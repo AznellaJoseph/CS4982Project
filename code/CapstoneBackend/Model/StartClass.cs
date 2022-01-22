@@ -1,6 +1,8 @@
-﻿namespace CapstoneBackend.Model;
+﻿namespace CapstoneBackend.Model
+{
 
 //TODO: This class will not be used
-public class StartClass
-{
+    public class StartClass
+    {
+    }
 }

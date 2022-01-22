@@ -1,6 +1,8 @@
-namespace CapstoneBackend.DAL;
-
-public class StartDAL
+namespace CapstoneBackend.DAL
 {
-    
+
+    public class StartDAL
+    {
+
+    }
 }

@@ -1,12 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneBackend", "CapstoneBackend\CapstoneBackend.csproj", "{773F729C-0193-47D7-B02E-5C3CB23E0A8E}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneBackend", "CapstoneBackend\CapstoneBackend.csproj", "{773F729C-0193-47D7-B02E-5C3CB23E0A8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneTest", "CapstoneTest\CapstoneTest.csproj", "{E6080D0B-611B-4C0B-9387-7199186D437D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneTest", "CapstoneTest\CapstoneTest.csproj", "{E6080D0B-611B-4C0B-9387-7199186D437D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneDesktop", "CapstoneDesktop\CapstoneDesktop.csproj", "{8F09FAC3-4048-4406-8ADF-3AC73C0C67DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneDesktop", "CapstoneDesktop\CapstoneDesktop.csproj", "{8F09FAC3-4048-4406-8ADF-3AC73C0C67DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneWeb", "CapstoneWeb\CapstoneWeb.csproj", "{A7795538-D587-486C-A4E0-B91ED4CD1D40}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneWeb", "CapstoneWeb\CapstoneWeb.csproj", "{B57062CD-EE61-4437-8ED1-D341844CB193}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,9 +29,15 @@ Global
 		{8F09FAC3-4048-4406-8ADF-3AC73C0C67DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F09FAC3-4048-4406-8ADF-3AC73C0C67DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F09FAC3-4048-4406-8ADF-3AC73C0C67DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7795538-D587-486C-A4E0-B91ED4CD1D40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7795538-D587-486C-A4E0-B91ED4CD1D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7795538-D587-486C-A4E0-B91ED4CD1D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7795538-D587-486C-A4E0-B91ED4CD1D40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B57062CD-EE61-4437-8ED1-D341844CB193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B57062CD-EE61-4437-8ED1-D341844CB193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B57062CD-EE61-4437-8ED1-D341844CB193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B57062CD-EE61-4437-8ED1-D341844CB193}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DB50A480-DD82-446E-A971-AFD118366230}
 	EndGlobalSection
 EndGlobal
