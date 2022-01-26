@@ -16,7 +16,7 @@ namespace CapstoneBackend.DAL
         /// <returns> The user with the entered username and password </returns>
         public static User? GetUser(string username, string password)
         {
-            using MySqlConnection connection = new("server = 127.0.0.1; ; port = 3306; uid = root; pwd=2002A03c13F17**21; database = capstone;");
+            using MySqlConnection connection = new(Connection.connectionString);
             connection.Open();
             var query = "CALL uspGetUser(@username, @password)";
             using MySqlCommand cmd = new(query, connection);
