@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneTest", "CapstoneTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneDesktop", "CapstoneDesktop\CapstoneDesktop.csproj", "{8F09FAC3-4048-4406-8ADF-3AC73C0C67DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneWeb", "CapstoneWeb\CapstoneWeb.csproj", "{B57062CD-EE61-4437-8ED1-D341844CB193}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneWeb", "CapstoneWeb\CapstoneWeb.csproj", "{B57062CD-EE61-4437-8ED1-D341844CB193}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CapstoneDatabase", "CapstoneDatabase\CapstoneDatabase.sqlproj", "{16DAFE88-6AD7-464C-8E4F-7CE392072357}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,12 @@ Global
 		{B57062CD-EE61-4437-8ED1-D341844CB193}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B57062CD-EE61-4437-8ED1-D341844CB193}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B57062CD-EE61-4437-8ED1-D341844CB193}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16DAFE88-6AD7-464C-8E4F-7CE392072357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16DAFE88-6AD7-464C-8E4F-7CE392072357}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16DAFE88-6AD7-464C-8E4F-7CE392072357}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{16DAFE88-6AD7-464C-8E4F-7CE392072357}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16DAFE88-6AD7-464C-8E4F-7CE392072357}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16DAFE88-6AD7-464C-8E4F-7CE392072357}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
