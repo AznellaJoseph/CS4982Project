@@ -14,32 +14,29 @@ namespace CapstoneBackend.DAL
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
         /// <returns> The user with the entered username and password </returns>
-        public User? GetUser(string username, string password)
+        public static User? GetUser(string username, string password)
         {
-            using (MySqlConnection connection = new(Connection.connectionString))
-            {
-                connection.Open();
-                var query = "CALL uspGetUser(@username, @password)";
-                using MySqlCommand cmd = new(query, connection);
+            using MySqlConnection connection = new("server = 127.0.0.1; ; port = 3306; uid = root; pwd=2002A03c13F17**21; database = capstone;");
+            connection.Open();
+            var query = "CALL uspGetUser(@username, @password)";
+            using MySqlCommand cmd = new(query, connection);
 
-                cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
-                cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = password;
+            cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
+            cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = password;
 
-                using var reader = cmd.ExecuteReader();
-                var idOrdinal = reader.GetOrdinal("id");
-                var usernameOrdinal = reader.GetOrdinal("username");
-                var fnameOrdinal = reader.GetOrdinal("fname");
-                var lnameOrdinal = reader.GetOrdinal("lname");
+            using var reader = cmd.ExecuteReader();
+            var idOrdinal = reader.GetOrdinal("id");
+            var fnameOrdinal = reader.GetOrdinal("fname");
+            var lnameOrdinal = reader.GetOrdinal("lname");
 
-                if (reader.Read())
-                    return new User
-                    {
-                        Id = reader.GetInt32(idOrdinal),
-                        Username = reader.GetString(usernameOrdinal),
-                        FirstName = reader.GetString(fnameOrdinal),
-                        LastName = reader.GetString(lnameOrdinal)
-                    };
-            }
+            if (reader.Read())
+                return new User
+                {
+                    Id = reader.GetInt32(idOrdinal),
+                    Username = username,
+                    FirstName = reader.GetString(fnameOrdinal),
+                    LastName = reader.GetString(lnameOrdinal)
+                };
 
             return null;
         }
