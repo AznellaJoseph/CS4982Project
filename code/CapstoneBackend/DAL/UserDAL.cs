@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using CapstoneBackend.Model;
 
 namespace CapstoneBackend.DAL
@@ -15,7 +16,7 @@ namespace CapstoneBackend.DAL
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
         /// <returns> The user with the entered username and password </returns>
-        public static User? GetUser(string username, string password)
+        public static async Task<User?> GetUser(string username, string password)
         {
             using SqlConnection connection = new(Connection.connectionString);
 
@@ -29,7 +30,7 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
             cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = await cmd.ExecuteReaderAsync();
             var idOrdinal = reader.GetOrdinal("id");
             var fnameOrdinal = reader.GetOrdinal("fname");
             var lnameOrdinal = reader.GetOrdinal("lname");
