@@ -3,15 +3,29 @@
         xmlns:vm="using:CapstoneDesktop.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
         x:Class="CapstoneDesktop.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="CapstoneDesktop">
+        Title="Capstone Desktop" WindowState="Maximized">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<StackPanel>
+		<TextBlock Text="Login" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="15"/>
+
+		<StackPanel VerticalAlignment="Bottom" Margin="15,0, 15, 0" >
+			<TextBox Watermark="Username" VerticalAlignment="Bottom" Margin="15" Text="{Binding Username, Mode=TwoWay}" />
+			<TextBox PasswordChar="*" Watermark="Password" VerticalAlignment="Bottom" Margin="15" Text="{Binding Password, Mode=TwoWay}" />
+
+			<StackPanel Orientation="Horizontal" Margin="15" Spacing="20">
+				<Button Content="Login" Margin="15" Command="{Binding LoginCommand}"/>
+				<Button Content="Create Account" HorizontalAlignment="Right" Margin="15" Command="{Binding CreateAccountCommand}" />
+			</StackPanel>
+		</StackPanel>
+
+	</StackPanel>
+
 
 </Window>
