@@ -1,12 +1,9 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using CapstoneBackend.DAL;
+﻿using CapstoneBackend.DAL;
 using CapstoneDesktop.Utility;
-using JetBrains.Annotations;
 
 namespace CapstoneDesktop.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : ViewModelBase
     {
         private string _password = string.Empty;
 
@@ -46,8 +43,6 @@ namespace CapstoneDesktop.ViewModels
         public RelayCommand LoginCommand { get; set; }
         public RelayCommand CreateAccountCommand { get; set; }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
         private bool canLogin(object obj)
         {
             return !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password);
@@ -71,13 +66,6 @@ namespace CapstoneDesktop.ViewModels
 
         private void createAccount(object obj)
         {
-        }
-
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
