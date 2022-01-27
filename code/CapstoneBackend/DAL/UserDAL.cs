@@ -1,5 +1,6 @@
+using System.Data;
+using System.Data.SqlClient;
 using CapstoneBackend.Model;
-using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.DAL
 {
@@ -16,13 +17,17 @@ namespace CapstoneBackend.DAL
         /// <returns> The user with the entered username and password </returns>
         public static User? GetUser(string username, string password)
         {
-            using MySqlConnection connection = new(Connection.connectionString);
-            connection.Open();
-            var query = "CALL uspGetUser(@username, @password)";
-            using MySqlCommand cmd = new(query, connection);
+            using SqlConnection connection = new(Connection.connectionString);
 
-            cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
-            cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = password;
+
+            connection.Open();
+            var query = "uspGetUser";
+
+            using SqlCommand cmd = new(query, connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
+            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
 
             using var reader = cmd.ExecuteReader();
             var idOrdinal = reader.GetOrdinal("id");

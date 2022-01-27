@@ -11,6 +11,6 @@ namespace CapstoneBackend.DAL
     /// </summary>
     public class Connection
     {
-        public static readonly string connectionString = "server=127.0.0.1;;port=3306;uid=root;database=capstone;";
+        public static readonly string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=CapstoneDatabase;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
     }
 }
