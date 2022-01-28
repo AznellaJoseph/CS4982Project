@@ -46,5 +46,30 @@ namespace CapstoneBackend.DAL
 
             return null;
         }
+
+        /// <summary>Inserts a User into the DB.</summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="fname">The first name.</param>
+        /// <param name="lname">The last name.</param>
+        /// <returns>True, if a new user was inserted to the DB. False, otherwise.</returns>
+        public static async Task<bool> CreateUser(string username, string password, string fname, string lname)
+        {
+            using SqlConnection connection = new(Connection.connectionString);
+
+            connection.Open();
+
+            var procedure = "uspInsertUser";
+            using SqlCommand cmd = new(procedure, connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
+            //TODO : Store password hash.
+            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
+            cmd.Parameters.Add("@fname", SqlDbType.VarChar).Value = fname;
+            cmd.Parameters.Add("@lname", SqlDbType.VarChar).Value = lname;
+
+            return System.Convert.ToBoolean(await cmd.ExecuteNonQueryAsync());
+        }
     }
 }
