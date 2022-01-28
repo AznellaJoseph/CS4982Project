@@ -1,4 +1,8 @@
-﻿using CapstoneBackend.DAL;
+﻿using System;
+using System.Threading.Tasks;
+using Avalonia.Layout;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
 using CapstoneDesktop.Utility;
 
 namespace CapstoneDesktop.ViewModels
@@ -13,7 +17,6 @@ namespace CapstoneDesktop.ViewModels
         {
             LoginCommand = new RelayCommand(login, canLogin);
             CreateAccountCommand = new RelayCommand(createAccount, canCreateAccount);
-            UserNotExists = false;
         }
 
         public string Username
@@ -38,7 +41,7 @@ namespace CapstoneDesktop.ViewModels
             }
         }
 
-        public bool UserNotExists { get; set; }
+        public string ErrorMessage { get; set; } = string.Empty;
 
         public RelayCommand LoginCommand { get; set; }
         public RelayCommand CreateAccountCommand { get; set; }
@@ -50,12 +53,13 @@ namespace CapstoneDesktop.ViewModels
 
         private void login(object obj)
         {
-            if (UserDAL.GetUser(_username, _password) != null)
+            var loginTask = UserManager.LoginUser(this._username, this._password);
+            if (string.IsNullOrEmpty(loginTask.Result.ErrorMessage))
             {
             }
             else
             {
-                UserNotExists = true;
+                ErrorMessage = loginTask.Result.ErrorMessage;
             }
         }
 

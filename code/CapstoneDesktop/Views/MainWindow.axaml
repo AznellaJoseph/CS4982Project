@@ -16,7 +16,7 @@
 		<TextBlock Text="Login" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="15"/>
 
 		<StackPanel VerticalAlignment="Bottom" Margin="15,0, 15, 0" >
-			<TextBlock Text="Those credentials do not exist. Please try again" Foreground="Red" IsVisible="{Binding UserNotExists}" />
+			<TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
             <TextBox Watermark="Username" VerticalAlignment="Bottom" Margin="15" Text="{Binding Username, Mode=TwoWay}" />
 			<TextBox PasswordChar="*" Watermark="Password" VerticalAlignment="Bottom" Margin="15" Text="{Binding Password, Mode=TwoWay}" />
 
