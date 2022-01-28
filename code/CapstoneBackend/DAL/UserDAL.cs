@@ -2,6 +2,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 
 namespace CapstoneBackend.DAL
 {
@@ -64,8 +65,7 @@ namespace CapstoneBackend.DAL
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
-            //TODO : Store password hash.
-            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
+            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = PasswordHasher.Hash(password);
             cmd.Parameters.Add("@fname", SqlDbType.VarChar).Value = fname;
             cmd.Parameters.Add("@lname", SqlDbType.VarChar).Value = lname;
 
