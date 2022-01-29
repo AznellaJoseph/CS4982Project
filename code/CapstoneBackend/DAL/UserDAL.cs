@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.DAL
 {
@@ -12,29 +13,25 @@ namespace CapstoneBackend.DAL
     public class UserDAL
     {
         /// <summary>
-        ///     Gets the user with the specified username and password
+        ///     Gets the user with the specified username
         /// </summary>
         /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        /// <returns> The user with the entered username and password </returns>
-        public static async Task<User?> GetUser(string username, string password)
+        /// <returns> The user with the given username</returns>
+        public static User? GetUserByUsername(string username)
         {
-            using SqlConnection connection = new(Connection.connectionString);
-
-
+            using MySqlConnection connection = new(Connection.connectionString); 
             connection.Open();
-            var query = "uspGetUser";
-
-            using SqlCommand cmd = new(query, connection);
+            
+            var query = "uspGetUserByUsername";
+            using MySqlCommand cmd = new(query, connection);
             cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
 
-            cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
-            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
-
-            using var reader = await cmd.ExecuteReaderAsync();
+            using var reader = cmd.ExecuteReaderAsync().Result;
             var idOrdinal = reader.GetOrdinal("id");
             var fnameOrdinal = reader.GetOrdinal("fname");
             var lnameOrdinal = reader.GetOrdinal("lname");
+            var passwordOrdinal = reader.GetOrdinal("password");
 
             if (reader.Read())
                 return new User
@@ -42,9 +39,10 @@ namespace CapstoneBackend.DAL
                     Id = reader.GetInt32(idOrdinal),
                     Username = username,
                     FirstName = reader.GetString(fnameOrdinal),
-                    LastName = reader.GetString(lnameOrdinal)
+                    LastName = reader.GetString(lnameOrdinal),
+                    Password = reader.GetString(passwordOrdinal)
                 };
-
+            
             return null;
         }
 
@@ -54,22 +52,22 @@ namespace CapstoneBackend.DAL
         /// <param name="fname">The first name.</param>
         /// <param name="lname">The last name.</param>
         /// <returns>True, if a new user was inserted to the DB. False, otherwise.</returns>
-        public static async Task<bool> CreateUser(string username, string password, string fname, string lname)
+        public static bool CreateUser(string username, string password, string fname, string lname)
         {
-            using SqlConnection connection = new(Connection.connectionString);
+            using MySqlConnection connection = new(Connection.connectionString);
 
             connection.Open();
 
-            var procedure = "uspInsertUser";
-            using SqlCommand cmd = new(procedure, connection);
+            var procedure = "uspCreateUser";
+            using MySqlCommand cmd = new(procedure, connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
-            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = PasswordHasher.Hash(password);
-            cmd.Parameters.Add("@fname", SqlDbType.VarChar).Value = fname;
-            cmd.Parameters.Add("@lname", SqlDbType.VarChar).Value = lname;
+            cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
+            cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = PasswordHasher.Hash(password);
+            cmd.Parameters.Add("@fname", MySqlDbType.VarChar).Value = fname;
+            cmd.Parameters.Add("@lname", MySqlDbType.VarChar).Value = lname;
 
-            return System.Convert.ToBoolean(await cmd.ExecuteNonQueryAsync());
+            return System.Convert.ToBoolean(cmd.ExecuteNonQueryAsync());
         }
     }
 }

@@ -1,17 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : ReactiveObject
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

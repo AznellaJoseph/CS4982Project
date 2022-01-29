@@ -1,74 +1,50 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Avalonia.Layout;
-using CapstoneBackend.DAL;
+using System.Reactive;
 using CapstoneBackend.Model;
-using CapstoneDesktop.Utility;
+using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private string _password = string.Empty;
-
-        private string _username = string.Empty;
+        private string _error = string.Empty;
 
         public MainWindowViewModel()
         {
-            LoginCommand = new RelayCommand(login, canLogin);
-            CreateAccountCommand = new RelayCommand(createAccount, canCreateAccount);
+            LoginCommand = ReactiveCommand.Create(this.login);
+            CreateAccountCommand = ReactiveCommand.Create(this.createAccount);
         }
 
-        public string Username
+        public string? Username { get; set; }
+
+        public string? Password { get; set; }
+
+        public string ErrorMessage
         {
-            get => _username;
+            get => _error;
             set
             {
-                _username = value;
-                OnPropertyChanged();
-                LoginCommand.OnCanExecuteChanged();
+                this.RaiseAndSetIfChanged(ref _error, value);
             }
         }
 
-        public string Password
+        public ReactiveCommand<Unit, Unit> LoginCommand { get; }
+        public ReactiveCommand<Unit, Unit> CreateAccountCommand { get; set; }
+
+        private void login()
         {
-            get => _password;
-            set
+            var response = UserManager.GetUserByCredentials(this.Username ?? string.Empty, this.Password ?? string.Empty);
+            if (string.IsNullOrEmpty(response.ErrorMessage))
             {
-                _password = value;
-                OnPropertyChanged();
-                LoginCommand.OnCanExecuteChanged();
-            }
-        }
-
-        public string ErrorMessage { get; set; } = string.Empty;
-
-        public RelayCommand LoginCommand { get; set; }
-        public RelayCommand CreateAccountCommand { get; set; }
-
-        private bool canLogin(object obj)
-        {
-            return !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password);
-        }
-
-        private void login(object obj)
-        {
-            var loginTask = UserManager.LoginUser(this._username, this._password);
-            if (string.IsNullOrEmpty(loginTask.Result.ErrorMessage))
-            {
+                Console.WriteLine("YOU DID IT!");
             }
             else
             {
-                ErrorMessage = loginTask.Result.ErrorMessage;
+                this.ErrorMessage = response.ErrorMessage;
             }
         }
 
-        private bool canCreateAccount(object obj)
-        {
-            return true;
-        }
-
-        private void createAccount(object obj)
+        private void createAccount()
         {
         }
     }

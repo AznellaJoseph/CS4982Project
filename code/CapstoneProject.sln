@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneDesktop", "Capstone
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneWeb", "CapstoneWeb\CapstoneWeb.csproj", "{B57062CD-EE61-4437-8ED1-D341844CB193}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CapstoneDatabase", "CapstoneDatabase\CapstoneDatabase.sqlproj", "{16DAFE88-6AD7-464C-8E4F-7CE392072357}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
