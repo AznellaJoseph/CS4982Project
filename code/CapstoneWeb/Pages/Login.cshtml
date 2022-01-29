@@ -1,0 +1,21 @@
+﻿@page
+@model CapstoneWeb.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+<div>
+    
+    <h1>Login</h1>
+    
+    <form method="post">
+        Username:
+        <input asp-for="Username"/>
+        Password:
+        <input asp-for="Password"/>
+        <input type="submit" value="Login"/>
+    </form>
+
+    <a asp-page="CreateAccountModel">Create Account</a>
+</div>
