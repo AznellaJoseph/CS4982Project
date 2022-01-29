@@ -1,6 +1,5 @@
+using System;
 using System.Data;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using MySql.Data.MySqlClient;
@@ -10,7 +9,7 @@ namespace CapstoneBackend.DAL
     /// <summary>
     ///     Data Access Layer (DAL) for User
     /// </summary>
-    public class UserDAL
+    public class UserDal
     {
         /// <summary>
         ///     Gets the user with the specified username
@@ -19,10 +18,10 @@ namespace CapstoneBackend.DAL
         /// <returns> The user with the given username</returns>
         public static User? GetUserByUsername(string username)
         {
-            using MySqlConnection connection = new(Connection.connectionString); 
+            using MySqlConnection connection = new(Connection.ConnectionString);
             connection.Open();
-            
-            var query = "uspGetUserByUsername";
+
+            const string query = "uspGetUserByUsername";
             using MySqlCommand cmd = new(query, connection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
@@ -42,7 +41,7 @@ namespace CapstoneBackend.DAL
                     LastName = reader.GetString(lnameOrdinal),
                     Password = reader.GetString(passwordOrdinal)
                 };
-            
+
             return null;
         }
 
@@ -54,11 +53,11 @@ namespace CapstoneBackend.DAL
         /// <returns>True, if a new user was inserted to the DB. False, otherwise.</returns>
         public static bool CreateUser(string username, string password, string fname, string lname)
         {
-            using MySqlConnection connection = new(Connection.connectionString);
+            using MySqlConnection connection = new(Connection.ConnectionString);
 
             connection.Open();
 
-            var procedure = "uspCreateUser";
+            const string procedure = "uspCreateUser";
             using MySqlCommand cmd = new(procedure, connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
@@ -67,7 +66,7 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@fname", MySqlDbType.VarChar).Value = fname;
             cmd.Parameters.Add("@lname", MySqlDbType.VarChar).Value = lname;
 
-            return System.Convert.ToBoolean(cmd.ExecuteNonQueryAsync());
+            return Convert.ToBoolean(cmd.ExecuteNonQueryAsync());
         }
     }
 }

@@ -5,12 +5,19 @@ using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
+    /// <summary>
+    ///     ViewModel for the MainWindow (Login)
+    /// </summary>
+    /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class MainWindowViewModel : ViewModelBase
     {
         private string _error = string.Empty;
 
         private bool _loginControlsVisible = true;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
+        /// </summary>
         public MainWindowViewModel()
         {
             LoginCommand = ReactiveCommand.Create(this.login);
@@ -30,10 +37,7 @@ namespace CapstoneDesktop.ViewModels
         public string ErrorMessage
         {
             get => _error;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _error, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref _error, value);
         }
 
         public bool LoginControlsVisible
@@ -52,11 +56,9 @@ namespace CapstoneDesktop.ViewModels
 
         private void login()
         {
-            var response = UserManager.GetUserByCredentials(this.Username ?? string.Empty, this.Password ?? string.Empty);
+            var response = UserManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (string.IsNullOrEmpty(response.ErrorMessage))
-            {
                 Console.WriteLine("YOU DID IT!");
-            }
             else
             {
                 this.ErrorMessage = response.ErrorMessage;

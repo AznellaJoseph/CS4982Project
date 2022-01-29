@@ -8,9 +8,9 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Capstone Desktop" WindowState="Maximized">
 
-	<Design.DataContext>
-		<vm:MainWindowViewModel/>
-	</Design.DataContext>
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
 
 	<StackPanel>
 		
@@ -18,8 +18,8 @@
       <TextBlock Text="Login" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="15"/>
 
 			<TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
-            <TextBox Watermark="Username" VerticalAlignment="Bottom" Margin="15" Text="{Binding Username, Mode=TwoWay}" />
-			<TextBox PasswordChar="*" Watermark="Password" VerticalAlignment="Bottom" Margin="15" Text="{Binding Password, Mode=TwoWay}" />
+      <TextBox Watermark="Username" VerticalAlignment="Bottom" Margin="15" Text="{Binding Username, Mode=TwoWay}" />
+      <TextBox PasswordChar="*" Watermark="Password" VerticalAlignment="Bottom" Margin="15" Text="{Binding Password, Mode=TwoWay}" />
 
 			<StackPanel Orientation="Horizontal" Margin="15" Spacing="20">
 				<Button Content="Login" Margin="15" Command="{Binding LoginCommand}"/>
@@ -42,7 +42,7 @@
       </StackPanel>
     </StackPanel>
 
-	</StackPanel>
+  </StackPanel>
 
 
 </Window>
