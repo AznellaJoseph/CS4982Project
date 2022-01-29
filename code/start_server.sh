@@ -2,5 +2,7 @@
 
 docker kill capstone;
 
-docker run --rm --name capstone -e MYSQL_ROOT_PASSWORD="test" -e MYSQL_DATABASE="capstone" -v "$PWD"/CapstoneDatabase:/docker-entrypoint-initdb.d -p 3308:3306 -d mysql;
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && (pwd -W 2> /dev/null || pwd))
+
+docker run --rm --name capstone -e MYSQL_ROOT_PASSWORD="test" -e MYSQL_DATABASE="capstone" -v $SCRIPT_DIR'/CapstoneDatabase:/docker-entrypoint-initdb.d' -p 3308:3306 -d mysql;
 
