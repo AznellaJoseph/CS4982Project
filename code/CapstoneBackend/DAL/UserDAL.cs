@@ -50,8 +50,8 @@ namespace CapstoneBackend.DAL
         /// <param name="password">The password.</param>
         /// <param name="fname">The first name.</param>
         /// <param name="lname">The last name.</param>
-        /// <returns>True, if a new user was inserted to the DB. False, otherwise.</returns>
-        public static bool CreateUser(string username, string password, string fname, string lname)
+        /// <returns>ID of new user if successful. null, otherwise.</returns>
+        public static int? CreateUser(string username, string password, string fname, string lname)
         {
             using MySqlConnection connection = new(Connection.ConnectionString);
 
@@ -66,7 +66,14 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@fname", MySqlDbType.VarChar).Value = fname;
             cmd.Parameters.Add("@lname", MySqlDbType.VarChar).Value = lname;
 
-            return Convert.ToBoolean(cmd.ExecuteNonQueryAsync());
+            var userId = cmd.ExecuteScalar();
+
+            if (userId is not null)
+            {
+                return Convert.ToInt32(userId);
+            }
+
+            return null;
         }
     }
 }

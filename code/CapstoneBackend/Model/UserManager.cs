@@ -37,5 +37,36 @@ namespace CapstoneBackend.Model
                 Data = user
             };
         }
+
+        public static Response<int> RegisterUser(string username, string password, string fname, string lname)
+        {
+            var user = UserDal.GetUserByUsername(username);
+            if (user is not null)
+            {
+                return new Response<int>
+                {
+                    StatusCode = 400,
+                    ErrorMessage = "Username is taken."
+                };
+            }
+
+            var userCreated = UserDal.CreateUser(username, password, fname, lname);
+            if (userCreated is not null)
+            {
+                return new Response<int>
+                {
+                    StatusCode = 200,
+                    Data = (int) userCreated
+                };
+            }
+            else
+            {
+                return new Response<int>
+                {
+                    StatusCode = 500,
+                    ErrorMessage = "Internal Server Error."
+                };
+            }
+        }
     }
 }

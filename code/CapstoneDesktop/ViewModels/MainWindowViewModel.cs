@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reactive;
 using CapstoneBackend.Model;
 using ReactiveUI;
@@ -77,14 +78,14 @@ namespace CapstoneDesktop.ViewModels
 
         private void submitAccount()
         {
-            var response = "";
-            if (string.IsNullOrEmpty(response))
+            var response = UserManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
+            if (response.StatusCode == 200)
             {
-                Console.WriteLine("YOU DID IT!");
+                Debug.WriteLine("Successful Account Creation");
             }
             else
             {
-                this.ErrorMessage = response;
+                this.ErrorMessage = response.ErrorMessage ?? "Unknown Error.";
             }
         }
     }
