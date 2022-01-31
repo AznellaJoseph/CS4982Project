@@ -11,7 +11,6 @@ namespace CapstoneWeb.Pages
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class CreateAccountModel : PageModel
     {
-        public int Id { get; set; }
         public string ErrorMessage { get; set; }
 
         [BindProperty]
@@ -35,10 +34,10 @@ namespace CapstoneWeb.Pages
 
         public IActionResult OnPost()
         {
-            var response = UserManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
+            Response<int> response = UserManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)
             {
-                IndexModel.UserId = response.Data;
+                this.Response.Cookies.Append("userId", $"{response.Data}");
                 return RedirectToPage("Index");
             }
             else

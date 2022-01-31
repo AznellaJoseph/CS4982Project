@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ namespace CapstoneWeb.Pages
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class IndexModel : PageModel
     {
-        public static int UserId { get; set; } = -1;
+        public int UserId { get; set; } = -1;
         private readonly ILogger<IndexModel> _logger;
 
         /// <summary>
@@ -29,11 +30,13 @@ namespace CapstoneWeb.Pages
         /// <returns></returns>
         public IActionResult OnGet()
         {
-            if (UserId == -1)
+            string userIdString;
+            if (!this.Request.Cookies.TryGetValue("userId", out userIdString))
             {
                 return RedirectToPage("login");
             }
 
+            this.UserId = Convert.ToInt32(userIdString);
             return Page();
 
         }

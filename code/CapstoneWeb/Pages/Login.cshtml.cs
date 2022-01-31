@@ -37,7 +37,7 @@ namespace CapstoneWeb.Pages
             var response = UserManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (string.IsNullOrEmpty(response.ErrorMessage) && response.Data != null)
             {
-                IndexModel.UserId = response.Data.Id;
+                this.Response.Cookies.Append("userId", $"{response.Data.Id}");
                 return RedirectToPage("Index");
             }
 
