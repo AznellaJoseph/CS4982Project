@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -37,7 +38,7 @@ namespace CapstoneWeb.Pages
             Response<int> response = UserManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)
             {
-                this.Response.Cookies.Append("userId", $"{response.Data}");
+                this.HttpContext.Session.SetString("userId", $"{response.Data}");
                 return RedirectToPage("Index");
             }
             else

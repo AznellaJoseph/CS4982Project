@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -30,15 +32,12 @@ namespace CapstoneWeb.Pages
         /// <returns></returns>
         public IActionResult OnGet()
         {
-            string userIdString;
-            if (!this.Request.Cookies.TryGetValue("userId", out userIdString))
+            if (!this.HttpContext.Session.Keys.Contains("userId"))
             {
                 return RedirectToPage("login");
             }
-
-            this.UserId = Convert.ToInt32(userIdString);
+            this.UserId = Convert.ToInt32(this.HttpContext.Session.GetString("userId"));
             return Page();
-
         }
     }
 }
