@@ -6,4 +6,42 @@
 
 <div>
     <h1>Create Account</h1>
+    
+    <p>
+        @Model.ErrorMessage
+    </p>
+
+    <form method="post">
+
+        <div>
+            <label for="username">Username*:</label>
+            <input id="username" asp-for="Username" required />
+
+        </div>
+
+        <div>
+            <label for="password">Password*:</label>
+            <input id="password" asp-for="Password" required />
+        </div>
+
+        <div>
+            <label for="firstname">First Name*:</label>
+            <input id="firstname" asp-for="FirstName" required />
+
+        </div>
+
+        <div>
+            <label for="lastname">Last Name*:</label>
+            <input id="lastname" asp-for="LastName" required />
+
+        </div>
+        
+        <div>
+            <p>* These fields are required</p>
+        </div>
+
+        <input type="submit" />
+
+    </form>
+
 </div>
