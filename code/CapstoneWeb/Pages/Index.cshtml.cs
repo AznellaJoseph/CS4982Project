@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -39,6 +41,11 @@ namespace CapstoneWeb.Pages
             this.UserId = Convert.ToInt32(userIdString);
             return Page();
 
+        }
+
+        public IActionResult OnPostLogout()
+        {
+            return RedirectToPage("index");
         }
     }
 }
