@@ -6,23 +6,40 @@ using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.DAL
 {
+
     /// <summary>
     ///     Data Access Layer (DAL) for User
     /// </summary>
-    public class UserDal
+    public class UserDal : IDisposable
     {
+        
+        
+        private readonly MySqlConnection _connection;
+
+        public UserDal() : this(new MySqlConnection(Connection.ConnectionString))
+        {
+        }
+
+        public UserDal(MySqlConnection connection)
+        {
+            this._connection = connection;
+            this._connection.Open();
+        }
+
+        ~UserDal()
+        {
+            this._connection.Close();
+        }
+        
         /// <summary>
         ///     Gets the user with the specified username
         /// </summary>
         /// <param name="username">The username.</param>
         /// <returns> The user with the given username</returns>
-        public static User? GetUserByUsername(string username)
+        public User? GetUserByUsername(string username)
         {
-            using MySqlConnection connection = new(Connection.ConnectionString);
-            connection.Open();
-
             const string query = "uspGetUserByUsername";
-            using MySqlCommand cmd = new(query, connection);
+            using MySqlCommand cmd = new(query, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
 
@@ -51,14 +68,10 @@ namespace CapstoneBackend.DAL
         /// <param name="fname">The first name.</param>
         /// <param name="lname">The last name.</param>
         /// <returns>ID of new user if successful. null, otherwise.</returns>
-        public static int? CreateUser(string username, string password, string fname, string lname)
+        public int? CreateUser(string username, string password, string fname, string lname)
         {
-            using MySqlConnection connection = new(Connection.ConnectionString);
-
-            connection.Open();
-
             const string procedure = "uspCreateUser";
-            using MySqlCommand cmd = new(procedure, connection);
+            using MySqlCommand cmd = new(procedure, this._connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
@@ -77,6 +90,14 @@ namespace CapstoneBackend.DAL
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Disposes the connection of the Dal object
+        /// </summary>
+        public void Dispose()
+        {
+            this._connection.Close();
         }
     }
 }

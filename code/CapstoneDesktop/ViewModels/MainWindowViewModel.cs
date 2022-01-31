@@ -44,10 +44,8 @@ namespace CapstoneDesktop.ViewModels
         public bool LoginControlsVisible
         {
             get => _loginControlsVisible;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _loginControlsVisible, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref _loginControlsVisible, value);
+            
         }
 
         public ReactiveCommand<Unit, Unit> LoginCommand { get; }
@@ -57,7 +55,8 @@ namespace CapstoneDesktop.ViewModels
 
         private void login()
         {
-            var response = UserManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
+            using var userManager = new UserManager();
+            var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (string.IsNullOrEmpty(response.ErrorMessage))
                 Console.WriteLine("YOU DID IT!");
             else
@@ -78,7 +77,8 @@ namespace CapstoneDesktop.ViewModels
 
         private void submitAccount()
         {
-            var response = UserManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
+            using var userManager = new UserManager();
+            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)
             {
                 Debug.WriteLine("Successful Account Creation");

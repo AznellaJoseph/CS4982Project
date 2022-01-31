@@ -35,7 +35,8 @@ namespace CapstoneWeb.Pages
 
         public IActionResult OnPost()
         {
-            Response<int> response = UserManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
+            using var userManager = new UserManager();
+            Response<int> response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)
             {
                 this.HttpContext.Session.SetString("userId", $"{response.Data}");
