@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -37,7 +38,7 @@ namespace CapstoneWeb.Pages
             var response = UserManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (string.IsNullOrEmpty(response.ErrorMessage) && response.Data != null)
             {
-                this.Response.Cookies.Append("userId", $"{response.Data.Id}");
+                this.HttpContext.Session.SetString("userId", $"{response.Data.Id}");
                 return RedirectToPage("Index");
             }
 
