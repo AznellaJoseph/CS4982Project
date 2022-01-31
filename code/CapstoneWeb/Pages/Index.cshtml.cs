@@ -42,6 +42,7 @@ namespace CapstoneWeb.Pages
 
         public IActionResult OnPostLogout()
         {
+            this.HttpContext.Session.Remove("userId");
             return RedirectToPage("index");
         }
     }
