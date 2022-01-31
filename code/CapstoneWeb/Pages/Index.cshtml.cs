@@ -39,5 +39,11 @@ namespace CapstoneWeb.Pages
             this.UserId = Convert.ToInt32(this.HttpContext.Session.GetString("userId"));
             return Page();
         }
+
+        public IActionResult OnPostLogout()
+        {
+            this.HttpContext.Session.Remove("userId");
+            return RedirectToPage("index");
+        }
     }
 }
