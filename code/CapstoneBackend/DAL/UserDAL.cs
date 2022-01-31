@@ -36,7 +36,7 @@ namespace CapstoneBackend.DAL
         /// </summary>
         /// <param name="username">The username.</param>
         /// <returns> The user with the given username</returns>
-        public User? GetUserByUsername(string username)
+        public virtual User? GetUserByUsername(string username)
         {
             const string query = "uspGetUserByUsername";
             using MySqlCommand cmd = new(query, _connection);
@@ -68,7 +68,7 @@ namespace CapstoneBackend.DAL
         /// <param name="fname">The first name.</param>
         /// <param name="lname">The last name.</param>
         /// <returns>ID of new user if successful. null, otherwise.</returns>
-        public int? CreateUser(string username, string password, string fname, string lname)
+        public virtual int? CreateUser(string username, string password, string fname, string lname)
         {
             const string procedure = "uspCreateUser";
             using MySqlCommand cmd = new(procedure, this._connection);
