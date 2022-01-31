@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
@@ -10,6 +11,7 @@ namespace CapstoneWeb.Pages
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class IndexModel : PageModel
     {
+        public static int UserId { get; set; } = -1;
         private readonly ILogger<IndexModel> _logger;
 
         /// <summary>
@@ -27,7 +29,13 @@ namespace CapstoneWeb.Pages
         /// <returns></returns>
         public IActionResult OnGet()
         {
-            return RedirectToPage("login");
+            if (UserId == -1)
+            {
+                return RedirectToPage("login");
+            }
+
+            return Page();
+
         }
     }
 }

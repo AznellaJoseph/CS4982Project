@@ -14,10 +14,10 @@ namespace CapstoneWeb.Pages
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class LoginModel : PageModel
     {
-        public int Id { get; set; }
-
+        [BindProperty]
         public string Username { get; set; }
 
+        [BindProperty]
         public string Password { get; set; }
 
         public string ErrorMessage { get; set; }
@@ -35,8 +35,9 @@ namespace CapstoneWeb.Pages
         public IActionResult OnPost()
         {
             var response = UserManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
-            if (string.IsNullOrEmpty(response.ErrorMessage))
+            if (string.IsNullOrEmpty(response.ErrorMessage) && response.Data != null)
             {
+                IndexModel.UserId = response.Data.Id;
                 return RedirectToPage("Index");
             }
 
