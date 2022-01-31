@@ -8,7 +8,10 @@ namespace CapstoneVendorPrototype
         {
             PlaceClient client = new();
             var result = client.GetPointsOfInterest(35.8308, -90.7023);
-            Console.WriteLine(result.Result);
+            foreach (var aPlace in result.Result.Results)
+            {
+                Console.WriteLine(aPlace.Name);
+            }
         }
     }
 }

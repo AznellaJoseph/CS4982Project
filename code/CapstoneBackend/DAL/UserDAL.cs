@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using System.Diagnostics;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using MySql.Data.MySqlClient;

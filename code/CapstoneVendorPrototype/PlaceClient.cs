@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using RestSharp;
 
@@ -32,14 +34,14 @@ namespace CapstoneVendorPrototype
         /// </summary>
         /// <param name="latitude">The latitude.</param>
         /// <param name="longitude">The longitude.</param>
-        /// <returns>the a json string of points of intrests</returns>
-        public async Task<string> GetPointsOfInterest(double latitude, double longitude)
+        /// <param name="radius">The radius</param>
+        /// <returns>the a json string of points of interests</returns>
+        public async Task<PlacesResult> GetPointsOfInterest(double latitude, double longitude, int radius)
         {
             var request = new RestRequest("nearby")
-               .AddQueryParameter("ll", $"{latitude},{longitude}");
-                
-            var response = await this._client.ExecuteAsync(request);
-            return response!.Content;
+                .AddQueryParameter("ll", $"{latitude},{longitude}")
+                .AddQueryParameter("radius", $"{radius}");
+            return await this._client.GetAsync<PlacesResult>(request);
         }
 
         /// <summary>
