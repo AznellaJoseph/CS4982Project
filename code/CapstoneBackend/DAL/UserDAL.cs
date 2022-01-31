@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Diagnostics;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using MySql.Data.MySqlClient;
@@ -65,8 +66,11 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = PasswordHasher.Hash(password);
             cmd.Parameters.Add("@fname", MySqlDbType.VarChar).Value = fname;
             cmd.Parameters.Add("@lname", MySqlDbType.VarChar).Value = lname;
+            cmd.Parameters.Add("@userId", MySqlDbType.Int32).Direction = ParameterDirection.Output;
 
-            var userId = cmd.ExecuteScalar();
+            cmd.ExecuteNonQuery();
+
+            var userId = cmd.Parameters["@userId"].Value;
 
             if (userId is not null)
             {

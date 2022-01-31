@@ -38,6 +38,12 @@ namespace CapstoneBackend.Model
             };
         }
 
+        /// <summary>Registers the user.</summary>
+        /// <param name="username">The username input.</param>
+        /// <param name="password">The password input.</param>
+        /// <param name="fname">The fname input.</param>
+        /// <param name="lname">The lname input.</param>
+        /// <returns>Response status 200 for success; 400 for bad username; 500 otherwise.</returns>
         public static Response<int> RegisterUser(string username, string password, string fname, string lname)
         {
             var user = UserDal.GetUserByUsername(username);
