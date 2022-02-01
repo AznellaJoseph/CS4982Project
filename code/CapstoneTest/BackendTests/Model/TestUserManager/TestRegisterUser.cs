@@ -1,9 +1,9 @@
-using CapstoneBackend.Model;
-using Moq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace CapstoneTest
+namespace CapstoneTest.BackendTests.Model.TestUserManager
 {
 
     [TestClass]

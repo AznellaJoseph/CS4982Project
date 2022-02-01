@@ -3,7 +3,7 @@ using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace CapstoneTest.DesktopTests.ViewModels.MainWindowViewModel
+namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 {
 
     [TestClass]
@@ -13,7 +13,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.MainWindowViewModel
         public void TestPropertyCreations()
         {
             var mockUserManager = new Mock<UserManager>();
-            CapstoneDesktop.ViewModels.MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
+            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
 
             Assert.IsNotNull(mainWindowViewModel.CancelCreateAccountCommand);
             Assert.IsNotNull(mainWindowViewModel.LoginCommand);

@@ -72,7 +72,8 @@ namespace CapstoneDesktop.ViewModels
 
         private void login()
         {
-            var response = _userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
+            using var userManager = new UserManager();
+            var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (string.IsNullOrEmpty(response.ErrorMessage))
                 Console.WriteLine("YOU DID IT!");
             else
@@ -93,7 +94,8 @@ namespace CapstoneDesktop.ViewModels
 
         private void submitAccount()
         {
-            var response = _userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
+            using var userManager = new UserManager();
+            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)
             {
                 Debug.WriteLine("Successful Account Creation");
