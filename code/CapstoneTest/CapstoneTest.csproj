@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+        <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
         <PackageReference Include="Moq" Version="4.16.1" />
         <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
         <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
@@ -17,7 +18,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\CapstoneWeb\CapstoneWeb.csproj" />
+      <ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj" />
+      <ProjectReference Include="..\CapstoneDesktop\CapstoneDesktop.csproj" />
     </ItemGroup>
 
 </Project>

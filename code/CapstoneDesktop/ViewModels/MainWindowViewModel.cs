@@ -12,6 +12,22 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class MainWindowViewModel : ViewModelBase
     {
+        private readonly UserManager _userManager;
+
+        public MainWindowViewModel(UserManager manager)
+        {
+            this._userManager = manager;
+            LoginCommand = ReactiveCommand.Create(this.login);
+            OpenCreateAccountCommand = ReactiveCommand.Create(this.openCreateAccount);
+            CancelCreateAccountCommand = ReactiveCommand.Create(this.cancelCreateAccount);
+            SubmitAccountCommand = ReactiveCommand.Create(this.submitAccount);
+        }
+
+        ~MainWindowViewModel()
+        {
+            this._userManager.Dispose();
+        }
+
         private string _error = string.Empty;
 
         private bool _loginControlsVisible = true;
@@ -21,10 +37,11 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public MainWindowViewModel()
         {
-            LoginCommand = ReactiveCommand.Create(login);
-            OpenCreateAccountCommand = ReactiveCommand.Create(openCreateAccount);
-            CancelCreateAccountCommand = ReactiveCommand.Create(cancelCreateAccount);
-            SubmitAccountCommand = ReactiveCommand.Create(submitAccount);
+            this._userManager = new UserManager();
+            LoginCommand = ReactiveCommand.Create(this.login);
+            OpenCreateAccountCommand = ReactiveCommand.Create(this.openCreateAccount);
+            CancelCreateAccountCommand = ReactiveCommand.Create(this.cancelCreateAccount);
+            SubmitAccountCommand = ReactiveCommand.Create(this.submitAccount);
         }
 
         public string? Username { get; set; }
@@ -45,6 +62,7 @@ namespace CapstoneDesktop.ViewModels
         {
             get => _loginControlsVisible;
             set => this.RaiseAndSetIfChanged(ref _loginControlsVisible, value);
+            
         }
 
         public ReactiveCommand<Unit, Unit> LoginCommand { get; }
@@ -59,28 +77,33 @@ namespace CapstoneDesktop.ViewModels
             if (string.IsNullOrEmpty(response.ErrorMessage))
                 Console.WriteLine("YOU DID IT!");
             else
-                ErrorMessage = response.ErrorMessage;
+            {
+                this.ErrorMessage = response.ErrorMessage;
+            }
         }
 
         private void openCreateAccount()
         {
-            LoginControlsVisible = false;
+            this.LoginControlsVisible = false;
         }
 
         private void cancelCreateAccount()
         {
-            LoginControlsVisible = true;
+            this.LoginControlsVisible = true;
         }
 
         private void submitAccount()
         {
             using var userManager = new UserManager();
-            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
-                FirstName ?? string.Empty, LastName ?? string.Empty);
+            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)
+            {
                 Debug.WriteLine("Successful Account Creation");
+            }
             else
-                ErrorMessage = response.ErrorMessage ?? "Unknown Error.";
+            {
+                this.ErrorMessage = response.ErrorMessage ?? "Unknown Error.";
+            }
         }
     }
 }
