@@ -20,6 +20,7 @@
     <ItemGroup>
       <ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj" />
       <ProjectReference Include="..\CapstoneDesktop\CapstoneDesktop.csproj" />
+      <ProjectReference Include="..\CapstoneWeb\CapstoneWeb.csproj" />
     </ItemGroup>
 
 </Project>
