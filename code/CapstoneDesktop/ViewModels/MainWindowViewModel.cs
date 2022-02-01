@@ -12,6 +12,22 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class MainWindowViewModel : ViewModelBase
     {
+        private readonly UserManager _userManager;
+
+        public MainWindowViewModel(UserManager manager)
+        {
+            this._userManager = manager;
+            LoginCommand = ReactiveCommand.Create(this.login);
+            OpenCreateAccountCommand = ReactiveCommand.Create(this.openCreateAccount);
+            CancelCreateAccountCommand = ReactiveCommand.Create(this.cancelCreateAccount);
+            SubmitAccountCommand = ReactiveCommand.Create(this.submitAccount);
+        }
+
+        ~MainWindowViewModel()
+        {
+            this._userManager.Dispose();
+        }
+
         private string _error = string.Empty;
 
         private bool _loginControlsVisible = true;
@@ -21,6 +37,7 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public MainWindowViewModel()
         {
+            this._userManager = new UserManager();
             LoginCommand = ReactiveCommand.Create(this.login);
             OpenCreateAccountCommand = ReactiveCommand.Create(this.openCreateAccount);
             CancelCreateAccountCommand = ReactiveCommand.Create(this.cancelCreateAccount);
@@ -55,8 +72,7 @@ namespace CapstoneDesktop.ViewModels
 
         private void login()
         {
-            using var userManager = new UserManager();
-            var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
+            var response = _userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (string.IsNullOrEmpty(response.ErrorMessage))
                 Console.WriteLine("YOU DID IT!");
             else
@@ -77,8 +93,7 @@ namespace CapstoneDesktop.ViewModels
 
         private void submitAccount()
         {
-            using var userManager = new UserManager();
-            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
+            var response = _userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)
             {
                 Debug.WriteLine("Successful Account Creation");
