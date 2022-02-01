@@ -3,13 +3,12 @@
 namespace CapstoneVendorPrototype
 {
     /// <summary>
-    /// A Prototype Program to test Vendor API
+    ///     A Prototype Program to test Vendor API
     /// </summary>
     public static class Program
     {
-        
         /// <summary>
-        /// The main entry to test the prototype.
+        ///     The main entry to test the prototype.
         /// </summary>
         /// <param name="args">the args for the execution</param>
         public static void Main(string[] args)

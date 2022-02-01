@@ -6,14 +6,11 @@ using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.DAL
 {
-
     /// <summary>
     ///     Data Access Layer (DAL) for User
     /// </summary>
     public class UserDal : IDisposable
     {
-        
-        
         private readonly MySqlConnection _connection;
 
         public UserDal() : this(new MySqlConnection(Connection.ConnectionString))
@@ -22,15 +19,23 @@ namespace CapstoneBackend.DAL
 
         public UserDal(MySqlConnection connection)
         {
-            this._connection = connection;
-            this._connection.Open();
+            _connection = connection;
+            _connection.Open();
+        }
+
+        /// <summary>
+        ///     Disposes the connection of the Dal object
+        /// </summary>
+        public void Dispose()
+        {
+            _connection.Close();
         }
 
         ~UserDal()
         {
-            this._connection.Close();
+            _connection.Close();
         }
-        
+
         /// <summary>
         ///     Gets the user with the specified username
         /// </summary>
@@ -71,7 +76,7 @@ namespace CapstoneBackend.DAL
         public int? CreateUser(string username, string password, string fname, string lname)
         {
             const string procedure = "uspCreateUser";
-            using MySqlCommand cmd = new(procedure, this._connection);
+            using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
@@ -84,20 +89,9 @@ namespace CapstoneBackend.DAL
 
             var userId = cmd.Parameters["@userId"].Value;
 
-            if (userId is not null)
-            {
-                return Convert.ToInt32(userId);
-            }
+            if (userId is not null) return Convert.ToInt32(userId);
 
             return null;
-        }
-
-        /// <summary>
-        /// Disposes the connection of the Dal object
-        /// </summary>
-        public void Dispose()
-        {
-            this._connection.Close();
         }
     }
 }

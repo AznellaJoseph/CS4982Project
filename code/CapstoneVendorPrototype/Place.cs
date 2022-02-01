@@ -4,8 +4,8 @@ namespace CapstoneVendorPrototype
 {
     public class Place
     {
-        [JsonPropertyName("fsq_id")]
-        public string Id { get; set; }
+        [JsonPropertyName("fsq_id")] public string Id { get; set; }
+
         public PlaceCategory[] Categories { get; set; }
         public int Distance { get; set; }
         public Location Location { get; set; }

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using CapstoneBackend.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,17 +13,15 @@ namespace CapstoneWeb.Pages
     {
         public string ErrorMessage { get; set; }
 
-        [BindProperty]
-        public string Username { get; set; }
+        [BindProperty] public string Username { get; set; }
 
-        [BindProperty]
-        public string Password { get; set; }
+        [BindProperty] public string Password { get; set; }
 
-        [BindProperty]
-        public string FirstName { get; set; }
+        [BindProperty] public string FirstName { get; set; }
 
-        [BindProperty]
-        public string LastName { get; set; }
+        [BindProperty] public string LastName { get; set; }
+
+        public UserManager FakeUserManager { get; set; }
 
         /// <summary>
         ///     Called when [get].
@@ -35,17 +32,16 @@ namespace CapstoneWeb.Pages
 
         public IActionResult OnPost()
         {
-            using var userManager = new UserManager();
-            Response<int> response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
+            using var userManager = FakeUserManager ?? new UserManager();
+            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
+                FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)
             {
-                this.HttpContext.Session.SetString("userId", $"{response.Data}");
+                HttpContext.Session.SetString("userId", $"{response.Data}");
                 return RedirectToPage("Index");
             }
-            else
-            {
-                ErrorMessage = response.ErrorMessage ?? "Unknown Error.";
-            }
+
+            ErrorMessage = response.ErrorMessage ?? "Unknown Error.";
 
             return Page();
         }

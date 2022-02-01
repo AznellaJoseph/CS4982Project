@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 
 namespace CapstoneDesktop.Views
 {
-    public partial class MainWindow : Window
+    public class MainWindow : Window
     {
         public MainWindow()
         {

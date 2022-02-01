@@ -3,10 +3,10 @@
              xmlns:local="using:CapstoneDesktop"
              x:Class="CapstoneDesktop.App">
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Styles>
-        <FluentTheme Mode="Dark"/>
+        <FluentTheme Mode="Dark" />
     </Application.Styles>
 </Application>

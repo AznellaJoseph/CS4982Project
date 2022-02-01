@@ -1,7 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +11,13 @@ namespace CapstoneWeb.Pages
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class LoginModel : PageModel
     {
-        [BindProperty]
-        public string Username { get; set; }
+        [BindProperty] public string Username { get; set; }
 
-        [BindProperty]
-        public string Password { get; set; }
+        [BindProperty] public string Password { get; set; }
 
         public string ErrorMessage { get; set; }
+
+        public UserManager FakeUserManager { get; set; }
 
         /// <summary>
         ///     Called when [get].
@@ -35,18 +31,15 @@ namespace CapstoneWeb.Pages
         /// </summary>
         public IActionResult OnPost()
         {
-            using var userManager = new UserManager();
+            using var userManager = FakeUserManager ?? new UserManager();
             var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (string.IsNullOrEmpty(response.ErrorMessage) && response.Data != null)
             {
-                this.HttpContext.Session.SetString("userId", $"{response.Data.Id}");
+                HttpContext.Session.SetString("userId", $"{response.Data.Id}");
                 return RedirectToPage("Index");
             }
 
-            else
-            {
-                ErrorMessage = response.ErrorMessage;
-            }
+            ErrorMessage = response.ErrorMessage;
 
             return Page();
         }
