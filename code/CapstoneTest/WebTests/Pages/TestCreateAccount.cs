@@ -9,20 +9,24 @@ using Moq;
 
 namespace CapstoneTest.WebTests.Pages
 {
+    
     [TestClass]
-    public class TestLogin
+    public class TestCreateAccount
     {
+      
         
         [TestMethod]
         public void PostSuccess()
         {
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
-            fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User>{Data = new User{Id = 0}});
-            var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
+            fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int>{Data = 0});
+            var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
+            page.FirstName = "admin";
+            page.LastName = "admin";
             var result = page.OnPost();
             var outBytes = Encoding.UTF8.GetBytes("0");
             session.Verify(s => s.Set("userId", outBytes));
@@ -36,11 +40,13 @@ namespace CapstoneTest.WebTests.Pages
         {
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
-            fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User>{ ErrorMessage = "Failed."});
-            var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
+            fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int>{StatusCode = 404, ErrorMessage = "Failed."});
+            var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
+            page.FirstName = "admin";
+            page.LastName = "admin";
             var result = page.OnPost();
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual("Failed.", page.ErrorMessage);

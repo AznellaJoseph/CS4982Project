@@ -23,13 +23,6 @@ namespace CapstoneWeb.Pages
 
         public UserManager FakeUserManager { get; set; }
 
-        /// <summary>
-        ///     Called when [get].
-        /// </summary>
-        public void OnGet()
-        {
-        }
-
         public IActionResult OnPost()
         {
             var userManager = FakeUserManager ?? new UserManager();
