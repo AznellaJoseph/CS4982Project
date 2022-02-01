@@ -32,7 +32,7 @@ namespace CapstoneWeb.Pages
 
         public IActionResult OnPost()
         {
-            using var userManager = FakeUserManager ?? new UserManager();
+            var userManager = FakeUserManager ?? new UserManager();
             var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
                 FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)

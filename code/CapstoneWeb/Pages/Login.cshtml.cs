@@ -20,20 +20,13 @@ namespace CapstoneWeb.Pages
         public UserManager FakeUserManager { get; set; }
 
         /// <summary>
-        ///     Called when [get].
-        /// </summary>
-        public void OnGet()
-        {
-        }
-
-        /// <summary>
         ///     Called when [post].
         /// </summary>
         public IActionResult OnPost()
         {
-            using var userManager = FakeUserManager ?? new UserManager();
+            var userManager = FakeUserManager ?? new UserManager();
             var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
-            if (string.IsNullOrEmpty(response.ErrorMessage) && response.Data != null)
+            if (response.Data is not null)
             {
                 HttpContext.Session.SetString("userId", $"{response.Data.Id}");
                 return RedirectToPage("Index");

@@ -14,7 +14,16 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         [TestMethod]
         public void TestLoginSuccessful()
         {
+            var user = new User
+            {
+                FirstName = "admin",
+                LastName = "admin",
+                Username = "admin",
+                Password = "admin",
+                Id = 0
+            };
             var mockUserManager = new Mock<UserManager>();
+            mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User>{Data = user});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -22,9 +31,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
             mainWindowViewModel.Password = "admin";
 
             mainWindowViewModel.LoginCommand.Execute().Subscribe();
-
             testScheduler.Start();
-
             Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
         }
 
@@ -32,11 +39,12 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         public void TestLoginUnsuccessful()
         {
             var mockUserManager = new Mock<UserManager>();
+            mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User>{ErrorMessage = "Username is incorrect."});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
-            mainWindowViewModel.Username = "admin test";
-            mainWindowViewModel.Password = "admin test";
+            mainWindowViewModel.Username = "admin";
+            mainWindowViewModel.Password = "admin";
 
             mainWindowViewModel.LoginCommand.Execute().Subscribe();
 

@@ -9,7 +9,7 @@ namespace CapstoneBackend.DAL
     /// <summary>
     ///     Data Access Layer (DAL) for User
     /// </summary>
-    public class UserDal : IDisposable
+    public class UserDal
     {
         private readonly MySqlConnection _connection;
 
@@ -20,20 +20,7 @@ namespace CapstoneBackend.DAL
         public UserDal(MySqlConnection connection)
         {
             _connection = connection;
-            _connection.Open();
-        }
 
-        /// <summary>
-        ///     Disposes the connection of the Dal object
-        /// </summary>
-        public void Dispose()
-        {
-            _connection.Close();
-        }
-
-        ~UserDal()
-        {
-            _connection.Close();
         }
 
         /// <summary>
@@ -43,6 +30,7 @@ namespace CapstoneBackend.DAL
         /// <returns> The user with the given username</returns>
         public virtual User? GetUserByUsername(string username)
         {
+            this._connection.Open();
             const string query = "uspGetUserByUsername";
             using MySqlCommand cmd = new(query, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -54,17 +42,22 @@ namespace CapstoneBackend.DAL
             var lnameOrdinal = reader.GetOrdinal("lname");
             var passwordOrdinal = reader.GetOrdinal("password");
 
+            User? user = null;
+            
             if (reader.Read())
-                return new User
-                {
-                    Id = reader.GetInt32(idOrdinal),
-                    Username = username,
-                    FirstName = reader.GetString(fnameOrdinal),
-                    LastName = reader.GetString(lnameOrdinal),
-                    Password = reader.GetString(passwordOrdinal)
-                };
-
-            return null;
+            {
+                user = new User
+                  {
+                      Id = reader.GetInt32(idOrdinal),
+                      Username = username, 
+                      FirstName = reader.GetString(fnameOrdinal),
+                      LastName = reader.GetString(lnameOrdinal),
+                      Password = reader.GetString(passwordOrdinal)
+                  };
+            }
+              
+            this._connection.Close();
+            return user;
         }
 
         /// <summary>Inserts a User into the DB.</summary>
@@ -75,6 +68,7 @@ namespace CapstoneBackend.DAL
         /// <returns>ID of new user if successful. null, otherwise.</returns>
         public virtual int? CreateUser(string username, string password, string fname, string lname)
         {
+            this._connection.Open();
             const string procedure = "uspCreateUser";
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -88,10 +82,8 @@ namespace CapstoneBackend.DAL
             cmd.ExecuteNonQuery();
 
             var userId = cmd.Parameters["@userId"].Value;
-
-            if (userId is not null) return Convert.ToInt32(userId);
-
-            return null;
+            this._connection.Close();
+            return userId is null ? null : Convert.ToInt32(userId);
         }
     }
 }

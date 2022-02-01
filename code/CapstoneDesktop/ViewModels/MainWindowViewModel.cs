@@ -22,27 +22,18 @@ namespace CapstoneDesktop.ViewModels
             CancelCreateAccountCommand = ReactiveCommand.Create(this.cancelCreateAccount);
             SubmitAccountCommand = ReactiveCommand.Create(this.submitAccount);
         }
-
-        ~MainWindowViewModel()
+        
+        
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
+        /// </summary>
+        public MainWindowViewModel() : this(new UserManager())
         {
-            this._userManager.Dispose();
         }
 
         private string _error = string.Empty;
 
         private bool _loginControlsVisible = true;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
-        /// </summary>
-        public MainWindowViewModel()
-        {
-            this._userManager = new UserManager();
-            LoginCommand = ReactiveCommand.Create(this.login);
-            OpenCreateAccountCommand = ReactiveCommand.Create(this.openCreateAccount);
-            CancelCreateAccountCommand = ReactiveCommand.Create(this.cancelCreateAccount);
-            SubmitAccountCommand = ReactiveCommand.Create(this.submitAccount);
-        }
 
         public string? Username { get; set; }
 
@@ -72,13 +63,12 @@ namespace CapstoneDesktop.ViewModels
 
         private void login()
         {
-            using var userManager = new UserManager();
-            var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
-            if (string.IsNullOrEmpty(response.ErrorMessage))
+            var response = this._userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
+            if (response.Data is not null)
                 Console.WriteLine("YOU DID IT!");
             else
             {
-                this.ErrorMessage = response.ErrorMessage;
+                this.ErrorMessage = response.ErrorMessage ?? string.Empty;
             }
         }
 
@@ -94,8 +84,7 @@ namespace CapstoneDesktop.ViewModels
 
         private void submitAccount()
         {
-            using var userManager = new UserManager();
-            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
+            var response = this._userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
             if (response.StatusCode == 200)
             {
                 Debug.WriteLine("Successful Account Creation");
