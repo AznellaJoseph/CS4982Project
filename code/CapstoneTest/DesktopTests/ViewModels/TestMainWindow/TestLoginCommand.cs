@@ -12,7 +12,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
     public class TestLoginCommand
     {
         [TestMethod]
-        public void TestLoginSuccessful()
+        public void Login_ValidCredentials_ReturnsNoError()
         {
             var user = new User
             {
@@ -36,7 +36,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         }
 
         [TestMethod]
-        public void TestLoginUnsuccessfulIncorrectUsername()
+        public void Login_IncorrectUsername_ReturnsErrorMessage()
         {
             var mockUserManager = new Mock<UserManager>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User> { ErrorMessage = "Username is incorrect." });
@@ -54,7 +54,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         }
 
         [TestMethod]
-        public void TestLoginUnsuccessfulNullErrorMessage()
+        public void Login_NullErrorMessage_ReturnsEmptyErrorMessage()
         {
             var mockUserManager = new Mock<UserManager>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User> { ErrorMessage = null });
@@ -72,7 +72,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         }
 
         [TestMethod]
-        public void TestLoginUnsuccessfulNullCredentials()
+        public void Login_NullCredentials_ReturnsErrorMessage()
         {
             var mockUserManager = new Mock<UserManager>();
             mockUserManager.Setup(um => um.GetUserByCredentials("", "")).Returns(new Response<User> { ErrorMessage = "Username is incorrect." });

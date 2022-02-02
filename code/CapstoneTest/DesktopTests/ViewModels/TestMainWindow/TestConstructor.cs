@@ -10,7 +10,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
     public class TestConstructor
     {
         [TestMethod]
-        public void TestPropertyCreationsOneParameter()
+        public void Constructor_OneParameter_PropertyCreations()
         {
             var mockUserManager = new Mock<UserManager>();
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
@@ -28,7 +28,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         }
 
         [TestMethod]
-        public void TestPropertyCreationsNoParameters()
+        public void Constructor_NoParameters_PropertyCreations()
         {
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel();
 

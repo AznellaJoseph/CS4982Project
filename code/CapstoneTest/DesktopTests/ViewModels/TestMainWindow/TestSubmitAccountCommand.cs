@@ -12,7 +12,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
     public class TestSubmitAccountCommand
     {
         [TestMethod]
-        public void TestCommandSuccessfulSubmit()
+        public void SubmitAccount_RegisterValidUser_ReturnsNoError()
         {
             var mockUserManager = new Mock<UserManager>();
             mockUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int> { Data = 0, StatusCode = 200 });
@@ -33,7 +33,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         }
 
         [TestMethod]
-        public void TestCommandUnsuccessfulSubmit()
+        public void SubmitAccount_RegisterAlreadyExistingUser_ReturnsError()
         {
             var mockUserManager = new Mock<UserManager>();
             mockUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int> { StatusCode = 404, ErrorMessage = "Username is taken." });
@@ -53,7 +53,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         }
 
         [TestMethod]
-        public void TestCommandUnsuccessfulSubmitWithNoErrorMessage()
+        public void SubmitAccount_UnsuccessfulRegister_ReturnsUnknownError()
         {
             var mockUserManager = new Mock<UserManager>();
             mockUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int> { StatusCode = 404 });
@@ -73,7 +73,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         }
 
         [TestMethod]
-        public void TestCommandUnsuccessfulSubmitNullCredentials()
+        public void SubmitAccount_RegisterWithNullCredentials_ReturnsInternalServerError()
         {
             var mockUserManager = new Mock<UserManager>();
             mockUserManager.Setup(um => um.RegisterUser("", "", "", "")).Returns(new Response<int> { StatusCode = 404, ErrorMessage = "Internal Server Error." });
