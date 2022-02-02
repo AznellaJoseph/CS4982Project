@@ -10,10 +10,27 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
     public class TestConstructor
     {
         [TestMethod]
-        public void TestPropertyCreations()
+        public void TestPropertyCreationsOneParameter()
         {
             var mockUserManager = new Mock<UserManager>();
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
+
+            Assert.IsNotNull(mainWindowViewModel.CancelCreateAccountCommand);
+            Assert.IsNotNull(mainWindowViewModel.LoginCommand);
+            Assert.IsNotNull(mainWindowViewModel.OpenCreateAccountCommand);
+            Assert.IsNotNull(mainWindowViewModel.SubmitAccountCommand);
+            Assert.IsNull(mainWindowViewModel.FirstName);
+            Assert.IsNull(mainWindowViewModel.LastName);
+            Assert.IsNull(mainWindowViewModel.Username);
+            Assert.IsNull(mainWindowViewModel.Password);
+            Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
+            Assert.AreEqual(true, mainWindowViewModel.LoginControlsVisible);
+        }
+
+        [TestMethod]
+        public void TestPropertyCreationsNoParameters()
+        {
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel();
 
             Assert.IsNotNull(mainWindowViewModel.CancelCreateAccountCommand);
             Assert.IsNotNull(mainWindowViewModel.LoginCommand);
