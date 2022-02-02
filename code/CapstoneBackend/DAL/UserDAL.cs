@@ -79,11 +79,18 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@lname", MySqlDbType.VarChar).Value = lname;
             cmd.Parameters.Add("@userId", MySqlDbType.Int32).Direction = ParameterDirection.Output;
 
-            cmd.ExecuteNonQuery();
-
-            var userId = cmd.Parameters["@userId"].Value;
-            this._connection.Close();
-            return userId is null ? null : Convert.ToInt32(userId);
+            try
+            {
+                cmd.ExecuteNonQuery();
+                var userId = cmd.Parameters["@userId"].Value;
+                this._connection.Close();
+                return Convert.ToInt32(userId);
+            }
+            catch
+            {
+                this._connection.Close();
+                return null;
+            }
         }
     }
 }

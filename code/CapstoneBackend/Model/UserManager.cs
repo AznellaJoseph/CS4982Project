@@ -47,6 +47,7 @@ namespace CapstoneBackend.Model
 
             return new Response<User>
             {
+                StatusCode = 200,
                 Data = user
             };
         }
