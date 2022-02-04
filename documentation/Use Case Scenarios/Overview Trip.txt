@@ -1,0 +1,13 @@
+Use Case Scenario: Overview Trip
+
+
+Context: The user is logged in
+
+
+Primary Flow: 
+1. The user selects a trip
+2. The user is shown an overview of the trip
+
+
+Alternative Flows:
+There are no alternative flows for this use case
