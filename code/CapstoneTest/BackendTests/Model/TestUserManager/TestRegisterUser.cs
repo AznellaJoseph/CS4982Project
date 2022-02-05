@@ -19,7 +19,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             string lname = "LastName";
 
             User? fakeExistingUser = null;
-            User fakeCreatedUser = new() { Id = 1};
+            User fakeCreatedUser = new() { Id = 1 };
             var mockUserDAL = new Mock<UserDal>();
             mockUserDAL.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
             mockUserDAL.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(fakeCreatedUser.Id);
@@ -51,6 +51,27 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
             Assert.AreEqual(400, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Register_InternalServerErrorConfiguration_Fails()
+        {
+            string username = "TestUsername";
+            string password = "TestPassword";
+            string fname = "FirstName";
+            string lname = "LastName";
+
+            int? dbResult = null;
+            User? fakeExistingUser = null;
+            var mockUserDAL = new Mock<UserDal>();
+            mockUserDAL.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
+            mockUserDAL.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(dbResult);
+
+            UserManager userManager = new(mockUserDAL.Object);
+
+            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+
+            Assert.AreEqual(500, resultResponse.StatusCode);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
     public class TestCancelCreateAccountCommand
     {
         [TestMethod]
-        public void TestCommandExecution()
+        public void CancelCreateAccount_CorrectOutput()
         {
             var mockUserManager = new Mock<UserManager>();
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);

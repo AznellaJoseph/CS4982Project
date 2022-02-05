@@ -1,0 +1,20 @@
+Use Case Scenario: Create a Trip
+
+
+Context: The user is logged in to the system
+
+
+Primary Flow:
+1. The user clicks the “Create Trip” button
+2. The user enters a name for the trip
+3. The user enters a start and end date for the trip
+4. The user clicks the “Create Trip” button to submit the new trip
+
+
+Alternative Flows:
+
+
+The user cancels the operation
+A2. The user clicks the “Cancel” button
+A3. The user is directed to the landing page
+________________
