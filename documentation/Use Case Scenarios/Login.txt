@@ -1,0 +1,32 @@
+﻿Use Case Scenario: Login
+
+
+Context: The user has the system open and is not already logged in
+
+
+Primary Flow:
+1. The user enters their username
+2. The user enters their password
+3. The user clicks on the “Login” button
+4. The user is taken to the landing page
+
+
+Alternative Flows:
+
+
+The user enters the wrong username
+A1. The user enters the wrong username
+A4. The user is shown an error message stating the username is incorrect and cannot log in
+
+
+The user enters the wrong password
+A2. The user enters the wrong password
+A4. The user is shown an error message stating the username is incorrect and cannot log in
+
+
+The user fails to enter a username or password
+A1. The user clicks on the “Login” button
+A2. The user is shown an error message
+________________
+
+
