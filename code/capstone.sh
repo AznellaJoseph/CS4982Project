@@ -2,7 +2,15 @@
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && (pwd -W 2> /dev/null || pwd))
 
-if [[ $1 == "build" ]]
+if [[ $1 == "run" ]]
+then
+  if [[ $2 != "" ]]
+  then
+    dotnet run --project=$2
+  else
+    echo "Invalid Command. capstone run [project]"
+  fi
+elif [[ $1 == "build" ]]
 then
   if [[ $2 != "" ]]
   then
@@ -11,6 +19,7 @@ then
     dotnet build
   fi
 elif [[ $1 == "server" ]]
+elif [[ $1 == "test" ]]
 then
   if [[ $2 == "run" ]]
   then
@@ -22,7 +31,6 @@ then
   else
     echo "Not Valid Command. capstone server [ run | stop ]."
   fi
-elif [[ $1 == "test" ]]
 then
   dotnet test
 elif [[ $1 == "cover" ]]
