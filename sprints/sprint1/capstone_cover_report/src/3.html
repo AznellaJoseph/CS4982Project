@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/WebTests/Pages/TestLogin.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Text;
+using CapstoneBackend.Model;
+using CapstoneWeb.Pages;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.WebTests.Pages
+{
+    [TestClass]
+    public class TestLogin
+    {
+        
+        [TestMethod]
+        public void PostSuccess()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var fakeUserManager = new Mock&lt;UserManager&gt;();
+            fakeUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;User&gt;{Data = new User{Id = 0}});
+            var page = TestPageBuilder.BuildPage&lt;LoginModel&gt;(session.Object);
+            page.FakeUserManager = fakeUserManager.Object;
+            page.Username = &quot;admin&quot;;
+            page.Password = &quot;admin&quot;;
+            var result = page.OnPost();
+            var outBytes = Encoding.UTF8.GetBytes(&quot;0&quot;);
+            session.Verify(s =&gt; s.Set(&quot;userId&quot;, outBytes));
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;Index&quot;, redirect.PageName);
+        }
+        
+        [TestMethod]
+        public void PostFailure()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var fakeUserManager = new Mock&lt;UserManager&gt;();
+            fakeUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;User&gt;{ ErrorMessage = &quot;Failed.&quot;});
+            var page = TestPageBuilder.BuildPage&lt;LoginModel&gt;(session.Object);
+            page.FakeUserManager = fakeUserManager.Object;
+            page.Username = &quot;admin&quot;;
+            page.Password = &quot;admin&quot;;
+            var result = page.OnPost();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(&quot;Failed.&quot;, page.ErrorMessage);
+        }
+        
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,10,1],[19,13,19,48,1],[20,13,20,59,1],[21,13,21,137,1],[22,13,22,78,1],[23,13,23,59,1],[24,13,24,37,1],[25,13,25,37,1],[26,13,26,40,1],[27,13,27,56,1],[28,13,28,60,1],[29,13,29,75,1],[30,13,30,58,1],[31,13,31,57,1],[32,9,32,10,1],[36,9,36,10,1],[37,13,37,48,1],[38,13,38,59,1],[39,13,39,139,1],[40,13,40,78,1],[41,13,41,59,1],[42,13,42,37,1],[43,13,43,37,1],[44,13,44,40,1],[45,13,45,65,1],[46,13,46,59,1],[47,9,47,10,1]]);
+    </script>
+  </body>
+</html>

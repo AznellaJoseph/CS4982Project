@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Startup.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+namespace CapstoneWeb
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddRazorPages();
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =&gt;
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+
+            app.UseSession();
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =&gt; { endpoints.MapRazorPages(); });
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[12,9,12,53,0],[13,9,13,10,0],[14,13,14,43,0],[15,9,15,10,0],[17,47,17,51,0],[21,9,21,10,0],[22,13,22,38,0],[23,13,23,50,0],[25,13,26,13,0],[26,13,26,14,0],[26,14,27,17,0],[27,17,27,64,0],[27,64,28,17,0],[28,17,28,48,0],[28,48,29,17,0],[29,17,29,51,0],[29,51,30,13,0],[30,13,30,14,0],[30,14,30,16,0],[31,9,31,10,0],[35,9,35,10,0],[36,13,36,37,0],[37,13,37,14,0],[38,17,38,49,0],[39,13,39,14,0],[41,13,41,14,0],[42,17,42,31,0],[43,13,43,14,0],[45,13,45,30,0],[46,13,46,39,0],[47,13,47,34,0],[49,13,49,30,0],[51,13,51,36,0],[53,13,53,43,0],[53,43,53,44,0],[53,44,53,45,0],[53,45,53,71,0],[53,71,53,72,0],[53,72,53,73,0],[53,73,53,75,0],[54,9,54,10,0]]);
+    </script>
+  </body>
+</html>

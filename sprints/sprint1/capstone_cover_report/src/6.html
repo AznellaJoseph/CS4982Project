@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestMainWindow/TestConstructor.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
+{
+
+    [TestClass]
+    public class TestConstructor
+    {
+        [TestMethod]
+        public void TestPropertyCreations()
+        {
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
+
+            Assert.IsNotNull(mainWindowViewModel.CancelCreateAccountCommand);
+            Assert.IsNotNull(mainWindowViewModel.LoginCommand);
+            Assert.IsNotNull(mainWindowViewModel.OpenCreateAccountCommand);
+            Assert.IsNotNull(mainWindowViewModel.SubmitAccountCommand);
+            Assert.IsNull(mainWindowViewModel.FirstName);
+            Assert.IsNull(mainWindowViewModel.LastName);
+            Assert.IsNull(mainWindowViewModel.Username);
+            Assert.IsNull(mainWindowViewModel.Password);
+            Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
+            Assert.AreEqual(true, mainWindowViewModel.LoginControlsVisible);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,9,14,10,1],[15,13,15,59,1],[16,13,16,83,1],[18,13,18,78,1],[19,13,19,64,1],[20,13,20,76,1],[21,13,21,72,1],[22,13,22,58,1],[23,13,23,57,1],[24,13,24,57,1],[25,13,25,57,1],[26,13,26,77,1],[27,13,27,77,1],[28,9,28,10,1]]);
+    </script>
+  </body>
+</html>

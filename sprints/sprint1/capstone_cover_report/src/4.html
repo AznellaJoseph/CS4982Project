@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/WebTests/Pages/TestPageBuilder.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
+using Moq;
+
+namespace CapstoneTest.WebTests.Pages
+{
+    public static class TestPageBuilder
+    {
+
+        public static T BuildPage&lt;T&gt;(ISession session) where T : PageModel, new()
+        {
+            var httpContext = new DefaultHttpContext
+            {
+                Session = session
+            };
+            var modelState = new ModelStateDictionary();
+            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+            var modelMetadataProvider = new EmptyModelMetadataProvider();
+            var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+            var tempData = new TempDataDictionary(httpContext, Mock.Of&lt;ITempDataProvider&gt;());
+            var pageContext = new PageContext(actionContext)
+            {
+                ViewData = viewData
+            };
+            var page = new T
+            {
+                PageContext = pageContext,
+                TempData = tempData,
+                Url = new UrlHelper(actionContext),
+            };
+            return page;
+        }
+
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,10,1],[18,13,21,15,1],[22,13,22,57,1],[23,13,23,121,1],[24,13,24,74,1],[25,13,25,86,1],[26,13,26,94,1],[27,13,30,15,1],[31,13,36,15,1],[37,13,37,25,1],[38,9,38,10,1]]);
+    </script>
+  </body>
+</html>

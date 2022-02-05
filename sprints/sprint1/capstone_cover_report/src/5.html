@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestMainWindow/TestCancelCreateAccountCommand.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
+using Microsoft.Reactive.Testing;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
+{
+
+    [TestClass]
+    public class TestCancelCreateAccountCommand
+    {
+        [TestMethod]
+        public void TestCommandExecution()
+        {
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
+            var testScheduler = new TestScheduler();
+
+            Assert.AreEqual(true, mainWindowViewModel.LoginControlsVisible);
+
+            mainWindowViewModel.CancelCreateAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(true, mainWindowViewModel.LoginControlsVisible);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,59,1],[18,13,18,83,1],[19,13,19,53,1],[21,13,21,77,1],[23,13,23,82,1],[25,13,25,35,1],[27,13,27,77,1],[28,9,28,10,1]]);
+    </script>
+  </body>
+</html>
