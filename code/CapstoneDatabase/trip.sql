@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS trip;
+
+CREATE TABLE trip
+(
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    userId INT UNSIGNED NOT NULL,
+    name VARCHAR(45) NOT NULL,
+    startDate DATE NOT NULL,
+    endDate DATE NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_trip_userId
+    FOREIGN KEY (userId)
+    REFERENCES user(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
