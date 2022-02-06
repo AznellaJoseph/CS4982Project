@@ -19,18 +19,38 @@ then
     dotnet build
   fi
 elif [[ $1 == "server" ]]
-elif [[ $1 == "test" ]]
 then
-  if [[ $2 == "run" ]]
+  if [[ $2 == "makemigrations" ]]
   then
-    docker kill capstone;
-    docker run --rm --name capstone -e MYSQL_ROOT_PASSWORD="test" -e MYSQL_DATABASE="capstone" -v $SCRIPT_DIR'/CapstoneDatabase:/docker-entrypoint-initdb.d' -p 3308:3306 -d mysql;
+    if [ -d ./CapstoneDatabase/execution ]
+    then
+      rm -r ./CapstoneDatabase/execution
+    fi
+
+    mkdir -m777 ./CapstoneDatabase/execution
+
+    EXE_COUNT=0;
+    while IFS= read -r line
+    do
+      cp ./CapstoneDatabase/$line ./CapstoneDatabase/execution/$EXE_COUNT"_$line"
+      ((EXE_COUNT=EXE_COUNT + 1))
+    done < "./CapstoneDatabase/execution_order.config"
+  elif [[ $2 == "run" ]]
+  then
+    if [ ! -d ./CapstoneDatabase/execution ]
+    then
+      echo "Run capstone server makemigrations before starting the server."
+      exit 1
+    fi
+    docker kill capstone
+    docker run --rm --name capstone -e MYSQL_ROOT_PASSWORD="test" -e MYSQL_DATABASE="capstone" -v $SCRIPT_DIR'/CapstoneDatabase/execution:/docker-entrypoint-initdb.d' -p 3308:3306 -d mysql;
   elif [[ $2 == "stop" ]]
   then
-    docker kill capstone;
+    docker kill capstone
   else
-    echo "Not Valid Command. capstone server [ run | stop ]."
+    echo "Not Valid Command. capstone server [ run | stop | makemigrations ]."
   fi
+elif [[ $1 == "test" ]]
 then
   dotnet test
 elif [[ $1 == "cover" ]]
