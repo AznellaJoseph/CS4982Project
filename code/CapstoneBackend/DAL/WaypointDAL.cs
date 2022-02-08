@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CapstoneBackend.Model;
 using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.DAL
@@ -59,6 +60,47 @@ namespace CapstoneBackend.DAL
             var waypointNum = Convert.ToInt32(cmd.ExecuteScalar());
 
             return waypointNum;
+        }
+
+
+        /// <summary>
+        /// Gets the waypyoints on date.
+        /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="selectedDate">The selected date.</param>
+        /// <returns> A list of the waypoints of the trip on the specified date </returns>
+        public IList<Waypoint> GetWaypyointsOnDate(int tripId, DateTime selectedDate)
+        {
+            this._connection.Open();
+            const string procedure = "uspGetWaypointsOnDate";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            IList<Waypoint> waypointsOnDate = new List<Waypoint>();
+
+            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
+            cmd.Parameters.Add("@selectedDate", MySqlDbType.Date).Value = selectedDate;
+
+            using MySqlDataReader reader = cmd.ExecuteReader();
+
+            int waypointNumOrdinal = reader.GetOrdinal("waypointNum");
+            int startTimeOrdinal = reader.GetOrdinal("startTime");
+            int endTimeOrdinal = reader.GetOrdinal("endTime");
+            int locationOrdinal = reader.GetOrdinal("location");
+
+            while (reader.Read())
+            {
+                waypointsOnDate.Add(new Waypoint
+                {
+                    TripId = tripId,
+                    WaypointNum = reader.GetInt32(waypointNumOrdinal),
+                    Location = reader.GetString(locationOrdinal),
+                    StartTime = reader.GetDateTime(startTimeOrdinal),
+                    EndTime = reader.GetDateTime(endTimeOrdinal)
+                });
+            }
+
+            return waypointsOnDate;
+
         }
     }
 }
