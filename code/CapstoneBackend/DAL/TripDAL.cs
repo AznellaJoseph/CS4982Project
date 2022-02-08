@@ -41,7 +41,6 @@ namespace CapstoneBackend.DAL
             using MySqlCommand cmd = new(query, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
-
             using var reader = cmd.ExecuteReaderAsync().Result;
             var idOrdinal = reader.GetOrdinal("id");
             var nameOrdinal = reader.GetOrdinal("name");

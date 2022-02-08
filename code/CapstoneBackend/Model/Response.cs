@@ -9,7 +9,7 @@
         /// <summary>
         ///     The status code of the response
         /// </summary>
-        public int StatusCode { get; set; } = 200;
+        public uint StatusCode { get; set; } = 200;
 
 
         /// <summary>
