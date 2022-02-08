@@ -19,7 +19,7 @@ namespace CapstoneBackend.Model
             _dal = dal;
         }
         
-        public Response<IList<Trip>> GetTripsByUser(int userId)
+        public virtual Response<IList<Trip>> GetTripsByUser(int userId)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace CapstoneBackend.Model
             }
         }
 
-        public Response<int> CreateTrip(int userId, string name, DateTime startDate, DateTime endDate)
+        public virtual Response<int> CreateTrip(int userId, string name, DateTime startDate, DateTime endDate)
         {
             if (startDate.CompareTo(endDate) > 0)
             {
@@ -58,7 +58,7 @@ namespace CapstoneBackend.Model
                     return new Response<int>
                     {
                         StatusCode = 500,
-                        ErrorMessage = "Server failed to create trip."
+                        ErrorMessage = "Server Error"
                     };
                 }
                 return new Response<int>

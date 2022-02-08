@@ -14,13 +14,14 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
     public class TestGetTripsByUserId
     {
 
+        [TestMethod]
         public void GetTrips_Success()
         {
             var mockDal = new Mock<TripDal>();
             mockDal.Setup(dal => dal.GetTripsByUserId(1)).Returns(new List<Trip>());
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(200U, result.StatusCode);
             Assert.IsTrue(result.Data?.IsNullOrEmpty());
         }
         

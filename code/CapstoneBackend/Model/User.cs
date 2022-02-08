@@ -7,7 +7,8 @@ namespace CapstoneBackend.Model
     /// </summary>
     public class User
     {
-        private readonly TripManager _tripManager = new TripManager();
+
+        public TripManager TripManager { private get; set; } = new TripManager();
         
         /// <summary>
         ///     The id of the user.
@@ -38,7 +39,7 @@ namespace CapstoneBackend.Model
 
         private IList<Trip> getTrips()
         {
-            var response = this._tripManager.GetTripsByUser(this.Id);
+            var response = this.TripManager.GetTripsByUser(this.Id);
             return response.StatusCode == 200 && response.Data is not null ? response.Data : new List<Trip>();
         }
     }
