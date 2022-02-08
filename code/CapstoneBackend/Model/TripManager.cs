@@ -7,12 +7,23 @@ namespace CapstoneBackend.Model
 {
     public class TripManager
     {
+        
+        private readonly TripDal _dal;
+
+        public TripManager() : this(new TripDal())
+        {
+        }
+
+        public TripManager(TripDal dal)
+        {
+            _dal = dal;
+        }
+        
         public Response<IList<Trip>> GetTripsByUser(int userId)
         {
-            var dal = new TripDal();
             try
             {
-                var trips = dal.GetTripsByUserId(userId);
+                var trips = this._dal.GetTripsByUserId(userId);
                 return new Response<IList<Trip>>
                 {
                     Data = trips
@@ -38,11 +49,10 @@ namespace CapstoneBackend.Model
                     ErrorMessage = "Start date of a trip cannot be after the end date."
                 };
             }
-
-            var dal = new TripDal();
+            
             try
             {
-                var tripId = dal.CreateTrip(userId, name, startDate, endDate);
+                var tripId = this._dal.CreateTrip(userId, name, startDate, endDate);
                 if (tripId is null)
                 {
                     return new Response<int>
