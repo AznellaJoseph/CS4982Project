@@ -6,29 +6,32 @@ Context: The user has the system open and has not logged in or created an accoun
 
 Primary Flow:
 1. The user clicks the “Create Account” button
-2. The user enters a username
-3. The user enters a password
-4. The user enters a first name
-5. The user enters a last name
-6. The user clicks the “Confirm” button
-7. The user is directed to the landing page
+2. The user enters the credentials
+3. The user confirms the password by entering it again
+4. The user clicks the “Confirm” button
+5. The user is directed to the landing page
 
 
 Alternative Flows:
 
-
 The user enters a username that is already taken by another user
-A7. The user is shown an error message stating that the entered username has already been taken
-A8. The user enters valid credentials
-A9. Start from Primary step 6
-
+A4. The user is shown an error message stating that the entered username has already been taken
+A5. The user enters valid credentials
+A6. Start from Primary step 2
 
 The user cancels the create account action
-A2. The user clicks the “Cancel” button
-A3. The user is directed to the login screen
+A4. The user clicks the “Cancel” button
+A5. The user is directed to the login screen
 
+The server failed to create the account due to the server not currently running
+A4. The user is shown an error message concerning the server failing to add their credentials as a new user since it was not running
+A5. The user is directed to the login screen
 
-The server failed to create the account
-A7. The user is shown an error message concerning the server failing to add their credentials as a new user
-A8. The user is directed to the login screen
+The user does not enter the correct password twice
+A3. The user enters a different password the second time
+A4. The user is shown an error message stating that the passwords must match
+
+The user does not enter a required field
+A4. The user fails to enter all of the required fields
+A5. The user is shown an error message specifying which fields must be filled out to create the new account
 ________________
