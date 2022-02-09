@@ -25,8 +25,8 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
 
-            Assert.AreEqual(200, resultResponse.StatusCode);
-            Assert.IsTrue(resultResponse.Data is User);
+            Assert.AreEqual(200U, resultResponse.StatusCode);
+            Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
             Assert.AreEqual(resultResponse.Data?.FirstName, fakeExistingUser.FirstName);
             Assert.AreEqual(resultResponse.Data?.LastName, fakeExistingUser.LastName);
             Assert.AreEqual(resultResponse.Data?.Username, fakeExistingUser.Username);
@@ -45,7 +45,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
 
-            Assert.AreEqual(404, resultResponse.StatusCode);
+            Assert.AreEqual(404U, resultResponse.StatusCode);
         }
 
         [TestMethod]
@@ -59,7 +59,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
 
-            Assert.AreEqual(404, resultResponse.StatusCode);
+            Assert.AreEqual(404U, resultResponse.StatusCode);
         }
     }
 }

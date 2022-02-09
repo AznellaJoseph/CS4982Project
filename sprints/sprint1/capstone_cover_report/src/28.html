@@ -2,72 +2,49 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Views/MainWindow.axaml</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Pages/Index.cshtml.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-&lt;Window xmlns=&quot;https://github.com/avaloniaui&quot;
-        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
-        xmlns:vm=&quot;using:CapstoneDesktop.ViewModels&quot;
-        xmlns:d=&quot;http://schemas.microsoft.com/expression/blend/2008&quot;
-        xmlns:mc=&quot;http://schemas.openxmlformats.org/markup-compatibility/2006&quot;
-        mc:Ignorable=&quot;d&quot;
-        x:Class=&quot;CapstoneDesktop.Views.MainWindow&quot;
-        Icon=&quot;/Assets/avalonia-logo.ico&quot;
-        Title=&quot;Capstone Desktop&quot; WindowState=&quot;Maximized&quot;&gt;
+using System;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-    &lt;Design.DataContext&gt;
-        &lt;vm:MainWindowViewModel /&gt;
-    &lt;/Design.DataContext&gt;
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     Index Model
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class IndexModel : PageModel
+    {
+        public int UserId { get; private set; }
 
-    &lt;StackPanel&gt;
+        /// &lt;summary&gt;
+        ///     Called when [get].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public IActionResult OnGet()
+        {
+            if (!HttpContext.Session.Keys.Contains(&quot;userId&quot;)) return RedirectToPage(&quot;login&quot;);
+            UserId = Convert.ToInt32(HttpContext.Session.GetString(&quot;userId&quot;));
+            return Page();
+        }
 
-        &lt;StackPanel IsVisible=&quot;{Binding LoginControlsVisible, Mode=TwoWay}&quot; VerticalAlignment=&quot;Bottom&quot;
-                    Margin=&quot;15,0, 15, 0&quot;&gt;
-            &lt;TextBlock Text=&quot;Login&quot; FontSize=&quot;24&quot; HorizontalAlignment=&quot;Center&quot; VerticalAlignment=&quot;Top&quot; Margin=&quot;15&quot; /&gt;
-
-            &lt;TextBlock Text=&quot;{Binding ErrorMessage}&quot; Foreground=&quot;Red&quot; /&gt;
-            &lt;TextBox Watermark=&quot;Username&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot; Text=&quot;{Binding Username, Mode=TwoWay}&quot; /&gt;
-            &lt;TextBox PasswordChar=&quot;*&quot; Watermark=&quot;Password&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot;
-                     Text=&quot;{Binding Password, Mode=TwoWay}&quot; /&gt;
-
-            &lt;StackPanel Orientation=&quot;Horizontal&quot; Margin=&quot;15&quot; Spacing=&quot;20&quot;&gt;
-                &lt;Button Content=&quot;Login&quot; Margin=&quot;15&quot; Command=&quot;{Binding LoginCommand}&quot; /&gt;
-                &lt;Button Content=&quot;Create Account&quot; HorizontalAlignment=&quot;Right&quot; Margin=&quot;15&quot;
-                        Command=&quot;{Binding OpenCreateAccountCommand}&quot; /&gt;
-            &lt;/StackPanel&gt;
-        &lt;/StackPanel&gt;
-
-        &lt;StackPanel IsVisible=&quot;{Binding !LoginControlsVisible, Mode=TwoWay}&quot; VerticalAlignment=&quot;Bottom&quot;
-                    Margin=&quot;15,0, 15, 0&quot;&gt;
-            &lt;TextBlock Text=&quot;Create Account&quot; FontSize=&quot;24&quot; HorizontalAlignment=&quot;Center&quot; VerticalAlignment=&quot;Top&quot;
-                       Margin=&quot;15&quot; /&gt;
-
-            &lt;TextBlock Text=&quot;{Binding ErrorMessage}&quot; Foreground=&quot;Red&quot; /&gt;
-            &lt;TextBox Watermark=&quot;Username&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot; Text=&quot;{Binding Username, Mode=TwoWay}&quot; /&gt;
-            &lt;TextBox Watermark=&quot;First Name&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot;
-                     Text=&quot;{Binding FirstName, Mode=TwoWay}&quot; /&gt;
-            &lt;TextBox Watermark=&quot;Last Name&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot;
-                     Text=&quot;{Binding LastName, Mode=TwoWay}&quot; /&gt;
-            &lt;TextBox PasswordChar=&quot;*&quot; Watermark=&quot;Password&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot;
-                     Text=&quot;{Binding Password, Mode=TwoWay}&quot; /&gt;
-
-            &lt;StackPanel Orientation=&quot;Horizontal&quot; Margin=&quot;15&quot; Spacing=&quot;20&quot;&gt;
-                &lt;Button Content=&quot;Create&quot; Margin=&quot;15&quot; Command=&quot;{Binding SubmitAccountCommand}&quot; /&gt;
-                &lt;Button Content=&quot;Cancel&quot; HorizontalAlignment=&quot;Right&quot; Margin=&quot;15&quot;
-                        Command=&quot;{Binding CancelCreateAccountCommand}&quot; /&gt;
-            &lt;/StackPanel&gt;
-        &lt;/StackPanel&gt;
-
-    &lt;/StackPanel&gt;
-
-
-&lt;/Window&gt;
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Remove(&quot;userId&quot;);
+            return RedirectToPage(&quot;index&quot;);
+        }
+    }
+}
     </pre>
     <script type="text/javascript">
-      highlightRanges([[1,2,1,8,0],[8,9,8,13,0],[9,9,9,14,0],[15,6,15,16,0],[17,10,17,20,0],[17,21,17,30,0],[18,21,18,27,0],[19,14,19,23,0],[19,24,19,28,0],[19,51,19,70,0],[19,104,19,110,0],[21,14,21,23,0],[21,24,21,28,0],[21,54,21,64,0],[22,14,22,21,0],[22,22,22,31,0],[22,70,22,76,0],[22,82,22,86,0],[23,14,23,21,0],[23,22,23,34,0],[23,39,23,48,0],[23,87,23,93,0],[24,22,24,26,0],[26,14,26,24,0],[26,25,26,36,0],[26,62,26,69,0],[27,18,27,24,0],[27,25,27,32,0],[27,53,27,60,0],[28,18,28,24,0],[28,25,28,32,0],[28,78,28,84,0],[29,25,29,32,0],[33,10,33,20,0],[33,21,33,30,0],[34,21,34,27,0],[35,14,35,23,0],[35,24,35,28,0],[35,60,35,79,0],[36,24,36,30,0],[38,14,38,23,0],[38,24,38,28,0],[38,54,38,64,0],[39,14,39,21,0],[39,22,39,31,0],[39,70,39,76,0],[39,82,39,86,0],[40,14,40,21,0],[40,22,40,31,0],[40,72,40,78,0],[41,22,41,26,0],[42,14,42,21,0],[42,22,42,31,0],[42,71,42,77,0],[43,22,43,26,0],[44,14,44,21,0],[44,22,44,34,0],[44,39,44,48,0],[44,87,44,93,0],[45,22,45,26,0],[47,14,47,24,0],[47,25,47,36,0],[47,62,47,69,0],[48,18,48,24,0],[48,25,48,32,0],[48,54,48,61,0],[49,18,49,24,0],[49,25,49,32,0],[49,70,49,76,0],[50,25,50,32,0]]);
+      highlightRanges([[15,29,15,33,1],[15,34,15,46,1],[22,9,22,10,1],[23,13,23,62,1],[23,63,23,94,1],[24,13,24,79,1],[25,13,25,27,1],[26,9,26,10,1],[29,9,29,10,1],[30,13,30,50,1],[31,13,31,44,1],[32,9,32,10,1]]);
     </script>
   </body>
 </html>

@@ -2,34 +2,50 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Program.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/Trip.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using System;
 
-namespace CapstoneWeb
+namespace CapstoneBackend.Model
 {
-    public class Program
+    /// &lt;summary&gt;
+    /// A model class for the Trip object
+    /// &lt;/summary&gt;
+    public class Trip
     {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =&gt; { webBuilder.UseStartup&lt;Startup&gt;(); });
-        }
+        /// &lt;summary&gt;
+        /// The Id of the Trip
+        /// &lt;/summary&gt;
+        public int Id { get; set; }
+        
+        /// &lt;summary&gt;
+        /// The Id of User of The trip
+        /// &lt;/summary&gt;
+        public int UserId { get; set; }
+        
+        /// &lt;summary&gt;
+        /// The name of the trip
+        /// &lt;/summary&gt;
+        public string Name { get; set; }
+        
+        /// &lt;summary&gt;
+        /// The start date of the  trip
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+        
+        /// &lt;summary&gt;
+        /// The end date of the trip
+        /// &lt;/summary&gt;
+        public DateTime EndDate { get; set; }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[9,9,9,10,0],[10,13,10,51,0],[11,9,11,10,0],[14,9,14,10,0],[15,13,16,57,0],[16,57,16,58,0],[16,58,16,59,0],[16,59,16,92,0],[16,92,16,93,0],[16,93,16,94,0],[16,94,16,96,0],[17,9,17,10,0]]);
+      highlightRanges([[13,25,13,29,1],[13,30,13,34,1],[18,29,18,33,1],[18,34,18,38,1],[23,30,23,34,1],[23,35,23,39,1],[28,37,28,41,1],[28,42,28,46,1],[33,35,33,39,1],[33,40,33,44,1]]);
     </script>
   </body>
 </html>
