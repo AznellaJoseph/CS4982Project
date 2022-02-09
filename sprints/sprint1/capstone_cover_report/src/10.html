@@ -2,75 +2,48 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestGetUserByCredentials.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/MySqlExceptionBuilder.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using CapstoneBackend.DAL;
-using CapstoneBackend.Model;
-using CapstoneBackend.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using MySql.Data.MySqlClient;
 
-namespace CapstoneTest.BackendTests.Model.TestUserManager
+namespace CapstoneTest.BackendTests.Model
 {
-
-    [TestClass]
-    public class TestGetUserByCredentials
+    public class MySqlExceptionBuilder
     {
-        private const string TEST_USERNAME = &quot;TestUsername&quot;;
-        private const string TEST_PASSWORD = &quot;TestPassword&quot;;
-
-        [TestMethod]
-        public void Call_WithValidCredentials_Succeeds()
+        private string? errorMessage = null;
+        private uint? code = null;
+        public MySqlException Build()
         {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash(TEST_PASSWORD) };
-            var mockUserDAL = new Mock&lt;UserDal&gt;();
-            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(TEST_USERNAME)).Returns(fakeExistingUser);
-
-            UserManager userManager = new(mockUserDAL.Object);
-
-            var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
-
-            Assert.AreEqual(200, resultResponse.StatusCode);
-            Assert.IsTrue(resultResponse.Data is User);
+            if (this.errorMessage is null &amp;&amp; this.code is null)
+            {
+                var ctor1 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0];
+                return (MySqlException) ctor1.Invoke(Array.Empty&lt;object&gt;());
+            }
+           
+            var ctor2 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[7];
+            return (MySqlException) ctor2.Invoke(new object[] {this.code ?? 500, &quot;&quot;, this.errorMessage ?? &quot;&quot;});
         }
 
-        [TestMethod]
-        public void Call_WithUnknownUsername_Fails()
+        public MySqlExceptionBuilder WithError(uint errorCode, string message)
         {
-            User? missingUser = null;
-            var mockUserDAL = new Mock&lt;UserDal&gt;();
-            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(TEST_USERNAME)).Returns(missingUser);
-
-            UserManager userManager = new(mockUserDAL.Object);
-
-            var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
-
-            Assert.AreEqual(404, resultResponse.StatusCode);
-        }
-
-        [TestMethod]
-        public void Call_WithWrongPassword_Fails()
-        {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash(&quot;CorrectPassword&quot;) };
-            var mockUserDAL = new Mock&lt;UserDal&gt;();
-            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(TEST_USERNAME)).Returns(fakeExistingUser);
-
-            UserManager userManager = new(mockUserDAL.Object);
-
-            var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
-
-            Assert.AreEqual(404, resultResponse.StatusCode);
+            this.errorMessage = message;
+            this.code = errorCode;
+            return this;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[19,9,19,10,1],[20,13,20,93,1],[21,13,21,51,1],[22,13,22,100,1],[24,13,24,63,1],[26,13,26,97,1],[28,13,28,61,1],[29,13,29,56,1],[30,9,30,10,1],[34,9,34,10,1],[35,13,35,38,1],[36,13,36,51,1],[37,13,37,95,1],[39,13,39,63,1],[41,13,41,97,1],[43,13,43,61,1],[44,9,44,10,1],[48,9,48,10,1],[49,13,49,97,1],[50,13,50,51,1],[51,13,51,100,1],[53,13,53,63,1],[55,13,55,97,1],[57,13,57,61,1],[58,9,58,10,1]]);
+      highlightRanges([[12,9,12,45,1],[13,9,13,35,1],[15,9,15,10,1],[16,13,16,64,1],[17,13,17,14,0],[18,17,18,119,0],[19,17,19,77,0],[22,13,22,115,1],[23,13,23,112,1],[24,9,24,10,1],[27,9,27,10,1],[28,13,28,41,1],[29,13,29,35,1],[30,13,30,25,1],[31,9,31,10,1]]);
     </script>
   </body>
 </html>

@@ -28,7 +28,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
-            Assert.AreEqual(200, resultResponse.StatusCode);
+            Assert.AreEqual(200U, resultResponse.StatusCode);
             Assert.AreEqual(1, resultResponse.Data);
         }
 
@@ -50,7 +50,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
-            Assert.AreEqual(400, resultResponse.StatusCode);
+            Assert.AreEqual(400U, resultResponse.StatusCode);
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
-            Assert.AreEqual(500, resultResponse.StatusCode);
+            Assert.AreEqual(500U, resultResponse.StatusCode);
         }
     }
 }

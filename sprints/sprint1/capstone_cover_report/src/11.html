@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestRegisterUser.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestGetUserByCredentials.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -10,6 +10,7 @@
     <pre id="content" class="source-code">
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -18,55 +19,63 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 {
 
     [TestClass]
-    public class TestRegisterUser
+    public class TestGetUserByCredentials
     {
-        [TestMethod]
-        public void Register_WithValidInput_Succeeds()
-        {
-            string username = &quot;TestUsername&quot;;
-            string password = &quot;TestPassword&quot;;
-            string fname = &quot;FirstName&quot;;
-            string lname = &quot;LastName&quot;;
+        private const string TEST_USERNAME = &quot;TestUsername&quot;;
+        private const string TEST_PASSWORD = &quot;TestPassword&quot;;
 
-            User? fakeExistingUser = null;
-            User fakeCreatedUser = new() { Id = 1};
+        [TestMethod]
+        public void Call_WithValidCredentials_Succeeds()
+        {
+            User fakeExistingUser = new() { Password = PasswordHasher.Hash(TEST_PASSWORD) };
             var mockUserDAL = new Mock&lt;UserDal&gt;();
-            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDAL.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(fakeCreatedUser.Id);
+            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(TEST_USERNAME)).Returns(fakeExistingUser);
 
             UserManager userManager = new(mockUserDAL.Object);
 
-            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+            var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
 
-            Assert.AreEqual(200, resultResponse.StatusCode);
-            Assert.AreEqual(1, resultResponse.Data);
+            Assert.AreEqual(200U, resultResponse.StatusCode);
+            Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
+            Assert.AreEqual(resultResponse.Data?.FirstName, fakeExistingUser.FirstName);
+            Assert.AreEqual(resultResponse.Data?.LastName, fakeExistingUser.LastName);
+            Assert.AreEqual(resultResponse.Data?.Username, fakeExistingUser.Username);
+            Assert.AreEqual(resultResponse.Data?.Password, fakeExistingUser.Password);
+            Assert.AreEqual(resultResponse.Data?.Id, fakeExistingUser.Id);
         }
 
         [TestMethod]
-        public void Register_WithDuplicateUsername_Fails()
+        public void Call_WithUnknownUsername_Fails()
         {
-            string username = &quot;TestUsername&quot;;
-            string password = &quot;TestPassword&quot;;
-            string fname = &quot;FirstName&quot;;
-            string lname = &quot;LastName&quot;;
-
-            int? dbResult = null;
-            User fakeExistingUser = new() { Id = 1 };
+            User? missingUser = null;
             var mockUserDAL = new Mock&lt;UserDal&gt;();
-            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDAL.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(dbResult);
+            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(TEST_USERNAME)).Returns(missingUser);
 
             UserManager userManager = new(mockUserDAL.Object);
 
-            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+            var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
 
-            Assert.AreEqual(400, resultResponse.StatusCode);
+            Assert.AreEqual(404U, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Call_WithWrongPassword_Fails()
+        {
+            User fakeExistingUser = new() { Password = PasswordHasher.Hash(&quot;CorrectPassword&quot;) };
+            var mockUserDAL = new Mock&lt;UserDal&gt;();
+            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(TEST_USERNAME)).Returns(fakeExistingUser);
+
+            UserManager userManager = new(mockUserDAL.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
+
+            Assert.AreEqual(404U, resultResponse.StatusCode);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[15,9,15,10,1],[16,13,16,46,1],[17,13,17,46,1],[18,13,18,40,1],[19,13,19,39,1],[21,13,21,43,1],[22,13,22,52,1],[23,13,23,51,1],[24,13,24,95,1],[25,13,25,114,1],[27,13,27,63,1],[29,13,29,93,1],[31,13,31,61,1],[32,13,32,53,1],[33,9,33,10,1],[37,9,37,10,1],[38,13,38,46,1],[39,13,39,46,1],[40,13,40,40,1],[41,13,41,39,1],[43,13,43,34,1],[44,13,44,54,1],[45,13,45,51,1],[46,13,46,95,1],[47,13,47,104,1],[49,13,49,63,1],[51,13,51,93,1],[53,13,53,61,1],[54,9,54,10,1]]);
+      highlightRanges([[19,9,19,10,1],[20,13,20,93,1],[21,13,21,51,1],[22,13,22,100,1],[24,13,24,63,1],[26,13,26,97,1],[28,13,28,62,1],[29,13,29,72,1],[30,13,30,89,1],[31,13,31,87,1],[32,13,32,87,1],[33,13,33,87,1],[34,13,34,75,1],[35,9,35,10,1],[39,9,39,10,1],[40,13,40,38,1],[41,13,41,51,1],[42,13,42,95,1],[44,13,44,63,1],[46,13,46,97,1],[48,13,48,62,1],[49,9,49,10,1],[53,9,53,10,1],[54,13,54,97,1],[55,13,55,51,1],[56,13,56,100,1],[58,13,58,63,1],[60,13,60,97,1],[62,13,62,62,1],[63,9,63,10,1]]);
     </script>
   </body>
 </html>

@@ -2,113 +2,55 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/MainWindowViewModel.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Pages/Login.cshtml.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
-using System.Diagnostics;
-using System.Reactive;
 using CapstoneBackend.Model;
-using ReactiveUI;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CapstoneDesktop.ViewModels
+namespace CapstoneWeb.Pages
 {
     /// &lt;summary&gt;
-    ///     ViewModel for the MainWindow (Login)
+    ///     Login Model
     /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
-    public class MainWindowViewModel : ViewModelBase
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class LoginModel : PageModel
     {
-        private readonly UserManager _userManager;
+        [BindProperty] public string Username { get; set; }
 
-        public MainWindowViewModel(UserManager manager)
-        {
-            this._userManager = manager;
-            LoginCommand = ReactiveCommand.Create(this.login);
-            OpenCreateAccountCommand = ReactiveCommand.Create(this.openCreateAccount);
-            CancelCreateAccountCommand = ReactiveCommand.Create(this.cancelCreateAccount);
-            SubmitAccountCommand = ReactiveCommand.Create(this.submitAccount);
-        }
-        
-        
+        [BindProperty] public string Password { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+        public UserManager FakeUserManager { get; set; }
+
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;MainWindowViewModel&quot; /&gt; class.
+        ///     Called when [post].
         /// &lt;/summary&gt;
-        public MainWindowViewModel() : this(new UserManager())
+        public IActionResult OnPost()
         {
-        }
-
-        private string _error = string.Empty;
-
-        private bool _loginControlsVisible = true;
-
-        public string? Username { get; set; }
-
-        public string? Password { get; set; }
-
-        public string? FirstName { get; set; }
-
-        public string? LastName { get; set; }
-
-        public string ErrorMessage
-        {
-            get =&gt; _error;
-            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
-        }
-
-        public bool LoginControlsVisible
-        {
-            get =&gt; _loginControlsVisible;
-            set =&gt; this.RaiseAndSetIfChanged(ref _loginControlsVisible, value);
-            
-        }
-
-        public ReactiveCommand&lt;Unit, Unit&gt; LoginCommand { get; }
-        public ReactiveCommand&lt;Unit, Unit&gt; OpenCreateAccountCommand { get; set; }
-        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateAccountCommand { get; set; }
-        public ReactiveCommand&lt;Unit, Unit&gt; SubmitAccountCommand { get; set; }
-
-        private void login()
-        {
-            var response = this._userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
+            var userManager = FakeUserManager ?? new UserManager();
+            var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (response.Data is not null)
-                Console.WriteLine(&quot;YOU DID IT!&quot;);
-            else
             {
-                this.ErrorMessage = response.ErrorMessage ?? string.Empty;
+                HttpContext.Session.SetString(&quot;userId&quot;, $&quot;{response.Data.Id}&quot;);
+                return RedirectToPage(&quot;Index&quot;);
             }
-        }
 
-        private void openCreateAccount()
-        {
-            this.LoginControlsVisible = false;
-        }
+            ErrorMessage = response.ErrorMessage;
 
-        private void cancelCreateAccount()
-        {
-            this.LoginControlsVisible = true;
-        }
-
-        private void submitAccount()
-        {
-            var response = this._userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
-            if (response.StatusCode == 200)
-            {
-                Debug.WriteLine(&quot;Successful Account Creation&quot;);
-            }
-            else
-            {
-                this.ErrorMessage = response.ErrorMessage ?? &quot;Unknown Error.&quot;;
-            }
+            return Page();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[17,9,17,56,1],[18,9,18,10,1],[19,13,19,41,1],[20,13,20,63,1],[21,13,21,87,1],[22,13,22,91,1],[23,13,23,79,1],[24,9,24,10,1],[30,40,30,63,0],[31,9,31,10,0],[32,9,32,10,0],[34,9,34,46,1],[36,9,36,51,1],[38,35,38,39,1],[38,40,38,44,1],[40,35,40,39,1],[40,40,40,44,1],[42,36,42,40,1],[42,41,42,45,1],[44,35,44,39,1],[44,40,44,44,1],[48,20,48,26,1],[49,20,49,64,1],[54,20,54,41,1],[55,20,55,79,1],[59,59,59,63,1],[60,71,60,75,1],[60,76,60,80,1],[61,73,61,77,1],[61,78,61,82,1],[62,67,62,71,1],[62,72,62,76,1],[65,9,65,10,1],[66,13,66,119,1],[67,13,67,43,1],[68,17,68,50,1],[70,13,70,14,1],[71,17,71,75,1],[72,13,72,14,1],[73,9,73,10,1],[76,9,76,10,1],[77,13,77,47,1],[78,9,78,10,1],[81,9,81,10,1],[82,13,82,46,1],[83,9,83,10,1],[86,9,86,10,1],[87,13,87,164,1],[88,13,88,44,1],[89,13,89,14,1],[90,17,90,64,1],[91,13,91,14,1],[93,13,93,14,1],[94,17,94,79,1],[95,13,95,14,1],[96,9,96,10,1]]);
+      highlightRanges([[14,49,14,53,1],[14,54,14,58,1],[16,49,16,53,1],[16,54,16,58,1],[18,38,18,42,1],[18,43,18,47,1],[20,46,20,50,1],[20,51,20,55,1],[26,9,26,10,1],[27,13,27,68,1],[28,13,28,113,1],[29,13,29,43,1],[30,13,30,14,1],[31,17,31,80,1],[32,17,32,48,1],[35,13,35,50,1],[37,13,37,27,1],[38,9,38,10,1]]);
     </script>
   </body>
 </html>

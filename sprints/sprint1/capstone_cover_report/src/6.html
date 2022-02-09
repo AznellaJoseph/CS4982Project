@@ -20,10 +20,27 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
     public class TestConstructor
     {
         [TestMethod]
-        public void TestPropertyCreations()
+        public void Constructor_OneParameter_PropertyCreations()
         {
             var mockUserManager = new Mock&lt;UserManager&gt;();
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
+
+            Assert.IsNotNull(mainWindowViewModel.CancelCreateAccountCommand);
+            Assert.IsNotNull(mainWindowViewModel.LoginCommand);
+            Assert.IsNotNull(mainWindowViewModel.OpenCreateAccountCommand);
+            Assert.IsNotNull(mainWindowViewModel.SubmitAccountCommand);
+            Assert.IsNull(mainWindowViewModel.FirstName);
+            Assert.IsNull(mainWindowViewModel.LastName);
+            Assert.IsNull(mainWindowViewModel.Username);
+            Assert.IsNull(mainWindowViewModel.Password);
+            Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
+            Assert.AreEqual(true, mainWindowViewModel.LoginControlsVisible);
+        }
+
+        [TestMethod]
+        public void Constructor_NoParameters_PropertyCreations()
+        {
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel();
 
             Assert.IsNotNull(mainWindowViewModel.CancelCreateAccountCommand);
             Assert.IsNotNull(mainWindowViewModel.LoginCommand);
@@ -40,7 +57,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,9,14,10,1],[15,13,15,59,1],[16,13,16,83,1],[18,13,18,78,1],[19,13,19,64,1],[20,13,20,76,1],[21,13,21,72,1],[22,13,22,58,1],[23,13,23,57,1],[24,13,24,57,1],[25,13,25,57,1],[26,13,26,77,1],[27,13,27,77,1],[28,9,28,10,1]]);
+      highlightRanges([[14,9,14,10,1],[15,13,15,59,1],[16,13,16,83,1],[18,13,18,78,1],[19,13,19,64,1],[20,13,20,76,1],[21,13,21,72,1],[22,13,22,58,1],[23,13,23,57,1],[24,13,24,57,1],[25,13,25,57,1],[26,13,26,77,1],[27,13,27,77,1],[28,9,28,10,1],[32,9,32,10,1],[33,13,33,81,1],[35,13,35,78,1],[36,13,36,64,1],[37,13,37,76,1],[38,13,38,72,1],[39,13,39,58,1],[40,13,40,57,1],[41,13,41,57,1],[42,13,42,57,1],[43,13,43,77,1],[44,13,44,77,1],[45,9,45,10,1]]);
     </script>
   </body>
 </html>

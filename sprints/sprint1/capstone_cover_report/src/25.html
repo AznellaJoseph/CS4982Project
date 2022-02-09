@@ -2,43 +2,34 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Program.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Program.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
-using Avalonia;
-using Avalonia.ReactiveUI;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
-namespace CapstoneDesktop
+namespace CapstoneWeb
 {
-    internal class Program
+    public class Program
     {
-        // Initialization code. Don&#39;t use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren&#39;t initialized
-        // yet and stuff might break.
-        [STAThread]
         public static void Main(string[] args)
         {
-            BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
+            CreateHostBuilder(args).Build().Run();
         }
 
-        // Avalonia configuration, don&#39;t remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return AppBuilder.Configure&lt;App&gt;()
-                .UsePlatformDetect()
-                .LogToTrace()
-                .UseReactiveUI();
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =&gt; { webBuilder.UseStartup&lt;Startup&gt;(); });
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,9,14,10,0],[15,13,16,56,0],[17,9,17,10,0],[21,9,21,10,0],[22,13,25,34,0],[26,9,26,10,0]]);
+      highlightRanges([[9,9,9,10,0],[10,13,10,51,0],[11,9,11,10,0],[14,9,14,10,0],[15,13,16,57,0],[16,57,16,58,0],[16,58,16,59,0],[16,59,16,92,0],[16,92,16,93,0],[16,93,16,94,0],[16,94,16,96,0],[17,9,17,10,0]]);
     </script>
   </body>
 </html>

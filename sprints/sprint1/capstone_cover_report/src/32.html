@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Program.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using Avalonia;
+using Avalonia.ReactiveUI;
+
+namespace CapstoneDesktop
+{
+    internal class Program
+    {
+        // Initialization code. Don&#39;t use any Avalonia, third-party APIs or any
+        // SynchronizationContext-reliant code before AppMain is called: things aren&#39;t initialized
+        // yet and stuff might break.
+        [STAThread]
+        public static void Main(string[] args)
+        {
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
+        }
+
+        // Avalonia configuration, don&#39;t remove; also used by visual designer.
+        public static AppBuilder BuildAvaloniaApp()
+        {
+            return AppBuilder.Configure&lt;App&gt;()
+                .UsePlatformDetect()
+                .LogToTrace()
+                .UseReactiveUI();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,9,14,10,0],[15,13,16,56,0],[17,9,17,10,0],[21,9,21,10,0],[22,13,25,34,0],[26,9,26,10,0]]);
+    </script>
+  </body>
+</html>

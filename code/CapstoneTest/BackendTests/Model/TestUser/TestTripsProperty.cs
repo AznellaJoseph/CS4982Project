@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUser/TestTripsProperty.cs</title>
-    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
-  </head>
-  <body>
-    <pre id="content" class="source-code">
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,12 +16,12 @@ namespace CapstoneTest.BackendTests.Model.TestUser
         [TestMethod]
         public void GetTrips_Success()
         {
-            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockTripManager = new Mock<TripManager>();
             var startDate = DateTime.Now;
             var endDate = DateTime.Now;
-            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(1)).Returns(new Response&lt;IList&lt;Trip&gt;&gt;
+            mockTripManager.Setup(tm => tm.GetTripsByUser(1)).Returns(new Response<IList<Trip>>
             {
-                Data = new List&lt;Trip&gt;
+                Data = new List<Trip>
                 {
                     new()
                     {
@@ -60,8 +50,8 @@ namespace CapstoneTest.BackendTests.Model.TestUser
         [TestMethod]
         public void GetTrips_Failure()
         {
-            var mockTripManager = new Mock&lt;TripManager&gt;();
-            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(1)).Returns(new Response&lt;IList&lt;Trip&gt;&gt;());
+            var mockTripManager = new Mock<TripManager>();
+            mockTripManager.Setup(tm => tm.GetTripsByUser(1)).Returns(new Response<IList<Trip>>());
             var user = new User
             {
                 Id = 1,
@@ -72,9 +62,3 @@ namespace CapstoneTest.BackendTests.Model.TestUser
         }
     }
 }
-    </pre>
-    <script type="text/javascript">
-      highlightRanges([[18,9,18,10,1],[19,13,19,59,1],[20,13,20,42,1],[21,13,21,40,1],[22,13,35,16,1],[36,13,40,15,1],[41,13,41,37,1],[42,13,42,44,1],[43,13,43,40,1],[44,13,44,45,1],[45,13,45,54,1],[46,13,46,56,1],[47,13,47,52,1],[48,9,48,10,1],[52,9,52,10,1],[53,13,53,59,1],[54,13,54,100,1],[55,13,59,15,1],[60,13,60,37,1],[61,13,61,51,1],[62,9,62,10,1]]);
-    </script>
-  </body>
-</html>

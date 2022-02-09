@@ -22,10 +22,10 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
     public class TestSubmitAccountCommand
     {
         [TestMethod]
-        public void TestCommandSuccessfulSubmit()
+        public void SubmitAccount_RegisterValidUser_ReturnsNoError()
         {
             var mockUserManager = new Mock&lt;UserManager&gt;();
-            mockUserManager.Setup(um =&gt; um.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt;{Data = 0, StatusCode = 200});
+            mockUserManager.Setup(um =&gt; um.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt; { Data = 0, StatusCode = 200 });
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -33,7 +33,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
             mainWindowViewModel.Password = &quot;admin&quot;;
             mainWindowViewModel.FirstName = &quot;admin&quot;;
             mainWindowViewModel.LastName = &quot;admin&quot;;
-            
+
             mainWindowViewModel.SubmitAccountCommand.Execute().Subscribe();
 
             testScheduler.Start();
@@ -43,10 +43,10 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         }
 
         [TestMethod]
-        public void TestCommandUnsuccessfulSubmit()
+        public void SubmitAccount_RegisterAlreadyExistingUser_ReturnsError()
         {
             var mockUserManager = new Mock&lt;UserManager&gt;();
-            mockUserManager.Setup(um =&gt; um.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt;{StatusCode = 404, ErrorMessage = &quot;Username is taken.&quot;});
+            mockUserManager.Setup(um =&gt; um.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt; { StatusCode = 404, ErrorMessage = &quot;Username is taken.&quot; });
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -54,19 +54,19 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
             mainWindowViewModel.Password = &quot;admin&quot;;
             mainWindowViewModel.FirstName = &quot;admin&quot;;
             mainWindowViewModel.LastName = &quot;admin&quot;;
-            
+
             mainWindowViewModel.SubmitAccountCommand.Execute().Subscribe();
 
             testScheduler.Start();
 
             Assert.AreEqual(&quot;Username is taken.&quot;, mainWindowViewModel.ErrorMessage);
         }
-        
+
         [TestMethod]
-        public void TestCommandUnsuccessfulSubmitWithNoErrorMessage()
+        public void SubmitAccount_UnsuccessfulRegister_ReturnsUnknownError()
         {
             var mockUserManager = new Mock&lt;UserManager&gt;();
-            mockUserManager.Setup(um =&gt; um.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt;{StatusCode = 404});
+            mockUserManager.Setup(um =&gt; um.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt; { StatusCode = 404 });
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -74,18 +74,38 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
             mainWindowViewModel.Password = &quot;admin&quot;;
             mainWindowViewModel.FirstName = &quot;admin&quot;;
             mainWindowViewModel.LastName = &quot;admin&quot;;
-            
+
             mainWindowViewModel.SubmitAccountCommand.Execute().Subscribe();
 
             testScheduler.Start();
 
             Assert.AreEqual(&quot;Unknown Error.&quot;, mainWindowViewModel.ErrorMessage);
         }
+
+        [TestMethod]
+        public void SubmitAccount_RegisterWithNullCredentials_ReturnsInternalServerError()
+        {
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            mockUserManager.Setup(um =&gt; um.RegisterUser(&quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;)).Returns(new Response&lt;int&gt; { StatusCode = 404, ErrorMessage = &quot;Internal Server Error.&quot; });
+            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
+            var testScheduler = new TestScheduler();
+
+            mainWindowViewModel.Username = null;
+            mainWindowViewModel.Password = null;
+            mainWindowViewModel.FirstName = null;
+            mainWindowViewModel.LastName = null;
+
+            mainWindowViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;Internal Server Error.&quot;, mainWindowViewModel.ErrorMessage);
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[16,9,16,10,1],[17,13,17,59,1],[18,13,18,149,1],[19,13,19,83,1],[20,13,20,53,1],[22,13,22,52,1],[23,13,23,52,1],[24,13,24,53,1],[25,13,25,52,1],[27,13,27,76,1],[29,13,29,35,1],[31,13,31,77,1],[33,9,33,10,1],[37,9,37,10,1],[38,13,38,59,1],[39,13,39,176,1],[40,13,40,83,1],[41,13,41,53,1],[43,13,43,52,1],[44,13,44,52,1],[45,13,45,53,1],[46,13,46,52,1],[48,13,48,76,1],[50,13,50,35,1],[52,13,52,85,1],[53,9,53,10,1],[57,9,57,10,1],[58,13,58,59,1],[59,13,59,139,1],[60,13,60,83,1],[61,13,61,53,1],[63,13,63,52,1],[64,13,64,52,1],[65,13,65,53,1],[66,13,66,52,1],[68,13,68,76,1],[70,13,70,35,1],[72,13,72,81,1],[73,9,73,10,1]]);
+      highlightRanges([[16,9,16,10,1],[17,13,17,59,1],[18,13,18,152,1],[19,13,19,83,1],[20,13,20,53,1],[22,13,22,52,1],[23,13,23,52,1],[24,13,24,53,1],[25,13,25,52,1],[27,13,27,76,1],[29,13,29,35,1],[31,13,31,77,1],[33,9,33,10,1],[37,9,37,10,1],[38,13,38,59,1],[39,13,39,179,1],[40,13,40,83,1],[41,13,41,53,1],[43,13,43,52,1],[44,13,44,52,1],[45,13,45,53,1],[46,13,46,52,1],[48,13,48,76,1],[50,13,50,35,1],[52,13,52,85,1],[53,9,53,10,1],[57,9,57,10,1],[58,13,58,59,1],[59,13,59,142,1],[60,13,60,83,1],[61,13,61,53,1],[63,13,63,52,1],[64,13,64,52,1],[65,13,65,53,1],[66,13,66,52,1],[68,13,68,76,1],[70,13,70,35,1],[72,13,72,81,1],[73,9,73,10,1],[77,9,77,10,1],[78,13,78,59,1],[79,13,79,163,1],[80,13,80,83,1],[81,13,81,53,1],[83,13,83,49,1],[84,13,84,49,1],[85,13,85,50,1],[86,13,86,49,1],[88,13,88,76,1],[90,13,90,35,1],[92,13,92,89,1],[93,9,93,10,1]]);
     </script>
   </body>
 </html>
