@@ -2,16 +2,16 @@ DROP TABLE IF EXISTS trip;
 
 CREATE TABLE trip
 (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    tripId INT UNSIGNED NOT NULL AUTO_INCREMENT,
     userId INT UNSIGNED NOT NULL,
     name VARCHAR(45) NOT NULL,
     notes VARCHAR(500) NOT NULL,
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
-    PRIMARY KEY (id),
+    PRIMARY KEY (tripId),
     CONSTRAINT fk_trip_userId
     FOREIGN KEY (userId)
-    REFERENCES user(id)
+    REFERENCES user(userId)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );

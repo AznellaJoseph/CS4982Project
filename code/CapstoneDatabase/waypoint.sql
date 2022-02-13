@@ -10,7 +10,7 @@ CREATE TABLE waypoint
     PRIMARY KEY (waypointId),
     CONSTRAINT fk_waypoint_tripId
         FOREIGN KEY (tripId)
-            REFERENCES trip(id)
+            REFERENCES trip(tripId)
             ON UPDATE CASCADE
             ON DELETE CASCADE
 );
