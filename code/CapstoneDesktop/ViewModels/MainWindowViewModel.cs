@@ -39,6 +39,8 @@ namespace CapstoneDesktop.ViewModels
 
         public string? Password { get; set; }
 
+        public string? ConfirmedPassword { get; set; }
+
         public string? FirstName { get; set; }
 
         public string? LastName { get; set; }
@@ -84,14 +86,23 @@ namespace CapstoneDesktop.ViewModels
 
         private void submitAccount()
         {
-            var response = this._userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
-            if (response.StatusCode == 200)
+            
+            if (Password == ConfirmedPassword)
             {
-                Debug.WriteLine("Successful Account Creation");
+                var response = this._userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
+
+                if (response.StatusCode == 200)
+                {
+                    Debug.WriteLine("Successful Account Creation");
+                }
+                else
+                {
+                    this.ErrorMessage = response.ErrorMessage ?? "Unknown Error.";
+                }
             }
             else
             {
-                this.ErrorMessage = response.ErrorMessage ?? "Unknown Error.";
+                this.ErrorMessage = "The given passwords must match.";
             }
         }
     }
