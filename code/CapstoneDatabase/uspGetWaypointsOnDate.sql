@@ -8,7 +8,7 @@ CREATE PROCEDURE uspGetWaypointsOnDate(
 )
 
 BEGIN
-	SELECT waypointNum, startTime, endTime, location
+	SELECT waypointNum, startTime, endTime, location, waypoint.notes
 	FROM waypoint, trip
 	WHERE waypoint.tripId = trip.id AND (CONVERT(startTime, DATE) = selectedDate OR CONVERT(endTime, DATE) = selectedDate);
 
