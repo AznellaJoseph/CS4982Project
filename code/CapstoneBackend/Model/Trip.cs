@@ -10,7 +10,7 @@ namespace CapstoneBackend.Model
         /// <summary>
         /// The Id of the Trip
         /// </summary>
-        public int Id { get; set; }
+        public int TripId { get; set; }
         
         /// <summary>
         /// The Id of User of The trip
@@ -20,7 +20,13 @@ namespace CapstoneBackend.Model
         /// <summary>
         /// The name of the trip
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
+
+
+        /// <summary>
+        /// The notes of the trip;
+        /// </summary>
+        public string Notes { get; set; } = string.Empty;
         
         /// <summary>
         /// The start date of the  trip

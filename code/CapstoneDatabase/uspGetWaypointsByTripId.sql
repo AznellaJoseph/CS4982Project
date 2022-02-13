@@ -6,7 +6,7 @@ CREATE PROCEDURE uspGetWaypointsByTripId(
 	tripId INT UNSIGNED
 )
 BEGIN
-        SELECT waypointNum, location, startTime, endTime
+        SELECT waypointId, location, startTime, endTime
         FROM waypoint
         WHERE waypoint.tripId = tripId;
 END$
