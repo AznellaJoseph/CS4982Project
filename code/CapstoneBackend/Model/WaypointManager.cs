@@ -65,7 +65,7 @@ namespace CapstoneBackend.Model
         /// <returns> A response of the waypoints on that date or an error message if there are none </returns>
         public Response<IList<Waypoint>> GetWaypointsOnDate(int tripId, DateTime selectedDate)
         {
-            var waypointsOnDate = _dal.GetWaypyointsOnDate(tripId, selectedDate);
+            var waypointsOnDate = _dal.GetWaypointsOnDate(tripId, selectedDate);
 
             return new Response<IList<Waypoint>>
             {
@@ -73,6 +73,12 @@ namespace CapstoneBackend.Model
             };
         }
 
+
+        /// <summary>
+        /// Gets the waypoints by trip identifier.
+        /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns></returns>
         public Response<IList<Waypoint>> GetWaypointsByTripId(int tripId)
         {
             var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);

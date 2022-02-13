@@ -4,12 +4,12 @@ DELIMITER $
 
 CREATE PROCEDURE uspGetWaypointsOnDate(
 	selectedDate DATE,
-	tripId int
+	tripId INT
 )
 
 BEGIN
-	SELECT waypointId, startDate, endDate, location, waypoint.notes
+	SELECT waypointId, waypoint.startDate, waypoint.endDate, location, waypoint.notes
 	FROM waypoint, trip
-	WHERE waypoint.tripId = trip.tripId AND (CONVERT(startDate, DATE) = selectedDate OR CONVERT(endDate, DATE) = selectedDate);
+	WHERE waypoint.tripId = trip.tripId AND (CONVERT(waypoint.startDate, DATE) = selectedDate OR CONVERT(waypoint.endDate, DATE) = selectedDate);
 
 END$

@@ -13,15 +13,17 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         [TestMethod]
         public void Call_EmptySet_ReturnsEmptyList()
         {
+            var currentTime = DateTime.Now;
+
             IList<Waypoint> fakeWaypoints = new List<Waypoint>();
 
             var mockWaypointDal = new Mock<WaypointDal>();
-            mockWaypointDal.Setup(db => db.GetWaypyointsOnDate(1, DateTime.Now)).Returns(fakeWaypoints);
+            mockWaypointDal.Setup(db => db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
 
             WaypointManager waypointManager = new(mockWaypointDal.Object);
 
             var resultResponse =
-                waypointManager.GetWaypointsOnDate(1, DateTime.Now);
+                waypointManager.GetWaypointsOnDate(1, currentTime);
 
             Assert.AreEqual(0, resultResponse.Data?.Count);
         }
@@ -29,6 +31,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         [TestMethod]
         public void Call_YieldsSetWithOneValue_ReturnsExpectedList()
         {
+            var currentTime = DateTime.Now;
             IList<Waypoint> fakeWaypoints = new List<Waypoint>
             {
                 new Waypoint
@@ -36,22 +39,64 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
                     TripId = 1,
                     WaypointId= 1,
                     Location = "1601 Maple St",
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now
+                    StartDate = currentTime,
+                    EndDate = currentTime
                 }
             };
 
             var mockWaypointDal = new Mock<WaypointDal>();
-            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", DateTime.Now, DateTime.Now, null))
+
+            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", currentTime, currentTime, null))
                 .Returns(1);
-            mockWaypointDal.Setup(db => db.GetWaypyointsOnDate(1, DateTime.Now)).Returns(fakeWaypoints);
+            mockWaypointDal.Setup(db => db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
 
             WaypointManager waypointManager = new(mockWaypointDal.Object);
 
             var resultResponse =
-                waypointManager.GetWaypointsOnDate(1, DateTime.Now);
+                waypointManager.GetWaypointsOnDate(1, currentTime);
 
             Assert.AreEqual(1, resultResponse.Data?.Count);
+        }
+
+
+        [TestMethod]
+        public void Call_YieldsSetWithMultipleValues_ReturnsExpectedList()
+        {
+            var currentTime = DateTime.Now;
+            IList<Waypoint> fakeWaypoints = new List<Waypoint>
+            {
+                new Waypoint
+                {
+                    TripId = 1,
+                    WaypointId= 1,
+                    Location = "1601 Maple St",
+                    StartDate = currentTime,
+                    EndDate = currentTime
+                },
+                new Waypoint
+                {
+                    TripId = 1,
+                    WaypointId = 2,
+                    Location = "1602 Maple St",
+                    StartDate = currentTime,
+                    EndDate = currentTime
+                }
+            };
+
+            var mockWaypointDal = new Mock<WaypointDal>();
+
+            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", currentTime, currentTime, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1602 Maple St", currentTime, currentTime, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db => db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsOnDate(1, currentTime);
+
+            Assert.AreEqual(2, resultResponse.Data?.Count);
         }
     }
 }

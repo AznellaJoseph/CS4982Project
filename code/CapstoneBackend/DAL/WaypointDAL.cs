@@ -58,6 +58,7 @@ namespace CapstoneBackend.DAL
 
             var waypointId = Convert.ToInt32(cmd.ExecuteScalar());
 
+            this._connection.Close();
             return waypointId;
         }
 
@@ -66,7 +67,7 @@ namespace CapstoneBackend.DAL
         /// Gets the waypoints by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns></returns>
+        /// <returns> a list of the waypoints from the trip specified by the trip id </returns>
         public virtual IList<Waypoint> GetWaypointsByTripId(int tripId)
         {
             _connection.Open();
@@ -97,6 +98,7 @@ namespace CapstoneBackend.DAL
                     Notes = reader.GetString(notesOrdinal)
                 });
 
+            this._connection.Close();
             return waypointsInTrip;
         }
 
@@ -107,7 +109,7 @@ namespace CapstoneBackend.DAL
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
         /// <returns> A list of the waypoints of the trip on the specified date </returns>
-        public virtual IList<Waypoint> GetWaypyointsOnDate(int tripId, DateTime selectedDate)
+        public virtual IList<Waypoint> GetWaypointsOnDate(int tripId, DateTime selectedDate)
         {
             _connection.Open();
             const string procedure = "uspGetWaypointsOnDate";
@@ -118,7 +120,7 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@selectedDate", MySqlDbType.Date).Value = selectedDate;
             cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
 
-            using var reader = cmd.ExecuteReader();
+            using var reader = cmd.ExecuteReaderAsync().Result;
 
             var waypointIdOrdinal = reader.GetOrdinal("waypointId");
             var startDateOrdinal = reader.GetOrdinal("startDate");
@@ -137,6 +139,7 @@ namespace CapstoneBackend.DAL
                     Notes = reader.GetString(notesOrdinal)
                 });
 
+            this._connection.Close();
             return waypointsOnDate;
         }
     }
