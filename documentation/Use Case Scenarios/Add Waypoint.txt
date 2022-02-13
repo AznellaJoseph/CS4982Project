@@ -1,22 +1,26 @@
 Use Case Scenario: Add Waypoint
 
 
-Context: The user is logged in to the system
+Context: The user is logged in to the system and is viewing the overview of a selected trip
 
 
 Primary Flow:
-1. The user clicks on a trip
-2. The user selects a date on the calendar in the range of the trip
-3. The user clicks the “Create Waypoint” button
-4. The user enters the time and place for the waypoint
-5. The user clicks the "Create Waypoint" button to submit the new waypoint
-6. The user is directed to the list of waypoints for the chosen date
+1. The user clicks the “Create Waypoint” button
+2. The user enters the start and end times and location the waypoint
+3. The user clicks the "Create Waypoint" button to submit the new waypoint
 
 
 Alternative Flows:
 
-
 The user cancels the operation
-A4. The user clicks the “Cancel” button
-A5. The user is redirected to the list of waypoints for the chosen date
+A2. The user clicks the “Cancel” button
+A3. The user is taken back to the trip overview
+
+The user does not enter an end time for the waypoint
+A2. The user does not enter an end time
+A3. The end time for the waypoint is set to the end date of the selected trip
+
+The user does not enter a required field
+A2. The user fails to enter a required field
+A3. The user is shown an error message specifying which field must be filled out before submitting
 ________________

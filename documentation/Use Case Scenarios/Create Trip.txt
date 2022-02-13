@@ -1,18 +1,24 @@
 Use Case Scenario: Create a Trip
 
 
-Context: The user is logged in to the system
+Context: The user is logged in to the system and is on the landing page
 
 
 Primary Flow:
 1. The user clicks the “Create Trip” button
-2. The user enters a name for the trip
-3. The user enters a start and end date for the trip
-4. The user clicks the “Create Trip” button to submit the new trip
+2. The user enters the required fields for the new trip
+3. The user clicks the “Create Trip” button to submit the new trip
 
 
 Alternative Flows:
 
+The user enters an end date that is before the start date
+A2. The user enters an end date earlier than the start date
+A3. The user is shown an error message that the end date must come after the start date
+
+The user is missing a required field
+A3. The user fails to enter a required field
+A4. The user is shown an error message specifying which field must be filled out before submitting
 
 The user cancels the operation
 A2. The user clicks the “Cancel” button
