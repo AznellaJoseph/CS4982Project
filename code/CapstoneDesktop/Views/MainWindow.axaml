@@ -100,27 +100,27 @@
 
 					<TextBlock Text="USERNAME:" Margin="15 0 0 0"/>
 					<Border Classes="input">
-						<TextBox Watermark="Username" VerticalAlignment="Bottom" Text="{Binding Username, Mode=TwoWay}" />
+						<TextBox Watermark="USERNAME" VerticalAlignment="Bottom" Text="{Binding Username, Mode=TwoWay}" />
 					</Border>
 
 					<TextBlock Text="FIRST NAME:" Margin="15 0 0 0"/>
 					<Border Classes="input">
-						<TextBox Watermark="First Name" VerticalAlignment="Bottom" Text="{Binding FirstName, Mode=TwoWay}" />
+						<TextBox Watermark="FIRST NAME" VerticalAlignment="Bottom" Text="{Binding FirstName, Mode=TwoWay}" />
 					</Border>
 					
 					<TextBlock Text="LAST NAME:" Margin="15 0 0 0"/>
 					<Border Classes="input">
-						<TextBox Watermark="Last Name" VerticalAlignment="Bottom" Text="{Binding LastName, Mode=TwoWay}" />
+						<TextBox Watermark="LAST NAME" VerticalAlignment="Bottom" Text="{Binding LastName, Mode=TwoWay}" />
 					</Border>
 
 					<TextBlock Text="PASSWORD:" Margin="15 0 0 0"/>
 					<Border Classes="input">
-						<TextBox PasswordChar="*" Watermark="Password" VerticalAlignment="Bottom" Text="{Binding Password, Mode=TwoWay}" />
+						<TextBox PasswordChar="*" Watermark="PASSWORD" VerticalAlignment="Bottom" Text="{Binding Password, Mode=TwoWay}" />
 					</Border>
 
 					<TextBlock Text="RE-ENTER PASSWORD:" Margin="15 0 0 0"/>
 					<Border Classes="input">
-						<TextBox PasswordChar="*" Watermark="Password" VerticalAlignment="Bottom" Text="{Binding Password, Mode=TwoWay}" />
+						<TextBox PasswordChar="*" Watermark="PASSWORD" VerticalAlignment="Bottom" Text="{Binding ConfirmedPassword, Mode=TwoWay}" />
 					</Border>
 
 					<StackPanel Orientation="Horizontal" Margin="15">
