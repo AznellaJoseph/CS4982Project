@@ -33,14 +33,17 @@ namespace CapstoneBackend.DAL
 
 
         /// <summary>
-        ///     Creates a waypoint.
+        /// Creates a waypoint.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="location">The location.</param>
-        /// <param name="startTime">The start time.</param>
-        /// <param name="endTime">The end time.</param>
-        /// <returns> The waypoint number </returns>
-        public virtual int CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime)
+        /// <param name="startDate">The start date.</param>
+        /// <param name="endDate">The end date.</param>
+        /// <param name="notes">The notes.</param>
+        /// <returns>
+        /// The waypoint id
+        /// </returns>
+        public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate, string? notes)
         {
             _connection.Open();
             const string procedure = "uspCreateWaypoint";
@@ -49,12 +52,52 @@ namespace CapstoneBackend.DAL
 
             cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
             cmd.Parameters.Add("@location", MySqlDbType.VarChar).Value = location;
-            cmd.Parameters.Add("startTime", MySqlDbType.DateTime).Value = startTime;
-            cmd.Parameters.Add("@endTime", MySqlDbType.DateTime).Value = endTime;
+            cmd.Parameters.Add("@startDate", MySqlDbType.DateTime).Value = startDate;
+            cmd.Parameters.Add("@endDate", MySqlDbType.DateTime).Value = endDate;
+            cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = notes;
 
-            var waypointNum = Convert.ToInt32(cmd.ExecuteScalar());
+            var waypointId = Convert.ToInt32(cmd.ExecuteScalar());
 
-            return waypointNum;
+            return waypointId;
+        }
+
+
+        /// <summary>
+        /// Gets the waypoints by trip identifier.
+        /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns></returns>
+        public virtual IList<Waypoint> GetWaypointsByTripId(int tripId)
+        {
+            _connection.Open();
+            const string procedure = "uspGetWaypointsByTripId";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            IList<Waypoint> waypointsInTrip = new List<Waypoint>();
+
+            cmd.Parameters.Add("@tripId", MySqlDbType.UInt32).Value = tripId;
+
+
+            using var reader = cmd.ExecuteReader();
+
+            var waypointIdOrdinal = reader.GetOrdinal("waypointId");
+            var startDateOrdinal = reader.GetOrdinal("startDate");
+            var endDateOrdinal = reader.GetOrdinal("endDate");
+            var locationOrdinal = reader.GetOrdinal("location");
+            var notesOrdinal = reader.GetOrdinal("notes");
+
+            while (reader.Read())
+                waypointsInTrip.Add(new Waypoint
+                {
+                    TripId = tripId,
+                    WaypointId = reader.GetInt32(waypointIdOrdinal),
+                    Location = reader.GetString(locationOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.GetString(notesOrdinal)
+                });
+
+            return waypointsInTrip;
         }
 
 
@@ -77,19 +120,21 @@ namespace CapstoneBackend.DAL
 
             using var reader = cmd.ExecuteReader();
 
-            var waypointNumOrdinal = reader.GetOrdinal("waypointNum");
-            var startTimeOrdinal = reader.GetOrdinal("startTime");
-            var endTimeOrdinal = reader.GetOrdinal("endTime");
+            var waypointIdOrdinal = reader.GetOrdinal("waypointId");
+            var startDateOrdinal = reader.GetOrdinal("startDate");
+            var endDateOrdinal = reader.GetOrdinal("endDate");
             var locationOrdinal = reader.GetOrdinal("location");
+            var notesOrdinal = reader.GetOrdinal("notes");
 
             while (reader.Read())
                 waypointsOnDate.Add(new Waypoint
                 {
                     TripId = tripId,
-                    WaypointNum = reader.GetInt32(waypointNumOrdinal),
+                    WaypointId = reader.GetInt32(waypointIdOrdinal),
                     Location = reader.GetString(locationOrdinal),
-                    StartTime = reader.GetDateTime(startTimeOrdinal),
-                    EndTime = reader.GetDateTime(endTimeOrdinal)
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.GetString(notesOrdinal)
                 });
 
             return waypointsOnDate;

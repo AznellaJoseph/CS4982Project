@@ -31,14 +31,17 @@ namespace CapstoneBackend.Model
 
 
         /// <summary>
-        ///     Creates the waypoint.
+        /// Creates the waypoint.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="location">The location.</param>
+        /// <param name="notes">The notes.</param>
         /// <param name="startTime">The start time.</param>
         /// <param name="endTime">The end time.</param>
-        /// <returns> A response of if the waypoint was created in the database </returns>
-        public Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime)
+        /// <returns>
+        /// A response of if the waypoint was created in the database
+        /// </returns>
+        public Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime, string? notes)
         {
             if (startTime.CompareTo(endTime) > 0)
                 return new Response<int>
@@ -49,7 +52,7 @@ namespace CapstoneBackend.Model
             return new Response<int>
             {
                 StatusCode = 200,
-                Data = _dal.CreateWaypoint(tripId, location, startTime, endTime)
+                Data = _dal.CreateWaypoint(tripId, location, startTime, endTime, notes ?? string.Empty)
             };
         }
 
@@ -67,6 +70,16 @@ namespace CapstoneBackend.Model
             return new Response<IList<Waypoint>>
             {
                 Data = waypointsOnDate
+            };
+        }
+
+        public Response<IList<Waypoint>> GetWaypointsByTripId(int tripId)
+        {
+            var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
+
+            return new Response<IList<Waypoint>>
+            {
+                Data = waypointsInTrip
             };
         }
     }

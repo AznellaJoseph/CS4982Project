@@ -8,14 +8,14 @@ namespace CapstoneBackend.Model
     public class Waypoint
     {
         /// <summary>
-        ///     The trip identifier.
+        ///     The trip id.
         /// </summary>
         public int TripId { get; set; }
 
         /// <summary>
-        ///     The waypoint number.
+        ///     The waypoint id.
         /// </summary>
-        public int WaypointNum { get; set; }
+        public int WaypointId { get; set; }
 
         /// <summary>
         ///     The location.
@@ -23,13 +23,18 @@ namespace CapstoneBackend.Model
         public string Location { get; set; } = string.Empty;
 
         /// <summary>
-        ///     The start time.
+        ///     The start date.
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public DateTime StartDate { get; set; }
 
         /// <summary>
-        ///     The end time.
+        ///     The end date.
         /// </summary>
-        public DateTime EndTime { get; set; }
+        public DateTime EndDate { get; set; }
+
+        /// <summary>
+        /// The notes.
+        /// </summary>
+        public string Notes { get; set; } = string.Empty;
     }
 }
