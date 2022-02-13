@@ -115,8 +115,8 @@ namespace CapstoneBackend.DAL
             cmd.CommandType = CommandType.StoredProcedure;
             IList<Waypoint> waypointsOnDate = new List<Waypoint>();
 
-            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
             cmd.Parameters.Add("@selectedDate", MySqlDbType.Date).Value = selectedDate;
+            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
 
             using var reader = cmd.ExecuteReader();
 

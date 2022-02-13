@@ -14,30 +14,30 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         public void Create_InvalidTimes_ReturnsErrorMessage()
         {
             var mockWaypointDal = new Mock<WaypointDal>();
-            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", DateTime.Now.AddDays(4), DateTime.Now))
+            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", DateTime.Now.AddDays(4), DateTime.Now, null))
                 .Returns(400);
 
             WaypointManager waypointManager = new(mockWaypointDal.Object);
 
             var resultResponse =
-                waypointManager.CreateWaypoint(1, "1601 Maple St", DateTime.Now.AddDays(4), DateTime.Now);
+                waypointManager.CreateWaypoint(1, "1601 Maple St", DateTime.Now.AddDays(4), DateTime.Now, null);
 
-            Assert.AreEqual(400, resultResponse.StatusCode);
+            Assert.AreEqual(400u, resultResponse.StatusCode);
         }
 
         [TestMethod]
         public void Create_ValidParameters_ReturnsWaypointNumber()
         {
             var mockWaypointDal = new Mock<WaypointDal>();
-            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", DateTime.Now, DateTime.Now.AddDays(2)))
+            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", DateTime.Now, DateTime.Now.AddDays(2), null))
                 .Returns(200);
 
             WaypointManager waypointManager = new(mockWaypointDal.Object);
 
             var resultResponse =
-                waypointManager.CreateWaypoint(1, "1601 Maple St", DateTime.Now, DateTime.Now.AddDays(2));
+                waypointManager.CreateWaypoint(1, "1601 Maple St", DateTime.Now, DateTime.Now.AddDays(2), null);
 
-            Assert.AreEqual(200, resultResponse.StatusCode);
+            Assert.AreEqual(200u, resultResponse.StatusCode);
 
         }
     }
