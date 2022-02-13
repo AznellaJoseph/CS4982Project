@@ -1,11 +1,9 @@
+using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
-using Castle.Core.Internal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using MySql.Data.MySqlClient;
 
 namespace CapstoneTest.BackendTests.Model.TestTripManager
 {
@@ -18,22 +16,52 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
         public void GetTrips_Success()
         {
             var mockDal = new Mock<TripDal>();
-            mockDal.Setup(dal => dal.GetTripsByUserId(1)).Returns(new List<Trip>());
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now;
+            mockDal.Setup(dal => dal.GetTripsByUserId(1)).Returns(new List<Trip>()
+            {
+                new()
+                {
+                    TripId = 1,
+                    UserId = 1,
+                    Name = "test",
+                    StartDate = startDate,
+                    EndDate = endDate
+                }
+            });
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.GetTripsByUser(1);
             Assert.AreEqual(200U, result.StatusCode);
-            Assert.IsTrue(result.Data?.IsNullOrEmpty());
+            Assert.IsFalse(result.Data?.Count == 0);
+            var trip = result.Data?[0];
+            Assert.AreEqual(1, trip?.TripId);
+            Assert.AreEqual(1, trip?.UserId);
+            Assert.AreEqual("test", trip?.Name);
+            Assert.AreEqual(string.Empty, trip?.Notes);
+            Assert.AreEqual(startDate, trip?.StartDate);
+            Assert.AreEqual(endDate, trip?.EndDate);
         }
         
         [TestMethod]
-        public void GetTrips_Failure()
+        public void GetTrips_MySqlException_Failure()
         {
             var mockDal = new Mock<TripDal>();
             var builder = new MySqlExceptionBuilder();
             mockDal.Setup(dal => dal.GetTripsByUserId(1)).Throws(builder.WithError(500, "test").Build());
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual((uint) 500, result.StatusCode);
+            Assert.AreEqual(500U, result.StatusCode);
+            Assert.AreEqual("test", result.ErrorMessage);
+        }
+        
+        [TestMethod]
+        public void GetTrips_Exception_Failure()
+        {
+            var mockDal = new Mock<TripDal>();
+            mockDal.Setup(dal => dal.GetTripsByUserId(1)).Throws(new Exception("test"));
+            var tripManager = new TripManager(mockDal.Object);
+            var result = tripManager.GetTripsByUser(1);
+            Assert.AreEqual(500U, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
         
