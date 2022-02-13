@@ -28,7 +28,7 @@ namespace CapstoneBackend.DAL
         {
             _connection = connection;
         }
-        
+
         /// <summary>
         /// Gets trips of the user with the given id.
         /// </summary>
@@ -42,38 +42,41 @@ namespace CapstoneBackend.DAL
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
             using var reader = cmd.ExecuteReaderAsync().Result;
-            var idOrdinal = reader.GetOrdinal("id");
+            var idOrdinal = reader.GetOrdinal("tripId");
             var nameOrdinal = reader.GetOrdinal("name");
+            var notesOrdinal = reader.GetOrdinal("notes");
             var startDateOrdinal = reader.GetOrdinal("startDate");
             var endDateOrdinal = reader.GetOrdinal("endDate");
 
             IList<Trip> trips = new List<Trip>();
-            
+
             if (reader.Read())
             {
                 trips.Add(new Trip
                 {
-                    Id = reader.GetInt32(idOrdinal),
+                    TripId = reader.GetInt32(idOrdinal),
                     UserId = userId,
                     Name = reader.GetString(nameOrdinal),
+                    Notes = reader.GetString(notesOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
                     EndDate = reader.GetDateTime(endDateOrdinal)
                 });
             }
-              
+
             this._connection.Close();
             return trips;
         }
-        
+
         /// <summary>
         /// Creates a Trip in the database
         /// </summary>
         /// <param name="userId">the userId</param>
         /// <param name="name">the name of the trip</param>
+        /// <param name="notes">the notes of the trip</param>
         /// <param name="startDate">the start date of the trip</param>
         /// <param name="endDate">the end date of the trip</param>
         /// <returns>the trip id of the created trip or null if it failed</returns>
-        public virtual int? CreateTrip(int userId, string name, DateTime startDate, DateTime endDate)
+        public virtual int CreateTrip(int userId, string name, string? notes, DateTime startDate, DateTime endDate)
         {
             this._connection.Open();
             const string procedure = "uspCreateTrip";
@@ -81,21 +84,14 @@ namespace CapstoneBackend.DAL
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
+            cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = notes ?? string.Empty;
             cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
             cmd.Parameters.Add("@startDate", MySqlDbType.Date).Value = startDate;
             cmd.Parameters.Add("@endDate", MySqlDbType.Date).Value = endDate;
 
-            try
-            {
-                var tripId = cmd.ExecuteScalar();
-                this._connection.Close();
-                return Convert.ToInt32(tripId);
-            }
-            catch
-            {
-                this._connection.Close();
-                return null;
-            }
+            var tripId = cmd.ExecuteScalar();
+            this._connection.Close();
+            return Convert.ToInt32(tripId);
         }
     }
 }
