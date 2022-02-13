@@ -5,20 +5,14 @@ DELIMITER $
 CREATE PROCEDURE uspCreateWaypoint(
     tripId INT,
     location VARCHAR(75),
-    startTime DATETIME,
-    endTime DATETIME
+    startDate DATETIME,
+    endDate DATETIME
 )
 BEGIN
-DECLARE numWaypointsInTrip INT;
 
-SELECT COUNT(*) + 1
-INTO numWaypointsInTrip
-FROM waypoint
-WHERE waypoint.tripId = tripId;
+INSERT INTO waypoint (tripId, location, startDate, endDate)
+VALUES (tripId, location, startDate, endDate);
 
-INSERT INTO waypoint (tripId, waypointNum, location, startTime, endTime)
-VALUES (tripId, numWaypointsInTrip, location, startTime, endTime);
-
-SELECT numWaypointsInTrip AS waypointNum;
+SELECT LAST_INSERT_ID();
 
 END$

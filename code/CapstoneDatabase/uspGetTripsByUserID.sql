@@ -4,7 +4,7 @@ DELIMITER $
 
 CREATE PROCEDURE uspGetTripsByUserID(userId int)
 BEGIN
-    SELECT id, name, startDate, endDate
+    SELECT tripId, name, notes, startDate, endDate
     FROM trip
     WHERE trip.userId = userId;
 END$

@@ -21,6 +21,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 
             mainWindowViewModel.Username = "admin";
             mainWindowViewModel.Password = "admin";
+            mainWindowViewModel.ConfirmedPassword = "admin";
             mainWindowViewModel.FirstName = "admin";
             mainWindowViewModel.LastName = "admin";
 
@@ -29,6 +30,26 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
             testScheduler.Start();
 
             Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
+
+        }
+
+        [TestMethod]
+        public void SubmitAccount_PasswordMisMatch_ReturnsError()
+        {
+            MainWindowViewModel mainWindowViewModel = new();
+            var testScheduler = new TestScheduler();
+
+            mainWindowViewModel.Username = "admin";
+            mainWindowViewModel.Password = "admin";
+            mainWindowViewModel.ConfirmedPassword = "Passwords Dont Match";
+            mainWindowViewModel.FirstName = "admin";
+            mainWindowViewModel.LastName = "admin";
+
+            mainWindowViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual("The given passwords must match.", mainWindowViewModel.ErrorMessage);
 
         }
 
@@ -42,6 +63,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 
             mainWindowViewModel.Username = "admin";
             mainWindowViewModel.Password = "admin";
+            mainWindowViewModel.ConfirmedPassword = "admin";
             mainWindowViewModel.FirstName = "admin";
             mainWindowViewModel.LastName = "admin";
 
@@ -62,6 +84,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 
             mainWindowViewModel.Username = "admin";
             mainWindowViewModel.Password = "admin";
+            mainWindowViewModel.ConfirmedPassword = "admin";
             mainWindowViewModel.FirstName = "admin";
             mainWindowViewModel.LastName = "admin";
 
@@ -82,6 +105,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 
             mainWindowViewModel.Username = null;
             mainWindowViewModel.Password = null;
+            mainWindowViewModel.ConfirmedPassword = null;
             mainWindowViewModel.FirstName = null;
             mainWindowViewModel.LastName = null;
 
