@@ -33,7 +33,7 @@ namespace CapstoneBackend.Model
         public DateTime EndDate { get; set; }
 
         /// <summary>
-        /// The notes.
+        ///     The notes.
         /// </summary>
         public string Notes { get; set; } = string.Empty;
     }

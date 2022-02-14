@@ -1,36 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
+    /// <summary>
+    ///     ViewModel for the CreateWaypoint Window
+    /// </summary>
+    /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateWaypointWindowViewModel : ViewModelBase
     {
         private readonly WaypointManager _waypointManager;
 
+        private string _error = string.Empty;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="CreateWaypointWindowViewModel" /> class.
+        /// </summary>
+        /// <param name="manager">The manager.</param>
         public CreateWaypointWindowViewModel(WaypointManager manager)
         {
-            this._waypointManager = manager;
-            this.CreateWaypointCommand = ReactiveCommand.Create(this.createWaypoint);
-            this.CancelCreateWaypointCommand = ReactiveCommand.Create(this.cancelCreateWaypoint);
+            _waypointManager = manager;
+            CreateWaypointCommand = ReactiveCommand.Create(createWaypoint);
+            CancelCreateWaypointCommand = ReactiveCommand.Create(cancelCreateWaypoint);
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="CreateWaypointWindowViewModel" /> class.
+        /// </summary>
         public CreateWaypointWindowViewModel() : this(new WaypointManager())
         {
         }
 
-        private string _error = string.Empty;
-
         public string ErrorMessage
         {
-            get => this._error;
-            set => this.RaiseAndSetIfChanged(ref this._error, value);
+            get => _error;
+            set => this.RaiseAndSetIfChanged(ref _error, value);
         }
 
         public DateTime StartDate { get; set; }
@@ -55,19 +62,14 @@ namespace CapstoneDesktop.ViewModels
                 var resultResponse = _waypointManager.CreateWaypoint(0, WaypointLocation, StartDate + StartTime,
                     EndDate + EndTime, Notes);
                 if (!string.IsNullOrEmpty(resultResponse.ErrorMessage))
-                {
                     ErrorMessage = resultResponse.ErrorMessage;
-                }
                 else
-                {
                     Debug.WriteLine("Successfully created waypoint");
-                }
             }
         }
 
         private void cancelCreateWaypoint()
         {
-
         }
     }
 }

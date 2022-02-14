@@ -7,18 +7,16 @@ using Moq;
 
 namespace CapstoneTest.BackendTests.Model.TestTripManager
 {
-    
     [TestClass]
     public class TestGetTripsByUserId
     {
-
         [TestMethod]
         public void GetTrips_Success()
         {
             var mockDal = new Mock<TripDal>();
             var startDate = DateTime.Now;
             var endDate = DateTime.Now;
-            mockDal.Setup(dal => dal.GetTripsByUserId(1)).Returns(new List<Trip>()
+            mockDal.Setup(dal => dal.GetTripsByUserId(1)).Returns(new List<Trip>
             {
                 new()
                 {
@@ -41,7 +39,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             Assert.AreEqual(startDate, trip?.StartDate);
             Assert.AreEqual(endDate, trip?.EndDate);
         }
-        
+
         [TestMethod]
         public void GetTrips_MySqlException_Failure()
         {
@@ -53,7 +51,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             Assert.AreEqual(500U, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
-        
+
         [TestMethod]
         public void GetTrips_Exception_Failure()
         {
@@ -64,6 +62,5 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             Assert.AreEqual(500U, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
-        
     }
 }

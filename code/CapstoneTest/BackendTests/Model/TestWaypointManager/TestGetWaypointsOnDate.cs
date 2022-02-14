@@ -34,10 +34,10 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             var currentTime = DateTime.Now;
             IList<Waypoint> fakeWaypoints = new List<Waypoint>
             {
-                new Waypoint
+                new()
                 {
                     TripId = 1,
-                    WaypointId= 1,
+                    WaypointId = 1,
                     Location = "1601 Maple St",
                     StartDate = currentTime,
                     EndDate = currentTime
@@ -65,15 +65,15 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             var currentTime = DateTime.Now;
             IList<Waypoint> fakeWaypoints = new List<Waypoint>
             {
-                new Waypoint
+                new()
                 {
                     TripId = 1,
-                    WaypointId= 1,
+                    WaypointId = 1,
                     Location = "1601 Maple St",
                     StartDate = currentTime,
                     EndDate = currentTime
                 },
-                new Waypoint
+                new()
                 {
                     TripId = 1,
                     WaypointId = 2,

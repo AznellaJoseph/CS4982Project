@@ -11,14 +11,12 @@ namespace CapstoneBackend.Model
     {
         private readonly WaypointDal _dal;
 
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="WaypointManager" /> class.
         /// </summary>
         public WaypointManager() : this(new WaypointDal())
         {
         }
-
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="WaypointManager" /> class.
@@ -29,9 +27,8 @@ namespace CapstoneBackend.Model
             _dal = dal;
         }
 
-
         /// <summary>
-        /// Creates the waypoint.
+        ///     Creates the waypoint.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="location">The location.</param>
@@ -39,9 +36,10 @@ namespace CapstoneBackend.Model
         /// <param name="startTime">The start time.</param>
         /// <param name="endTime">The end time.</param>
         /// <returns>
-        /// A response of if the waypoint was created in the database
+        ///     A response of if the waypoint was created in the database
         /// </returns>
-        public Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime, string? notes)
+        public Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime,
+            string? notes)
         {
             if (startTime.CompareTo(endTime) > 0)
                 return new Response<int>
@@ -55,7 +53,6 @@ namespace CapstoneBackend.Model
                 Data = _dal.CreateWaypoint(tripId, location, startTime, endTime, notes ?? string.Empty)
             };
         }
-
 
         /// <summary>
         ///     Gets the waypoints on date.
@@ -73,9 +70,8 @@ namespace CapstoneBackend.Model
             };
         }
 
-
         /// <summary>
-        /// Gets the waypoints by trip identifier.
+        ///     Gets the waypoints by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns></returns>

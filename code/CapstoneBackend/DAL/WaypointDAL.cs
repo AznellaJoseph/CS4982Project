@@ -13,14 +13,12 @@ namespace CapstoneBackend.DAL
     {
         private readonly MySqlConnection _connection;
 
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="WaypointDal" /> class.
         /// </summary>
         public WaypointDal() : this(new MySqlConnection(Connection.ConnectionString))
         {
         }
-
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="WaypointDal" /> class.
@@ -31,9 +29,8 @@ namespace CapstoneBackend.DAL
             _connection = connection;
         }
 
-
         /// <summary>
-        /// Creates a waypoint.
+        ///     Creates a waypoint.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="location">The location.</param>
@@ -41,9 +38,10 @@ namespace CapstoneBackend.DAL
         /// <param name="endDate">The end date.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        /// The waypoint id
+        ///     The waypoint id
         /// </returns>
-        public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate, string? notes)
+        public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate,
+            string? notes)
         {
             _connection.Open();
             const string procedure = "uspCreateWaypoint";
@@ -58,13 +56,12 @@ namespace CapstoneBackend.DAL
 
             var waypointId = Convert.ToInt32(cmd.ExecuteScalar());
 
-            this._connection.Close();
+            _connection.Close();
             return waypointId;
         }
 
-
         /// <summary>
-        /// Gets the waypoints by trip identifier.
+        ///     Gets the waypoints by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns> a list of the waypoints from the trip specified by the trip id </returns>
@@ -98,10 +95,9 @@ namespace CapstoneBackend.DAL
                     Notes = reader.GetString(notesOrdinal)
                 });
 
-            this._connection.Close();
+            _connection.Close();
             return waypointsInTrip;
         }
-
 
         /// <summary>
         ///     Gets the waypyoints on date.
@@ -139,7 +135,7 @@ namespace CapstoneBackend.DAL
                     Notes = reader.GetString(notesOrdinal)
                 });
 
-            this._connection.Close();
+            _connection.Close();
             return waypointsOnDate;
         }
     }

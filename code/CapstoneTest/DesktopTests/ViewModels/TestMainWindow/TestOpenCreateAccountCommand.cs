@@ -1,13 +1,12 @@
+using System;
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 {
-
     [TestClass]
     public class TestOpenCreateAccountCommand
     {

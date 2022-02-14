@@ -31,7 +31,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             Assert.AreEqual(200U, result.StatusCode);
             Assert.AreEqual(1, result.Data);
         }
-        
+
         [TestMethod]
         public void CreateTrip_ServerMySqlException_Failure()
         {
@@ -39,20 +39,22 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             var builder = new MySqlExceptionBuilder();
             var startDate = DateTime.Now;
             var endDate = DateTime.Now;
-            mockDal.Setup(dal => dal.CreateTrip(1, string.Empty, null, startDate, endDate)).Throws(builder.WithError(500, "test").Build());
+            mockDal.Setup(dal => dal.CreateTrip(1, string.Empty, null, startDate, endDate))
+                .Throws(builder.WithError(500, "test").Build());
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.CreateTrip(1, string.Empty, null, startDate, endDate);
             Assert.AreEqual(500U, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
-        
+
         [TestMethod]
         public void CreateTrip_ServerException_Failure()
         {
             var mockDal = new Mock<TripDal>();
             var startDate = DateTime.Now;
             var endDate = DateTime.Now;
-            mockDal.Setup(dal => dal.CreateTrip(1, string.Empty, null, startDate, endDate)).Throws(new Exception("test"));
+            mockDal.Setup(dal => dal.CreateTrip(1, string.Empty, null, startDate, endDate))
+                .Throws(new Exception("test"));
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.CreateTrip(1, string.Empty, null, startDate, endDate);
             Assert.AreEqual(500U, result.StatusCode);

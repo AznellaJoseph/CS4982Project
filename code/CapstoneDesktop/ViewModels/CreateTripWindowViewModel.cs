@@ -16,9 +16,8 @@ namespace CapstoneDesktop.ViewModels
 
         private string _error = string.Empty;
 
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateTripWindowViewModel"/> class.
+        ///     Initializes a new instance of the <see cref="CreateTripWindowViewModel" /> class.
         /// </summary>
         /// <param name="manager">The manager.</param>
         public CreateTripWindowViewModel(TripManager manager)
@@ -28,16 +27,15 @@ namespace CapstoneDesktop.ViewModels
             CancelCreateTripCommand = ReactiveCommand.Create(cancelCreateTrip);
         }
 
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateTripWindowViewModel"/> class.
+        ///     Initializes a new instance of the <see cref="CreateTripWindowViewModel" /> class.
         /// </summary>
         public CreateTripWindowViewModel() : this(new TripManager())
         {
         }
 
         /// <summary>
-        /// The error message.
+        ///     The error message.
         /// </summary>
         public string ErrorMessage
         {

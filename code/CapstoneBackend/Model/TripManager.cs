@@ -5,25 +5,39 @@ using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.Model
 {
+    /// <summary>
+    ///     A wrapper class for the TripDal. Manages the collection of Trips and informs of server errors.
+    /// </summary>
     public class TripManager
     {
-        
         private readonly TripDal _dal;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TripManager" /> class.
+        /// </summary>
         public TripManager() : this(new TripDal())
         {
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TripManager" /> class.
+        /// </summary>
+        /// <param name="dal">The dal.</param>
         public TripManager(TripDal dal)
         {
             _dal = dal;
         }
-        
+
+        /// <summary>
+        ///     Gets the trips by user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
         public virtual Response<IList<Trip>> GetTripsByUser(int userId)
         {
             try
             {
-                var trips = this._dal.GetTripsByUserId(userId);
+                var trips = _dal.GetTripsByUserId(userId);
                 return new Response<IList<Trip>>
                 {
                     Data = trips
@@ -47,20 +61,28 @@ namespace CapstoneBackend.Model
             }
         }
 
-        public virtual Response<int> CreateTrip(int userId, string name, string? notes, DateTime startDate, DateTime endDate)
+        /// <summary>
+        ///     Creates the trip.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="notes">The notes.</param>
+        /// <param name="startDate">The start date.</param>
+        /// <param name="endDate">The end date.</param>
+        /// <returns></returns>
+        public virtual Response<int> CreateTrip(int userId, string name, string? notes, DateTime startDate,
+            DateTime endDate)
         {
             if (startDate.CompareTo(endDate) > 0)
-            {
                 return new Response<int>
                 {
                     StatusCode = 400,
                     ErrorMessage = "Start date of a trip cannot be after the end date."
                 };
-            }
-            
+
             try
             {
-                var tripId = this._dal.CreateTrip(userId, name, notes, startDate, endDate);
+                var tripId = _dal.CreateTrip(userId, name, notes, startDate, endDate);
                 return new Response<int>
                 {
                     Data = tripId
