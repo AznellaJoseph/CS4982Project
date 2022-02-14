@@ -64,7 +64,7 @@
 
 			<Border Classes="main">
 				<StackPanel Classes="main" VerticalAlignment="Center" Margin="15,0, 15, 0">
-		
+
 					<TextBlock Classes="h1" Text="CREATE TRIP" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="25" />
 					<TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
 
@@ -79,9 +79,9 @@
 					</Border>
 
 					<StackPanel Orientation="Horizontal" Spacing="20" Margin="20">
-						<DatePicker SelectedDate="{Binding StartDate}" Header="START DATE"/>
+						<DatePicker SelectedDate="{Binding StartDate}" MinYear="2022" Header="START DATE"/>
 
-						<DatePicker SelectedDate="{Binding EndDate}" Header="END DATE" />
+						<DatePicker SelectedDate="{Binding EndDate}" MinYear="2022" Header="END DATE" />
 					</StackPanel>
 
 					<StackPanel Orientation="Horizontal">

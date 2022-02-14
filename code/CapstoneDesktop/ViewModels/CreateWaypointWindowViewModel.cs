@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Text;
@@ -45,7 +46,23 @@ namespace CapstoneDesktop.ViewModels
 
         private void createWaypoint()
         {
-
+            if (string.IsNullOrEmpty(WaypointLocation))
+            {
+                ErrorMessage = "You must enter a location for the waypoint";
+            }
+            else
+            {
+                var resultResponse = _waypointManager.CreateWaypoint(0, WaypointLocation, StartDate + StartTime,
+                    EndDate + EndTime, Notes);
+                if (!string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                {
+                    ErrorMessage = resultResponse.ErrorMessage;
+                }
+                else
+                {
+                    Debug.WriteLine("Successfully created waypoint");
+                }
+            }
         }
 
         private void cancelCreateWaypoint()
