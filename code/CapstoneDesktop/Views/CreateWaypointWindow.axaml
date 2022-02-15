@@ -71,7 +71,7 @@
                     <TextBlock Text="WAYPOINT LOCATION:" Margin="15, 0, 0 ,0" />
                     <Border Classes="input">
                         <TextBox Watermark="LOCATION NAME" VerticalAlignment="Bottom"
-                                 Text="{Binding WaypointLocation, Mode=TwoWay}" />
+                                 Text="{Binding Location, Mode=TwoWay}" />
                     </Border>
                     <TextBlock Text="WAYPOINT NOTES" Margin="15, 0, 0 ,0" />
                     <Border Classes="input">

@@ -22,7 +22,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypointWindow
             Assert.IsNotNull(createWaypointWindowViewModel.CancelCreateWaypointCommand);
             Assert.IsNotNull(createWaypointWindowViewModel.StartTime);
             Assert.IsNotNull(createWaypointWindowViewModel.EndTime);
-            Assert.IsNull(createWaypointWindowViewModel.WaypointLocation);
+            Assert.IsNull(createWaypointWindowViewModel.Location);
             Assert.IsNull(createWaypointWindowViewModel.Notes);
         }
 
@@ -38,7 +38,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypointWindow
             Assert.IsNotNull(createWaypointWindowViewModel.CancelCreateWaypointCommand);
             Assert.IsNotNull(createWaypointWindowViewModel.StartTime);
             Assert.IsNotNull(createWaypointWindowViewModel.EndTime);
-            Assert.IsNull(createWaypointWindowViewModel.WaypointLocation);
+            Assert.IsNull(createWaypointWindowViewModel.Location);
             Assert.IsNull(createWaypointWindowViewModel.Notes);
         }
     }

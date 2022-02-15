@@ -38,31 +38,67 @@ namespace CapstoneDesktop.ViewModels
         {
         }
 
+        /// <summary>
+        /// The username.
+        /// </summary>
         public string? Username { get; set; }
 
+        /// <summary>
+        /// The password.
+        /// </summary>
         public string? Password { get; set; }
 
+        /// <summary>
+        /// The confirmed password.
+        /// </summary>
         public string? ConfirmedPassword { get; set; }
 
+        /// <summary>
+        /// The first name.
+        /// </summary>
         public string? FirstName { get; set; }
 
+        /// <summary>
+        /// The last name.
+        /// </summary>
         public string? LastName { get; set; }
 
+        /// <summary>
+        /// The error message.
+        /// </summary>
         public string ErrorMessage
         {
             get => _error;
             set => this.RaiseAndSetIfChanged(ref _error, value);
         }
 
+        /// <summary>
+        /// The bool property of if the login controls are visible.
+        /// </summary>
         public bool LoginControlsVisible
         {
             get => _loginControlsVisible;
             set => this.RaiseAndSetIfChanged(ref _loginControlsVisible, value);
         }
 
+        /// <summary>
+        /// The login command.
+        /// </summary>
         public ReactiveCommand<Unit, Unit> LoginCommand { get; }
+
+        /// <summary>
+        /// The open create account command.
+        /// </summary>
         public ReactiveCommand<Unit, Unit> OpenCreateAccountCommand { get; set; }
+
+        /// <summary>
+        /// The cancel create account command.
+        /// </summary>
         public ReactiveCommand<Unit, Unit> CancelCreateAccountCommand { get; set; }
+
+        /// <summary>
+        /// The submit account command.
+        /// </summary>
         public ReactiveCommand<Unit, Unit> SubmitAccountCommand { get; set; }
 
         private void login()

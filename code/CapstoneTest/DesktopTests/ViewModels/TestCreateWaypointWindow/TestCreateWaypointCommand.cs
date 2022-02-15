@@ -37,7 +37,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypointWindow
 
             var testScheduler = new TestScheduler();
 
-            createWaypointWindowViewModel.WaypointLocation = "Paris, Italy";
+            createWaypointWindowViewModel.Location = "Paris, Italy";
             createWaypointWindowViewModel.Notes = "notes";
             createWaypointWindowViewModel.StartDate = DateTime.Today.AddDays(1);
             createWaypointWindowViewModel.StartTime = TimeSpan.Zero;
@@ -63,7 +63,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypointWindow
 
             var testScheduler = new TestScheduler();
 
-            createWaypointWindowViewModel.WaypointLocation = "Paris, Italy";
+            createWaypointWindowViewModel.Location = "Paris, Italy";
             createWaypointWindowViewModel.StartDate = DateTime.Today;
             createWaypointWindowViewModel.EndDate = DateTime.Today;
 

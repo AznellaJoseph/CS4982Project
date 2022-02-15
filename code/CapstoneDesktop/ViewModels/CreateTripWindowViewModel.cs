@@ -43,12 +43,34 @@ namespace CapstoneDesktop.ViewModels
             set => this.RaiseAndSetIfChanged(ref _error, value);
         }
 
+        /// <summary>
+        /// The trip name.
+        /// </summary>
         public string? TripName { get; set; }
+
+        /// <summary>
+        /// The notes.
+        /// </summary>
         public string? Notes { get; set; }
+
+        /// <summary>
+        /// The start date.
+        /// </summary>
         public DateTime StartDate { get; set; } = DateTime.Today;
+
+        /// <summary>
+        /// The end date.
+        /// </summary>
         public DateTime EndDate { get; set; } = DateTime.Today.AddDays(1);
 
+        /// <summary>
+        /// The create trip command.
+        /// </summary>
         public ReactiveCommand<Unit, Unit> CreateTripCommand { get; set; }
+
+        /// <summary>
+        /// The cancel create trip command.
+        /// </summary>
         public ReactiveCommand<Unit, Unit> CancelCreateTripCommand { get; set; }
 
         private void createTrip()

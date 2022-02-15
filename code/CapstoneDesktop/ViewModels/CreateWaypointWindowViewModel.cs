@@ -34,32 +34,64 @@ namespace CapstoneDesktop.ViewModels
         {
         }
 
+        /// <summary>
+        /// The error message.
+        /// </summary>
         public string ErrorMessage
         {
             get => _error;
             set => this.RaiseAndSetIfChanged(ref _error, value);
         }
 
+        /// <summary>
+        /// The start date.
+        /// </summary>
         public DateTime StartDate { get; set; }
+
+        /// <summary>
+        /// The start time.
+        /// </summary>
         public TimeSpan StartTime { get; set; }
+
+        /// <summary>
+        /// The end date.
+        /// </summary>
         public DateTime EndDate { get; set; }
+
+        /// <summary>
+        /// The end time.
+        /// </summary>
         public TimeSpan EndTime { get; set; }
 
-        public string? WaypointLocation { get; set; }
+        /// <summary>
+        /// The location.
+        /// </summary>
+        public string? Location { get; set; }
+
+        /// <summary>
+        /// The notes.
+        /// </summary>
         public string? Notes { get; set; }
 
+        /// <summary>
+        /// The create waypoint command.
+        /// </summary>
         public ReactiveCommand<Unit, Unit> CreateWaypointCommand { get; set; }
+
+        /// <summary>
+        /// The cancel create waypoint command.
+        /// </summary>
         public ReactiveCommand<Unit, Unit> CancelCreateWaypointCommand { get; set; }
 
         private void createWaypoint()
         {
-            if (string.IsNullOrEmpty(WaypointLocation))
+            if (string.IsNullOrEmpty(Location))
             {
                 ErrorMessage = "You must enter a location for the waypoint";
             }
             else
             {
-                var resultResponse = _waypointManager.CreateWaypoint(0, WaypointLocation, StartDate + StartTime,
+                var resultResponse = _waypointManager.CreateWaypoint(0, Location, StartDate + StartTime,
                     EndDate + EndTime, Notes);
                 if (!string.IsNullOrEmpty(resultResponse.ErrorMessage))
                     ErrorMessage = resultResponse.ErrorMessage;
