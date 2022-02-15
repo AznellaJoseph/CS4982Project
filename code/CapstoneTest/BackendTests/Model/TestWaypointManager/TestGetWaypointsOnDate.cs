@@ -40,13 +40,14 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
                     WaypointId = 1,
                     Location = "1601 Maple St",
                     StartDate = currentTime,
-                    EndDate = currentTime
+                    EndDate = currentTime,
+                    Notes = "notes"
                 }
             };
 
             var mockWaypointDal = new Mock<WaypointDal>();
 
-            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", currentTime, currentTime, null))
+            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", currentTime, currentTime, "notes"))
                 .Returns(1);
             mockWaypointDal.Setup(db => db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
 
@@ -56,6 +57,12 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
                 waypointManager.GetWaypointsOnDate(1, currentTime);
 
             Assert.AreEqual(1, resultResponse.Data?.Count);
+            Assert.AreEqual(1, resultResponse.Data?[0].TripId);
+            Assert.AreEqual(1, resultResponse.Data?[0].WaypointId);
+            Assert.AreEqual("1601 Maple St", resultResponse.Data?[0].Location);
+            Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
+            Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
+            Assert.AreEqual("notes", resultResponse.Data?[0].Notes);
         }
 
 

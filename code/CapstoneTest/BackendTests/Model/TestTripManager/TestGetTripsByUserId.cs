@@ -24,7 +24,8 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
                     UserId = 1,
                     Name = "test",
                     StartDate = startDate,
-                    EndDate = endDate
+                    EndDate = endDate,
+                    Notes = "notes"
                 }
             });
             var tripManager = new TripManager(mockDal.Object);
@@ -35,7 +36,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             Assert.AreEqual(1, trip?.TripId);
             Assert.AreEqual(1, trip?.UserId);
             Assert.AreEqual("test", trip?.Name);
-            Assert.AreEqual(string.Empty, trip?.Notes);
+            Assert.AreEqual("notes", trip?.Notes);
             Assert.AreEqual(startDate, trip?.StartDate);
             Assert.AreEqual(endDate, trip?.EndDate);
         }
