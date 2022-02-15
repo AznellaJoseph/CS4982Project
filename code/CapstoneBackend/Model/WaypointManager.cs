@@ -38,7 +38,7 @@ namespace CapstoneBackend.Model
         /// <returns>
         ///     A response of if the waypoint was created in the database
         /// </returns>
-        public Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime,
+        public virtual Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime,
             string? notes)
         {
             if (startTime.CompareTo(endTime) > 0)
@@ -60,7 +60,7 @@ namespace CapstoneBackend.Model
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
         /// <returns> A response of the waypoints on that date or an error message if there are none </returns>
-        public Response<IList<Waypoint>> GetWaypointsOnDate(int tripId, DateTime selectedDate)
+        public virtual Response<IList<Waypoint>> GetWaypointsOnDate(int tripId, DateTime selectedDate)
         {
             var waypointsOnDate = _dal.GetWaypointsOnDate(tripId, selectedDate);
 
@@ -75,7 +75,7 @@ namespace CapstoneBackend.Model
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns></returns>
-        public Response<IList<Waypoint>> GetWaypointsByTripId(int tripId)
+        public virtual Response<IList<Waypoint>> GetWaypointsByTripId(int tripId)
         {
             var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
 

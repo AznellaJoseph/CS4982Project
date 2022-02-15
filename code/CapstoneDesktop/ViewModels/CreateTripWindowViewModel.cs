@@ -46,7 +46,7 @@ namespace CapstoneDesktop.ViewModels
         public string? TripName { get; set; }
         public string? Notes { get; set; }
         public DateTime StartDate { get; set; } = DateTime.Today;
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; } = DateTime.Today.AddDays(1);
 
         public ReactiveCommand<Unit, Unit> CreateTripCommand { get; set; }
         public ReactiveCommand<Unit, Unit> CancelCreateTripCommand { get; set; }
