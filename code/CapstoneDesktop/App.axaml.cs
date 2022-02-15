@@ -20,7 +20,7 @@ namespace CapstoneDesktop
                 {
                     DataContext = new MainWindowViewModel()
                 };
-
+            
             base.OnFrameworkInitializationCompleted();
         }
     }
