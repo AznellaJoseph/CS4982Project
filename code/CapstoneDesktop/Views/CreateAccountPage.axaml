@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CapstoneDesktop.Views.CreateAccountPage">
+    
+    <StackPanel VerticalAlignment="Bottom"
+                Margin="15,0, 15, 0">
+        <TextBlock Text="Create Account" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top"
+                           Margin="15" />
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
+            <TextBox Watermark="Username" VerticalAlignment="Bottom" Margin="15" Text="{Binding Username, Mode=TwoWay}" />
+            <TextBox Watermark="First Name" VerticalAlignment="Bottom" Margin="15"
+                     Text="{Binding FirstName, Mode=TwoWay}" />
+            <TextBox Watermark="Last Name" VerticalAlignment="Bottom" Margin="15"
+                     Text="{Binding LastName, Mode=TwoWay}" />
+            <TextBox PasswordChar="*" Watermark="Password" VerticalAlignment="Bottom" Margin="15"
+                     Text="{Binding Password, Mode=TwoWay}" />
+
+        <StackPanel Orientation="Horizontal" Margin="15" Spacing="20">
+                <Button Content="Create" Margin="15" Command="{Binding SubmitAccountCommand}" />
+                <Button Content="Cancel" HorizontalAlignment="Right" Margin="15"
+                        Command="{Binding CancelCreateAccountCommand}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

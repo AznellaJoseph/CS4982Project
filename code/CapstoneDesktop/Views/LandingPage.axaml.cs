@@ -1,23 +1,21 @@
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using CapstoneDesktop.ViewModels;
+using ReactiveUI;
 
 namespace CapstoneDesktop.Views
 {
-    public class MainWindow : ReactiveWindow<MainWindowViewModel>
+    public class LandingPage : ReactiveUserControl<LandingPageViewModel>
     {
-        public MainWindow()
+
+        public LandingPage()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent()
         {
+            this.WhenActivated(disposables => { });
             AvaloniaXamlLoader.Load(this);
         }
     }

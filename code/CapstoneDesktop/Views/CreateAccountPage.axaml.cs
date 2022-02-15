@@ -3,21 +3,20 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using CapstoneDesktop.ViewModels;
+using ReactiveUI;
 
 namespace CapstoneDesktop.Views
 {
-    public class MainWindow : ReactiveWindow<MainWindowViewModel>
+    public class CreateAccountPage : ReactiveUserControl<CreateAccountPageViewModel>
     {
-        public MainWindow()
+        public CreateAccountPage()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent()
         {
+            this.WhenActivated(disposables => { });
             AvaloniaXamlLoader.Load(this);
         }
     }

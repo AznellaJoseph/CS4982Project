@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CapstoneDesktop.Views.LandingPage">
+    <Grid RowDefinitions="2*,20,Auto,20,3*" ColumnDefinitions="2*,20,3*" Margin="20">
+        <Border Classes="container" Grid.Column="0" Grid.Row="0">
+            <Panel/>
+        </Border>
+        <Border Classes="container" Grid.Column="0" Grid.Row="2">
+            <Grid ColumnDefinitions="*,10,*">
+                <Button HorizontalAlignment="Stretch" Grid.Column="0">
+                    <TextBlock Classes="dark" Text="PROFILE" TextAlignment="Center"/>
+                </Button>
+                <Button HorizontalAlignment="Stretch" Grid.Column="2" Command="{Binding LogoutCommand}">
+                    <TextBlock Classes="dark" Text="LOGOUT" TextAlignment="Center"/>
+                </Button>
+            </Grid>
+        </Border>
+        <Border Classes="container" Grid.Column="0" Grid.Row="4">
+            <Panel/>
+        </Border>
+        <Border Classes="container" Grid.Row="0" Grid.RowSpan="5" Grid.Column="2">
+            <Grid VerticalAlignment="Stretch" RowDefinitions="70,10,1*,10,70">
+                <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Classes="h1 light">TRIPS</TextBlock>
+                <ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+                    <ItemsControl Items="{Binding TripViewModels}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" Spacing="10" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button HorizontalAlignment="Stretch" Command="{Binding TripClickCommand}">
+                                    <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*">
+                                        <TextBlock Grid.Column="0" Text="{Binding Trip.StartDate}"/>
+                                        <TextBlock Grid.Column="2" Text="-"/>
+                                        <TextBlock Grid.Column="4" Text="{Binding Trip.EndDate}"/>
+                                        <TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Trip.Name}"/>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Button Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding CreateTripCommand}">
+                    <TextBlock Classes="dark" Text="CREATE TRIP" VerticalAlignment="Center" TextAlignment="Center"/>
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
