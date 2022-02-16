@@ -43,7 +43,7 @@ then
       exit 1
     fi
     docker kill capstone
-    docker run --rm --name capstone -e MYSQL_ROOT_PASSWORD="test" -e MYSQL_DATABASE="capstone" -v $SCRIPT_DIR'/CapstoneDatabase/execution:/docker-entrypoint-initdb.d' -p 3308:3306 -d mysql;
+    docker run --rm --name capstone -e MYSQL_ROOT_PASSWORD="test" -e MYSQL_DATABASE="capstone" -v "$SCRIPT_DIR'/CapstoneDatabase/execution:/docker-entrypoint-initdb.d'" -p 3308:3306 -d mysql;
   elif [[ $2 == "stop" ]]
   then
     docker kill capstone

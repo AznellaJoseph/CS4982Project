@@ -6,17 +6,9 @@ using CapstoneDesktop.ViewModels;
 
 namespace CapstoneDesktop.Views
 {
-
-    /// <summary>
-    ///     Window for the Main Functionality (Login and Create Account)
-    /// </summary>
-    /// <seealso cref="Avalonia.Controls.Window" />
-    public class MainWindow : ReactiveWindow<MainWindowViewModel>
+    public partial class TripOverviewWindow : ReactiveWindow<TripOverviewViewModel>
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="MainWindow" /> class.
-        /// </summary>
-        public MainWindow()
+        public TripOverviewWindow()
         {
             InitializeComponent();
 #if DEBUG

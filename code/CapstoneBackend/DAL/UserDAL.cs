@@ -13,14 +13,20 @@ namespace CapstoneBackend.DAL
     {
         private readonly MySqlConnection _connection;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="UserDal" /> class.
+        /// </summary>
         public UserDal() : this(new MySqlConnection(Connection.ConnectionString))
         {
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="UserDal" /> class.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
         public UserDal(MySqlConnection connection)
         {
             _connection = connection;
-
         }
 
         /// <summary>
@@ -30,7 +36,7 @@ namespace CapstoneBackend.DAL
         /// <returns> The user with the given username</returns>
         public virtual User? GetUserByUsername(string username)
         {
-            this._connection.Open();
+            _connection.Open();
             const string query = "uspGetUserByUsername";
             using MySqlCommand cmd = new(query, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -43,7 +49,7 @@ namespace CapstoneBackend.DAL
             var passwordOrdinal = reader.GetOrdinal("password");
 
             User? user = null;
-            
+
             if (reader.Read())
             {
                 user = new User
@@ -68,7 +74,7 @@ namespace CapstoneBackend.DAL
         /// <returns>ID of new user if successful. null, otherwise.</returns>
         public virtual int CreateUser(string username, string password, string fname, string lname)
         {
-            this._connection.Open();
+            _connection.Open();
             const string procedure = "uspCreateUser";
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;

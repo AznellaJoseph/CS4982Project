@@ -7,18 +7,16 @@ using Moq;
 
 namespace CapstoneTest.BackendTests.Model.TestTripManager
 {
-    
     [TestClass]
     public class TestGetTripsByUserId
     {
-
         [TestMethod]
         public void GetTrips_Success()
         {
             var mockDal = new Mock<TripDal>();
             var startDate = DateTime.Now;
             var endDate = DateTime.Now;
-            mockDal.Setup(dal => dal.GetTripsByUserId(1)).Returns(new List<Trip>()
+            mockDal.Setup(dal => dal.GetTripsByUserId(1)).Returns(new List<Trip>
             {
                 new()
                 {
@@ -26,7 +24,8 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
                     UserId = 1,
                     Name = "test",
                     StartDate = startDate,
-                    EndDate = endDate
+                    EndDate = endDate,
+                    Notes = "notes"
                 }
             });
             var tripManager = new TripManager(mockDal.Object);
@@ -37,11 +36,11 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             Assert.AreEqual(1, trip?.TripId);
             Assert.AreEqual(1, trip?.UserId);
             Assert.AreEqual("test", trip?.Name);
-            Assert.AreEqual(string.Empty, trip?.Notes);
+            Assert.AreEqual("notes", trip?.Notes);
             Assert.AreEqual(startDate, trip?.StartDate);
             Assert.AreEqual(endDate, trip?.EndDate);
         }
-        
+
         [TestMethod]
         public void GetTrips_MySqlException_Failure()
         {
@@ -53,7 +52,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             Assert.AreEqual(500U, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
-        
+
         [TestMethod]
         public void GetTrips_Exception_Failure()
         {
@@ -64,6 +63,5 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             Assert.AreEqual(500U, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
-        
     }
 }

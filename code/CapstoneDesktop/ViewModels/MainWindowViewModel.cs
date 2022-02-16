@@ -11,6 +11,6 @@ namespace CapstoneDesktop.ViewModels
         {
             this.Router.Navigate.Execute(new LoginPageViewModel(this));
         }
-
+        
     }
 }
