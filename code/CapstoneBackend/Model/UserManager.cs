@@ -1,5 +1,4 @@
-﻿using System;
-using CapstoneBackend.DAL;
+﻿using CapstoneBackend.DAL;
 using CapstoneBackend.Utils;
 
 namespace CapstoneBackend.Model
@@ -11,15 +10,21 @@ namespace CapstoneBackend.Model
     {
         private readonly UserDal _dal;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="UserManager" /> class.
+        /// </summary>
         public UserManager() : this(new UserDal())
         {
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="UserManager" /> class.
+        /// </summary>
+        /// <param name="dal">The dal.</param>
         public UserManager(UserDal dal)
         {
             _dal = dal;
         }
-
 
         /// <summary>
         ///     Gets a user by their credentials, i.e. username and password. If the user does not match any ones credentials then

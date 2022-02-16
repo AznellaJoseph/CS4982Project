@@ -5,15 +5,15 @@ using Avalonia.Markup.Xaml;
 namespace CapstoneDesktop.Views
 {
     /// <summary>
-    ///     Window for the Main Functionality (Login and Create Account)
+    ///     Window for Create Trip Functionality
     /// </summary>
     /// <seealso cref="Avalonia.Controls.Window" />
-    public class MainWindow : Window
+    public class CreateTripWindow : Window
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MainWindow" /> class.
+        ///     Initializes a new instance of the <see cref="CreateTripWindow" /> class.
         /// </summary>
-        public MainWindow()
+        public CreateTripWindow()
         {
             InitializeComponent();
 #if DEBUG
