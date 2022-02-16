@@ -1,13 +1,12 @@
+using System;
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 {
-
     [TestClass]
     public class TestLoginCommand
     {
@@ -23,7 +22,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
                 Id = 0
             };
             var mockUserManager = new Mock<UserManager>();
-            mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User> { Data = user });
+            mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
+                .Returns(new Response<User> {Data = user});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -39,7 +39,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         public void Login_IncorrectUsername_ReturnsErrorMessage()
         {
             var mockUserManager = new Mock<UserManager>();
-            mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User> { ErrorMessage = "Username is incorrect." });
+            mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
+                .Returns(new Response<User> {ErrorMessage = "Username is incorrect."});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -57,7 +58,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         public void Login_NullErrorMessage_ReturnsEmptyErrorMessage()
         {
             var mockUserManager = new Mock<UserManager>();
-            mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User> { ErrorMessage = null });
+            mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
+                .Returns(new Response<User> {ErrorMessage = null});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -75,7 +77,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         public void Login_NullCredentials_ReturnsErrorMessage()
         {
             var mockUserManager = new Mock<UserManager>();
-            mockUserManager.Setup(um => um.GetUserByCredentials("", "")).Returns(new Response<User> { ErrorMessage = "Username is incorrect." });
+            mockUserManager.Setup(um => um.GetUserByCredentials("", ""))
+                .Returns(new Response<User> {ErrorMessage = "Username is incorrect."});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -88,6 +91,5 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 
             Assert.AreEqual("Username is incorrect.", mainWindowViewModel.ErrorMessage);
         }
-
     }
 }

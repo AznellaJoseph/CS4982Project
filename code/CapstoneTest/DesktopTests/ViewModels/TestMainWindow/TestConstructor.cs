@@ -5,7 +5,6 @@ using Moq;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 {
-
     [TestClass]
     public class TestConstructor
     {
@@ -30,7 +29,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         [TestMethod]
         public void Constructor_NoParameters_PropertyCreations()
         {
-            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel();
+            var mainWindowViewModel = new MainWindowViewModel();
 
             Assert.IsNotNull(mainWindowViewModel.CancelCreateAccountCommand);
             Assert.IsNotNull(mainWindowViewModel.LoginCommand);

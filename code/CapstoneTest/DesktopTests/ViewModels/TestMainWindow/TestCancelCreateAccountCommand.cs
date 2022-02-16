@@ -1,13 +1,12 @@
+using System;
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using Microsoft.Reactive.Testing;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 {
-
     [TestClass]
     public class TestCancelCreateAccountCommand
     {

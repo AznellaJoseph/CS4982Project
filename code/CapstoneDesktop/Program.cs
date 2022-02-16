@@ -16,7 +16,12 @@ namespace CapstoneDesktop
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }
-        
+
+        // Avalonia configuration, don't remove; also used by visual designer.
+        /// <summary>
+        ///     Builds the avalonia application.
+        /// </summary>
+        /// <returns> The app builder creating the application </returns>
         public static AppBuilder BuildAvaloniaApp()
         {
             Locator.CurrentMutable.Register(() => new LoginPage(), typeof(IViewFor<LoginPageViewModel>));

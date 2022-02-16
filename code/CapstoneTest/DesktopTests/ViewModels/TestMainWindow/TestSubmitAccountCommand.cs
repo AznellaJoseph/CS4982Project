@@ -1,13 +1,12 @@
+using System;
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using Microsoft.Reactive.Testing;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 {
-
     [TestClass]
     public class TestSubmitAccountCommand
     {
@@ -15,7 +14,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         public void SubmitAccount_RegisterValidUser_ReturnsNoError()
         {
             var mockUserManager = new Mock<UserManager>();
-            mockUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int> { Data = 0, StatusCode = 200 });
+            mockUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
+                .Returns(new Response<int> {Data = 0, StatusCode = 200});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -30,7 +30,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
             testScheduler.Start();
 
             Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
-
         }
 
         [TestMethod]
@@ -50,14 +49,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
             testScheduler.Start();
 
             Assert.AreEqual("The given passwords must match.", mainWindowViewModel.ErrorMessage);
-
         }
 
         [TestMethod]
         public void SubmitAccount_RegisterAlreadyExistingUser_ReturnsError()
         {
             var mockUserManager = new Mock<UserManager>();
-            mockUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int> { StatusCode = 404, ErrorMessage = "Username is taken." });
+            mockUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int>
+                {StatusCode = 404, ErrorMessage = "Username is taken."});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -78,7 +77,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         public void SubmitAccount_UnsuccessfulRegister_ReturnsUnknownError()
         {
             var mockUserManager = new Mock<UserManager>();
-            mockUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int> { StatusCode = 404 });
+            mockUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
+                .Returns(new Response<int> {StatusCode = 404});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
@@ -99,7 +99,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
         public void SubmitAccount_RegisterWithNullCredentials_ReturnsInternalServerError()
         {
             var mockUserManager = new Mock<UserManager>();
-            mockUserManager.Setup(um => um.RegisterUser("", "", "", "")).Returns(new Response<int> { StatusCode = 404, ErrorMessage = "Internal Server Error." });
+            mockUserManager.Setup(um => um.RegisterUser("", "", "", "")).Returns(new Response<int>
+                {StatusCode = 404, ErrorMessage = "Internal Server Error."});
             MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
             var testScheduler = new TestScheduler();
 
