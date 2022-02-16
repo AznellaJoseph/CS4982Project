@@ -8,3 +8,5 @@ BEGIN
     FROM trip
     WHERE trip.userId = userId;
 END$
+
+DELIMITER ;

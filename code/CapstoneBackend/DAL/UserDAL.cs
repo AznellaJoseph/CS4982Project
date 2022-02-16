@@ -43,7 +43,7 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = username;
 
             using var reader = cmd.ExecuteReaderAsync().Result;
-            var idOrdinal = reader.GetOrdinal("id");
+            var idOrdinal = reader.GetOrdinal("userId");
             var fnameOrdinal = reader.GetOrdinal("fname");
             var lnameOrdinal = reader.GetOrdinal("lname");
             var passwordOrdinal = reader.GetOrdinal("password");
@@ -51,16 +51,18 @@ namespace CapstoneBackend.DAL
             User? user = null;
 
             if (reader.Read())
+            {
                 user = new User
-                {
-                    Id = reader.GetInt32(idOrdinal),
-                    Username = username,
-                    FirstName = reader.GetString(fnameOrdinal),
-                    LastName = reader.GetString(lnameOrdinal),
-                    Password = reader.GetString(passwordOrdinal)
-                };
-
-            _connection.Close();
+                  {
+                      UserId = reader.GetInt32(idOrdinal),
+                      Username = username, 
+                      FirstName = reader.GetString(fnameOrdinal),
+                      LastName = reader.GetString(lnameOrdinal),
+                      Password = reader.GetString(passwordOrdinal)
+                  };
+            }
+              
+            this._connection.Close();
             return user;
         }
 
@@ -70,7 +72,7 @@ namespace CapstoneBackend.DAL
         /// <param name="fname">The first name.</param>
         /// <param name="lname">The last name.</param>
         /// <returns>ID of new user if successful. null, otherwise.</returns>
-        public virtual int? CreateUser(string username, string password, string fname, string lname)
+        public virtual int CreateUser(string username, string password, string fname, string lname)
         {
             _connection.Open();
             const string procedure = "uspCreateUser";
@@ -81,20 +83,10 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = PasswordHasher.Hash(password);
             cmd.Parameters.Add("@fname", MySqlDbType.VarChar).Value = fname;
             cmd.Parameters.Add("@lname", MySqlDbType.VarChar).Value = lname;
-            cmd.Parameters.Add("@userId", MySqlDbType.Int32).Direction = ParameterDirection.Output;
 
-            try
-            {
-                cmd.ExecuteNonQuery();
-                var userId = cmd.Parameters["@userId"].Value;
-                _connection.Close();
-                return Convert.ToInt32(userId);
-            }
-            catch
-            {
-                _connection.Close();
-                return null;
-            }
+            var userId = cmd.ExecuteScalar();
+            this._connection.Close();
+            return Convert.ToInt32(userId);
         }
     }
 }
