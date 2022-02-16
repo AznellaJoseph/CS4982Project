@@ -9,7 +9,7 @@
         /// <summary>
         ///     The id of the user.
         /// </summary>
-        public int Id { get; set; }
+        public int UserId { get; set; }
 
         /// <summary>
         ///     The username of the user

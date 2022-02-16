@@ -45,9 +45,9 @@ namespace CapstoneDesktop.ViewModels
             if (Password == ConfirmedPassword)
             {
                 var response = this._userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);
-                if (response.StatusCode == 200)
+                if (response.StatusCode == 200U)
                 {
-                    return this.HostScreen.Router.Navigate.Execute(new LandingPageViewModel(this.HostScreen));
+                    return this.HostScreen.Router.Navigate.Execute(new LandingPageViewModel(new User { UserId = response.Data},this.HostScreen));
                 }
                 else
                 {

@@ -48,7 +48,7 @@ namespace CapstoneBackend.DAL
             {
                 user = new User
                   {
-                      Id = reader.GetInt32(idOrdinal),
+                      UserId = reader.GetInt32(idOrdinal),
                       Username = username, 
                       FirstName = reader.GetString(fnameOrdinal),
                       LastName = reader.GetString(lnameOrdinal),
