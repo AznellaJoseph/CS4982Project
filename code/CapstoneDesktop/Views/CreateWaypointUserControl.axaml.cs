@@ -1,24 +1,20 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
 namespace CapstoneDesktop.Views
 {
     /// <summary>
-    ///     Window for Create Trip Functionality
+    ///     User Control for Create Waypoint Functionality
     /// </summary>
-    /// <seealso cref="Avalonia.Controls.Window" />
-    public class CreateTripWindow : Window
+    /// <seealso cref="Avalonia.Controls.UserControl" />
+    public class CreateWaypointUserControl : UserControl
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateTripWindow" /> class.
+        ///     Initializes a new instance of the <see cref="CreateWaypointUserControl" /> class.
         /// </summary>
-        public CreateTripWindow()
+        public CreateWaypointUserControl()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent()

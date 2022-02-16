@@ -4,7 +4,7 @@ using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypointWindow
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 {
     [TestClass]
     public class TestConstructor
@@ -13,7 +13,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypointWindow
         public void Constructor_OneParameter_PropertyCreations()
         {
             var mockWaypointManager = new Mock<WaypointManager>();
-            CreateWaypointWindowViewModel createWaypointWindowViewModel = new(mockWaypointManager.Object);
+            CreateWaypointViewModel createWaypointWindowViewModel = new(mockWaypointManager.Object);
 
             Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
             Assert.AreEqual(DateTime.MinValue, createWaypointWindowViewModel.StartDate);
@@ -29,7 +29,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypointWindow
         [TestMethod]
         public void Constructor_NoParameters_PropertyCreations()
         {
-            CreateWaypointWindowViewModel createWaypointWindowViewModel = new();
+            CreateWaypointViewModel createWaypointWindowViewModel = new();
 
             Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
             Assert.AreEqual(DateTime.MinValue, createWaypointWindowViewModel.StartDate);

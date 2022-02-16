@@ -10,17 +10,17 @@ namespace CapstoneDesktop.ViewModels
     ///     ViewModel for the CreateWaypoint Window
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
-    public class CreateWaypointWindowViewModel : ViewModelBase
+    public class CreateWaypointViewModel : ViewModelBase
     {
         private readonly WaypointManager _waypointManager;
 
         private string _error = string.Empty;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateWaypointWindowViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="CreateWaypointViewModel" /> class.
         /// </summary>
         /// <param name="manager">The manager.</param>
-        public CreateWaypointWindowViewModel(WaypointManager manager)
+        public CreateWaypointViewModel(WaypointManager manager)
         {
             _waypointManager = manager;
             CreateWaypointCommand = ReactiveCommand.Create(createWaypoint);
@@ -28,9 +28,9 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateWaypointWindowViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="CreateWaypointViewModel" /> class.
         /// </summary>
-        public CreateWaypointWindowViewModel() : this(new WaypointManager())
+        public CreateWaypointViewModel() : this(new WaypointManager())
         {
         }
 

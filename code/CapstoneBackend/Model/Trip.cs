@@ -22,7 +22,6 @@ namespace CapstoneBackend.Model
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
-
         /// <summary>
         ///     The notes of the trip;
         /// </summary>

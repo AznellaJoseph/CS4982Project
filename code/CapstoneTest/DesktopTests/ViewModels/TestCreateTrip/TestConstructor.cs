@@ -4,7 +4,7 @@ using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTripWindow
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 {
     [TestClass]
     public class TestConstructor
@@ -13,7 +13,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTripWindow
         public void Constructor_OneParameter_PropertyCreations()
         {
             var mockTripManager = new Mock<TripManager>();
-            CreateTripWindowViewModel createTripWindowViewModel = new(mockTripManager.Object);
+            CreateTripViewModel createTripWindowViewModel = new(mockTripManager.Object);
 
             Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
             Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);
@@ -27,7 +27,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTripWindow
         [TestMethod]
         public void Constructor_NoParameters_PropertyCreations()
         {
-            CreateTripWindowViewModel createTripWindowViewModel = new();
+            CreateTripViewModel createTripWindowViewModel = new();
 
             Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
             Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);

@@ -10,17 +10,17 @@ namespace CapstoneDesktop.ViewModels
     ///     ViewModel for Create Trip Window
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
-    public class CreateTripWindowViewModel : ViewModelBase
+    public class CreateTripViewModel : ViewModelBase
     {
         private readonly TripManager _tripManager;
 
         private string _error = string.Empty;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateTripWindowViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="CreateTripViewModel" /> class.
         /// </summary>
         /// <param name="manager">The manager.</param>
-        public CreateTripWindowViewModel(TripManager manager)
+        public CreateTripViewModel(TripManager manager)
         {
             _tripManager = manager;
             CreateTripCommand = ReactiveCommand.Create(createTrip);
@@ -28,9 +28,9 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateTripWindowViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="CreateTripViewModel" /> class.
         /// </summary>
-        public CreateTripWindowViewModel() : this(new TripManager())
+        public CreateTripViewModel() : this(new TripManager())
         {
         }
 

@@ -5,7 +5,7 @@ using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTripWindow
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 {
     [TestClass]
     public class TestCreateTripCommand
@@ -15,7 +15,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTripWindow
         {
             var mockTripManager = new Mock<TripManager>();
 
-            CreateTripWindowViewModel createTripWindowViewModel = new(mockTripManager.Object);
+            CreateTripViewModel createTripWindowViewModel = new(mockTripManager.Object);
             var testScheduler = new TestScheduler();
 
             createTripWindowViewModel.TripName = "";
@@ -35,7 +35,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTripWindow
                 .Returns(new Response<int>
                     {StatusCode = 400, ErrorMessage = "Start date of a trip cannot be after the end date."});
 
-            CreateTripWindowViewModel createTripWindowViewModel = new(mockTripManager.Object);
+            CreateTripViewModel createTripWindowViewModel = new(mockTripManager.Object);
             var testScheduler = new TestScheduler();
 
             createTripWindowViewModel.TripName = "name";
@@ -57,7 +57,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTripWindow
             mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", DateTime.Today, DateTime.Today.AddDays(1)))
                 .Returns(new Response<int> {StatusCode = 200});
 
-            CreateTripWindowViewModel createTripWindowViewModel = new(mockTripManager.Object);
+            CreateTripViewModel createTripWindowViewModel = new(mockTripManager.Object);
             var testScheduler = new TestScheduler();
 
             createTripWindowViewModel.TripName = "name";
