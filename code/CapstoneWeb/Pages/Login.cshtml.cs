@@ -28,7 +28,7 @@ namespace CapstoneWeb.Pages
             var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (response.Data is not null)
             {
-                HttpContext.Session.SetString("userId", $"{response.Data.Id}");
+                HttpContext.Session.SetString("userId", $"{response.Data.UserId}");
                 return RedirectToPage("Index");
             }
 

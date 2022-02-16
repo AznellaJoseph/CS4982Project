@@ -12,13 +12,13 @@ namespace CapstoneTest.WebTests.Pages
     [TestClass]
     public class TestLogin
     {
-        
         [TestMethod]
         public void PostSuccess()
         {
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
-            fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User>{Data = new User{Id = 0}});
+            fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
+                .Returns(new Response<User> {Data = new User {UserId = 0}});
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
@@ -30,13 +30,14 @@ namespace CapstoneTest.WebTests.Pages
             var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Index", redirect.PageName);
         }
-        
+
         [TestMethod]
         public void PostFailure()
         {
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
-            fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin")).Returns(new Response<User>{ ErrorMessage = "Failed."});
+            fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
+                .Returns(new Response<User> {ErrorMessage = "Failed."});
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
@@ -45,6 +46,5 @@ namespace CapstoneTest.WebTests.Pages
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual("Failed.", page.ErrorMessage);
         }
-        
     }
 }
