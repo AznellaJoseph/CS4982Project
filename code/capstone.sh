@@ -28,14 +28,13 @@ then
     fi
 
     mkdir ./CapstoneDatabase/execution
+    touch ./CapstoneDatabase/execution/execution.sql
 
-    EXE_COUNT=0;
     while IFS= read -r line
     do
-	    clean_line=$(sed -r 's/$/\r/' <<< $line)
-      cp ./CapstoneDatabase/$clean_line ./CapstoneDatabase/execution/$EXE_COUNT"_$clean_line"
-      ((EXE_COUNT=EXE_COUNT + 1))
-done < "./CapstoneDatabase/execution_order.config"
+      clean_line=$(sed -r 's/\r//' <<< $line)
+      cat "./CapstoneDatabase/$clean_line" >> ./CapstoneDatabase/execution/execution.sql
+    done < "./CapstoneDatabase/execution_order.config"
   elif [[ $2 == "run" ]]
   then
     if [ ! -d ./CapstoneDatabase/execution ]
@@ -44,7 +43,7 @@ done < "./CapstoneDatabase/execution_order.config"
       exit 1
     fi
     docker kill capstone
-    docker run --rm --name capstone -e MYSQL_ROOT_PASSWORD="test" -e MYSQL_DATABASE="capstone" -v $SCRIPT_DIR'/CapstoneDatabase/execution:/docker-entrypoint-initdb.d' -p 3308:3306 -d mysql;
+    docker run --rm --name capstone -e MYSQL_ROOT_PASSWORD="test" -e MYSQL_DATABASE="capstone" -v "$SCRIPT_DIR/CapstoneDatabase/execution:/docker-entrypoint-initdb.d" -p 3308:3306 -d mysql;
   elif [[ $2 == "stop" ]]
   then
     docker kill capstone

@@ -12,12 +12,15 @@ namespace CapstoneWeb.Pages
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class IndexModel : PageModel
     {
+        /// <summary>
+        /// The user id.
+        /// </summary>
         public int UserId { get; private set; }
 
         /// <summary>
         ///     Called when [get].
         /// </summary>
-        /// <returns></returns>
+        /// <returns> The page to go to when [get] </returns>
         public IActionResult OnGet()
         {
             if (!HttpContext.Session.Keys.Contains("userId")) return RedirectToPage("login");
@@ -25,6 +28,10 @@ namespace CapstoneWeb.Pages
             return Page();
         }
 
+        /// <summary>
+        /// Called when [post logout].
+        /// </summary>
+        /// <returns> The action to take when logging out </returns>
         public IActionResult OnPostLogout()
         {
             HttpContext.Session.Remove("userId");

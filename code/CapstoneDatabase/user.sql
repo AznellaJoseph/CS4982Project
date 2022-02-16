@@ -7,5 +7,5 @@ CREATE TABLE user
 	password VARCHAR(45) NOT NULL, 
 	fname VARCHAR(45) NOT NULL, 
 	lname VARCHAR(45) NOT NULL,
-	PRIMARY KEY (userId) 
+	PRIMARY KEY (userId)
 );

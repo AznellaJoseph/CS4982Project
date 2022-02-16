@@ -19,4 +19,21 @@
     <ItemGroup>
         <ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Views\LandingPage.axaml.cs">
+        <DependentUpon>LandingPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\LoginPage.axaml.cs">
+        <DependentUpon>LoginPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\CreateAccountPage.axaml.cs">
+        <DependentUpon>CreateAccountPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Views\Styles\DarkMode.axaml" />
+    </ItemGroup>
 </Project>

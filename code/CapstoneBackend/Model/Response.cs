@@ -11,12 +11,10 @@
         /// </summary>
         public uint StatusCode { get; set; } = 200;
 
-
         /// <summary>
         ///     The data of the response
         /// </summary>
         public T? Data { get; set; }
-
 
         /// <summary>
         ///     The error message of the response

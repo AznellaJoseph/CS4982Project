@@ -3,27 +3,25 @@ using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 
 namespace CapstoneTest.BackendTests.Model.TestUserManager
 {
-
     [TestClass]
     public class TestGetUserByCredentials
     {
-        private const string TEST_USERNAME = "TestUsername";
-        private const string TEST_PASSWORD = "TestPassword";
+        private const string TestUsername = "TestUsername";
+        private const string TestPassword = "TestPassword";
 
         [TestMethod]
         public void Call_WithValidCredentials_Succeeds()
         {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash(TEST_PASSWORD) };
-            var mockUserDAL = new Mock<UserDal>();
-            mockUserDAL.Setup(db => db.GetUserByUsername(TEST_USERNAME)).Returns(fakeExistingUser);
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash(TestPassword)};
+            var mockUserDal = new Mock<UserDal>();
+            mockUserDal.Setup(db => db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
 
-            UserManager userManager = new(mockUserDAL.Object);
+            UserManager userManager = new(mockUserDal.Object);
 
-            var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
             Assert.AreEqual(200U, resultResponse.StatusCode);
             Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
@@ -38,12 +36,12 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
         public void Call_WithUnknownUsername_Fails()
         {
             User? missingUser = null;
-            var mockUserDAL = new Mock<UserDal>();
-            mockUserDAL.Setup(db => db.GetUserByUsername(TEST_USERNAME)).Returns(missingUser);
+            var mockUserDal = new Mock<UserDal>();
+            mockUserDal.Setup(db => db.GetUserByUsername(TestUsername)).Returns(missingUser);
 
-            UserManager userManager = new(mockUserDAL.Object);
+            UserManager userManager = new(mockUserDal.Object);
 
-            var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
             Assert.AreEqual(404U, resultResponse.StatusCode);
         }
@@ -51,13 +49,13 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
         [TestMethod]
         public void Call_WithWrongPassword_Fails()
         {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash("CorrectPassword") };
-            var mockUserDAL = new Mock<UserDal>();
-            mockUserDAL.Setup(db => db.GetUserByUsername(TEST_USERNAME)).Returns(fakeExistingUser);
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash("CorrectPassword")};
+            var mockUserDal = new Mock<UserDal>();
+            mockUserDal.Setup(db => db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
 
-            UserManager userManager = new(mockUserDAL.Object);
+            UserManager userManager = new(mockUserDal.Object);
 
-            var resultResponse = userManager.GetUserByCredentials(TEST_USERNAME, TEST_PASSWORD);
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
             Assert.AreEqual(404U, resultResponse.StatusCode);
         }
