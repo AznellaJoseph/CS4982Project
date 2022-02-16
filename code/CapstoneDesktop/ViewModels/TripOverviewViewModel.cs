@@ -12,24 +12,26 @@ namespace CapstoneDesktop.ViewModels
 {
     public class TripOverviewViewModel : ViewModelBase
     {
-        private string _tripName = "Test Trip";
-        private string _tripNotes = "Some Notes";
-        private DateTime _tripStartDate = new DateTime(2022, 1, 8);
-        private DateTime _tripEndDate = new DateTime(2022, 1, 20);
+        private string _tripName = String.Empty;
+        private string _tripNotes = String.Empty;
+        private DateTime _tripStartDate = DateTime.MinValue;
+        private DateTime _tripEndDate = DateTime.MaxValue;
 
-
+        /// <summary>Initializes a new instance of the <see cref="TripOverviewViewModel" /> class.</summary>
+        /// <param name="selectedTrip">The selected trip to populate the view with info for.</param>
         public TripOverviewViewModel(Trip selectedTrip)
         {
-            this.TripName = selectedTrip.Name;
-            this.TripNotes = selectedTrip.Notes;
-            this.TripStartDate = selectedTrip.StartDate;
-            this.TripEndDate = selectedTrip.EndDate;
+            this._tripName = selectedTrip.Name;
+            this._tripNotes = selectedTrip.Notes;
+            this._tripStartDate = selectedTrip.StartDate;
+            this._tripEndDate = selectedTrip.EndDate;
 
             LogoutCommand = ReactiveCommand.Create(this.Logout);
             ProfileCommand = ReactiveCommand.Create(this.OpenProfile);
             BackCommand = ReactiveCommand.Create(this.GoBackToTrips);
         }
 
+        /// <summary>Initializes a new instance of the <see cref="TripOverviewViewModel" /> class.</summary>
         public TripOverviewViewModel()
         {
             LogoutCommand = ReactiveCommand.Create(this.Logout);
@@ -37,34 +39,48 @@ namespace CapstoneDesktop.ViewModels
             BackCommand = ReactiveCommand.Create(this.GoBackToTrips);
         }
 
+        /// <summary>Gets or sets the name of the trip.</summary>
+        /// <value>The name of the trip.</value>
         public string TripName 
         {
             get => _tripName.ToUpper();
             set => this.RaiseAndSetIfChanged(ref _tripName, value);
         }
 
+        /// <summary>Gets or sets the trip notes.</summary>
+        /// <value>The trip notes.</value>
         public string TripNotes
         {
             get => _tripNotes;
             set => this.RaiseAndSetIfChanged(ref _tripNotes, value);
         }
 
+        /// <summary>Gets or sets the trip start date.</summary>
+        /// <value>The trip start date.</value>
         public DateTime TripStartDate
         {
             get => _tripStartDate;
             set => this.RaiseAndSetIfChanged(ref _tripStartDate, value);
         }
 
+        /// <summary>Gets or sets the trip end date.</summary>
+        /// <value>The trip end date.</value>
         public DateTime TripEndDate
         {
             get => _tripEndDate;
             set => this.RaiseAndSetIfChanged(ref _tripEndDate, value);
         }
 
+        /// <summary>Gets or sets the logout command.</summary>
+        /// <value>The logout command.</value>
         public ReactiveCommand<Unit, Unit> LogoutCommand { get; set; }
 
+        /// <summary>Gets or sets the profile command.</summary>
+        /// <value>The profile command.</value>
         public ReactiveCommand<Unit, Unit> ProfileCommand { get; set; }
 
+        /// <summary>Gets or sets the back command.</summary>
+        /// <value>The back command.</value>
         public ReactiveCommand<Unit, Unit> BackCommand { get; set; }
 
         private void Logout()

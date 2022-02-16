@@ -95,7 +95,7 @@
 			</StackPanel.Styles>
 
 			<Border Classes="dark">
-				<TextBlock Classes="h1" Text="{Binding TripName}" FontSize="50" Padding="20"/>
+				<TextBlock Classes="h1" Text="{Binding TripName, Mode=OneTime}" FontSize="50" Padding="20"/>
 			</Border>
 
 			<Border Classes="dark">
