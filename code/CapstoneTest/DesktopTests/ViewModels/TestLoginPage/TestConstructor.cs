@@ -3,7 +3,7 @@ using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
+namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
 {
     [TestClass]
     public class TestConstructor
