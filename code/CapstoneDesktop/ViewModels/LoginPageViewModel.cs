@@ -47,8 +47,6 @@ namespace CapstoneDesktop.ViewModels
 
         private IObservable<IRoutableViewModel> login()
         {
-            // TODO: remove later used for testing purposes.
-            return this.HostScreen.Router.Navigate.Execute(new LandingPageViewModel(this.HostScreen));
             var response = this._userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (response.StatusCode == 200U)
             {

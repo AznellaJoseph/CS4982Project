@@ -42,9 +42,6 @@ namespace CapstoneDesktop.ViewModels
 
         private IObservable<IRoutableViewModel> submitAccount()
         {
-           
-            // TODO: remove later used for testing purposes.
-            return this.HostScreen.Router.Navigate.Execute(new LandingPageViewModel(this.HostScreen));
             if (Password == ConfirmedPassword)
             {
                 var response = this._userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty, FirstName ?? string.Empty, LastName ?? string.Empty);

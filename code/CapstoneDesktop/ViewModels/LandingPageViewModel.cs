@@ -23,7 +23,6 @@ namespace CapstoneDesktop.ViewModels
             this.TripViewModels = new ObservableCollection<TripViewModel>();
             this.CreateTripCommand = ReactiveCommand.Create(() =>
             {
-                Console.WriteLine("Create Trip");
                 this.TripViewModels?.Add(new(new()
                 {
                     Name = $"Test {(new Random()).Next(100)}",

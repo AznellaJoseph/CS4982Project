@@ -8,8 +8,10 @@ CREATE PROCEDURE uspGetWaypointsOnDate(
 )
 
 BEGIN
-	SELECT waypointNum, startTime, endTime, location
+	SELECT waypointId, waypoint.startDate, waypoint.endDate, location
 	FROM waypoint, trip
-	WHERE waypoint.tripId = trip.id AND (CONVERT(startTime, DATE) = selectedDate OR CONVERT(endTime, DATE) = selectedDate);
+	WHERE waypoint.tripId = trip.tripId AND (CONVERT(waypoint.startDate, DATE) = selectedDate OR CONVERT(waypoint.endDate, DATE) = selectedDate);
 
 END$
+
+DELIMITER ;
