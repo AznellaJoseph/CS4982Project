@@ -14,10 +14,10 @@
         <input id="location" asp-for="Location" required />
 
         <label for="startDate">Start Date*</label>
-        <input id="startDate" asp-for="StartDate" type="datetime" required />
+        <input id="startDate" asp-for="StartDate" type="datetime-local" required asp-format="{0:yyyy-MM-ddTHH:mm}"/>
 
         <label for="endDate">End Date*</label>
-        <input id="endDate" asp-for="EndDate" type="date" />
+        <input id="endDate" asp-for="EndDate" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}"/>
         
         <label for="notes">Notes</label>
         <input id="notes" asp-for="Notes"/>

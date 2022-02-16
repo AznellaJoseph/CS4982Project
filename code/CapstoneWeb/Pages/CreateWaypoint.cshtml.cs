@@ -13,8 +13,8 @@ namespace CapstoneWeb.Pages
     {
         [BindProperty] public string ErrorMessage { get; set; }
         [BindProperty] public string Location { get; set; }
-        [BindProperty] public DateTime StartDate { get; set; }
-        [BindProperty] public DateTime EndDate { get; set; }
+        [BindProperty] public DateTime StartDate { get; set; } = DateTime.Now;
+        [BindProperty] public DateTime EndDate { get; set; } = DateTime.Now;
         [BindProperty] public string Notes { get; set; }
 
         public WaypointManager WaypointManager { get; set; }

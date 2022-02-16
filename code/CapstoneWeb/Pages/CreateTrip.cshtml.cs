@@ -14,8 +14,8 @@ namespace CapstoneWeb.Pages
 
         [BindProperty] public string ErrorMessage { get; set; }
         [BindProperty] public string Name { get; set; }
-        [BindProperty] public DateTime StartDate { get; set; }
-        [BindProperty] public DateTime EndDate { get; set; }
+        [BindProperty] public DateTime StartDate { get; set; } = DateTime.Today;
+        [BindProperty] public DateTime EndDate { get; set; } = DateTime.Today;
         [BindProperty] public string Notes { get; set; }
 
         public TripManager TripManager { get; set; }
