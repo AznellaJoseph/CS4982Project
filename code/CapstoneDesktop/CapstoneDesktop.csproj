@@ -32,6 +32,10 @@
         <DependentUpon>CreateAccountPage.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\WaypointListControl.axaml.cs">
+        <DependentUpon>WaypointListControl.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
     <ItemGroup>
       <UpToDateCheckInput Remove="Views\Styles\DarkMode.axaml" />
