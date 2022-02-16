@@ -4,7 +4,6 @@
     ViewData["Title"] = "Login";
 }
 
-
 <div>
 
     <h1>Login</h1>
@@ -15,12 +14,12 @@
 
     <form method="post">
         <label for="username">Username*</label>
-        <input id="username" asp-for="Username" required/>
+        <input id="username" asp-for="Username" required />
 
         <label for="password">Password*</label>
-        <input id="password" asp-for="Password" required type="password"/>
+        <input id="password" asp-for="Password" required type="password" />
 
-        <input type="submit" value="Login"/>
+        <input id="button" type="submit" value="Login" />
 
         <div>
             <p>* These fields are required</p>

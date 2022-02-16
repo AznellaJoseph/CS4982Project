@@ -8,7 +8,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the MainWindow (Login)
+    ///     ViewModel for the LoginPage
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class LoginPageViewModel : ViewModelBase, IRoutableViewModel

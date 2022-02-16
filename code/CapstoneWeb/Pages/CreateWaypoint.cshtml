@@ -1,0 +1,33 @@
+﻿@page
+@model CapstoneWeb.Pages.CreateWaypointModel
+@{
+    ViewData["Title"] = "Create Waypoint";
+}
+
+<div>
+    <h1>Create Waypoint </h1>
+
+    <p>@Model.ErrorMessage</p>
+
+    <form method="post">
+        <label for="location">Location* </label>
+        <input id="location" asp-for="Location" required />
+
+        <label for="startDate">Start Date*</label>
+        <input id="startDate" asp-for="StartDate" type="datetime" required />
+
+        <label for="endDate">End Date*</label>
+        <input id="endDate" asp-for="EndDate" type="date" />
+        
+        <label for="notes">Notes</label>
+        <input id="notes" asp-for="Notes"/>
+
+        <input type="submit" value="Create Waypoint" />
+
+        <div>
+            <p>* Indicates a required field</p>
+        </div>
+
+    </form>
+
+</div>
