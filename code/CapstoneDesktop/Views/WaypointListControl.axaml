@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CapstoneDesktop.Views.WaypointListControl">
+    <Grid RowDefinitions="*,10,Auto,10,*">
+        <TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="Waypoints"/>
+        <ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+            <ItemsControl Items="{Binding TripViewModels}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" Spacing="10" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*">
+                            <TextBlock Grid.Column="0" Text="{Binding SelectedWaypoint.StartDate}"/>
+                            <TextBlock Grid.Column="2" Text="-"/>
+                            <TextBlock Grid.Column="4" Text="{Binding SelectedWaypoint.EndDate}"/>
+                            <TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding SelectedWaypoint.Location}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Button Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding CreateTripCommand}">
+            <TextBlock Classes="dark" Text="CREATE WAYPOINT" VerticalAlignment="Center" TextAlignment="Center"/>
+        </Button>
+    </Grid>
+</UserControl>

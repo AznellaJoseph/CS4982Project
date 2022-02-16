@@ -50,7 +50,7 @@ namespace CapstoneDesktop.ViewModels
             var response = this._userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
             if (response.StatusCode == 200U && response.Data is not null)
             {
-                return this.HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, this.HostScreen));
+                return this.HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, new TripManager(), this.HostScreen));
             }
             this.ErrorMessage = response.ErrorMessage ?? string.Empty; 
             return Observable.Empty<IRoutableViewModel>();
