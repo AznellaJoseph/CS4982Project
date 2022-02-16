@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CapstoneDesktop.Views.CreateAccountPage">
+    
+    <Border Classes="container" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="30">
+        <StackPanel Spacing="10" Width="500">
+            <TextBlock Classes="h1" Text="CREATE ACCOUNT" FontSize="24" TextAlignment="Center" />
+            
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
+
+            <TextBlock Text="USERNAME:" />
+            <TextBox Watermark="USERNAME" Text="{Binding Username, Mode=TwoWay}" />
+            
+            <TextBlock Text="FIRST NAME:" />
+            <TextBox Watermark="FIRST NAME" Text="{Binding FirstName, Mode=TwoWay}" />
+            
+            <TextBlock Text="LAST NAME:" />
+            <TextBox Watermark="LAST NAME" Text="{Binding LastName, Mode=TwoWay}" />
+
+            <TextBlock Text="PASSWORD:" />
+            <TextBox PasswordChar="*" Watermark="PASSWORD" Text="{Binding Password, Mode=TwoWay}" />
+
+            <TextBlock Text="RE-ENTER PASSWORD:" />
+            <TextBox PasswordChar="*" Watermark="PASSWORD" Text="{Binding ConfirmedPassword, Mode=TwoWay}" />
+
+            <Grid ColumnDefinitions="*,10,*">
+                <Button Grid.Column="0" HorizontalAlignment="Stretch" Command="{Binding SubmitAccountCommand}">
+                    <Button.Content>
+                        <TextBlock TextAlignment="Center" Text="CREATE ACCOUNT"/>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Column="2" HorizontalAlignment="Stretch" Command="{Binding CancelCreateAccountCommand}">
+                    <Button.Content>
+                        <TextBlock TextAlignment="Center" Text="CANCEL"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

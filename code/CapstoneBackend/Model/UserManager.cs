@@ -1,5 +1,6 @@
 ﻿using CapstoneBackend.DAL;
 using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.Model
 {
@@ -35,7 +36,19 @@ namespace CapstoneBackend.Model
         /// <returns>the data of the found user or an error</returns>
         public virtual Response<User> GetUserByCredentials(string username, string password)
         {
-            var user = _dal.GetUserByUsername(username);
+            User? user = null;
+            try
+            {
+                user = _dal.GetUserByUsername(username);
+            }
+            catch (MySqlException e)
+            {
+                return new Response<User>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
             if (user is null)
                 return new Response<User>
                 {
@@ -73,18 +86,31 @@ namespace CapstoneBackend.Model
                     ErrorMessage = "Username is taken."
                 };
 
-            var userCreated = _dal.CreateUser(username, password, fname, lname);
-            if (userCreated is not null)
+            try
+            {
+                var userCreated = _dal.CreateUser(username, password, fname, lname);
                 return new Response<int>
                 {
                     StatusCode = 200,
-                    Data = (int) userCreated
+                    Data = userCreated
                 };
-            return new Response<int>
+            }
+            catch (MySqlException e)
             {
-                StatusCode = 500,
-                ErrorMessage = "Internal Server Error."
-            };
+                return new Response<int>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception e)
+            {
+                return new Response<int>
+                {
+                    StatusCode = 500,
+                    ErrorMessage = "Internal Server Error."
+                };
+            }
         }
     }
 }

@@ -28,14 +28,13 @@ then
     fi
 
     mkdir ./CapstoneDatabase/execution
+    touch ./CapstoneDatabase/execution/execution.sql
 
-    EXE_COUNT=0;
     while IFS= read -r line
     do
-	    clean_line=$(sed -r 's/$/\r/' <<< $line)
-      cp ./CapstoneDatabase/$clean_line ./CapstoneDatabase/execution/$EXE_COUNT"_$clean_line"
-      ((EXE_COUNT=EXE_COUNT + 1))
-done < "./CapstoneDatabase/execution_order.config"
+      clean_line=$(sed -r 's/\r//' <<< $line)
+      cat "./CapstoneDatabase/$clean_line" >> ./CapstoneDatabase/execution/execution.sql
+    done < "./CapstoneDatabase/execution_order.config"
   elif [[ $2 == "run" ]]
   then
     if [ ! -d ./CapstoneDatabase/execution ]

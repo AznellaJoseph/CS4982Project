@@ -1,145 +1,16 @@
 <Window xmlns="https://github.com/avaloniaui"
+        xmlns:rxui="clr-namespace:Avalonia.ReactiveUI;assembly=Avalonia.ReactiveUI"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:CapstoneDesktop.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CapstoneDesktop.ViewModels"
         mc:Ignorable="d"
         x:Class="CapstoneDesktop.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Capstone Desktop" WindowState="Maximized">
-
-    <Design.DataContext>
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
-
-    <Window.Styles>
-        <Style Selector="Border.main">
-            <Setter Property="Background" Value="#002E3D" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="MinWidth" Value="500" />
-            <Setter Property="MinHeight" Value="600" />
-            <Setter Property="CornerRadius" Value="30" />
-            <Setter Property="Padding" Value="15" />
-        </Style>
-
-        <Style Selector="Border.input">
-            <Setter Property="Background" Value="#007EA7" />
-            <Setter Property="BoxShadow" Value="inset 0 0 3 1 #002E3D" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="CornerRadius" Value="5" />
-            <Setter Property="Margin" Value="15" />
-            <Setter Property="Padding" Value="3" />
-        </Style>
-    </Window.Styles>
-
-    <Border
-        Background="#000F14"
-        Padding="100">
-        <StackPanel>
-            <StackPanel.Styles>
-                <Style Selector="TextBox">
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="BorderThickness" Value="0" />
-                    <Setter Property="Foreground" Value="#084454" />
-                    <Setter Property="FontWeight" Value="Medium" />
-                    <Setter Property="FontSize" Value="14" />
-                </Style>
-
-                <Style Selector="Button">
-                    <Setter Property="Background" Value="#007EA7" />
-                    <Setter Property="Padding" Value="12" />
-                    <Setter Property="Margin" Value="0" />
-                    <Setter Property="Width" Value="240" />
-                    <Setter Property="HorizontalContentAlignment" Value="Center" />
-                    <Setter Property="FontWeight" Value="Medium" />
-                    <Setter Property="Foreground" Value="Black" />
-                    <Setter Property="FontSize" Value="12" />
-                </Style>
-
-                <Style Selector="TextBlock.h1">
-                    <Setter Property="FontWeight" Value="Bold" />
-                </Style>
-            </StackPanel.Styles>
-
-            <Border Classes="main" IsVisible="{Binding LoginControlsVisible, Mode=TwoWay}">
-                <StackPanel Classes="main" VerticalAlignment="Center" Margin="15,0, 15, 0">
-                    <Canvas Width="450" Height="200" Background="Gray" Margin="25">
-                        <TextBlock>WAYPOINTZ LOGO</TextBlock>
-                    </Canvas>
-
-                    <TextBlock Classes="h1" Text="LOGIN" FontSize="24" HorizontalAlignment="Center"
-                               VerticalAlignment="Top" Margin="25" />
-
-                    <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
-                    <TextBlock Text="USERNAME:" Margin="15 0 0 0" />
-
-                    <Border Classes="input">
-                        <TextBox Watermark="USERNAME" VerticalAlignment="Bottom" Text="{Binding Username, Mode=TwoWay}" />
-                    </Border>
-
-                    <TextBlock Text="PASSWORD:" Margin="15 0 0 0" />
-
-                    <Border Classes="input">
-                        <TextBox PasswordChar="*" Watermark="PASSWORD" VerticalAlignment="Bottom"
-                                 Text="{Binding Password, Mode=TwoWay}" />
-                    </Border>
-
-                    <StackPanel Orientation="Horizontal" Margin="15">
-                        <Button Content="LOGIN" Command="{Binding LoginCommand}" HorizontalAlignment="Left" />
-                        <Button Content="CREATE ACCOUNT" Command="{Binding OpenCreateAccountCommand}"
-                                HorizontalAlignment="Right" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-
-            <Border Classes="main" IsVisible="{Binding !LoginControlsVisible, Mode=TwoWay}">
-                <StackPanel VerticalAlignment="Center" Margin="15,0, 15, 0">
-                    <TextBlock Classes="h1" Text="CREATE ACCOUNT" FontSize="24" HorizontalAlignment="Center"
-                               VerticalAlignment="Top"
-                               Margin="25" />
-
-                    <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
-
-                    <TextBlock Text="USERNAME:" Margin="15 0 0 0" />
-                    <Border Classes="input">
-                        <TextBox Watermark="USERNAME" VerticalAlignment="Bottom" Text="{Binding Username, Mode=TwoWay}" />
-                    </Border>
-
-                    <TextBlock Text="FIRST NAME:" Margin="15 0 0 0" />
-                    <Border Classes="input">
-                        <TextBox Watermark="FIRST NAME" VerticalAlignment="Bottom"
-                                 Text="{Binding FirstName, Mode=TwoWay}" />
-                    </Border>
-
-                    <TextBlock Text="LAST NAME:" Margin="15 0 0 0" />
-                    <Border Classes="input">
-                        <TextBox Watermark="LAST NAME" VerticalAlignment="Bottom"
-                                 Text="{Binding LastName, Mode=TwoWay}" />
-                    </Border>
-
-                    <TextBlock Text="PASSWORD:" Margin="15 0 0 0" />
-                    <Border Classes="input">
-                        <TextBox PasswordChar="*" Watermark="PASSWORD" VerticalAlignment="Bottom"
-                                 Text="{Binding Password, Mode=TwoWay}" />
-                    </Border>
-
-                    <TextBlock Text="RE-ENTER PASSWORD:" Margin="15 0 0 0" />
-                    <Border Classes="input">
-                        <TextBox PasswordChar="*" Watermark="PASSWORD" VerticalAlignment="Bottom"
-                                 Text="{Binding ConfirmedPassword, Mode=TwoWay}" />
-                    </Border>
-
-                    <StackPanel Orientation="Horizontal" Margin="15">
-                        <Button Content="CREATE ACCOUNT" Command="{Binding SubmitAccountCommand}"
-                                HorizontalAlignment="Left" />
-                        <Button Content="CANCEL" Command="{Binding CancelCreateAccountCommand}"
-                                HorizontalAlignment="Right" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-
-        </StackPanel>
-    </Border>
-
+        Title="Waypointz" WindowState="Maximized">
+    <rxui:RoutedViewHost Router="{Binding Router}" >
+        <rxui:RoutedViewHost.DefaultContent>
+            <TextBlock>LOGO</TextBlock>
+        </rxui:RoutedViewHost.DefaultContent>
+    </rxui:RoutedViewHost>
 </Window>

@@ -16,3 +16,5 @@ VALUES (tripId, location, startDate, endDate);
 SELECT LAST_INSERT_ID();
 
 END$
+
+DELIMITER ;

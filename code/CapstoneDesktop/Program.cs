@@ -1,14 +1,15 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
+using CapstoneDesktop.Views;
+using ReactiveUI;
+using Splat;
 
 namespace CapstoneDesktop
 {
     internal class Program
     {
-        // Initialization code. Don't use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-        // yet and stuff might break.
         [STAThread]
         public static void Main(string[] args)
         {
@@ -23,6 +24,9 @@ namespace CapstoneDesktop
         /// <returns> The app builder creating the application </returns>
         public static AppBuilder BuildAvaloniaApp()
         {
+            Locator.CurrentMutable.Register(() => new LoginPage(), typeof(IViewFor<LoginPageViewModel>));
+            Locator.CurrentMutable.Register(() => new CreateAccountPage(), typeof(IViewFor<CreateAccountPageViewModel>));
+            Locator.CurrentMutable.Register(() => new LandingPage(), typeof(IViewFor<LandingPageViewModel>));
             return AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
