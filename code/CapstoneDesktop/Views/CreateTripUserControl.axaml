@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:CapstoneDesktop.ViewModels"
+        mc:Ignorable="d"
+        x:Class="CapstoneDesktop.Views.CreateTripUserControl">
+
+	<Design.DataContext>
+		<viewModels:CreateTripViewModel />
+	</Design.DataContext>
+
+	<UserControl.Styles>
+		<Style Selector="Border.main">
+			<Setter Property="Background" Value="#002E3D" />
+			<Setter Property="HorizontalAlignment" Value="Center" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="MinWidth" Value="500" />
+			<Setter Property="MinHeight" Value="600" />
+			<Setter Property="CornerRadius" Value="30" />
+			<Setter Property="Padding" Value="15" />
+		</Style>
+
+		<Style Selector="Border.input">
+			<Setter Property="Background" Value="#007EA7" />
+			<Setter Property="BoxShadow" Value="inset 0 0 3 1 #002E3D" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="CornerRadius" Value="5" />
+			<Setter Property="Margin" Value="15" />
+			<Setter Property="Padding" Value="3" />
+		</Style>
+	</UserControl.Styles>
+
+	<Border
+        Background="#000F14"
+        Padding="100">
+		<StackPanel>
+			<StackPanel.Styles>
+				<Style Selector="TextBox">
+					<Setter Property="Background" Value="Transparent" />
+					<Setter Property="BorderThickness" Value="0" />
+					<Setter Property="Foreground" Value="#084454" />
+					<Setter Property="FontWeight" Value="Medium" />
+					<Setter Property="FontSize" Value="14" />
+				</Style>
+
+				<Style Selector="Button">
+					<Setter Property="Background" Value="#007EA7" />
+					<Setter Property="Padding" Value="12" />
+					<Setter Property="Margin" Value="0" />
+					<Setter Property="Width" Value="240" />
+					<Setter Property="HorizontalContentAlignment" Value="Center" />
+					<Setter Property="FontWeight" Value="Medium" />
+					<Setter Property="Foreground" Value="Black" />
+					<Setter Property="FontSize" Value="12" />
+				</Style>
+
+				<Style Selector="TextBlock.h1">
+					<Setter Property="FontWeight" Value="Bold" />
+				</Style>
+			</StackPanel.Styles>
+
+			<Border Classes="main">
+				<StackPanel Classes="main" VerticalAlignment="Center" Margin="15,0, 15, 0">
+
+					<TextBlock Classes="h1" Text="CREATE TRIP" FontSize="24" HorizontalAlignment="Center"
+                               VerticalAlignment="Top" Margin="25" />
+					<TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
+
+					<TextBlock Text="TRIP NAME:" Margin="15, 0, 0 ,0" />
+					<Border Classes="input">
+						<TextBox Watermark="TRIP NAME" VerticalAlignment="Bottom"
+                                 Text="{Binding TripName, Mode=TwoWay}" />
+					</Border>
+
+					<TextBlock Text="TRIP NOTES:" Margin="15, 0, 0 ,0" />
+					<Border Classes="input">
+						<TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
+                                 AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
+					</Border>
+
+					<StackPanel Orientation="Horizontal" Spacing="20" Margin="20">
+						<DatePicker SelectedDate="{Binding StartDate}" Header="START DATE" />
+
+						<DatePicker SelectedDate="{Binding EndDate}" Header="END DATE" />
+					</StackPanel>
+
+					<StackPanel Orientation="Horizontal">
+						<Button Content="CREATE TRIP" Command="{Binding CreateTripCommand}" Margin="20" />
+						<Button Content="CANCEL" Command="{Binding CancelCreateTripCommand}" Margin="20" />
+					</StackPanel>
+
+				</StackPanel>
+			</Border>
+		</StackPanel>
+	</Border>
+
+</UserControl>
