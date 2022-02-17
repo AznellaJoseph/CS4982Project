@@ -18,7 +18,7 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
             fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> {Data = new User {Id = 0}});
+                .Returns(new Response<User> {Data = new User {UserId = 0}});
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";

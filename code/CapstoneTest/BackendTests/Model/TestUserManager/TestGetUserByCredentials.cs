@@ -25,11 +25,11 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             Assert.AreEqual(200U, resultResponse.StatusCode);
             Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
-            Assert.AreEqual(resultResponse.Data?.FirstName, fakeExistingUser.FirstName);
-            Assert.AreEqual(resultResponse.Data?.LastName, fakeExistingUser.LastName);
-            Assert.AreEqual(resultResponse.Data?.Username, fakeExistingUser.Username);
-            Assert.AreEqual(resultResponse.Data?.Password, fakeExistingUser.Password);
-            Assert.AreEqual(resultResponse.Data?.Id, fakeExistingUser.Id);
+            Assert.AreEqual(resultResponse?.Data?.FirstName, fakeExistingUser.FirstName);
+            Assert.AreEqual(resultResponse?.Data?.LastName, fakeExistingUser.LastName);
+            Assert.AreEqual(resultResponse?.Data?.Username, fakeExistingUser.Username);
+            Assert.AreEqual(resultResponse?.Data?.Password, fakeExistingUser.Password);
+            Assert.AreEqual(resultResponse?.Data?.UserId, fakeExistingUser.UserId);
         }
 
         [TestMethod]
