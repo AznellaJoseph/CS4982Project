@@ -92,7 +92,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
             Assert.AreEqual(500U, resultResponse.StatusCode);
-            Assert.AreEqual("Internal server error", resultResponse.ErrorMessage);
+            Assert.AreEqual("Internal Server Error.", resultResponse.ErrorMessage);
         }
     }
 }
