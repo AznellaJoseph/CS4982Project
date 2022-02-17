@@ -1,6 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:CapstoneDesktop.Converters"
              x:Class="CapstoneDesktop.Views.LandingPage">
+    <UserControl.Resources>
+        <conv:DateFormatter x:Key="DateFormatter" />
+    </UserControl.Resources>
     <Grid RowDefinitions="2*,20,Auto,20,3*" ColumnDefinitions="2*,20,3*" Margin="20">
         <Border Classes="container" Grid.Column="0" Grid.Row="0">
             <Panel/>
@@ -32,9 +36,9 @@
                             <DataTemplate>
                                 <Button HorizontalAlignment="Stretch" Command="{Binding TripClickCommand}">
                                     <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*">
-                                        <TextBlock Grid.Column="0" Text="{Binding Trip.StartDate}"/>
-                                        <TextBlock Grid.Column="2" Text="-"/>
-                                        <TextBlock Grid.Column="4" Text="{Binding Trip.EndDate}"/>
+                                        <TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Trip.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}"/>
+                                        <TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
+                                        <TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Trip.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}"/>
                                         <TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Trip.Name}"/>
                                     </Grid>
                                 </Button>

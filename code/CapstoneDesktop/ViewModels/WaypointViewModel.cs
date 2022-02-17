@@ -9,21 +9,13 @@ namespace CapstoneDesktop.ViewModels
     {
 
         private readonly IScreen _screen;
-        // public Waypoint Waypoint { get; }
-        
-        public ReactiveCommand<Unit, Unit> TripClickCommand { get; }
+        public Waypoint Waypoint { get; }
 
-        public WaypointViewModel(IScreen screen)
+        public WaypointViewModel(Waypoint waypoint, IScreen screen)
         {
             this._screen = screen;
-            // this.Trip = trip;
-            this.TripClickCommand = ReactiveCommand.Create(this.clickTrip);
+            this.Waypoint = waypoint;
         }
 
-        private void clickTrip()
-        {
-            //TODO redirect to Trip View
-        }
-        
     }
 }
