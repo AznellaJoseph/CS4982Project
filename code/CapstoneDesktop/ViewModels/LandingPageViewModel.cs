@@ -7,48 +7,78 @@ using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
+    /// <summary>
+    ///     ViewModel for the Landing Page
+    /// </summary>
+    /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
+    /// <seealso cref="ReactiveUI.IRoutableViewModel" />
     public class LandingPageViewModel : ViewModelBase, IRoutableViewModel
     {
         private readonly TripManager _tripManager;
         private readonly User _user;
-        
-        public IScreen HostScreen { get; }
-        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-        
-        public ReactiveCommand<Unit, Unit> CreateTripCommand { get; }
 
-        public ReactiveCommand<Unit, IRoutableViewModel> LogoutCommand { get; }
-        
-        public ObservableCollection<TripViewModel> TripViewModels { get; set; }
-        
-        
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="LandingPageViewModel" /> class.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="tripManager">The trip manager.</param>
+        /// <param name="screen">The screen.</param>
         public LandingPageViewModel(User user, TripManager tripManager, IScreen screen)
         {
-            this._user = user;
-            this._tripManager = tripManager;
-            this.HostScreen = screen;
-            this.TripViewModels = new ObservableCollection<TripViewModel>();
-            this.CreateTripCommand = ReactiveCommand.Create(this.createTrip);
-            this.LogoutCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.Navigate.Execute(new LoginPageViewModel(this.HostScreen)));
-            this.loadTrips();
+            _user = user;
+            _tripManager = tripManager;
+            HostScreen = screen;
+            TripViewModels = new ObservableCollection<TripViewModel>();
+            CreateTripCommand = ReactiveCommand.Create(createTrip);
+            LogoutCommand = ReactiveCommand.CreateFromObservable(() =>
+                HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
+            loadTrips();
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="LandingPageViewModel" /> class.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="screen">The screen.</param>
         public LandingPageViewModel(User user, IScreen screen) : this(user, new TripManager(), screen)
         {
         }
 
+        /// <summary>
+        ///     The create trip command
+        /// </summary>
+        public ReactiveCommand<Unit, Unit> CreateTripCommand { get; }
+
+        /// <summary>
+        ///     The logout command
+        /// </summary>
+        public ReactiveCommand<Unit, IRoutableViewModel> LogoutCommand { get; }
+
+        /// <summary>
+        ///     The trip view models
+        /// </summary>
+        public ObservableCollection<TripViewModel> TripViewModels { get; set; }
+
+        /// <summary>
+        ///     The host screen
+        /// </summary>
+        public IScreen HostScreen { get; }
+
+        /// <summary>
+        ///     The url path segment
+        /// </summary>
+        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
+
         private void loadTrips()
         {
-            var response = this._tripManager.GetTripsByUser(this._user.UserId);
+            var response = _tripManager.GetTripsByUser(_user.UserId);
             foreach (var trip in response.Data ?? new List<Trip>())
-            {
-                this.TripViewModels.Add(new TripViewModel(trip, this.HostScreen));
-            }
+                TripViewModels.Add(new TripViewModel(trip, HostScreen));
         }
 
         private void createTrip()
         {
-            
         }
     }
 }

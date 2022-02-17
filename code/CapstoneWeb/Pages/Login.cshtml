@@ -14,17 +14,19 @@
 
     <form method="post">
         <label for="username">Username*</label>
-        <input id="username" asp-for="Username" required />
+        <input id="username" asp-for="Username" required placeholder="USERNAME"/> <br />
 
         <label for="password">Password*</label>
-        <input id="password" asp-for="Password" required type="password" />
+        <input id="password" asp-for="Password" required type="password" placeholder="PASSWORD"/> <br />
 
-        <input id="button" type="submit" value="Login" />
+        <button type="submit">Login</button>
 
         <div>
             <p>* These fields are required</p>
         </div>
     </form>
 
-    <a asp-page="CreateAccount">Create Account</a>
+    <form method="post">
+        <button type="submit" asp-page-handler="createAccount">Create Account</button>
+    </form>
 </div>
