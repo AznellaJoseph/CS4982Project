@@ -104,7 +104,7 @@ namespace CapstoneBackend.Model
                     ErrorMessage = e.Message
                 };
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new Response<int>
                 {

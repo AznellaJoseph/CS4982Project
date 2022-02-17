@@ -32,7 +32,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             loginPageViewModel.Username = "admin";
             loginPageViewModel.Password = "admin";
 
-            loginPageViewModel.LoginCommand.Execute().Subscribe();
+            loginPageViewModel.LoginCommand.ThrownExceptions.Subscribe();
             testScheduler.Start();
             Assert.AreEqual(string.Empty, loginPageViewModel.ErrorMessage);
         }
