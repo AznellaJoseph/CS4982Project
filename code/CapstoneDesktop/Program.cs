@@ -24,6 +24,7 @@ namespace CapstoneDesktop
         /// <returns> The app builder creating the application </returns>
         public static AppBuilder BuildAvaloniaApp()
         {
+            Locator.CurrentMutable.Register(() => new TripOverviewPage(), typeof(IViewFor<TripOverviewPageViewModel>));
             Locator.CurrentMutable.Register(() => new LoginPage(), typeof(IViewFor<LoginPageViewModel>));
             Locator.CurrentMutable.Register(() => new CreateAccountPage(), typeof(IViewFor<CreateAccountPageViewModel>));
             Locator.CurrentMutable.Register(() => new LandingPage(), typeof(IViewFor<LandingPageViewModel>));

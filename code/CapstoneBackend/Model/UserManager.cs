@@ -1,4 +1,5 @@
-﻿using CapstoneBackend.DAL;
+﻿using System;
+using CapstoneBackend.DAL;
 using CapstoneBackend.Utils;
 using MySql.Data.MySqlClient;
 

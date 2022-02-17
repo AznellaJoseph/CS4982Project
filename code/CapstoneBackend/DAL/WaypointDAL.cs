@@ -113,11 +113,10 @@ namespace CapstoneBackend.DAL
             cmd.CommandType = CommandType.StoredProcedure;
             IList<Waypoint> waypointsOnDate = new List<Waypoint>();
 
-            cmd.Parameters.Add("@selectedDate", MySqlDbType.Date).Value = selectedDate;
+            cmd.Parameters.Add("@selectedDate", MySqlDbType.DateTime).Value = selectedDate;
             cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
 
             using var reader = cmd.ExecuteReaderAsync().Result;
-
             var waypointIdOrdinal = reader.GetOrdinal("waypointId");
             var startDateOrdinal = reader.GetOrdinal("startDate");
             var endDateOrdinal = reader.GetOrdinal("endDate");
@@ -127,11 +126,11 @@ namespace CapstoneBackend.DAL
             while (reader.Read())
                 waypointsOnDate.Add(new Waypoint
                 {
-                    TripId = tripId,
-                    WaypointId = reader.GetInt32(waypointIdOrdinal),
+                    TripId = tripId, 
+                    WaypointId = reader.GetInt32(waypointIdOrdinal), 
                     Location = reader.GetString(locationOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
-                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal), 
                     Notes = reader.GetString(notesOrdinal)
                 });
 

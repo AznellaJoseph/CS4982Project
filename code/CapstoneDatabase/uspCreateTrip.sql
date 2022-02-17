@@ -7,8 +7,7 @@ CREATE PROCEDURE uspCreateTrip(
 	name VARCHAR(45),
 	notes VARCHAR(500),
 	startDate DATE,
-	endDate DATE,
-	notes VARCHAR(500)
+	endDate DATE
 )
 
 BEGIN
