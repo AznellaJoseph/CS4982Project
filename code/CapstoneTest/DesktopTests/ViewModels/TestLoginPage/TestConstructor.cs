@@ -2,6 +2,7 @@ using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
 {
@@ -12,35 +13,29 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
         public void Constructor_OneParameter_PropertyCreations()
         {
             var mockUserManager = new Mock<UserManager>();
-            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
+            var mockScreen = new Mock<IScreen>();
+            LoginPageViewModel mainWindowViewModel = new(mockUserManager.Object, mockScreen.Object);
 
-            Assert.IsNotNull(mainWindowViewModel.CancelCreateAccountCommand);
             Assert.IsNotNull(mainWindowViewModel.LoginCommand);
             Assert.IsNotNull(mainWindowViewModel.OpenCreateAccountCommand);
-            Assert.IsNotNull(mainWindowViewModel.SubmitAccountCommand);
-            Assert.IsNull(mainWindowViewModel.FirstName);
-            Assert.IsNull(mainWindowViewModel.LastName);
+            Assert.IsNotNull(mainWindowViewModel.HostScreen);
             Assert.IsNull(mainWindowViewModel.Username);
             Assert.IsNull(mainWindowViewModel.Password);
             Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
-            Assert.AreEqual(true, mainWindowViewModel.LoginControlsVisible);
         }
 
         [TestMethod]
         public void Constructor_NoParameters_PropertyCreations()
         {
-            var mainWindowViewModel = new MainWindowViewModel();
+            var mockScreen = new Mock<IScreen>();
+            var mainWindowViewModel = new LoginPageViewModel(mockScreen.Object);
 
-            Assert.IsNotNull(mainWindowViewModel.CancelCreateAccountCommand);
             Assert.IsNotNull(mainWindowViewModel.LoginCommand);
             Assert.IsNotNull(mainWindowViewModel.OpenCreateAccountCommand);
-            Assert.IsNotNull(mainWindowViewModel.SubmitAccountCommand);
-            Assert.IsNull(mainWindowViewModel.FirstName);
-            Assert.IsNull(mainWindowViewModel.LastName);
+            Assert.IsNotNull(mainWindowViewModel.HostScreen);
             Assert.IsNull(mainWindowViewModel.Username);
             Assert.IsNull(mainWindowViewModel.Password);
             Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
-            Assert.AreEqual(true, mainWindowViewModel.LoginControlsVisible);
         }
     }
 }

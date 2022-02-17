@@ -17,10 +17,10 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             const string lname = "LastName";
 
             User? fakeExistingUser = null;
-            User fakeCreatedUser = new() {Id = 1};
+            User fakeCreatedUser = new() {UserId = 1};
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(fakeCreatedUser.Id);
+            mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(fakeCreatedUser.UserId);
 
             UserManager userManager = new(mockUserDal.Object);
 
@@ -38,11 +38,10 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             const string fname = "FirstName";
             const string lname = "LastName";
 
-            int? dbResult = null;
-            User fakeExistingUser = new() {Id = 1};
+            User fakeExistingUser = new() {UserId = 1};
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(dbResult);
+            mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(null);
 
             UserManager userManager = new(mockUserDal.Object);
 
@@ -59,11 +58,10 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             const string fname = "FirstName";
             const string lname = "LastName";
 
-            int? dbResult = null;
             User? fakeExistingUser = null;
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(dbResult);
+            mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(null);
 
             UserManager userManager = new(mockUserDal.Object);
 
