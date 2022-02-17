@@ -19,10 +19,6 @@ namespace CapstoneWeb.Pages
 
         public WaypointManager WaypointManager { get; set; }
 
-        public void OnGet()
-        {
-        }
-
         public IActionResult OnPost()
         {
             var waypointManager = WaypointManager ?? new WaypointManager();

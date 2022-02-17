@@ -20,10 +20,6 @@ namespace CapstoneWeb.Pages
 
         public TripManager TripManager { get; set; }
 
-        public void OnGet()
-        {
-        }
-
         public IActionResult OnPost()
         {
             var tripManager = TripManager ?? new TripManager();
