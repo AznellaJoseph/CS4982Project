@@ -1,21 +1,16 @@
-﻿using CapstoneBackend.Model;
+﻿using System;
+using CapstoneBackend.Model;
 using CapstoneWeb.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CapstoneTest.WebTests.Pages
 {
     [TestClass]
     public class TestTripOverview
     {
-
         [TestMethod]
         public void GetSuccess()
         {
@@ -23,7 +18,8 @@ namespace CapstoneTest.WebTests.Pages
             var fakeTripManager = new Mock<TripManager>();
             var startDate = DateTime.Now;
             var endDate = DateTime.Now;
-            fakeTripManager.Setup(mngr => mngr.GetTripByTripId(1)).Returns(new Response<Trip> { 
+            fakeTripManager.Setup(mngr => mngr.GetTripByTripId(1)).Returns(new Response<Trip>
+            {
                 StatusCode = 200U,
                 Data = new Trip
                 {
@@ -60,7 +56,7 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnGet();
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
 
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Index", redirect.PageName);
         }
 
@@ -73,7 +69,7 @@ namespace CapstoneTest.WebTests.Pages
             var endDate = DateTime.Now;
             fakeTripManager.Setup(mngr => mngr.GetTripByTripId(8)).Returns(new Response<Trip>
             {
-                StatusCode = 404U,
+                StatusCode = 404U
             });
             var page = TestPageBuilder.BuildPage<TripOverviewModel>(session.Object);
             page.FakeTripManager = fakeTripManager.Object;
@@ -82,9 +78,8 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnGet();
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
 
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Index", redirect.PageName);
         }
-
     }
 }

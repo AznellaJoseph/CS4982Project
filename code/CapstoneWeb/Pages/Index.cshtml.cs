@@ -13,7 +13,7 @@ namespace CapstoneWeb.Pages
     public class IndexModel : PageModel
     {
         /// <summary>
-        /// The user id.
+        ///     The user id.
         /// </summary>
         public int UserId { get; private set; }
 
@@ -29,7 +29,7 @@ namespace CapstoneWeb.Pages
         }
 
         /// <summary>
-        /// Called when [post logout].
+        ///     Called when [post logout].
         /// </summary>
         /// <returns> The action to take when logging out </returns>
         public IActionResult OnPostLogout()

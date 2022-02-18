@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +8,45 @@ namespace CapstoneWeb.Pages
 {
     public class CreateTripModel : PageModel
     {
+        /// <summary>
+        ///     The error message.
+        /// </summary>
+        [BindProperty]
+        public string ErrorMessage { get; set; }
 
-        [BindProperty] public string ErrorMessage { get; set; }
-        [BindProperty] public string Name { get; set; }
-        [BindProperty] public DateTime StartDate { get; set; } = DateTime.Today;
-        [BindProperty] public DateTime EndDate { get; set; } = DateTime.Today;
-        [BindProperty] public string Notes { get; set; }
+        /// <summary>
+        ///     The name.
+        /// </summary>
+        [BindProperty]
+        public string Name { get; set; }
 
+        /// <summary>
+        ///     The start date.
+        /// </summary>
+        [BindProperty]
+        public DateTime StartDate { get; set; } = DateTime.Today;
+
+        /// <summary>
+        ///     The end date.
+        /// </summary>
+        [BindProperty]
+        public DateTime EndDate { get; set; } = DateTime.Today;
+
+        /// <summary>
+        ///     The notes.
+        /// </summary>
+        [BindProperty]
+        public string Notes { get; set; }
+
+        /// <summary>
+        ///     The trip manager.
+        /// </summary>
         public TripManager TripManager { get; set; }
 
+        /// <summary>
+        ///     Called when [post].
+        /// </summary>
+        /// <returns>The next page to redirect to or the current page if there is an error </returns>
         public IActionResult OnPost()
         {
             var tripManager = TripManager ?? new TripManager();

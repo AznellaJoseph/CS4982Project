@@ -1,4 +1,3 @@
-using System;
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,7 +15,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             var mockUser = new Mock<User>();
             var mockTripManager = new Mock<TripManager>();
             var mockScreen = new Mock<IScreen>();
-            CreateTripPageViewModel createTripWindowViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
 
             Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
             Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);
@@ -33,7 +33,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             var mockUser = new Mock<User>();
             var mockTripManager = new Mock<TripManager>();
             var mockScreen = new Mock<IScreen>();
-            CreateTripPageViewModel createTripWindowViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
 
             Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
             Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);

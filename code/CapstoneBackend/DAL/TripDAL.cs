@@ -48,8 +48,7 @@ namespace CapstoneBackend.DAL
 
             Trip? trip = null;
 
-            if (reader.Read()) 
-            {
+            if (reader.Read())
                 trip = new Trip
                 {
                     TripId = tripId,
@@ -59,7 +58,6 @@ namespace CapstoneBackend.DAL
                     StartDate = reader.GetDateTime(startDateOrdinal),
                     EndDate = reader.GetDateTime(endDateOrdinal)
                 };
-            }
 
             _connection.Close();
             return trip;

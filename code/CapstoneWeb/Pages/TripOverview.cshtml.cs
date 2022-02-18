@@ -1,50 +1,44 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CapstoneWeb.Pages
 {
+    /// <summary>
+    ///     TripOverview Model
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class TripOverviewModel : PageModel
     {
-
         public Trip CurrentTrip;
 
         public TripManager FakeTripManager;
 
         /// <summary>
-        /// Called when [get].
+        ///     Called when [get].
         /// </summary>
         /// <returns>
-        /// Redirects to Index when ID passed in query params
-        /// Should redirect to 404 page when Trip not found
-        /// Returns full Trip Overview Page otherwise
+        ///     Redirects to Index when ID passed in query params
+        ///     Should redirect to 404 page when Trip not found
+        ///     Returns full Trip Overview Page otherwise
         /// </returns>
         public IActionResult OnGet()
         {
-            int? tripId = GetTripIdFromQuery();
+            var tripId = GetTripIdFromQuery();
 
-            if (tripId is null)
-            {
-                return RedirectToPage("Index");
-            }
+            if (tripId is null) return RedirectToPage("Index");
 
             var tripManager = FakeTripManager ?? new TripManager();
-            var response = tripManager.GetTripByTripId((int)tripId);
+            var response = tripManager.GetTripByTripId((int) tripId);
 
             if (response.StatusCode.Equals(200))
             {
                 CurrentTrip = response.Data;
                 return Page();
             }
-            else
-            {
-                return RedirectToPage("Index");
-            }
+
+            return RedirectToPage("Index");
         }
 
         private int? GetTripIdFromQuery()
@@ -53,7 +47,7 @@ namespace CapstoneWeb.Pages
 
             try
             {
-                string query = HttpContext.Request.Query["id"][0];
+                var query = HttpContext.Request.Query["id"][0];
                 result = Convert.ToInt32(query);
             }
             catch

@@ -18,7 +18,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             const string lname = "LastName";
 
             User? fakeExistingUser = null;
-            User fakeCreatedUser = new() { UserId = 1 };
+            User fakeCreatedUser = new() {UserId = 1};
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
             mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(fakeCreatedUser.UserId);
@@ -39,7 +39,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             const string fname = "FirstName";
             const string lname = "LastName";
 
-            User fakeExistingUser = new() { UserId = 1 };
+            User fakeExistingUser = new() {UserId = 1};
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
             mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname)).Returns(null);

@@ -1,4 +1,3 @@
-using System;
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,7 +15,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             var mockTrip = new Mock<Trip>();
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
-            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
+            CreateWaypointPageViewModel createWaypointWindowViewModel =
+                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
             Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
             Assert.IsNotNull(createWaypointWindowViewModel.CreateWaypointCommand);
@@ -35,7 +35,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             var mockTrip = new Mock<Trip>();
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
-            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
+            CreateWaypointPageViewModel createWaypointWindowViewModel =
+                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
             Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
             Assert.IsNotNull(createWaypointWindowViewModel.CreateWaypointCommand);
