@@ -10,7 +10,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
     public class TestConstructor
     {
         [TestMethod]
-        public void Constructor_OneParameter_PropertyCreations()
+        public void Constructor_ThreeParameter_PropertyCreations()
         {
             var mockTrip = new Mock<Trip>();
             var mockWaypointManager = new Mock<WaypointManager>();
@@ -19,6 +19,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
                 new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
             Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
+            Assert.AreEqual(mockScreen.Object, createWaypointWindowViewModel.HostScreen);
+            Assert.IsNotNull(createWaypointWindowViewModel.UrlPathSegment);
             Assert.IsNotNull(createWaypointWindowViewModel.CreateWaypointCommand);
             Assert.IsNotNull(createWaypointWindowViewModel.CancelCreateWaypointCommand);
             Assert.IsNull(createWaypointWindowViewModel.StartTime);
@@ -30,15 +32,16 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         }
 
         [TestMethod]
-        public void Constructor_NoParameters_PropertyCreations()
+        public void Constructor_TwoParameters_PropertyCreations()
         {
             var mockTrip = new Mock<Trip>();
-            var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
             CreateWaypointPageViewModel createWaypointWindowViewModel =
-                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
+                new(mockTrip.Object, mockScreen.Object);
 
             Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
+            Assert.AreEqual(mockScreen.Object, createWaypointWindowViewModel.HostScreen);
+            Assert.IsNotNull(createWaypointWindowViewModel.UrlPathSegment);
             Assert.IsNotNull(createWaypointWindowViewModel.CreateWaypointCommand);
             Assert.IsNotNull(createWaypointWindowViewModel.CancelCreateWaypointCommand);
             Assert.IsNull(createWaypointWindowViewModel.StartDate);

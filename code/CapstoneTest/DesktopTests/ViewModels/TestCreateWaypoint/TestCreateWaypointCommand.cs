@@ -59,6 +59,30 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
                 createWaypointWindowViewModel.ErrorMessage);
         }
 
+        [TestMethod]
+        public void CreateWaypointCommand_NullDates_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock<Trip>();
+            var mockWaypointManager = new Mock<WaypointManager>();
+            var mockScreen = new Mock<IScreen>();
+
+            CreateWaypointPageViewModel createWaypointWindowViewModel =
+                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createWaypointWindowViewModel.Location = "Paris, Italy";
+            createWaypointWindowViewModel.Notes = "notes";
+
+            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual("You must enter a start date and time for the waypoint",
+                createWaypointWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
         public void CreateWaypointCommand_SuccessfulCreation()
         {
             var mockWaypointManager = new Mock<WaypointManager>();
@@ -77,7 +101,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             createWaypointWindowViewModel.StartTime = DateTime.Today.TimeOfDay;
             createWaypointWindowViewModel.EndTime = DateTime.Today.TimeOfDay;
 
-            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
+            createWaypointWindowViewModel.CreateWaypointCommand.ThrownExceptions.Subscribe();
 
             testScheduler.Start();
 

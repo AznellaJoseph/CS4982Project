@@ -25,7 +25,8 @@ namespace CapstoneDesktop.ViewModels
         {
             _userManager = manager;
             HostScreen = screen;
-            CancelCreateAccountCommand = ReactiveCommand.CreateFromObservable(HostScreen.Router.NavigateBack.Execute);
+            CancelCreateAccountCommand =
+                ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.NavigateBack.Execute());
             SubmitAccountCommand = ReactiveCommand.CreateFromObservable(submitAccount);
         }
 
@@ -100,7 +101,7 @@ namespace CapstoneDesktop.ViewModels
                 if (response.StatusCode == 200U)
                 {
                     return HostScreen.Router.Navigate.Execute(
-                        new LandingPageViewModel(new User {UserId = response.Data}, HostScreen));
+                        new LandingPageViewModel(new User { UserId = response.Data }, HostScreen));
                 }
 
                 ErrorMessage = response.ErrorMessage ?? "Unknown Error.";

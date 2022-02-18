@@ -38,12 +38,13 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             var mockScreen = new Mock<IScreen>();
             CreateTripPageViewModel createTripWindowViewModel =
                 new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
-            mockTripManager.Setup(um => um.CreateTrip(0, "name", null, DateTime.Today.AddDays(1), DateTime.Today))
+            mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", DateTime.Today.AddDays(1), DateTime.Today))
                 .Returns(new Response<int>
-                    {StatusCode = 400, ErrorMessage = "Start date of a trip cannot be after the end date."});
+                { StatusCode = 400, ErrorMessage = "Start date of a trip cannot be after the end date." });
             var testScheduler = new TestScheduler();
 
             createTripWindowViewModel.TripName = "name";
+            createTripWindowViewModel.Notes = "notes";
             createTripWindowViewModel.StartDate = DateTime.Today.AddDays(1);
             createTripWindowViewModel.EndDate = DateTime.Today;
 
@@ -55,6 +56,30 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
                 createTripWindowViewModel.ErrorMessage);
         }
 
+        [TestMethod]
+        public void CreateTrip_NullStartDate_ReturnsErrorMessage()
+        {
+            var mockUser = new Mock<User>();
+            var mockTripManager = new Mock<TripManager>();
+            var mockScreen = new Mock<IScreen>();
+            var endDate = DateTime.Today.AddDays(1);
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = "name";
+            createTripWindowViewModel.EndDate = endDate;
+            createTripWindowViewModel.Notes = "notes";
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual("You must enter a start and end date for the trip.", createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
         public void CreateTrip_SuccessfulCreation()
         {
             var mockUser = new Mock<User>();
@@ -65,7 +90,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             CreateTripPageViewModel createTripWindowViewModel =
                 new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
             mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", startDate, endDate))
-                .Returns(new Response<int> {StatusCode = 200});
+                .Returns(new Response<int> { StatusCode = 200 });
             var testScheduler = new TestScheduler();
 
             createTripWindowViewModel.TripName = "name";
@@ -73,7 +98,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             createTripWindowViewModel.EndDate = endDate;
             createTripWindowViewModel.Notes = "notes";
 
-            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+            createTripWindowViewModel.CreateTripCommand.ThrownExceptions.Subscribe();
 
             testScheduler.Start();
 
