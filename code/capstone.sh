@@ -33,7 +33,7 @@ then
     while IFS= read -r line
     do
       clean_line=$(sed -r 's/\r//' <<< $line)
-      cat "./CapstoneDatabase/$clean_line" >> ./CapstoneDatabase/execution/execution.sql
+      cat ./CapstoneDatabase/$clean_line >> ./CapstoneDatabase/execution/execution.sql
     done < "./CapstoneDatabase/execution_order.config"
   elif [[ $2 == "run" ]]
   then

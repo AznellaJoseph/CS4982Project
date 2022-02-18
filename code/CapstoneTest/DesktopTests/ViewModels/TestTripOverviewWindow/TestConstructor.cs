@@ -3,6 +3,7 @@ using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using ReactiveUI;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
 {
@@ -13,20 +14,13 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
         [TestMethod]
         public void Constructor_NoParameters_PropertyCreations()
         {
-            TripOverviewViewModel testViewModel = new();
+            var mockTrip = new Mock<Trip>();
+            var mockWaypointManager = new Mock<WaypointManager>();
+            var mockScreen = new Mock<IScreen>();
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
             Assert.IsNotNull(testViewModel.LogoutCommand);
-            Assert.IsNotNull(testViewModel.ProfileCommand);
             Assert.IsNotNull(testViewModel.BackCommand);
-            Assert.IsNotNull(testViewModel.TripName);
-            Assert.IsNotNull(testViewModel.TripNotes);
-            Assert.IsNotNull(testViewModel.TripStartDate);
-            Assert.IsNotNull(testViewModel.TripEndDate);
-
-            Assert.AreEqual(String.Empty, testViewModel.TripName);
-            Assert.AreEqual(String.Empty, testViewModel.TripNotes);
-            Assert.AreEqual(DateTime.MinValue, testViewModel.TripStartDate);
-            Assert.AreEqual(DateTime.MaxValue, testViewModel.TripEndDate);
         }
 
         [TestMethod]
@@ -37,21 +31,13 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
             testTrip.Notes = "Some Notes";
             testTrip.StartDate = new DateTime(2022, 2, 2);
             testTrip.EndDate = new DateTime(3033, 3, 3);
-
-            TripOverviewViewModel testViewModel = new(testTrip);
+            var mockScreen = new Mock<IScreen>();
+            TripOverviewPageViewModel testViewModel = new(testTrip, mockScreen.Object);
 
             Assert.IsNotNull(testViewModel.LogoutCommand);
-            Assert.IsNotNull(testViewModel.ProfileCommand);
             Assert.IsNotNull(testViewModel.BackCommand);
-            Assert.IsNotNull(testViewModel.TripName);
-            Assert.IsNotNull(testViewModel.TripNotes);
-            Assert.IsNotNull(testViewModel.TripStartDate);
-            Assert.IsNotNull(testViewModel.TripEndDate);
 
-            Assert.AreEqual("TEST TRIP", testViewModel.TripName);
-            Assert.AreEqual("Some Notes", testViewModel.TripNotes);
-            Assert.AreEqual(new DateTime(2022, 2, 2), testViewModel.TripStartDate);
-            Assert.AreEqual(new DateTime(3033, 3, 3), testViewModel.TripEndDate);
+            Assert.AreEqual(testTrip, testViewModel.Trip);
         }
     }
 }

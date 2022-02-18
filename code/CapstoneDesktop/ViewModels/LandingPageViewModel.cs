@@ -17,7 +17,6 @@ namespace CapstoneDesktop.ViewModels
         private readonly TripManager _tripManager;
         private readonly User _user;
 
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="LandingPageViewModel" /> class.
         /// </summary>
@@ -30,7 +29,7 @@ namespace CapstoneDesktop.ViewModels
             _tripManager = tripManager;
             HostScreen = screen;
             TripViewModels = new ObservableCollection<TripViewModel>();
-            CreateTripCommand = ReactiveCommand.Create(createTrip);
+            CreateTripCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.Navigate.Execute(new CreateTripPageViewModel(this._user, this.HostScreen)));
             LogoutCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
             loadTrips();
@@ -48,7 +47,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The create trip command
         /// </summary>
-        public ReactiveCommand<Unit, Unit> CreateTripCommand { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> CreateTripCommand { get; }
 
         /// <summary>
         ///     The logout command
@@ -75,10 +74,6 @@ namespace CapstoneDesktop.ViewModels
             var response = _tripManager.GetTripsByUser(_user.UserId);
             foreach (var trip in response.Data ?? new List<Trip>())
                 TripViewModels.Add(new TripViewModel(trip, HostScreen));
-        }
-
-        private void createTrip()
-        {
         }
     }
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Views/TripOverviewPage.axaml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
+using ReactiveUI;
+
+namespace CapstoneDesktop.Views
+{
+    public class TripOverviewPage : ReactiveUserControl&lt;TripOverviewPageViewModel&gt;
+    {
+
+        public TripOverviewPage()
+        {
+            InitializeComponent();
+        }
+
+        private void InitializeComponent()
+        {
+            this.WhenActivated(disposables =&gt;
+            {
+                if (this.DataContext is not null)
+                {
+                    var context = (TripOverviewPageViewModel)this.DataContext;
+                    var calendar = this.FindControl&lt;Calendar&gt;(&quot;TripCalendar&quot;);
+                    calendar.BlackoutDates?.Add(new CalendarDateRange(DateTime.MinValue, context.Trip.StartDate.AddDays(-1)));
+                    calendar.BlackoutDates?.Add(new CalendarDateRange(context.Trip.EndDate.AddDays(1), DateTime.MaxValue));
+                }
+            });
+            AvaloniaXamlLoader.Load(this);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[13,9,13,34,0],[14,9,14,10,0],[15,13,15,35,0],[16,9,16,10,0],[19,9,19,10,0],[20,13,21,13,0],[21,13,21,14,0],[21,14,22,17,0],[22,17,22,50,0],[22,50,23,17,0],[23,17,23,18,0],[23,18,24,21,0],[24,21,24,79,0],[24,79,25,21,0],[25,21,25,79,0],[25,79,26,21,0],[26,21,26,127,0],[26,127,27,21,0],[27,21,27,124,0],[27,124,28,17,0],[28,17,28,18,0],[28,18,29,13,0],[29,13,29,14,0],[29,14,29,16,0],[30,13,30,43,0],[31,9,31,10,0]]);
+    </script>
+  </body>
+</html>

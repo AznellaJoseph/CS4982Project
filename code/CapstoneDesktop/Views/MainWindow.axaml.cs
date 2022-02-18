@@ -1,5 +1,3 @@
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using CapstoneDesktop.ViewModels;
@@ -8,9 +6,8 @@ namespace CapstoneDesktop.Views
 {
 
     /// <summary>
-    ///     Window for the Main Functionality (Login and Create Account)
+    ///     Window for displaying all windows
     /// </summary>
-    /// <seealso cref="Avalonia.Controls.Window" />
     public class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         /// <summary>
@@ -19,9 +16,6 @@ namespace CapstoneDesktop.Views
         public MainWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent()

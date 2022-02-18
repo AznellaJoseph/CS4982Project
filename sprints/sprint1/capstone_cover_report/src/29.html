@@ -2,55 +2,132 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Pages/Login.cshtml.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/UserManager.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using CapstoneBackend.Model;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
 
-namespace CapstoneWeb.Pages
+namespace CapstoneBackend.Model
 {
     /// &lt;summary&gt;
-    ///     Login Model
+    ///     A wrapper class for the UserDal. Manages the collection of Users and informs of server errors.
     /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
-    public class LoginModel : PageModel
+    public class UserManager
     {
-        [BindProperty] public string Username { get; set; }
-
-        [BindProperty] public string Password { get; set; }
-
-        public string ErrorMessage { get; set; }
-
-        public UserManager FakeUserManager { get; set; }
+        private readonly UserDal _dal;
 
         /// &lt;summary&gt;
-        ///     Called when [post].
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserManager&quot; /&gt; class.
         /// &lt;/summary&gt;
-        public IActionResult OnPost()
+        public UserManager() : this(new UserDal())
         {
-            var userManager = FakeUserManager ?? new UserManager();
-            var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
-            if (response.Data is not null)
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
+        public UserManager(UserDal dal)
+        {
+            _dal = dal;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a user by their credentials, i.e. username and password. If the user does not match any ones credentials then
+        ///     an error is returned.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;the given username&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;the given password&lt;/param&gt;
+        /// &lt;returns&gt;the data of the found user or an error&lt;/returns&gt;
+        public virtual Response&lt;User&gt; GetUserByCredentials(string username, string password)
+        {
+            User? user = null;
+            try
             {
-                HttpContext.Session.SetString(&quot;userId&quot;, $&quot;{response.Data.Id}&quot;);
-                return RedirectToPage(&quot;Index&quot;);
+                user = _dal.GetUserByUsername(username);
             }
+            catch (MySqlException e)
+            {
+                return new Response&lt;User&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            if (user is null)
+                return new Response&lt;User&gt;
+                {
+                    StatusCode = 404,
+                    ErrorMessage = &quot;Username is incorrect.&quot;
+                };
 
-            ErrorMessage = response.ErrorMessage;
+            if (!PasswordHasher.ValidatePassword(password, user.Password))
+                return new Response&lt;User&gt;
+                {
+                    StatusCode = 404,
+                    ErrorMessage = &quot;Password is incorrect.&quot;
+                };
 
-            return Page();
+            return new Response&lt;User&gt;
+            {
+                StatusCode = 200,
+                Data = user
+            };
+        }
+
+        /// &lt;summary&gt;Registers the user.&lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;The username input.&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;The password input.&lt;/param&gt;
+        /// &lt;param name=&quot;fname&quot;&gt;The fname input.&lt;/param&gt;
+        /// &lt;param name=&quot;lname&quot;&gt;The lname input.&lt;/param&gt;
+        /// &lt;returns&gt;Response status 200 for success; 400 for bad username; 500 otherwise.&lt;/returns&gt;
+        public virtual Response&lt;int&gt; RegisterUser(string username, string password, string fname, string lname)
+        {
+            var user = _dal.GetUserByUsername(username);
+            if (user is not null)
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = 400,
+                    ErrorMessage = &quot;Username is taken.&quot;
+                };
+
+            try
+            {
+                var userCreated = _dal.CreateUser(username, password, fname, lname);
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = 200,
+                    Data = userCreated
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = 500,
+                    ErrorMessage = &quot;Internal Server Error.&quot;
+                };
+            }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,49,14,53,1],[14,54,14,58,1],[16,49,16,53,1],[16,54,16,58,1],[18,38,18,42,1],[18,43,18,47,1],[20,46,20,50,1],[20,51,20,55,1],[26,9,26,10,1],[27,13,27,68,1],[28,13,28,113,1],[29,13,29,43,1],[30,13,30,14,1],[31,17,31,80,1],[32,17,32,48,1],[35,13,35,50,1],[37,13,37,27,1],[38,9,38,10,1]]);
+      highlightRanges([[18,32,18,51,1],[19,9,19,10,1],[20,9,20,10,1],[26,9,26,40,1],[27,9,27,10,1],[28,13,28,24,1],[29,9,29,10,1],[39,9,39,10,1],[40,13,40,31,1],[42,13,42,14,1],[43,17,43,57,1],[44,13,44,14,1],[45,13,45,37,1],[46,13,46,14,1],[47,17,51,19,1],[53,13,53,30,1],[54,17,58,19,1],[60,13,60,75,1],[61,17,65,19,1],[67,13,71,15,1],[72,9,72,10,1],[81,9,81,10,1],[82,13,82,57,1],[83,13,83,34,1],[84,17,88,19,1],[91,13,91,14,1],[92,17,92,85,1],[93,17,97,19,1],[99,13,99,37,1],[100,13,100,14,1],[101,17,105,19,1],[107,13,107,30,1],[108,13,108,14,1],[109,17,113,19,1],[115,9,115,10,1]]);
     </script>
   </body>
 </html>

@@ -11,7 +11,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
     [TestClass]
     public class TestOpenCreateAccountCommand
     {
-        [TestMethod]
         public void OpenCreateAccount_CorrectOutput()
         {
             var mockUserManager = new Mock<UserManager>();

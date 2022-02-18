@@ -2,50 +2,124 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/Trip.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestWaypointManager/TestGetWaypointsOnDate.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
+using System.Collections.Generic;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace CapstoneBackend.Model
+namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 {
-    /// &lt;summary&gt;
-    /// A model class for the Trip object
-    /// &lt;/summary&gt;
-    public class Trip
+    [TestClass]
+    public class TestGetWaypointsOnDate
     {
-        /// &lt;summary&gt;
-        /// The Id of the Trip
-        /// &lt;/summary&gt;
-        public int Id { get; set; }
-        
-        /// &lt;summary&gt;
-        /// The Id of User of The trip
-        /// &lt;/summary&gt;
-        public int UserId { get; set; }
-        
-        /// &lt;summary&gt;
-        /// The name of the trip
-        /// &lt;/summary&gt;
-        public string Name { get; set; }
-        
-        /// &lt;summary&gt;
-        /// The start date of the  trip
-        /// &lt;/summary&gt;
-        public DateTime StartDate { get; set; }
-        
-        /// &lt;summary&gt;
-        /// The end date of the trip
-        /// &lt;/summary&gt;
-        public DateTime EndDate { get; set; }
+        [TestMethod]
+        public void Call_EmptySet_ReturnsEmptyList()
+        {
+            var currentTime = DateTime.Now;
+
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;();
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsOnDate(1, currentTime);
+
+            Assert.AreEqual(0, resultResponse.Data?.Count);
+        }
+
+        [TestMethod]
+        public void Call_YieldsSetWithOneValue_ReturnsExpectedList()
+        {
+            var currentTime = DateTime.Now;
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
+            {
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 1,
+                    Location = &quot;1601 Maple St&quot;,
+                    StartDate = currentTime,
+                    EndDate = currentTime,
+                    Notes = &quot;notes&quot;
+                }
+            };
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, currentTime, currentTime, &quot;notes&quot;))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsOnDate(1, currentTime);
+
+            Assert.AreEqual(1, resultResponse.Data?.Count);
+            Assert.AreEqual(1, resultResponse.Data?[0].TripId);
+            Assert.AreEqual(1, resultResponse.Data?[0].WaypointId);
+            Assert.AreEqual(&quot;1601 Maple St&quot;, resultResponse.Data?[0].Location);
+            Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
+            Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
+            Assert.AreEqual(&quot;notes&quot;, resultResponse.Data?[0].Notes);
+        }
+
+
+        [TestMethod]
+        public void Call_YieldsSetWithMultipleValues_ReturnsExpectedList()
+        {
+            var currentTime = DateTime.Now;
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
+            {
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 1,
+                    Location = &quot;1601 Maple St&quot;,
+                    StartDate = currentTime,
+                    EndDate = currentTime
+                },
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 2,
+                    Location = &quot;1602 Maple St&quot;,
+                    StartDate = currentTime,
+                    EndDate = currentTime
+                }
+            };
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, currentTime, currentTime, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1602 Maple St&quot;, currentTime, currentTime, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsOnDate(1, currentTime);
+
+            Assert.AreEqual(2, resultResponse.Data?.Count);
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[13,25,13,29,1],[13,30,13,34,1],[18,29,18,33,1],[18,34,18,38,1],[23,30,23,34,1],[23,35,23,39,1],[28,37,28,41,1],[28,42,28,46,1],[33,35,33,39,1],[33,40,33,44,1]]);
+      highlightRanges([[15,9,15,10,1],[16,13,16,44,1],[18,13,18,66,1],[20,13,20,59,1],[21,13,21,103,1],[23,13,23,75,1],[25,13,26,68,1],[28,13,28,60,1],[29,9,29,10,1],[33,9,33,10,1],[34,13,34,44,1],[35,13,46,15,1],[48,13,48,59,1],[50,13,51,29,1],[52,13,52,103,1],[54,13,54,75,1],[56,13,57,68,1],[59,13,59,60,1],[60,13,60,64,1],[61,13,61,68,1],[62,13,62,80,1],[63,13,63,77,1],[64,13,64,75,1],[65,13,65,69,1],[66,9,66,10,1],[71,9,71,10,1],[72,13,72,44,1],[73,13,91,15,1],[93,13,93,59,1],[95,13,96,29,1],[97,13,98,29,1],[99,13,99,103,1],[101,13,101,75,1],[103,13,104,68,1],[106,13,106,60,1],[107,9,107,10,1]]);
     </script>
   </body>
 </html>

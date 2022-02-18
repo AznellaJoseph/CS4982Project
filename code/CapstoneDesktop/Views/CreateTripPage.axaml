@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CapstoneDesktop.Views.CreateTripPage">
+    <Border Classes="container" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="30">
+        <StackPanel Width="700" Spacing="10">
+            <TextBlock Classes="h1" Text="CREATE TRIP" FontSize="24" HorizontalAlignment="Center"
+                       VerticalAlignment="Top" Margin="25" />
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
+
+            <TextBlock Text="TRIP NAME:" />
+            <TextBox Watermark="TRIP NAME" Text="{Binding TripName, Mode=TwoWay}" />
+
+            <TextBlock Text="TRIP NOTES:" />
+            <TextBox Watermark="NOTES" Text="{Binding Notes, Mode=TwoWay}"
+                     AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
+            <Grid ColumnDefinitions="*,10,*">
+                <DatePicker Grid.Column="0" Header="START DATE" SelectedDate="{Binding StartDate}" HorizontalAlignment="Stretch"/>
+                <DatePicker Grid.Column="2" Header="END DATE" SelectedDate="{Binding EndDate}" HorizontalAlignment="Stretch"/>
+            </Grid>
+            <Grid ColumnDefinitions="*,10,*">
+                <Button Grid.Column="0" Command="{Binding CreateTripCommand}" HorizontalAlignment="Stretch">
+                    <TextBlock TextAlignment="Center" Text="CREATE TRIP" />
+                </Button>
+                <Button Grid.Column="2" Command="{Binding CancelCreateTripCommand}" HorizontalAlignment="Stretch">
+                    <TextBlock TextAlignment="Center" Text="CANCEL" />
+                </Button>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -1,18 +1,20 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
 
 namespace CapstoneDesktop.Views
 {
     /// <summary>
-    ///     User Control for Create Waypoint Functionality
+    ///     Page for Create Waypoint Functionality
     /// </summary>
-    /// <seealso cref="Avalonia.Controls.UserControl" />
-    public class CreateWaypointUserControl : UserControl
+    public class CreateWaypointPage : ReactiveUserControl<CreateWaypointPageViewModel>
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateWaypointUserControl" /> class.
+        ///     Initializes a new instance of the <see cref="CreateWaypointPage" /> class.
         /// </summary>
-        public CreateWaypointUserControl()
+        public CreateWaypointPage()
         {
             InitializeComponent();
         }

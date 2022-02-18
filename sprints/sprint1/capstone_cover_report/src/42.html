@@ -2,52 +2,60 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\App.axaml.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Pages/Login.cshtml.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Markup.Xaml;
-using CapstoneDesktop.ViewModels;
-using CapstoneDesktop.Views;
+using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CapstoneDesktop
+namespace CapstoneWeb.Pages
 {
     /// &lt;summary&gt;
-    ///     Application for Capstone Desktop
+    ///     Login Model
     /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;Avalonia.Application&quot; /&gt;
-    public class App : Application
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class LoginModel : PageModel
     {
-        /// &lt;summary&gt;
-        ///     Initializes the application by loading XAML etc.
-        /// &lt;/summary&gt;
-        public override void Initialize()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        [BindProperty] public string Username { get; set; }
+
+        [BindProperty] public string Password { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+        public UserManager FakeUserManager { get; set; }
 
         /// &lt;summary&gt;
-        ///     Called when [framework initialization completed].
+        ///     Called when [post].
         /// &lt;/summary&gt;
-        public override void OnFrameworkInitializationCompleted()
+        public IActionResult OnPost()
         {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = new MainWindowViewModel()
-                };
-            
-            base.OnFrameworkInitializationCompleted();
+            var userManager = FakeUserManager ?? new UserManager();
+            var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
+            if (response.Data is not null)
+            {
+                HttpContext.Session.SetString(&quot;userId&quot;, $&quot;{response.Data.UserId}&quot;);
+                return RedirectToPage(&quot;Index&quot;);
+            }
+
+            ErrorMessage = response.ErrorMessage;
+
+            return Page();
+        }
+
+        public IActionResult OnPostCreateAccount()
+        {
+            return RedirectToPage(&quot;createaccount&quot;);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[19,9,19,10,0],[20,13,20,43,0],[21,9,21,10,0],[27,9,27,10,0],[28,13,28,88,0],[29,17,32,19,0],[34,13,34,55,0],[35,9,35,10,0]]);
+      highlightRanges([[14,49,14,53,1],[14,54,14,58,1],[16,49,16,53,1],[16,54,16,58,1],[18,38,18,42,1],[18,43,18,47,1],[20,46,20,50,1],[20,51,20,55,1],[26,9,26,10,1],[27,13,27,68,1],[28,13,28,113,1],[29,13,29,43,1],[30,13,30,14,1],[31,17,31,84,1],[32,17,32,48,1],[35,13,35,50,1],[37,13,37,27,1],[38,9,38,10,1],[41,9,41,10,1],[42,13,42,52,1],[43,9,43,10,1]]);
     </script>
   </body>
 </html>

@@ -2,56 +2,59 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestTripManager/TestGetTripsByUserId.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/MySqlExceptionBuilder.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System.Collections.Generic;
-using System.Data.Common;
-using CapstoneBackend.DAL;
-using CapstoneBackend.Model;
-using Castle.Core.Internal;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using System;
+using System.Reflection;
 using MySql.Data.MySqlClient;
 
-namespace CapstoneTest.BackendTests.Model.TestTripManager
+namespace CapstoneTest.BackendTests.Model
 {
-    
-    [TestClass]
-    public class TestGetTripsByUserId
+    /// &lt;summary&gt;
+    ///     An Exception Builder for MySQL to be used in testing
+    /// &lt;/summary&gt;
+    public class MySqlExceptionBuilder
     {
+        private uint? _code;
+        private string? _errorMessage;
 
-        [TestMethod]
-        public void GetTrips_Success()
+        /// &lt;summary&gt;
+        ///     Builds this instance.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public MySqlException Build()
         {
-            var mockDal = new Mock&lt;TripDal&gt;();
-            mockDal.Setup(dal =&gt; dal.GetTripsByUserId(1)).Returns(new List&lt;Trip&gt;());
-            var tripManager = new TripManager(mockDal.Object);
-            var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual(200U, result.StatusCode);
-            Assert.IsTrue(result.Data?.IsNullOrEmpty());
+            if (_errorMessage is null &amp;&amp; _code is null)
+            {
+                var ctor1 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0];
+                return (MySqlException) ctor1.Invoke(Array.Empty&lt;object&gt;());
+            }
+
+            var ctor2 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[7];
+            return (MySqlException) ctor2.Invoke(new object[] {_code ?? 500, &quot;&quot;, _errorMessage ?? &quot;&quot;});
         }
-        
-        [TestMethod]
-        public void GetTrips_Failure()
+
+        /// &lt;summary&gt;
+        ///     Withes the error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;errorCode&quot;&gt;The error code.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public MySqlExceptionBuilder WithError(uint errorCode, string message)
         {
-            var mockDal = new Mock&lt;TripDal&gt;();
-            var builder = new MySqlExceptionBuilder();
-            mockDal.Setup(dal =&gt; dal.GetTripsByUserId(1)).Throws(builder.WithError(500, &quot;test&quot;).Build());
-            var tripManager = new TripManager(mockDal.Object);
-            var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual((uint) 500, result.StatusCode);
-            Assert.AreEqual(&quot;test&quot;, result.ErrorMessage);
+            _errorMessage = message;
+            _code = errorCode;
+            return this;
         }
-        
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[19,9,19,10,1],[20,13,20,47,1],[21,13,21,85,1],[22,13,22,63,1],[23,13,23,56,1],[24,13,24,54,1],[25,13,25,57,1],[26,9,26,10,1],[30,9,30,10,1],[31,13,31,47,1],[32,13,32,55,1],[33,13,33,106,1],[34,13,34,63,1],[35,13,35,56,1],[36,13,36,60,1],[37,13,37,58,1],[38,9,38,10,1]]);
+      highlightRanges([[20,9,20,10,1],[21,13,21,56,1],[22,13,22,14,0],[23,17,23,119,0],[24,17,24,77,0],[27,13,27,115,1],[28,13,28,104,1],[29,9,29,10,1],[38,9,38,10,1],[39,13,39,37,1],[40,13,40,31,1],[41,13,41,25,1],[42,9,42,10,1]]);
     </script>
   </body>
 </html>

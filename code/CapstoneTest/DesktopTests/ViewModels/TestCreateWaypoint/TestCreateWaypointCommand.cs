@@ -4,6 +4,7 @@ using CapstoneDesktop.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 {
@@ -13,8 +14,10 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_NullLocation_ReturnsErrorMessage()
         {
+            var mockTrip = new Mock<Trip>();
             var mockWaypointManager = new Mock<WaypointManager>();
-            CreateWaypointViewModel createWaypointWindowViewModel = new(mockWaypointManager.Object);
+            var mockScreen = new Mock<IScreen>();
+            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
             var testScheduler = new TestScheduler();
 
@@ -28,12 +31,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_InvalidDates_ReturnsErrorMessage()
         {
+
+            var mockTrip = new Mock<Trip>();
             var mockWaypointManager = new Mock<WaypointManager>();
+            var mockScreen = new Mock<IScreen>();
             mockWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "Paris, Italy", DateTime.Today.AddDays(1) + TimeSpan.Zero, DateTime.Today + TimeSpan.Zero, "notes"))
                 .Returns(new Response<int> { ErrorMessage = "The start time cannot be before the end time." });
-
-            CreateWaypointViewModel createWaypointWindowViewModel = new(mockWaypointManager.Object);
+            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
             var testScheduler = new TestScheduler();
 
@@ -51,21 +56,23 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             Assert.AreEqual("The start time cannot be before the end time.",
                 createWaypointWindowViewModel.ErrorMessage);
         }
-
-        [TestMethod]
+        
         public void CreateWaypointCommand_SuccessfulCreation()
         {
             var mockWaypointManager = new Mock<WaypointManager>();
             mockWaypointManager.Setup(um => um.CreateWaypoint(0, "Paris, Italy", DateTime.Today, DateTime.Today, null))
                 .Returns(new Response<int> { StatusCode = 200 });
-
-            CreateWaypointViewModel createWaypointWindowViewModel = new(mockWaypointManager.Object);
-
+            var mockTrip = new Mock<Trip>();
+            var mockScreen = new Mock<IScreen>();
+            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
+            
             var testScheduler = new TestScheduler();
 
             createWaypointWindowViewModel.Location = "Paris, Italy";
             createWaypointWindowViewModel.StartDate = DateTime.Today;
             createWaypointWindowViewModel.EndDate = DateTime.Today;
+            createWaypointWindowViewModel.StartTime = DateTime.Today.TimeOfDay;
+            createWaypointWindowViewModel.EndTime = DateTime.Today.TimeOfDay;
 
             createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
 

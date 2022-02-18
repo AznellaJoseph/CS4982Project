@@ -2,79 +2,62 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUser/TestTripsProperty.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestCreateTrip/TestConstructor.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using CapstoneBackend.Model;
-using Castle.Core.Internal;
+using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 
-namespace CapstoneTest.BackendTests.Model.TestUser
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 {
     [TestClass]
-    public class TestTripsProperty
+    public class TestConstructor
     {
-        
         [TestMethod]
-        public void GetTrips_Success()
+        public void Constructor_OneParameter_PropertyCreations()
         {
+            var mockUser = new Mock&lt;User&gt;();
             var mockTripManager = new Mock&lt;TripManager&gt;();
-            var startDate = DateTime.Now;
-            var endDate = DateTime.Now;
-            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(1)).Returns(new Response&lt;IList&lt;Trip&gt;&gt;
-            {
-                Data = new List&lt;Trip&gt;
-                {
-                    new()
-                    {
-                        Id = 1,
-                        UserId = 1,
-                        Name = string.Empty,
-                        StartDate = startDate,
-                        EndDate = endDate,
-                    }
-                }
-            });
-            var user = new User
-            {
-                Id = 1,
-                TripManager = mockTripManager.Object
-            };
-            var result = user.Trips;
-            var item = result.ElementAt(0);
-            Assert.AreEqual(1,item.Id);
-            Assert.AreEqual(1, item.UserId);
-            Assert.AreEqual(string.Empty, item.Name);
-            Assert.AreEqual(startDate, item.StartDate);
-            Assert.AreEqual(endDate, item.EndDate);
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTripPageViewModel createTripWindowViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+
+            Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
+            Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);
+            Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
+            Assert.IsNull(createTripWindowViewModel.StartDate);
+            Assert.IsNull(createTripWindowViewModel.EndDate);
+            Assert.IsNull(createTripWindowViewModel.TripName);
+            Assert.IsNull(createTripWindowViewModel.Notes);
         }
-        
+
         [TestMethod]
-        public void GetTrips_Failure()
+        public void Constructor_NoParameters_PropertyCreations()
         {
+            var mockUser = new Mock&lt;User&gt;();
             var mockTripManager = new Mock&lt;TripManager&gt;();
-            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(1)).Returns(new Response&lt;IList&lt;Trip&gt;&gt;());
-            var user = new User
-            {
-                Id = 1,
-                TripManager = mockTripManager.Object
-            };
-            var result = user.Trips;
-            Assert.IsTrue(result.IsNullOrEmpty());
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTripPageViewModel createTripWindowViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+
+            Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
+            Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);
+            Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
+            Assert.IsNull(createTripWindowViewModel.StartDate);
+            Assert.IsNull(createTripWindowViewModel.EndDate);
+            Assert.IsNull(createTripWindowViewModel.TripName);
+            Assert.IsNull(createTripWindowViewModel.Notes);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[18,9,18,10,1],[19,13,19,59,1],[20,13,20,42,1],[21,13,21,40,1],[22,13,35,16,1],[36,13,40,15,1],[41,13,41,37,1],[42,13,42,44,1],[43,13,43,40,1],[44,13,44,45,1],[45,13,45,54,1],[46,13,46,56,1],[47,13,47,52,1],[48,9,48,10,1],[52,9,52,10,1],[53,13,53,59,1],[54,13,54,100,1],[55,13,59,15,1],[60,13,60,37,1],[61,13,61,51,1],[62,9,62,10,1]]);
+      highlightRanges([[15,9,15,10,1],[16,13,16,45,1],[17,13,17,59,1],[18,13,18,50,1],[19,13,19,129,1],[21,13,21,81,1],[22,13,22,75,1],[23,13,23,83,1],[24,13,24,64,1],[25,13,25,62,1],[26,13,26,63,1],[27,13,27,60,1],[28,9,28,10,1],[32,9,32,10,1],[33,13,33,45,1],[34,13,34,59,1],[35,13,35,50,1],[36,13,36,129,1],[38,13,38,81,1],[39,13,39,75,1],[40,13,40,83,1],[41,13,41,64,1],[42,13,42,62,1],[43,13,43,63,1],[44,13,44,60,1],[45,9,45,10,1]]);
     </script>
   </body>
 </html>

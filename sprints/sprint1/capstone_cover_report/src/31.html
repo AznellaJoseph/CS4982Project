@@ -2,27 +2,103 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/App.axaml</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/WaypointManager.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-&lt;Application xmlns=&quot;https://github.com/avaloniaui&quot;
-             xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
-             xmlns:local=&quot;using:CapstoneDesktop&quot;
-             x:Class=&quot;CapstoneDesktop.App&quot;&gt;
-    &lt;Application.DataTemplates&gt;
-        &lt;local:ViewLocator /&gt;
-    &lt;/Application.DataTemplates&gt;
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.DAL;
 
-    &lt;Application.Styles&gt;
-        &lt;FluentTheme Mode=&quot;Dark&quot; /&gt;
-    &lt;/Application.Styles&gt;
-&lt;/Application&gt;
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A wrapper class for the WaypointDal. Manages the collection of Waypoints and informs of server errors.
+    /// &lt;/summary&gt;
+    public class WaypointManager
+    {
+        private readonly WaypointDal _dal;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;WaypointManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public WaypointManager() : this(new WaypointDal())
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;WaypointManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
+        public WaypointManager(WaypointDal dal)
+        {
+            _dal = dal;
+        }
+
+        /// &lt;summary&gt;
+        ///     Creates the waypoint.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;location&quot;&gt;The location.&lt;/param&gt;
+        /// &lt;param name=&quot;notes&quot;&gt;The notes.&lt;/param&gt;
+        /// &lt;param name=&quot;startTime&quot;&gt;The start time.&lt;/param&gt;
+        /// &lt;param name=&quot;endTime&quot;&gt;The end time.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     A response of if the waypoint was created in the database
+        /// &lt;/returns&gt;
+        public virtual Response&lt;int&gt; CreateWaypoint(int tripId, string location, DateTime startTime, DateTime? endTime,
+            string? notes)
+        {
+            if (startTime.CompareTo(endTime) &gt; 0)
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = 400,
+                    ErrorMessage = &quot;The start time cannot be before the end time.&quot;
+                };
+            return new Response&lt;int&gt;
+            {
+                StatusCode = 200,
+                Data = _dal.CreateWaypoint(tripId, location, startTime, endTime, notes ?? string.Empty)
+            };
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the waypoints on date.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;selectedDate&quot;&gt;The selected date.&lt;/param&gt;
+        /// &lt;returns&gt; A response of the waypoints on that date or an error message if there are none &lt;/returns&gt;
+        public virtual Response&lt;IList&lt;Waypoint&gt;&gt; GetWaypointsOnDate(int tripId, DateTime selectedDate)
+        {
+            var waypointsOnDate = _dal.GetWaypointsOnDate(tripId, selectedDate);
+
+            return new Response&lt;IList&lt;Waypoint&gt;&gt;
+            {
+                Data = waypointsOnDate
+            };
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the waypoints by trip identifier.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public virtual Response&lt;IList&lt;Waypoint&gt;&gt; GetWaypointsByTripId(int tripId)
+        {
+            var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
+
+            return new Response&lt;IList&lt;Waypoint&gt;&gt;
+            {
+                Data = waypointsInTrip
+            };
+        }
+    }
+}
     </pre>
     <script type="text/javascript">
-      highlightRanges([[1,2,1,13,0],[6,10,6,27,0],[10,10,10,21,0],[10,22,10,26,0]]);
+      highlightRanges([[17,36,17,59,1],[18,9,18,10,1],[19,9,19,10,1],[25,9,25,48,1],[26,9,26,10,1],[27,13,27,24,1],[28,9,28,10,1],[43,9,43,10,1],[44,13,44,50,1],[45,17,49,19,1],[50,13,54,15,1],[55,9,55,10,1],[64,9,64,10,1],[65,13,65,81,1],[67,13,70,15,1],[71,9,71,10,1],[79,9,79,10,1],[80,13,80,69,1],[82,13,85,15,1],[86,9,86,10,1]]);
     </script>
   </body>
 </html>
