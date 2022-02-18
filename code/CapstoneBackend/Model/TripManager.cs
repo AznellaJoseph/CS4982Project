@@ -28,6 +28,52 @@ namespace CapstoneBackend.Model
             _dal = dal;
         }
 
+        /// <summary>Gets the trip by trip ID.</summary>
+        /// <param name="tripId">The trip ID.</param>
+        /// <returns>
+        /// A response with the Trip object and staus 200 if successful, 
+        /// An error message with status 404 if not found, an error otherwise.
+        /// </returns>
+        public virtual Response<Trip> GetTripByTripId(int tripId)
+        {
+            Trip? trip;
+            try
+            {
+                trip = _dal.GetTripByTripId(tripId);
+                
+            }
+            catch (MySqlException e)
+            {
+                return new Response<Trip>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch
+            {
+                return new Response<Trip>
+                {
+                    StatusCode = 500,
+                    ErrorMessage = "Internal Server Error."
+                };
+            }
+
+            if (trip is null)
+            {
+                return new Response<Trip>
+                {
+                    StatusCode = 404,
+                    ErrorMessage = "No trip found with given ID."
+                };
+            }
+            return new Response<Trip>
+            {
+                Data = trip,
+                StatusCode = 200
+            };
+        }
+
         /// <summary>
         ///     Gets the trips by user.
         /// </summary>
