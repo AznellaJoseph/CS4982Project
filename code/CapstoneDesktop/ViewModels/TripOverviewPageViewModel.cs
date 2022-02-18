@@ -18,8 +18,6 @@ namespace CapstoneDesktop.ViewModels
         public IScreen HostScreen { get; }
         public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
 
-        public IValueConverter DateFormatter { get; set; } = new DateFormatter();
-        
         public ReactiveCommand<Unit, IRoutableViewModel> LogoutCommand { get; }
         
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
