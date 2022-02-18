@@ -3,6 +3,7 @@ using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 {
@@ -12,14 +13,16 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
         [TestMethod]
         public void Constructor_OneParameter_PropertyCreations()
         {
+            var mockUser = new Mock<User>();
             var mockTripManager = new Mock<TripManager>();
-            CreateTripViewModel createTripWindowViewModel = new(mockTripManager.Object);
+            var mockScreen = new Mock<IScreen>();
+            CreateTripPageViewModel createTripWindowViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
 
             Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
             Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);
             Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
-            Assert.AreEqual(DateTime.Today, createTripWindowViewModel.StartDate);
-            Assert.AreEqual(DateTime.Today.AddDays(1), createTripWindowViewModel.EndDate);
+            Assert.IsNull(createTripWindowViewModel.StartDate);
+            Assert.IsNull(createTripWindowViewModel.EndDate);
             Assert.IsNull(createTripWindowViewModel.TripName);
             Assert.IsNull(createTripWindowViewModel.Notes);
         }
@@ -27,13 +30,16 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
         [TestMethod]
         public void Constructor_NoParameters_PropertyCreations()
         {
-            CreateTripViewModel createTripWindowViewModel = new();
+            var mockUser = new Mock<User>();
+            var mockTripManager = new Mock<TripManager>();
+            var mockScreen = new Mock<IScreen>();
+            CreateTripPageViewModel createTripWindowViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
 
             Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
             Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);
             Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
-            Assert.AreEqual(DateTime.Today, createTripWindowViewModel.StartDate);
-            Assert.AreEqual(DateTime.Today.AddDays(1), createTripWindowViewModel.EndDate);
+            Assert.IsNull(createTripWindowViewModel.StartDate);
+            Assert.IsNull(createTripWindowViewModel.EndDate);
             Assert.IsNull(createTripWindowViewModel.TripName);
             Assert.IsNull(createTripWindowViewModel.Notes);
         }

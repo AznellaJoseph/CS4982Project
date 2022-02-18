@@ -76,7 +76,7 @@ namespace CapstoneDesktop.ViewModels
             this._user = user;
             this.HostScreen = screen;
             CreateTripCommand = ReactiveCommand.CreateFromObservable(createTrip);
-            CancelCreateTripCommand = ReactiveCommand.CreateFromObservable(this.HostScreen.Router.NavigateBack.Execute);
+            CancelCreateTripCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.NavigateBack.Execute());
         }
 
         /// <summary>
