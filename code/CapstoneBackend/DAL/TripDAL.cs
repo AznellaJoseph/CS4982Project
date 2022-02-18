@@ -87,7 +87,7 @@ namespace CapstoneBackend.DAL
 
             IList<Trip> trips = new List<Trip>();
 
-            if (reader.Read())
+            while (reader.Read())
                 trips.Add(new Trip
                 {
                     TripId = reader.GetInt32(idOrdinal),

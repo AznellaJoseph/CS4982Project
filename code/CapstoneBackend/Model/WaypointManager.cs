@@ -38,7 +38,7 @@ namespace CapstoneBackend.Model
         /// <returns>
         ///     A response of if the waypoint was created in the database
         /// </returns>
-        public virtual Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime,
+        public virtual Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime? endTime,
             string? notes)
         {
             if (startTime.CompareTo(endTime) > 0)

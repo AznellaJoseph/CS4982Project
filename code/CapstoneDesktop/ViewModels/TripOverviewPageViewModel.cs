@@ -23,7 +23,7 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> LogoutCommand { get; }
         
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
-        public ReactiveCommand<Unit, Unit> CreateWaypointCommand { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> CreateWaypointCommand { get; }
         public ObservableCollection<WaypointViewModel> WaypointViewModels { get; }
         
         public Trip Trip { get; }
@@ -44,7 +44,7 @@ namespace CapstoneDesktop.ViewModels
             this._waypointManager = waypointManager;
             this.HostScreen = screen;
             this.LogoutCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.Navigate.Execute(new LoginPageViewModel(this.HostScreen)));
-            this.CreateWaypointCommand = ReactiveCommand.Create(this.createWaypoint);
+            this.CreateWaypointCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.Navigate.Execute(new CreateWaypointPageViewModel(this.Trip, this.HostScreen)));
             this.BackCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.NavigateBack.Execute());
             this.WaypointViewModels = new ObservableCollection<WaypointViewModel>();
         }
@@ -63,10 +63,6 @@ namespace CapstoneDesktop.ViewModels
         }
 
         public TripOverviewPageViewModel(Trip trip, IScreen screen) : this(trip, new WaypointManager(), screen)
-        {
-        }
-
-        private void createWaypoint()
         {
         }
 
