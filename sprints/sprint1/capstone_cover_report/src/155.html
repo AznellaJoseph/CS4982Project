@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Converters/DateFormatter.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Globalization;
+using Avalonia.Data.Converters;
+
+namespace CapstoneDesktop.Converters
+{
+    /// &lt;summary&gt;
+    ///     DateFormatter to be used when displaying dates
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Avalonia.Data.Converters.IValueConverter&quot; /&gt;
+    public class DateFormatter : IValueConverter
+    {
+        /// &lt;summary&gt;
+        ///     Converts a value.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;value&quot;&gt;The value to convert.&lt;/param&gt;
+        /// &lt;param name=&quot;targetType&quot;&gt;The type of the target.&lt;/param&gt;
+        /// &lt;param name=&quot;parameter&quot;&gt;A user-defined parameter.&lt;/param&gt;
+        /// &lt;param name=&quot;culture&quot;&gt;The culture to use.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     The converted value.
+        /// &lt;/returns&gt;
+        /// &lt;remarks&gt;
+        ///     This method should not throw exceptions. If the value is not convertible, return
+        ///     a &lt;see cref=&quot;T:Avalonia.Data.BindingNotification&quot; /&gt; in an error state. Any exceptions thrown will be
+        ///     treated as an application exception.
+        /// &lt;/remarks&gt;
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var date = (DateTime) value;
+            DataShown type;
+
+            if (Enum.TryParse((string) parameter, out type))
+                switch (type)
+                {
+                    case DataShown.Both:
+                        return date.ToString(&quot;MM/dd/yyyy hh:mm tt&quot;, culture);
+                    case DataShown.Date:
+                        return date.ToString(&quot;MM/dd/yyyy&quot;, culture);
+                    case DataShown.Time:
+                        return date.ToString(&quot;hh:mm tt&quot;, culture);
+                    default:
+                        return date.ToString(culture);
+                }
+
+            return date.ToString(culture);
+        }
+
+        /// &lt;summary&gt;
+        ///     Converts a value.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;value&quot;&gt;The value to convert.&lt;/param&gt;
+        /// &lt;param name=&quot;targetType&quot;&gt;The type of the target.&lt;/param&gt;
+        /// &lt;param name=&quot;parameter&quot;&gt;A user-defined parameter.&lt;/param&gt;
+        /// &lt;param name=&quot;culture&quot;&gt;The culture to use.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     The converted value.
+        /// &lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.NotSupportedException&quot;&gt;&lt;/exception&gt;
+        /// &lt;remarks&gt;
+        ///     This method should not throw exceptions. If the value is not convertible, return
+        ///     a &lt;see cref=&quot;T:Avalonia.Data.BindingNotification&quot; /&gt; in an error state. Any exceptions thrown will be
+        ///     treated as an application exception.
+        /// &lt;/remarks&gt;
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+
+        private enum DataShown
+        {
+            Date,
+            Time,
+            Both
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[29,9,29,10,0],[30,13,30,41,0],[33,13,33,61,0],[34,17,34,30,0],[37,25,37,78,0],[39,25,39,69,0],[41,25,41,67,0],[43,25,43,55,0],[46,13,46,43,0],[47,9,47,10,0],[66,9,66,10,0],[67,13,67,47,0]]);
+    </script>
+  </body>
+</html>
