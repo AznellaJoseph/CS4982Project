@@ -51,18 +51,16 @@ namespace CapstoneBackend.DAL
             User? user = null;
 
             if (reader.Read())
-            {
                 user = new User
-                  {
-                      UserId = reader.GetInt32(idOrdinal),
-                      Username = username, 
-                      FirstName = reader.GetString(fnameOrdinal),
-                      LastName = reader.GetString(lnameOrdinal),
-                      Password = reader.GetString(passwordOrdinal)
-                  };
-            }
-              
-            this._connection.Close();
+                {
+                    UserId = reader.GetInt32(idOrdinal),
+                    Username = username,
+                    FirstName = reader.GetString(fnameOrdinal),
+                    LastName = reader.GetString(lnameOrdinal),
+                    Password = reader.GetString(passwordOrdinal)
+                };
+
+            _connection.Close();
             return user;
         }
 
@@ -85,7 +83,7 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@lname", MySqlDbType.VarChar).Value = lname;
 
             var userId = cmd.ExecuteScalar();
-            this._connection.Close();
+            _connection.Close();
             return Convert.ToInt32(userId);
         }
     }

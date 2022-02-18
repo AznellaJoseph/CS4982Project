@@ -29,7 +29,8 @@ namespace CapstoneDesktop.ViewModels
             _tripManager = tripManager;
             HostScreen = screen;
             TripViewModels = new ObservableCollection<TripViewModel>();
-            CreateTripCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.Navigate.Execute(new CreateTripPageViewModel(this._user, this.HostScreen)));
+            CreateTripCommand = ReactiveCommand.CreateFromObservable(() =>
+                HostScreen.Router.Navigate.Execute(new CreateTripPageViewModel(_user, HostScreen)));
             LogoutCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
             loadTrips();

@@ -31,8 +31,8 @@ namespace CapstoneBackend.Model
         /// <summary>Gets the trip by trip ID.</summary>
         /// <param name="tripId">The trip ID.</param>
         /// <returns>
-        /// A response with the Trip object and staus 200 if successful, 
-        /// An error message with status 404 if not found, an error otherwise.
+        ///     A response with the Trip object and staus 200 if successful,
+        ///     An error message with status 404 if not found, an error otherwise.
         /// </returns>
         public virtual Response<Trip> GetTripByTripId(int tripId)
         {
@@ -40,7 +40,6 @@ namespace CapstoneBackend.Model
             try
             {
                 trip = _dal.GetTripByTripId(tripId);
-                
             }
             catch (MySqlException e)
             {
@@ -60,13 +59,11 @@ namespace CapstoneBackend.Model
             }
 
             if (trip is null)
-            {
                 return new Response<Trip>
                 {
                     StatusCode = 404,
                     ErrorMessage = "No trip found with given ID."
                 };
-            }
             return new Response<Trip>
             {
                 Data = trip,
@@ -78,7 +75,7 @@ namespace CapstoneBackend.Model
         ///     Gets the trips by user.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns></returns>
+        /// <returns> A response of the list of trips or an error message </returns>
         public virtual Response<IList<Trip>> GetTripsByUser(int userId)
         {
             try
@@ -115,7 +112,7 @@ namespace CapstoneBackend.Model
         /// <param name="notes">The notes.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns></returns>
+        /// <returns> A response of the id of the newly created trip or an error message if it failed </returns>
         public virtual Response<int> CreateTrip(int userId, string name, string? notes, DateTime startDate,
             DateTime endDate)
         {

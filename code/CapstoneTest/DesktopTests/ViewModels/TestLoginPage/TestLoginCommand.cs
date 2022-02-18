@@ -25,7 +25,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> { Data = user });
+                .Returns(new Response<User> {Data = user});
             LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 
@@ -43,7 +43,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> { ErrorMessage = "Username is incorrect." });
+                .Returns(new Response<User> {ErrorMessage = "Username is incorrect."});
             LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 
@@ -63,7 +63,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> { ErrorMessage = null });
+                .Returns(new Response<User> {ErrorMessage = null});
             LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 
@@ -83,7 +83,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("", ""))
-                .Returns(new Response<User> { ErrorMessage = "Username is incorrect." });
+                .Returns(new Response<User> {ErrorMessage = "Username is incorrect."});
             LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 

@@ -1,4 +1,3 @@
-using System;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
@@ -16,7 +15,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
         [TestMethod]
         public void Call_WithValidCredentials_Succeeds()
         {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash(TestPassword) };
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash(TestPassword)};
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
 
@@ -50,7 +49,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
         [TestMethod]
         public void Call_WithWrongPassword_Fails()
         {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash("CorrectPassword") };
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash("CorrectPassword")};
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
 
@@ -66,7 +65,8 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
         {
             var mockUserDal = new Mock<UserDal>();
             var builder = new MySqlExceptionBuilder();
-            mockUserDal.Setup(db => db.GetUserByUsername(TestUsername)).Throws(builder.WithError(500, "Internal server error").Build());
+            mockUserDal.Setup(db => db.GetUserByUsername(TestUsername))
+                .Throws(builder.WithError(500, "Internal server error").Build());
             UserManager userManager = new(mockUserDal.Object);
 
             var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);

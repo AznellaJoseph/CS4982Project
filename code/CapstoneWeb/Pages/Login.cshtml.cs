@@ -11,17 +11,32 @@ namespace CapstoneWeb.Pages
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class LoginModel : PageModel
     {
-        [BindProperty] public string Username { get; set; }
+        /// <summary>
+        ///     The username.
+        /// </summary>
+        [BindProperty]
+        public string Username { get; set; }
 
-        [BindProperty] public string Password { get; set; }
+        /// <summary>
+        ///     The password.
+        /// </summary>
+        [BindProperty]
+        public string Password { get; set; }
 
+        /// <summary>
+        ///     The error message.
+        /// </summary>
         public string ErrorMessage { get; set; }
 
+        /// <summary>
+        ///     The fake user manager.
+        /// </summary>
         public UserManager FakeUserManager { get; set; }
 
         /// <summary>
         ///     Called when [post].
         /// </summary>
+        /// <returns> A redirect to the next page or the current page if there was an error </returns>
         public IActionResult OnPost()
         {
             var userManager = FakeUserManager ?? new UserManager();
@@ -37,6 +52,10 @@ namespace CapstoneWeb.Pages
             return Page();
         }
 
+        /// <summary>
+        ///     Called when [post create account].
+        /// </summary>
+        /// <returns>A redirect to the next page or the current page if there was an error </returns>
         public IActionResult OnPostCreateAccount()
         {
             return RedirectToPage("createaccount");

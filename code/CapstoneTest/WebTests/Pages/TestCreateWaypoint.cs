@@ -20,7 +20,7 @@ namespace CapstoneTest.WebTests.Pages
             var fakeWaypointManager = new Mock<WaypointManager>();
             var currentTime = DateTime.Now;
             fakeWaypointManager.Setup(um => um.CreateWaypoint(0, "1601 Maple St", currentTime, currentTime, "notes"))
-                .Returns(new Response<int> { Data = 0 });
+                .Returns(new Response<int> {Data = 0});
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.WaypointManager = fakeWaypointManager.Object;
 
@@ -34,7 +34,7 @@ namespace CapstoneTest.WebTests.Pages
             var outBytes = Encoding.UTF8.GetBytes("0");
             session.Verify(s => s.Set("waypointId", outBytes));
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("index", redirect.PageName);
         }
 
@@ -46,7 +46,7 @@ namespace CapstoneTest.WebTests.Pages
             var currentTime = DateTime.Now;
             fakeWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "1601 Maple St", currentTime.AddDays(1), currentTime, "notes"))
-                .Returns(new Response<int> { ErrorMessage = "Start date must come after end date." });
+                .Returns(new Response<int> {ErrorMessage = "Start date must come after end date."});
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.WaypointManager = fakeWaypointManager.Object;
 

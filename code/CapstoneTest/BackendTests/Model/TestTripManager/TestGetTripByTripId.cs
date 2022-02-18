@@ -1,10 +1,8 @@
-﻿using CapstoneBackend.DAL;
+﻿using System;
+using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
-
 
 namespace CapstoneTest.BackendTests.Model.TestTripManager
 {
@@ -54,7 +52,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
 
             Assert.AreEqual(404U, result.StatusCode);
             Assert.IsNotNull(result.ErrorMessage);
-            Assert.AreNotEqual(String.Empty, result.ErrorMessage);
+            Assert.AreNotEqual(string.Empty, result.ErrorMessage);
         }
 
         [TestMethod]

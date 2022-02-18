@@ -57,9 +57,8 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPostCreateAccount();
 
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("createaccount", redirect.PageName);
         }
-
     }
 }
