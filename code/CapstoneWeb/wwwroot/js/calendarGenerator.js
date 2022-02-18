@@ -1,20 +1,20 @@
-let startDateString = document.getElementById("startDate").value;
-let endDateString = document.getElementById("endDate").value;
+const startDateString = document.getElementById("startDate").value;
+const endDateString = document.getElementById("endDate").value;
 
 const tripStartDate = new Date(startDateString);
 const tripEndDate = new Date(endDateString)
 
 
 Date.prototype.addDays = function (days) {
-    var date = new Date(this.valueOf());
+    const date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
 }
 
 function getDateRange(startDate, endDate) {
-    var dateRange = [];
+    const dateRange = [];
 
-    var currentDate = startDate;
+    let currentDate = startDate;
     while (currentDate <= endDate) {
         dateRange.push(new Date(currentDate));
         currentDate = currentDate.addDays(1);
@@ -24,10 +24,10 @@ function getDateRange(startDate, endDate) {
 }
 
 function formatAvailableDates(dateRange) {
-    calendarObject = [];
+    const calendarObject = [];
 
     dateRange.forEach(date => {
-        calendarItem = {
+        const calendarItem = {
             date: date.toISOString().slice(0, 10)
         }
 
@@ -37,12 +37,12 @@ function formatAvailableDates(dateRange) {
     return calendarObject;
 }
 
-let tripDateRange = getDateRange(tripStartDate, tripEndDate);
-let calendarObject = formatAvailableDates(tripDateRange);
+const tripDateRange = getDateRange(tripStartDate, tripEndDate);
+const calendarData = formatAvailableDates(tripDateRange);
 
 
 let myCalendar = new VanillaCalendar({
     selector: "#myCalendar",
-    availableDates: calendarObject,
+    availableDates: calendarData,
     datesFilter: true
 });
