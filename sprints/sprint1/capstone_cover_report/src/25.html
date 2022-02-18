@@ -2,34 +2,39 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Program.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/Response.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-
-namespace CapstoneWeb
+namespace CapstoneBackend.Model
 {
-    public class Program
+    /// &lt;summary&gt;
+    ///     Response Class
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name=&quot;T&quot;&gt;&lt;/typeparam&gt;
+    public class Response&lt;T&gt;
     {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+        /// &lt;summary&gt;
+        ///     The status code of the response
+        /// &lt;/summary&gt;
+        public uint StatusCode { get; set; } = 200;
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =&gt; { webBuilder.UseStartup&lt;Startup&gt;(); });
-        }
+        /// &lt;summary&gt;
+        ///     The data of the response
+        /// &lt;/summary&gt;
+        public T? Data { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The error message of the response
+        /// &lt;/summary&gt;
+        public string? ErrorMessage { get; set; }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[9,9,9,10,0],[10,13,10,51,0],[11,9,11,10,0],[14,9,14,10,0],[15,13,16,57,0],[16,57,16,58,0],[16,58,16,59,0],[16,59,16,92,0],[16,92,16,93,0],[16,93,16,94,0],[16,94,16,96,0],[17,9,17,10,0]]);
+      highlightRanges([[12,34,12,38,1],[12,39,12,43,1],[12,48,12,51,1],[17,26,17,30,1],[17,31,17,35,1],[22,39,22,43,1],[22,44,22,48,1]]);
     </script>
   </body>
 </html>

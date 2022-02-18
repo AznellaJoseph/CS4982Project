@@ -2,92 +2,99 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestRegisterUser.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestCreateWaypoint/TestCreateWaypointCommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using CapstoneBackend.DAL;
+using System;
 using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
+using ReactiveUI;
 
-namespace CapstoneTest.BackendTests.Model.TestUserManager
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 {
-
     [TestClass]
-    public class TestRegisterUser
+    public class TestCreateWaypointCommand
     {
         [TestMethod]
-        public void Register_WithValidInput_Succeeds()
+        public void CreateWaypointCommand_NullLocation_ReturnsErrorMessage()
         {
-            string username = &quot;TestUsername&quot;;
-            string password = &quot;TestPassword&quot;;
-            string fname = &quot;FirstName&quot;;
-            string lname = &quot;LastName&quot;;
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
-            User? fakeExistingUser = null;
-            User fakeCreatedUser = new() { Id = 1 };
-            var mockUserDAL = new Mock&lt;UserDal&gt;();
-            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDAL.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(fakeCreatedUser.Id);
+            var testScheduler = new TestScheduler();
 
-            UserManager userManager = new(mockUserDAL.Object);
+            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
 
-            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+            testScheduler.Start();
 
-            Assert.AreEqual(200U, resultResponse.StatusCode);
-            Assert.AreEqual(1, resultResponse.Data);
+            Assert.AreEqual(&quot;You must enter a location for the waypoint&quot;, createWaypointWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]
-        public void Register_WithDuplicateUsername_Fails()
+        public void CreateWaypointCommand_InvalidDates_ReturnsErrorMessage()
         {
-            string username = &quot;TestUsername&quot;;
-            string password = &quot;TestPassword&quot;;
-            string fname = &quot;FirstName&quot;;
-            string lname = &quot;LastName&quot;;
 
-            int? dbResult = null;
-            User fakeExistingUser = new() { Id = 1 };
-            var mockUserDAL = new Mock&lt;UserDal&gt;();
-            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDAL.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(dbResult);
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockWaypointManager.Setup(um =&gt;
+                    um.CreateWaypoint(0, &quot;Paris, Italy&quot;, DateTime.Today.AddDays(1) + TimeSpan.Zero, DateTime.Today + TimeSpan.Zero, &quot;notes&quot;))
+                .Returns(new Response&lt;int&gt; { ErrorMessage = &quot;The start time cannot be before the end time.&quot; });
+            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
-            UserManager userManager = new(mockUserDAL.Object);
+            var testScheduler = new TestScheduler();
 
-            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+            createWaypointWindowViewModel.Location = &quot;Paris, Italy&quot;;
+            createWaypointWindowViewModel.Notes = &quot;notes&quot;;
+            createWaypointWindowViewModel.StartDate = DateTime.Today.AddDays(1);
+            createWaypointWindowViewModel.StartTime = TimeSpan.Zero;
+            createWaypointWindowViewModel.EndDate = DateTime.Today;
+            createWaypointWindowViewModel.EndTime = TimeSpan.Zero;
 
-            Assert.AreEqual(400U, resultResponse.StatusCode);
+            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;The start time cannot be before the end time.&quot;,
+                createWaypointWindowViewModel.ErrorMessage);
         }
-
-        [TestMethod]
-        public void Register_InternalServerErrorConfiguration_Fails()
+        
+        public void CreateWaypointCommand_SuccessfulCreation()
         {
-            string username = &quot;TestUsername&quot;;
-            string password = &quot;TestPassword&quot;;
-            string fname = &quot;FirstName&quot;;
-            string lname = &quot;LastName&quot;;
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            mockWaypointManager.Setup(um =&gt; um.CreateWaypoint(0, &quot;Paris, Italy&quot;, DateTime.Today, DateTime.Today, null))
+                .Returns(new Response&lt;int&gt; { StatusCode = 200 });
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
+            
+            var testScheduler = new TestScheduler();
 
-            int? dbResult = null;
-            User? fakeExistingUser = null;
-            var mockUserDAL = new Mock&lt;UserDal&gt;();
-            mockUserDAL.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDAL.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(dbResult);
+            createWaypointWindowViewModel.Location = &quot;Paris, Italy&quot;;
+            createWaypointWindowViewModel.StartDate = DateTime.Today;
+            createWaypointWindowViewModel.EndDate = DateTime.Today;
+            createWaypointWindowViewModel.StartTime = DateTime.Today.TimeOfDay;
+            createWaypointWindowViewModel.EndTime = DateTime.Today.TimeOfDay;
 
-            UserManager userManager = new(mockUserDAL.Object);
+            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
 
-            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+            testScheduler.Start();
 
-            Assert.AreEqual(500U, resultResponse.StatusCode);
+            Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[15,9,15,10,1],[16,13,16,46,1],[17,13,17,46,1],[18,13,18,40,1],[19,13,19,39,1],[21,13,21,43,1],[22,13,22,53,1],[23,13,23,51,1],[24,13,24,95,1],[25,13,25,114,1],[27,13,27,63,1],[29,13,29,93,1],[31,13,31,62,1],[32,13,32,53,1],[33,9,33,10,1],[37,9,37,10,1],[38,13,38,46,1],[39,13,39,46,1],[40,13,40,40,1],[41,13,41,39,1],[43,13,43,34,1],[44,13,44,54,1],[45,13,45,51,1],[46,13,46,95,1],[47,13,47,104,1],[49,13,49,63,1],[51,13,51,93,1],[53,13,53,62,1],[54,9,54,10,1],[58,9,58,10,1],[59,13,59,46,1],[60,13,60,46,1],[61,13,61,40,1],[62,13,62,39,1],[64,13,64,34,1],[65,13,65,43,1],[66,13,66,51,1],[67,13,67,95,1],[68,13,68,104,1],[70,13,70,63,1],[72,13,72,93,1],[74,13,74,62,1],[75,9,75,10,1]]);
+      highlightRanges([[16,9,16,10,1],[17,13,17,45,1],[18,13,18,67,1],[19,13,19,50,1],[20,13,20,141,1],[22,13,22,53,1],[24,13,24,87,1],[26,13,26,35,1],[28,13,28,119,1],[29,9,29,10,1],[33,9,33,10,1],[35,13,35,45,1],[36,13,36,67,1],[37,13,37,50,1],[38,13,40,112,1],[41,13,41,141,1],[43,13,43,53,1],[45,13,45,69,1],[46,13,46,59,1],[47,13,47,81,1],[48,13,48,69,1],[49,13,49,68,1],[50,13,50,67,1],[52,13,52,87,1],[54,13,54,35,1],[56,13,57,61,1],[58,9,58,10,1],[61,9,61,10,0],[62,13,62,67,0],[63,13,64,66,0],[65,13,65,45,0],[66,13,66,50,0],[67,13,67,141,0],[69,13,69,53,0],[71,13,71,69,0],[72,13,72,70,0],[73,13,73,68,0],[74,13,74,80,0],[75,13,75,78,0],[77,13,77,87,0],[79,13,79,35,0],[81,13,81,87,0],[82,9,82,10,0]]);
     </script>
   </body>
 </html>

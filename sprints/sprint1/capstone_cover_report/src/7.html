@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestMainWindow/TestLoginCommand.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestTripOverviewWindow/TestConstructor.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -10,100 +10,51 @@
     <pre id="content" class="source-code">
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
-using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using ReactiveUI;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
+namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
 {
-
     [TestClass]
-    public class TestLoginCommand
+    public class TestConstructor
     {
+
         [TestMethod]
-        public void Login_ValidCredentials_ReturnsNoError()
+        public void Constructor_NoParameters_PropertyCreations()
         {
-            var user = new User
-            {
-                FirstName = &quot;admin&quot;,
-                LastName = &quot;admin&quot;,
-                Username = &quot;admin&quot;,
-                Password = &quot;admin&quot;,
-                Id = 0
-            };
-            var mockUserManager = new Mock&lt;UserManager&gt;();
-            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;User&gt; { Data = user });
-            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
-            var testScheduler = new TestScheduler();
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
-            mainWindowViewModel.Username = &quot;admin&quot;;
-            mainWindowViewModel.Password = &quot;admin&quot;;
-
-            mainWindowViewModel.LoginCommand.Execute().Subscribe();
-            testScheduler.Start();
-            Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
+            Assert.IsNotNull(testViewModel.LogoutCommand);
+            Assert.IsNotNull(testViewModel.BackCommand);
         }
 
         [TestMethod]
-        public void Login_IncorrectUsername_ReturnsErrorMessage()
+        public void Constructor_OneParameter_PropertyCreations()
         {
-            var mockUserManager = new Mock&lt;UserManager&gt;();
-            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;User&gt; { ErrorMessage = &quot;Username is incorrect.&quot; });
-            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
-            var testScheduler = new TestScheduler();
+            Trip testTrip = new();
+            testTrip.Name = &quot;Test Trip&quot;;
+            testTrip.Notes = &quot;Some Notes&quot;;
+            testTrip.StartDate = new DateTime(2022, 2, 2);
+            testTrip.EndDate = new DateTime(3033, 3, 3);
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            TripOverviewPageViewModel testViewModel = new(testTrip, mockScreen.Object);
 
-            mainWindowViewModel.Username = &quot;admin&quot;;
-            mainWindowViewModel.Password = &quot;admin&quot;;
+            Assert.IsNotNull(testViewModel.LogoutCommand);
+            Assert.IsNotNull(testViewModel.BackCommand);
 
-            mainWindowViewModel.LoginCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(&quot;Username is incorrect.&quot;, mainWindowViewModel.ErrorMessage);
+            Assert.AreEqual(testTrip, testViewModel.Trip);
         }
-
-        [TestMethod]
-        public void Login_NullErrorMessage_ReturnsEmptyErrorMessage()
-        {
-            var mockUserManager = new Mock&lt;UserManager&gt;();
-            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;User&gt; { ErrorMessage = null });
-            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
-            var testScheduler = new TestScheduler();
-
-            mainWindowViewModel.Username = &quot;admin&quot;;
-            mainWindowViewModel.Password = &quot;admin&quot;;
-
-            mainWindowViewModel.LoginCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
-        }
-
-        [TestMethod]
-        public void Login_NullCredentials_ReturnsErrorMessage()
-        {
-            var mockUserManager = new Mock&lt;UserManager&gt;();
-            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;&quot;, &quot;&quot;)).Returns(new Response&lt;User&gt; { ErrorMessage = &quot;Username is incorrect.&quot; });
-            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
-            var testScheduler = new TestScheduler();
-
-            mainWindowViewModel.Username = null;
-            mainWindowViewModel.Password = null;
-
-            mainWindowViewModel.LoginCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(&quot;Username is incorrect.&quot;, mainWindowViewModel.ErrorMessage);
-        }
-
     }
 }
+
     </pre>
     <script type="text/javascript">
-      highlightRanges([[16,9,16,10,1],[17,13,24,15,1],[25,13,25,59,1],[26,13,26,128,1],[27,13,27,83,1],[28,13,28,53,1],[30,13,30,52,1],[31,13,31,52,1],[33,13,33,68,1],[34,13,34,35,1],[35,13,35,77,1],[36,9,36,10,1],[40,9,40,10,1],[41,13,41,59,1],[42,13,42,156,1],[43,13,43,83,1],[44,13,44,53,1],[46,13,46,52,1],[47,13,47,52,1],[49,13,49,68,1],[51,13,51,35,1],[53,13,53,89,1],[54,9,54,10,1],[58,9,58,10,1],[59,13,59,59,1],[60,13,60,136,1],[61,13,61,83,1],[62,13,62,53,1],[64,13,64,52,1],[65,13,65,52,1],[67,13,67,68,1],[69,13,69,35,1],[71,13,71,77,1],[72,9,72,10,1],[76,9,76,10,1],[77,13,77,59,1],[78,13,78,146,1],[79,13,79,83,1],[80,13,80,53,1],[82,13,82,49,1],[83,13,83,49,1],[85,13,85,68,1],[87,13,87,35,1],[89,13,89,89,1],[90,9,90,10,1]]);
+      highlightRanges([[16,9,16,10,1],[17,13,17,45,1],[18,13,18,67,1],[19,13,19,50,1],[20,13,20,123,1],[22,13,22,59,1],[23,13,23,57,1],[24,9,24,10,1],[28,9,28,10,1],[29,13,29,35,1],[30,13,30,41,1],[31,13,31,43,1],[32,13,32,59,1],[33,13,33,57,1],[34,13,34,50,1],[35,13,35,88,1],[37,13,37,59,1],[38,13,38,57,1],[40,13,40,59,1],[41,9,41,10,1]]);
     </script>
   </body>
 </html>

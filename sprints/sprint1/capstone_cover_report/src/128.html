@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Views/CreateWaypointPage.axaml</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+&lt;UserControl xmlns=&quot;https://github.com/avaloniaui&quot;
+        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        x:Class=&quot;CapstoneDesktop.Views.CreateWaypointPage&quot;&gt;
+    &lt;Border Classes=&quot;container&quot; VerticalAlignment=&quot;Center&quot; HorizontalAlignment=&quot;Center&quot; Padding=&quot;30&quot;&gt;
+        &lt;StackPanel Width=&quot;700&quot; Spacing=&quot;10&quot;&gt;
+            &lt;TextBlock Classes=&quot;h1&quot; Text=&quot;CREATE WAYPOINT&quot; HorizontalAlignment=&quot;Center&quot;
+                       VerticalAlignment=&quot;Top&quot; /&gt;
+            &lt;TextBlock Text=&quot;{Binding ErrorMessage}&quot; Foreground=&quot;Red&quot; /&gt;
+            &lt;TextBlock Text=&quot;WAYPOINT LOCATION:&quot; /&gt;
+            &lt;TextBox Watermark=&quot;LOCATION NAME&quot; VerticalAlignment=&quot;Bottom&quot; Text=&quot;{Binding Location, Mode=TwoWay}&quot; /&gt;
+            &lt;TextBlock Text=&quot;WAYPOINT NOTES&quot; /&gt;
+            &lt;TextBox Watermark=&quot;NOTES&quot; VerticalAlignment=&quot;Bottom&quot; Text=&quot;{Binding Notes, Mode=TwoWay}&quot; AcceptsReturn=&quot;True&quot; TextWrapping=&quot;Wrap&quot; Height=&quot;200&quot; /&gt;
+
+            &lt;Grid ColumnDefinitions=&quot;*,10,*&quot; RowDefinitions=&quot;*,10,*&quot;&gt;
+                &lt;DatePicker Grid.Column=&quot;0&quot; Grid.Row=&quot;0&quot; SelectedDate=&quot;{Binding StartDate}&quot; Header=&quot;START DATE&quot; /&gt;
+                &lt;TimePicker Grid.Column=&quot;2&quot; Grid.Row=&quot;0&quot; SelectedTime=&quot;{Binding StartTime}&quot; Header=&quot;START TIME&quot; /&gt;
+                &lt;DatePicker Grid.Column=&quot;0&quot; Grid.Row=&quot;2&quot; SelectedDate=&quot;{Binding EndDate}&quot; Header=&quot;END DATE&quot; /&gt;
+                &lt;TimePicker Grid.Column=&quot;2&quot; Grid.Row=&quot;2&quot; SelectedTime=&quot;{Binding EndTime}&quot; Header=&quot;END TIME&quot; /&gt;
+            &lt;/Grid&gt;
+            &lt;Grid ColumnDefinitions=&quot;*,10,*&quot;&gt;
+                &lt;Button Grid.Column=&quot;0&quot; Command=&quot;{Binding CreateWaypointCommand}&quot; HorizontalAlignment=&quot;Stretch&quot;&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;CREATE WAYPOINT&quot; /&gt;
+                &lt;/Button&gt;
+                &lt;Button Grid.Column=&quot;2&quot; Command=&quot;{Binding CancelCreateWaypointCommand}&quot; HorizontalAlignment=&quot;Stretch&quot;&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;CANCEL&quot; /&gt;
+                &lt;/Button&gt;
+            &lt;/Grid&gt;
+        &lt;/StackPanel&gt;
+    &lt;/Border&gt;
+&lt;/UserControl&gt;
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[1,2,1,13,0],[4,6,4,12,0],[4,13,4,20,0],[4,60,4,79,0],[5,10,5,20,0],[5,21,5,26,0],[6,14,6,23,0],[6,24,6,31,0],[6,37,6,41,0],[7,24,7,41,0],[8,14,8,23,0],[8,24,8,28,0],[8,54,8,64,0],[9,14,9,23,0],[9,24,9,28,0],[10,14,10,21,0],[10,22,10,31,0],[10,75,10,79,0],[11,14,11,23,0],[11,24,11,28,0],[12,14,12,21,0],[12,22,12,31,0],[12,67,12,71,0],[12,124,12,136,0],[14,14,14,18,0],[14,19,14,36,0],[14,46,14,60,0],[15,18,15,28,0],[15,29,15,33,0],[15,58,15,70,0],[15,93,15,99,0],[16,18,16,28,0],[16,29,16,33,0],[16,58,16,70,0],[16,93,16,99,0],[17,18,17,28,0],[17,29,17,33,0],[17,58,17,70,0],[17,91,17,97,0],[18,18,18,28,0],[18,29,18,33,0],[18,58,18,70,0],[18,91,18,97,0],[20,14,20,18,0],[20,19,20,36,0],[21,18,21,24,0],[21,25,21,29,0],[21,41,21,48,0],[22,22,22,31,0],[22,32,22,45,0],[22,55,22,59,0],[24,18,24,24,0],[24,25,24,29,0],[24,41,24,48,0],[25,22,25,31,0],[25,32,25,45,0],[25,55,25,59,0]]);
+    </script>
+  </body>
+</html>

@@ -2,42 +2,55 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/App.axaml.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/Waypoint.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Markup.Xaml;
-using CapstoneDesktop.ViewModels;
-using CapstoneDesktop.Views;
+using System;
 
-namespace CapstoneDesktop
+namespace CapstoneBackend.Model
 {
-    public class App : Application
+    /// &lt;summary&gt;
+    ///     Waypoint Model
+    /// &lt;/summary&gt;
+    public class Waypoint
     {
-        public override void Initialize()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        /// &lt;summary&gt;
+        ///     The trip id.
+        /// &lt;/summary&gt;
+        public int TripId { get; set; }
 
-        public override void OnFrameworkInitializationCompleted()
-        {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = new MainWindowViewModel()
-                };
+        /// &lt;summary&gt;
+        ///     The waypoint id.
+        /// &lt;/summary&gt;
+        public int WaypointId { get; set; }
 
-            base.OnFrameworkInitializationCompleted();
-        }
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        public string Location { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTime? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string Notes { get; set; } = string.Empty;
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[12,9,12,10,0],[13,13,13,43,0],[14,9,14,10,0],[17,9,17,10,0],[18,13,18,88,0],[19,17,22,19,0],[24,13,24,55,0],[25,9,25,10,0]]);
+      highlightRanges([[13,29,13,33,1],[13,34,13,38,1],[18,33,18,37,1],[18,38,18,42,1],[23,34,23,38,1],[23,39,23,43,1],[23,48,23,60,1],[28,37,28,41,1],[28,42,28,46,1],[33,36,33,40,1],[33,41,33,45,1],[38,31,38,35,1],[38,36,38,40,1],[38,45,38,57,1]]);
     </script>
   </body>
 </html>

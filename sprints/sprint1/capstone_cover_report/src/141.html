@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/LoginPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Diagnostics;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the MainWindow (Login)
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class LoginPageViewModel : ViewModelBase, IRoutableViewModel
+    {
+        private readonly UserManager _userManager;
+        private string _error = string.Empty;
+
+        public IScreen HostScreen { get; }
+        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
+
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; LoginCommand { get; }
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; OpenCreateAccountCommand { get; set; }
+
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+        
+        public LoginPageViewModel(UserManager manager, IScreen screen)
+        {
+            this._userManager = manager;
+            this.HostScreen = screen;
+            this.LoginCommand = ReactiveCommand.CreateFromObservable(this.login);
+            this.OpenCreateAccountCommand = ReactiveCommand.CreateFromObservable(() =&gt; this.HostScreen.Router.Navigate.Execute(new CreateAccountPageViewModel(this.HostScreen)));
+        }
+        
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;MainWindowViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public LoginPageViewModel(IScreen screen) : this(new UserManager(), screen)
+        {
+        }
+
+        private IObservable&lt;IRoutableViewModel&gt; login()
+        {
+            var response = this._userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
+            if (response.StatusCode == 200U &amp;&amp; response.Data is not null)
+                return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, HostScreen));
+            ErrorMessage = response.ErrorMessage ?? string.Empty;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,46,1],[19,37,19,41,1],[20,41,20,45,0],[20,50,20,91,1],[22,73,22,77,1],[23,85,23,89,1],[23,90,23,94,1],[25,35,25,39,1],[25,40,25,44,1],[26,35,26,39,1],[26,40,26,44,1],[29,20,29,26,1],[30,20,30,64,1],[33,9,33,71,1],[34,9,34,10,1],[35,13,35,41,1],[36,13,36,38,1],[37,13,37,82,1],[38,13,38,88,1],[38,88,38,176,0],[38,176,38,178,1],[39,9,39,10,1],[44,53,44,84,1],[45,9,45,10,1],[46,9,46,10,1],[49,9,49,10,1],[50,13,50,119,1],[51,13,51,74,1],[52,17,52,112,0],[53,13,53,66,1],[54,13,54,59,1],[55,9,55,10,1]]);
+    </script>
+  </body>
+</html>

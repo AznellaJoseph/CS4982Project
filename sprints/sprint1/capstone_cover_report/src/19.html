@@ -2,94 +2,93 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/TripManager.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestGetUserByCredentials.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
-using System.Collections.Generic;
 using CapstoneBackend.DAL;
-using MySql.Data.MySqlClient;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace CapstoneBackend.Model
+namespace CapstoneTest.BackendTests.Model.TestUserManager
 {
-    public class TripManager
+    [TestClass]
+    public class TestGetUserByCredentials
     {
-        
-        private readonly TripDal _dal;
+        private const string TestUsername = &quot;TestUsername&quot;;
+        private const string TestPassword = &quot;TestPassword&quot;;
 
-        public TripManager() : this(new TripDal())
+        [TestMethod]
+        public void Call_WithValidCredentials_Succeeds()
         {
+            User fakeExistingUser = new() { Password = PasswordHasher.Hash(TestPassword) };
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+
+            Assert.AreEqual(200U, resultResponse.StatusCode);
+            Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
+            Assert.AreEqual(resultResponse?.Data?.FirstName, fakeExistingUser.FirstName);
+            Assert.AreEqual(resultResponse?.Data?.LastName, fakeExistingUser.LastName);
+            Assert.AreEqual(resultResponse?.Data?.Username, fakeExistingUser.Username);
+            Assert.AreEqual(resultResponse?.Data?.Password, fakeExistingUser.Password);
+            Assert.AreEqual(resultResponse?.Data?.UserId, fakeExistingUser.UserId);
         }
 
-        public TripManager(TripDal dal)
+        [TestMethod]
+        public void Call_WithUnknownUsername_Fails()
         {
-            _dal = dal;
-        }
-        
-        public virtual Response&lt;IList&lt;Trip&gt;&gt; GetTripsByUser(int userId)
-        {
-            try
-            {
-                var trips = this._dal.GetTripsByUserId(userId);
-                return new Response&lt;IList&lt;Trip&gt;&gt;
-                {
-                    Data = trips
-                };
-            }
-            catch (MySqlException e)
-            {
-                return new Response&lt;IList&lt;Trip&gt;&gt;
-                {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
+            User? missingUser = null;
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(missingUser);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+
+            Assert.AreEqual(404U, resultResponse.StatusCode);
         }
 
-        public virtual Response&lt;int&gt; CreateTrip(int userId, string name, DateTime startDate, DateTime endDate)
+        [TestMethod]
+        public void Call_WithWrongPassword_Fails()
         {
-            if (startDate.CompareTo(endDate) &gt; 0)
-            {
-                return new Response&lt;int&gt;
-                {
-                    StatusCode = 400,
-                    ErrorMessage = &quot;Start date of a trip cannot be after the end date.&quot;
-                };
-            }
-            
-            try
-            {
-                var tripId = this._dal.CreateTrip(userId, name, startDate, endDate);
-                if (tripId is null)
-                {
-                    return new Response&lt;int&gt;
-                    {
-                        StatusCode = 500,
-                        ErrorMessage = &quot;Server Error&quot;
-                    };
-                }
-                return new Response&lt;int&gt;
-                {
-                    Data = (int)tripId
-                };
-            }
-            catch (MySqlException e)
-            {
-                return new Response&lt;int&gt;
-                {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
+            User fakeExistingUser = new() { Password = PasswordHasher.Hash(&quot;CorrectPassword&quot;) };
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+
+            Assert.AreEqual(404U, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Call_ThrowsMySqlException_Fails()
+        {
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Throws(builder.WithError(500, &quot;Internal server error&quot;).Build());
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+
+            Assert.AreEqual(500U, resultResponse.StatusCode);
+            Assert.AreEqual(&quot;Internal server error&quot;, resultResponse.ErrorMessage);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[13,32,13,51,1],[14,9,14,10,1],[15,9,15,10,1],[17,9,17,40,1],[18,9,18,10,1],[19,13,19,24,1],[20,9,20,10,1],[23,9,23,10,1],[25,13,25,14,1],[26,17,26,64,1],[27,17,30,19,1],[32,13,32,37,1],[33,13,33,14,1],[34,17,38,19,1],[40,9,40,10,1],[43,9,43,10,1],[44,13,44,50,1],[45,13,45,14,1],[46,17,50,19,1],[54,13,54,14,1],[55,17,55,85,1],[56,17,56,36,1],[57,17,57,18,1],[58,21,62,23,1],[64,17,67,19,1],[69,13,69,37,1],[70,13,70,14,1],[71,17,75,19,1],[77,9,77,10,1]]);
+      highlightRanges([[18,9,18,10,1],[19,13,19,92,1],[20,13,20,51,1],[21,13,21,99,1],[23,13,23,63,1],[25,13,25,95,1],[27,13,27,62,1],[28,13,28,72,1],[29,13,29,90,1],[30,13,30,88,1],[31,13,31,88,1],[32,13,32,88,1],[33,13,33,84,1],[34,9,34,10,1],[38,9,38,10,1],[39,13,39,38,1],[40,13,40,51,1],[41,13,41,94,1],[43,13,43,63,1],[45,13,45,95,1],[47,13,47,62,1],[48,9,48,10,1],[52,9,52,10,1],[53,13,53,97,1],[54,13,54,51,1],[55,13,55,99,1],[57,13,57,63,1],[59,13,59,95,1],[61,13,61,62,1],[62,9,62,10,1],[66,9,66,10,1],[67,13,67,51,1],[68,13,68,55,1],[69,13,69,137,1],[70,13,70,63,1],[72,13,72,95,1],[74,13,74,62,1],[75,13,75,83,1],[76,9,76,10,1]]);
     </script>
   </body>
 </html>

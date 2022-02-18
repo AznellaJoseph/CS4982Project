@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Converters/DateFormatter.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Globalization;
+using Avalonia.Data.Converters;
+
+namespace CapstoneDesktop.Converters
+{
+    public class DateFormatter : IValueConverter
+    {
+        
+        private enum DataShown
+        {
+            Date,
+            Time,
+            Both
+        }
+        
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var date = (DateTime) value;
+            DataShown type;
+            
+            if (Enum.TryParse((string) parameter, out type))
+            {
+                switch (type)
+                {
+                    case DataShown.Both:
+                        return date.ToString(&quot;MM/dd/yyyy hh:mm tt&quot;, culture);
+                    case DataShown.Date:
+                        return date.ToString(&quot;MM/dd/yyyy&quot;, culture);
+                    case DataShown.Time:
+                        return date.ToString(&quot;hh:mm tt&quot;, culture);
+                    default:
+                        return date.ToString(culture);
+                }
+            }
+            return date.ToString(culture);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,10,0],[19,13,19,41,0],[22,13,22,61,0],[23,13,23,14,0],[24,17,24,30,0],[27,25,27,78,0],[29,25,29,69,0],[31,25,31,67,0],[33,25,33,55,0],[36,13,36,43,0],[37,9,37,10,0],[40,9,40,10,0],[41,13,41,47,0]]);
+    </script>
+  </body>
+</html>

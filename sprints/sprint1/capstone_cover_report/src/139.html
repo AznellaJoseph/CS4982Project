@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/CreateWaypointPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Diagnostics;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the CreateWaypoint Window
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class CreateWaypointPageViewModel : ViewModelBase, IRoutableViewModel
+    {
+        private readonly WaypointManager _waypointManager;
+        private readonly Trip _trip;
+
+        private string _error = string.Empty;
+        
+        public IScreen HostScreen { get; }
+        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
+
+        /// &lt;summary&gt;
+        /// The create waypoint command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; CreateWaypointCommand { get; }
+
+        /// &lt;summary&gt;
+        /// The cancel create waypoint command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateWaypointCommand { get; }
+        
+        /// &lt;summary&gt;
+        /// The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        /// The start date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        /// The start time.
+        /// &lt;/summary&gt;
+        public TimeSpan? StartTime { get; set; }
+
+        /// &lt;summary&gt;
+        /// The end date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        /// The end time.
+        /// &lt;/summary&gt;
+        public TimeSpan? EndTime { get; set; }
+
+        /// &lt;summary&gt;
+        /// The location.
+        /// &lt;/summary&gt;
+        public string? Location { get; set; }
+
+        /// &lt;summary&gt;
+        /// The notes.
+        /// &lt;/summary&gt;
+        public string? Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateWaypointPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;trip&quot;&gt;the trip that the waypoint will be created for.&lt;/param&gt;
+        /// &lt;param name=&quot;manager&quot;&gt;The manager.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The host screen&lt;/param&gt;
+        public CreateWaypointPageViewModel(Trip trip, WaypointManager manager, IScreen screen)
+        {
+            this._trip = trip;
+            _waypointManager = manager;
+            this.HostScreen = screen;
+            CreateWaypointCommand = ReactiveCommand.CreateFromObservable(createWaypoint);
+            CancelCreateWaypointCommand = ReactiveCommand.CreateFromObservable(() =&gt; this.HostScreen.Router.NavigateBack.Execute());
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateWaypointPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public CreateWaypointPageViewModel(Trip trip, IScreen screen) : this(trip, new WaypointManager(), screen)
+        {
+        }
+
+        private IObservable&lt;IRoutableViewModel&gt; createWaypoint()
+        {
+            if (string.IsNullOrEmpty(Location))
+            {
+                ErrorMessage = &quot;You must enter a location for the waypoint&quot;;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+            if (StartDate is null || StartTime is null)
+            {
+                ErrorMessage = &quot;You must enter a start date and time for the waypoint&quot;;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var startDate = StartDate?.Date + StartTime;
+            var endTime = EndDate is null || EndTime is null ? null : EndDate?.Date + EndTime;
+            var resultResponse = _waypointManager.CreateWaypoint(this._trip.TripId, Location, startDate ?? DateTime.Now,
+                    endTime, Notes);
+            if (!string.IsNullOrEmpty(resultResponse.ErrorMessage))
+            {
+                    ErrorMessage = resultResponse.ErrorMessage;
+                    return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            return this.HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(this._trip, this.HostScreen));
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,9,19,46,1],[21,37,21,41,0],[22,41,22,45,0],[22,50,22,91,1],[27,82,27,86,1],[32,74,32,78,1],[39,20,39,26,1],[40,20,40,64,1],[46,44,46,48,1],[46,49,46,53,1],[51,38,51,42,1],[51,43,51,47,1],[56,42,56,46,1],[56,47,56,51,1],[61,36,61,40,1],[61,41,61,45,1],[66,35,66,39,1],[66,40,66,44,1],[71,32,71,36,1],[71,37,71,41,1],[79,9,79,95,1],[80,9,80,10,1],[81,13,81,31,1],[82,13,82,40,1],[83,13,83,38,1],[84,13,84,90,1],[85,13,85,86,1],[85,86,85,131,0],[85,131,85,133,1],[86,9,86,10,1],[91,73,91,114,0],[92,9,92,10,0],[93,9,93,10,0],[96,9,96,10,1],[97,13,97,48,1],[98,13,98,14,1],[99,17,99,77,1],[100,17,100,63,1],[102,13,102,56,1],[103,13,103,14,0],[104,17,104,88,0],[105,17,105,63,0],[108,13,108,57,1],[109,13,109,95,1],[110,13,111,37,1],[112,13,112,68,1],[113,13,113,14,1],[114,21,114,64,1],[115,21,115,67,1],[118,13,118,120,0],[119,9,119,10,1]]);
+    </script>
+  </body>
+</html>
