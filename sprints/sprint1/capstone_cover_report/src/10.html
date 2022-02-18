@@ -2,44 +2,53 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestLoginPage/TestOpenCreateAccountCommand.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestTripOverviewWindow/TestSetSelectedDate.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
+using System.Collections.Generic;
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
-using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ReactiveUI;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
+namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
 {
     [TestClass]
-    public class TestOpenCreateAccountCommand
+    public class TestSetSelectedDate
     {
-        public void OpenCreateAccount_CorrectOutput()
+        [TestMethod]
+        public void TestSet_Success()
         {
-            var mockUserManager = new Mock&lt;UserManager&gt;();
+            var startDate = DateTime.Now;
+            var mockTrip = new Mock&lt;Trip&gt;();
+            mockTrip.SetupGet(mt =&gt; mt.TripId).Returns(1);
             var mockScreen = new Mock&lt;IScreen&gt;();
-            LoginPageViewModel mainWindowViewModel = new(mockUserManager.Object, mockScreen.Object);
-            var testScheduler = new TestScheduler();
-
-            mainWindowViewModel.OpenCreateAccountCommand.ThrownExceptions.Subscribe();
-
-            testScheduler.Start();
-
-            mockScreen.VerifyGet(ms =&gt; ms.Router);
-
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            mockWaypointManager.Setup(wm =&gt; wm.GetWaypointsOnDate(1, startDate))
+                .Returns(new Response&lt;IList&lt;Waypoint&gt;&gt;
+                {
+                    Data = new List&lt;Waypoint&gt;
+                    {
+                        new()
+                    }
+                });
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
+            
+            testViewModel.SelectedDate = startDate;
+            
+            Assert.AreEqual(1, testViewModel.WaypointViewModels.Count);
+            
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[15,9,15,10,0],[16,13,16,59,0],[17,13,17,50,0],[18,13,18,101,0],[19,13,19,53,0],[21,13,21,87,0],[23,13,23,35,0],[25,13,25,51,0],[27,9,27,10,0]]);
+      highlightRanges([[16,9,16,10,1],[17,13,17,42,1],[18,13,18,45,1],[19,13,19,59,1],[20,13,20,50,1],[21,13,21,67,1],[22,13,29,20,1],[30,13,30,123,1],[32,13,32,52,1],[34,13,34,72,1],[36,9,36,10,1]]);
     </script>
   </body>
 </html>

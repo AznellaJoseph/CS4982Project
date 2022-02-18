@@ -2,110 +2,69 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestWaypointManager/TestGetWaypointsInTrip.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestLandingPage/TestLoadTrips.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
 using System.Collections.Generic;
-using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 
-namespace CapstoneTest.BackendTests.Model.TestWaypointManager
+namespace CapstoneTest.DesktopTests.ViewModels.TestLandingPage
 {
     [TestClass]
-    public class TestGetWaypointsInTrip
+    public class TestLoadTrips
     {
         [TestMethod]
-        public void Call_EmptySet_ReturnsEmptyList()
+        public void LoadTrips_NotNullResponse_AddsOneTrip()
         {
-            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;();
+            var mockUser = new Mock&lt;User&gt;
+            {
+                Object =
+                {
+                    UserId = 0
+                }
+            };
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
 
-            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
-            mockWaypointDal.Setup(db =&gt; db.GetWaypointsByTripId(1)).Returns(fakeWaypoints);
+            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(0))
+                .Returns(new Response&lt;IList&lt;Trip&gt;&gt; {Data = new List&lt;Trip&gt; {new()}});
 
-            WaypointManager waypointManager = new(mockWaypointDal.Object);
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
 
-            var resultResponse =
-                waypointManager.GetWaypointsByTripId(1);
-
-            Assert.AreEqual(0, resultResponse.Data?.Count);
+            Assert.AreEqual(1, landingPageViewModel.TripViewModels.Count);
         }
 
         [TestMethod]
-        public void Call_YieldsSetWithOneValue_ReturnsExpectedList()
+        public void LoadTrips_NullResponse_EmptyList()
         {
-            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
+            var mockUser = new Mock&lt;User&gt;
             {
-                new()
+                Object =
                 {
-                    TripId = 1,
-                    WaypointId = 1,
-                    Location = &quot;1601 Maple St&quot;,
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now
+                    UserId = 0
                 }
             };
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
 
-            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
-            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now, null))
-                .Returns(1);
-            mockWaypointDal.Setup(db =&gt; db.GetWaypointsByTripId(1)).Returns(fakeWaypoints);
+            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(0)).Returns(new Response&lt;IList&lt;Trip&gt;&gt; {Data = null});
 
-            WaypointManager waypointManager = new(mockWaypointDal.Object);
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
 
-            var resultResponse =
-                waypointManager.GetWaypointsByTripId(1);
-
-            Assert.AreEqual(1, resultResponse.Data?.Count);
-        }
-
-        [TestMethod]
-        public void Call_YieldsSetWithMultipleValues_ReturnsExpectedList()
-        {
-            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
-            {
-                new()
-                {
-                    TripId = 1,
-                    WaypointId = 1,
-                    Location = &quot;1601 Maple St&quot;,
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now
-                },
-                new()
-                {
-                    TripId = 1,
-                    WaypointId = 2,
-                    Location = &quot;1602 Maple St&quot;,
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now
-                }
-            };
-
-            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
-            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now, null))
-                .Returns(1);
-            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1602 Maple St&quot;, DateTime.Now, DateTime.Now, null))
-                .Returns(1);
-            mockWaypointDal.Setup(db =&gt; db.GetWaypointsByTripId(1)).Returns(fakeWaypoints);
-
-            WaypointManager waypointManager = new(mockWaypointDal.Object);
-
-            var resultResponse =
-                waypointManager.GetWaypointsByTripId(1);
-
-            Assert.AreEqual(2, resultResponse.Data?.Count);
+            Assert.AreEqual(0, landingPageViewModel.TripViewModels.Count);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[15,9,15,10,1],[16,13,16,66,1],[18,13,18,59,1],[19,13,19,92,1],[21,13,21,75,1],[23,13,24,57,1],[26,13,26,60,1],[27,9,27,10,1],[31,9,31,10,1],[32,13,42,15,1],[44,13,44,59,1],[45,13,46,29,1],[47,13,47,92,1],[49,13,49,75,1],[51,13,52,57,1],[54,13,54,60,1],[55,9,55,10,1],[59,9,59,10,1],[60,13,78,15,1],[80,13,80,59,1],[81,13,82,29,1],[83,13,84,29,1],[85,13,85,92,1],[87,13,87,75,1],[89,13,90,57,1],[92,13,92,60,1],[93,9,93,10,1]]);
+      highlightRanges([[15,9,15,10,1],[16,13,22,15,1],[23,13,23,59,1],[24,13,24,50,1],[26,13,27,85,1],[29,13,29,121,1],[31,13,31,75,1],[32,9,32,10,1],[36,9,36,10,1],[37,13,43,15,1],[44,13,44,59,1],[45,13,45,50,1],[47,13,47,112,1],[49,13,49,121,1],[51,13,51,75,1],[52,9,52,10,1]]);
     </script>
   </body>
 </html>

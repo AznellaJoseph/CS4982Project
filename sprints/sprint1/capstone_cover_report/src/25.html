@@ -2,39 +2,59 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/Response.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestWaypointManager/TestCreateWaypoint.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-namespace CapstoneBackend.Model
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 {
-    /// &lt;summary&gt;
-    ///     Response Class
-    /// &lt;/summary&gt;
-    /// &lt;typeparam name=&quot;T&quot;&gt;&lt;/typeparam&gt;
-    public class Response&lt;T&gt;
+    [TestClass]
+    public class TestCreateWaypoint
     {
-        /// &lt;summary&gt;
-        ///     The status code of the response
-        /// &lt;/summary&gt;
-        public uint StatusCode { get; set; } = 200;
+        [TestMethod]
+        public void Create_InvalidTimes_ReturnsErrorMessage()
+        {
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt;
+                    db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now.AddDays(4), DateTime.Now, null))
+                .Returns(400);
 
-        /// &lt;summary&gt;
-        ///     The data of the response
-        /// &lt;/summary&gt;
-        public T? Data { get; set; }
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
 
-        /// &lt;summary&gt;
-        ///     The error message of the response
-        /// &lt;/summary&gt;
-        public string? ErrorMessage { get; set; }
+            var resultResponse =
+                waypointManager.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now.AddDays(4), DateTime.Now, null);
+
+            Assert.AreEqual(400u, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Create_ValidParameters_ReturnsWaypointNumber()
+        {
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt;
+                    db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now.AddDays(2), null))
+                .Returns(200);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now.AddDays(2), null);
+
+            Assert.AreEqual(200u, resultResponse.StatusCode);
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[12,34,12,38,1],[12,39,12,43,1],[12,48,12,51,1],[17,26,17,30,1],[17,31,17,35,1],[22,39,22,43,1],[22,44,22,48,1]]);
+      highlightRanges([[14,9,14,10,1],[15,13,15,59,1],[16,13,18,31,1],[20,13,20,75,1],[22,13,23,113,1],[25,13,25,62,1],[26,9,26,10,1],[30,9,30,10,1],[31,13,31,59,1],[32,13,34,31,1],[36,13,36,75,1],[38,13,39,113,1],[41,13,41,62,1],[42,9,42,10,1]]);
     </script>
   </body>
 </html>

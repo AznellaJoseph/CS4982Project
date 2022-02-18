@@ -2,49 +2,93 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/User.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestGetUserByCredentials.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-namespace CapstoneBackend.Model
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestUserManager
 {
-    /// &lt;summary&gt;
-    ///     User Model Class
-    /// &lt;/summary&gt;
-    public class User
+    [TestClass]
+    public class TestGetUserByCredentials
     {
+        private const string TestUsername = &quot;TestUsername&quot;;
+        private const string TestPassword = &quot;TestPassword&quot;;
 
-        /// &lt;summary&gt;
-        ///     The id of the user.
-        /// &lt;/summary&gt;
-        public int UserId { get; set; }
+        [TestMethod]
+        public void Call_WithValidCredentials_Succeeds()
+        {
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash(TestPassword)};
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
 
-        /// &lt;summary&gt;
-        ///     The username of the user
-        /// &lt;/summary&gt;
-        public string Username { get; set; } = string.Empty;
+            UserManager userManager = new(mockUserDal.Object);
 
-        /// &lt;summary&gt;
-        ///     The password of the user.
-        /// &lt;/summary&gt;
-        public string Password { get; set; } = string.Empty;
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-        /// &lt;summary&gt;
-        ///     The first name of the user.
-        /// &lt;/summary&gt;
-        public string FirstName { get; set; } = string.Empty;
+            Assert.AreEqual(200U, resultResponse.StatusCode);
+            Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
+            Assert.AreEqual(resultResponse?.Data?.FirstName, fakeExistingUser.FirstName);
+            Assert.AreEqual(resultResponse?.Data?.LastName, fakeExistingUser.LastName);
+            Assert.AreEqual(resultResponse?.Data?.Username, fakeExistingUser.Username);
+            Assert.AreEqual(resultResponse?.Data?.Password, fakeExistingUser.Password);
+            Assert.AreEqual(resultResponse?.Data?.UserId, fakeExistingUser.UserId);
+        }
 
-        /// &lt;summary&gt;
-        ///     The last name of the user
-        /// &lt;/summary&gt;
-        public string LastName { get; set; } = string.Empty;
+        [TestMethod]
+        public void Call_WithUnknownUsername_Fails()
+        {
+            User? missingUser = null;
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(missingUser);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+
+            Assert.AreEqual(404U, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Call_WithWrongPassword_Fails()
+        {
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash(&quot;CorrectPassword&quot;)};
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+
+            Assert.AreEqual(404U, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Call_ThrowsMySqlException_Fails()
+        {
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername))
+                .Throws(builder.WithError(500, &quot;Internal server error&quot;).Build());
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+
+            Assert.AreEqual(500U, resultResponse.StatusCode);
+            Assert.AreEqual(&quot;Internal server error&quot;, resultResponse.ErrorMessage);
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[12,29,12,33,1],[12,34,12,38,1],[17,34,17,38,1],[17,39,17,43,1],[17,48,17,60,1],[22,34,22,38,1],[22,39,22,43,1],[22,48,22,60,1],[27,35,27,39,1],[27,40,27,44,1],[27,49,27,61,1],[32,34,32,38,1],[32,39,32,43,1],[32,48,32,60,1]]);
+      highlightRanges([[17,9,17,10,1],[18,13,18,90,1],[19,13,19,51,1],[20,13,20,99,1],[22,13,22,63,1],[24,13,24,95,1],[26,13,26,62,1],[27,13,27,72,1],[28,13,28,90,1],[29,13,29,88,1],[30,13,30,88,1],[31,13,31,88,1],[32,13,32,84,1],[33,9,33,10,1],[37,9,37,10,1],[38,13,38,38,1],[39,13,39,51,1],[40,13,40,94,1],[42,13,42,63,1],[44,13,44,95,1],[46,13,46,62,1],[47,9,47,10,1],[51,9,51,10,1],[52,13,52,95,1],[53,13,53,51,1],[54,13,54,99,1],[56,13,56,63,1],[58,13,58,95,1],[60,13,60,62,1],[61,9,61,10,1],[65,9,65,10,1],[66,13,66,51,1],[67,13,67,55,1],[68,13,69,82,1],[70,13,70,63,1],[72,13,72,95,1],[74,13,74,62,1],[75,13,75,83,1],[76,9,76,10,1]]);
     </script>
   </body>
 </html>

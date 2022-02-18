@@ -2,125 +2,37 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/CreateTripPageViewModel.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Views/LandingPage.axaml.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
-using System.Diagnostics;
-using System.Reactive;
-using System.Reactive.Linq;
-using CapstoneBackend.Model;
+using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
 using ReactiveUI;
 
-namespace CapstoneDesktop.ViewModels
+namespace CapstoneDesktop.Views
 {
-    /// &lt;summary&gt;
-    ///     ViewModel for Create Trip Window
-    /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
-    public class CreateTripPageViewModel : ViewModelBase, IRoutableViewModel
+    public class LandingPage : ReactiveUserControl&lt;LandingPageViewModel&gt;
     {
-        private readonly TripManager _tripManager;
-        private readonly User _user;
 
-        private string _error = string.Empty;
-
-        public IScreen HostScreen { get; }
-        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
-        /// &lt;summary&gt;
-        /// The create trip command.
-        /// &lt;/summary&gt;
-        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; CreateTripCommand { get; }
-
-        /// &lt;summary&gt;
-        /// The cancel create trip command.
-        /// &lt;/summary&gt;
-        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateTripCommand { get; }
-        
-        /// &lt;summary&gt;
-        ///     The error message.
-        /// &lt;/summary&gt;
-        public string ErrorMessage
+        public LandingPage()
         {
-            get =&gt; _error;
-            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+            InitializeComponent();
         }
 
-        /// &lt;summary&gt;
-        /// The trip name.
-        /// &lt;/summary&gt;
-        public string? TripName { get; set; }
-
-        /// &lt;summary&gt;
-        /// The notes.
-        /// &lt;/summary&gt;
-        public string? Notes { get; set; }
-
-        /// &lt;summary&gt;
-        /// The start date.
-        /// &lt;/summary&gt;
-        public DateTimeOffset? StartDate
+        private void InitializeComponent()
         {
-            get;
-            set;
-        }
-
-        /// &lt;summary&gt;
-        /// The end date.
-        /// &lt;/summary&gt;
-        public DateTimeOffset? EndDate { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;CreateTripPageViewModel&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;user&quot;&gt;The current user&lt;/param&gt;
-        /// &lt;param name=&quot;manager&quot;&gt;The manager.&lt;/param&gt;
-        /// &lt;param name=&quot;screen&quot;&gt;the host screen&lt;/param&gt;
-        public CreateTripPageViewModel(User user, TripManager manager, IScreen screen)
-        {
-            _tripManager = manager;
-            this._user = user;
-            this.HostScreen = screen;
-            CreateTripCommand = ReactiveCommand.CreateFromObservable(createTrip);
-            CancelCreateTripCommand = ReactiveCommand.CreateFromObservable(() =&gt; this.HostScreen.Router.NavigateBack.Execute());
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;CreateTripPageViewModel&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        public CreateTripPageViewModel(User user, IScreen screen) : this(user ,new TripManager(), screen)
-        {
-        }
-
-        private IObservable&lt;IRoutableViewModel&gt; createTrip()
-        {
-            if (string.IsNullOrEmpty(TripName))
-            {
-                ErrorMessage = &quot;You must enter a name for the trip.&quot;;
-                return Observable.Empty&lt;IRoutableViewModel&gt;();
-            }
-            if (this.StartDate is null || this.EndDate is null)
-            {
-                ErrorMessage = &quot;You must enter a start and end date for the trip.&quot;;
-                return Observable.Empty&lt;IRoutableViewModel&gt;();
-            }
-            var resultResponse = _tripManager.CreateTrip(this._user.UserId, TripName, Notes, StartDate.Value.Date, EndDate.Value.Date);
-            if (resultResponse.StatusCode != 200U || resultResponse.ErrorMessage is not null)
-            {
-                ErrorMessage = resultResponse.ErrorMessage ?? string.Empty;
-                return Observable.Empty&lt;IRoutableViewModel&gt;();
-            }
-            return this.HostScreen.Router.Navigate.Execute(new LandingPageViewModel(this._user, this.HostScreen));
+            this.WhenActivated(disposables =&gt; { });
+            AvaloniaXamlLoader.Load(this);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[19,9,19,46,1],[21,37,21,41,0],[22,41,22,45,0],[22,50,22,91,1],[27,78,27,82,1],[32,70,32,74,1],[39,20,39,26,1],[40,20,40,64,1],[46,35,46,39,1],[46,40,46,44,1],[51,32,51,36,1],[51,37,51,41,0],[58,13,58,17,1],[59,13,59,17,1],[65,42,65,46,1],[65,47,65,51,1],[73,9,73,87,1],[74,9,74,10,1],[75,13,75,36,1],[76,13,76,31,1],[77,13,77,38,1],[78,13,78,82,1],[79,13,79,82,1],[79,82,79,127,0],[79,127,79,129,1],[80,9,80,10,1],[85,69,85,106,0],[86,9,86,10,0],[87,9,87,10,0],[90,9,90,10,1],[91,13,91,48,1],[92,13,92,14,1],[93,17,93,70,1],[94,17,94,63,1],[96,13,96,64,1],[97,13,97,14,0],[98,17,98,84,0],[99,17,99,63,0],[101,13,101,136,1],[102,13,102,94,1],[103,13,103,14,1],[104,17,104,76,1],[105,17,105,63,1],[107,13,107,115,0],[108,9,108,10,1]]);
+      highlightRanges([[11,9,11,29,0],[12,9,12,10,0],[13,13,13,35,0],[14,9,14,10,0],[17,9,17,10,0],[18,13,18,47,0],[18,47,18,48,0],[18,48,18,49,0],[18,49,18,50,0],[18,50,18,52,0],[19,13,19,43,0],[20,9,20,10,0]]);
     </script>
   </body>
 </html>

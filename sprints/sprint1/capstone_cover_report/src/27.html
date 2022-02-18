@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/TripManager.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestWaypointManager/TestGetWaypointsOnDate.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -11,161 +11,115 @@
 using System;
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
-using MySql.Data.MySqlClient;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace CapstoneBackend.Model
+namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 {
-    /// &lt;summary&gt;
-    ///     A wrapper class for the TripDal. Manages the collection of Trips and informs of server errors.
-    /// &lt;/summary&gt;
-    public class TripManager
+    [TestClass]
+    public class TestGetWaypointsOnDate
     {
-        private readonly TripDal _dal;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TripManager&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        public TripManager() : this(new TripDal())
+        [TestMethod]
+        public void Call_EmptySet_ReturnsEmptyList()
         {
+            var currentTime = DateTime.Now;
+
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;();
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsOnDate(1, currentTime);
+
+            Assert.AreEqual(0, resultResponse.Data?.Count);
         }
 
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TripManager&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
-        public TripManager(TripDal dal)
+        [TestMethod]
+        public void Call_YieldsSetWithOneValue_ReturnsExpectedList()
         {
-            _dal = dal;
-        }
-
-        /// &lt;summary&gt;Gets the trip by trip ID.&lt;/summary&gt;
-        /// &lt;param name=&quot;tripId&quot;&gt;The trip ID.&lt;/param&gt;
-        /// &lt;returns&gt;
-        /// A response with the Trip object and staus 200 if successful, 
-        /// An error message with status 404 if not found, an error otherwise.
-        /// &lt;/returns&gt;
-        public virtual Response&lt;Trip&gt; GetTripByTripId(int tripId)
-        {
-            Trip? trip;
-            try
+            var currentTime = DateTime.Now;
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
             {
-                trip = _dal.GetTripByTripId(tripId);
-                
-            }
-            catch (MySqlException e)
-            {
-                return new Response&lt;Trip&gt;
+                new()
                 {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
-            catch
-            {
-                return new Response&lt;Trip&gt;
-                {
-                    StatusCode = 500,
-                    ErrorMessage = &quot;Internal Server Error.&quot;
-                };
-            }
-
-            if (trip is null)
-            {
-                return new Response&lt;Trip&gt;
-                {
-                    StatusCode = 404,
-                    ErrorMessage = &quot;No trip found with given ID.&quot;
-                };
-            }
-            return new Response&lt;Trip&gt;
-            {
-                Data = trip,
-                StatusCode = 200
+                    TripId = 1,
+                    WaypointId = 1,
+                    Location = &quot;1601 Maple St&quot;,
+                    StartDate = currentTime,
+                    EndDate = currentTime,
+                    Notes = &quot;notes&quot;
+                }
             };
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, currentTime, currentTime, &quot;notes&quot;))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsOnDate(1, currentTime);
+
+            Assert.AreEqual(1, resultResponse.Data?.Count);
+            Assert.AreEqual(1, resultResponse.Data?[0].TripId);
+            Assert.AreEqual(1, resultResponse.Data?[0].WaypointId);
+            Assert.AreEqual(&quot;1601 Maple St&quot;, resultResponse.Data?[0].Location);
+            Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
+            Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
+            Assert.AreEqual(&quot;notes&quot;, resultResponse.Data?[0].Notes);
         }
 
-        /// &lt;summary&gt;
-        ///     Gets the trips by user.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;userId&quot;&gt;The user identifier.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;/returns&gt;
-        public virtual Response&lt;IList&lt;Trip&gt;&gt; GetTripsByUser(int userId)
-        {
-            try
-            {
-                var trips = _dal.GetTripsByUserId(userId);
-                return new Response&lt;IList&lt;Trip&gt;&gt;
-                {
-                    Data = trips
-                };
-            }
-            catch (MySqlException e)
-            {
-                return new Response&lt;IList&lt;Trip&gt;&gt;
-                {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
-            catch (Exception e)
-            {
-                return new Response&lt;IList&lt;Trip&gt;&gt;
-                {
-                    StatusCode = 500,
-                    ErrorMessage = e.Message
-                };
-            }
-        }
 
-        /// &lt;summary&gt;
-        ///     Creates the trip.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;userId&quot;&gt;The user identifier.&lt;/param&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
-        /// &lt;param name=&quot;notes&quot;&gt;The notes.&lt;/param&gt;
-        /// &lt;param name=&quot;startDate&quot;&gt;The start date.&lt;/param&gt;
-        /// &lt;param name=&quot;endDate&quot;&gt;The end date.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;/returns&gt;
-        public virtual Response&lt;int&gt; CreateTrip(int userId, string name, string? notes, DateTime startDate,
-            DateTime endDate)
+        [TestMethod]
+        public void Call_YieldsSetWithMultipleValues_ReturnsExpectedList()
         {
-            if (startDate.CompareTo(endDate) &gt; 0)
-                return new Response&lt;int&gt;
+            var currentTime = DateTime.Now;
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
+            {
+                new()
                 {
-                    StatusCode = 400U,
-                    ErrorMessage = &quot;Start date of a trip cannot be after the end date.&quot;
-                };
+                    TripId = 1,
+                    WaypointId = 1,
+                    Location = &quot;1601 Maple St&quot;,
+                    StartDate = currentTime,
+                    EndDate = currentTime
+                },
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 2,
+                    Location = &quot;1602 Maple St&quot;,
+                    StartDate = currentTime,
+                    EndDate = currentTime
+                }
+            };
 
-            try
-            {
-                var tripId = _dal.CreateTrip(userId, name, notes, startDate, endDate);
-                return new Response&lt;int&gt;
-                {
-                    Data = tripId
-                };
-            }
-            catch (MySqlException e)
-            {
-                return new Response&lt;int&gt;
-                {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
-            catch (Exception e)
-            {
-                return new Response&lt;int&gt;
-                {
-                    StatusCode = 500,
-                    ErrorMessage = e.Message
-                };
-            }
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, currentTime, currentTime, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1602 Maple St&quot;, currentTime, currentTime, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsOnDate(1, currentTime);
+
+            Assert.AreEqual(2, resultResponse.Data?.Count);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[18,32,18,51,1],[19,9,19,10,1],[20,9,20,10,1],[26,9,26,40,1],[27,9,27,10,1],[28,13,28,24,1],[29,9,29,10,1],[38,9,38,10,1],[41,13,41,14,1],[42,17,42,53,1],[44,13,44,14,1],[45,13,45,37,1],[46,13,46,14,1],[47,17,51,19,1],[53,13,53,18,1],[54,13,54,14,1],[55,17,59,19,1],[62,13,62,30,1],[63,13,63,14,1],[64,17,68,19,1],[70,13,74,15,1],[75,9,75,10,1],[83,9,83,10,1],[85,13,85,14,1],[86,17,86,59,1],[87,17,90,19,1],[92,13,92,37,1],[93,13,93,14,1],[94,17,98,19,1],[100,13,100,32,1],[101,13,101,14,1],[102,17,106,19,1],[108,9,108,10,1],[121,9,121,10,1],[122,13,122,50,1],[123,17,127,19,1],[130,13,130,14,1],[131,17,131,87,1],[132,17,135,19,1],[137,13,137,37,1],[138,13,138,14,1],[139,17,143,19,1],[145,13,145,32,1],[146,13,146,14,1],[147,17,151,19,1],[153,9,153,10,1]]);
+      highlightRanges([[15,9,15,10,1],[16,13,16,44,1],[18,13,18,66,1],[20,13,20,59,1],[21,13,21,103,1],[23,13,23,75,1],[25,13,26,68,1],[28,13,28,60,1],[29,9,29,10,1],[33,9,33,10,1],[34,13,34,44,1],[35,13,46,15,1],[48,13,48,59,1],[50,13,51,29,1],[52,13,52,103,1],[54,13,54,75,1],[56,13,57,68,1],[59,13,59,60,1],[60,13,60,64,1],[61,13,61,68,1],[62,13,62,80,1],[63,13,63,77,1],[64,13,64,75,1],[65,13,65,69,1],[66,9,66,10,1],[71,9,71,10,1],[72,13,72,44,1],[73,13,91,15,1],[93,13,93,59,1],[95,13,96,29,1],[97,13,98,29,1],[99,13,99,103,1],[101,13,101,75,1],[103,13,104,68,1],[106,13,106,60,1],[107,9,107,10,1]]);
     </script>
   </body>
 </html>

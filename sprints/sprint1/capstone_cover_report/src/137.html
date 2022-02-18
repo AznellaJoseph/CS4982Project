@@ -2,129 +2,45 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/CreateAccountPageViewModel.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Views/CreateWaypointPage.axaml</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
-using System.Reactive;
-using System.Reactive.Linq;
-using CapstoneBackend.Model;
-using ReactiveUI;
+&lt;UserControl xmlns=&quot;https://github.com/avaloniaui&quot;
+        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        x:Class=&quot;CapstoneDesktop.Views.CreateWaypointPage&quot;&gt;
+    &lt;Border Classes=&quot;container&quot; VerticalAlignment=&quot;Center&quot; HorizontalAlignment=&quot;Center&quot; Padding=&quot;30&quot;&gt;
+        &lt;StackPanel Width=&quot;700&quot; Spacing=&quot;10&quot;&gt;
+            &lt;TextBlock Classes=&quot;h1&quot; Text=&quot;CREATE WAYPOINT&quot; HorizontalAlignment=&quot;Center&quot;
+                       VerticalAlignment=&quot;Top&quot; /&gt;
+            &lt;TextBlock Text=&quot;{Binding ErrorMessage}&quot; Foreground=&quot;Red&quot; /&gt;
+            &lt;TextBlock Text=&quot;WAYPOINT LOCATION:&quot; /&gt;
+            &lt;TextBox Watermark=&quot;LOCATION NAME&quot; VerticalAlignment=&quot;Bottom&quot; Text=&quot;{Binding Location, Mode=TwoWay}&quot; /&gt;
+            &lt;TextBlock Text=&quot;WAYPOINT NOTES&quot; /&gt;
+            &lt;TextBox Watermark=&quot;NOTES&quot; VerticalAlignment=&quot;Bottom&quot; Text=&quot;{Binding Notes, Mode=TwoWay}&quot; AcceptsReturn=&quot;True&quot; TextWrapping=&quot;Wrap&quot; Height=&quot;200&quot; /&gt;
 
-namespace CapstoneDesktop.ViewModels
-{
-    /// &lt;summary&gt;
-    ///     ViewModel for Create Account Page
-    /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
-    /// &lt;seealso cref=&quot;ReactiveUI.IRoutableViewModel&quot; /&gt;
-    public class CreateAccountPageViewModel : ViewModelBase, IRoutableViewModel
-    {
-        private readonly UserManager _userManager;
-        private string _error = string.Empty;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;CreateAccountPageViewModel&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;manager&quot;&gt;The manager.&lt;/param&gt;
-        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
-        public CreateAccountPageViewModel(UserManager manager, IScreen screen)
-        {
-            _userManager = manager;
-            HostScreen = screen;
-            CancelCreateAccountCommand = ReactiveCommand.CreateFromObservable(HostScreen.Router.NavigateBack.Execute);
-            SubmitAccountCommand = ReactiveCommand.CreateFromObservable(submitAccount);
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;CreateAccountPageViewModel&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
-        public CreateAccountPageViewModel(IScreen screen) : this(new UserManager(), screen)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     The cancel create account command
-        /// &lt;/summary&gt;
-        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateAccountCommand { get; }
-
-        /// &lt;summary&gt;
-        ///     The submit account command
-        /// &lt;/summary&gt;
-        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; SubmitAccountCommand { get; }
-
-        /// &lt;summary&gt;
-        ///     The username
-        /// &lt;/summary&gt;
-        public string? Username { get; set; }
-
-        /// &lt;summary&gt;
-        ///     The password
-        /// &lt;/summary&gt;
-        public string? Password { get; set; }
-
-        /// &lt;summary&gt;
-        ///     The confirmed password
-        /// &lt;/summary&gt;
-        public string? ConfirmedPassword { get; set; }
-
-        /// &lt;summary&gt;
-        ///     The first name
-        /// &lt;/summary&gt;
-        public string? FirstName { get; set; }
-
-        /// &lt;summary&gt;
-        ///     The last name
-        /// &lt;/summary&gt;
-        public string? LastName { get; set; }
-
-        /// &lt;summary&gt;
-        ///     The error message
-        /// &lt;/summary&gt;
-        public string ErrorMessage
-        {
-            get =&gt; _error;
-            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
-        }
-
-        /// &lt;summary&gt;
-        ///     The host screen.
-        /// &lt;/summary&gt;
-        public IScreen HostScreen { get; }
-
-        /// &lt;summary&gt;
-        ///     The url path segment.
-        /// &lt;/summary&gt;
-        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
-        private IObservable&lt;IRoutableViewModel&gt; submitAccount()
-        {
-            if (Password == ConfirmedPassword)
-            {
-                var response = _userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
-                    FirstName ?? string.Empty, LastName ?? string.Empty);
-                if (response.StatusCode == 200U)
-                {
-                    return HostScreen.Router.Navigate.Execute(
-                        new LandingPageViewModel(new User {UserId = response.Data}, HostScreen));
-                }
-
-                ErrorMessage = response.ErrorMessage ?? &quot;Unknown Error.&quot;;
-                return Observable.Empty&lt;IRoutableViewModel&gt;();
-            }
-
-            ErrorMessage = &quot;The given passwords must match.&quot;;
-            return Observable.Empty&lt;IRoutableViewModel&gt;();
-        }
-    }
-}
+            &lt;Grid ColumnDefinitions=&quot;*,10,*&quot; RowDefinitions=&quot;*,10,*&quot;&gt;
+                &lt;DatePicker Grid.Column=&quot;0&quot; Grid.Row=&quot;0&quot; SelectedDate=&quot;{Binding StartDate}&quot; Header=&quot;START DATE&quot; /&gt;
+                &lt;TimePicker Grid.Column=&quot;2&quot; Grid.Row=&quot;0&quot; SelectedTime=&quot;{Binding StartTime}&quot; Header=&quot;START TIME&quot; /&gt;
+                &lt;DatePicker Grid.Column=&quot;0&quot; Grid.Row=&quot;2&quot; SelectedDate=&quot;{Binding EndDate}&quot; Header=&quot;END DATE&quot; /&gt;
+                &lt;TimePicker Grid.Column=&quot;2&quot; Grid.Row=&quot;2&quot; SelectedTime=&quot;{Binding EndTime}&quot; Header=&quot;END TIME&quot; /&gt;
+            &lt;/Grid&gt;
+            &lt;Grid ColumnDefinitions=&quot;*,10,*&quot;&gt;
+                &lt;Button Grid.Column=&quot;0&quot; Command=&quot;{Binding CreateWaypointCommand}&quot; HorizontalAlignment=&quot;Stretch&quot;&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;CREATE WAYPOINT&quot; /&gt;
+                &lt;/Button&gt;
+                &lt;Button Grid.Column=&quot;2&quot; Command=&quot;{Binding CancelCreateWaypointCommand}&quot; HorizontalAlignment=&quot;Stretch&quot;&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;CANCEL&quot; /&gt;
+                &lt;/Button&gt;
+            &lt;/Grid&gt;
+        &lt;/StackPanel&gt;
+    &lt;/Border&gt;
+&lt;/UserControl&gt;
     </pre>
     <script type="text/javascript">
-      highlightRanges([[17,9,17,46,0],[24,9,24,79,0],[25,9,25,10,0],[26,13,26,36,0],[27,13,27,33,0],[28,13,28,119,0],[29,13,29,88,0],[30,9,30,10,0],[36,61,36,92,0],[37,9,37,10,0],[38,9,38,10,0],[43,73,43,77,0],[48,81,48,85,0],[53,35,53,39,0],[53,40,53,44,0],[58,35,58,39,0],[58,40,58,44,0],[63,44,63,48,0],[63,49,63,53,0],[68,36,68,40,0],[68,41,68,45,0],[73,35,73,39,0],[73,40,73,44,0],[80,20,80,26,0],[81,20,81,64,0],[87,37,87,41,0],[92,41,92,45,0],[92,50,92,91,0],[95,9,95,10,0],[96,13,96,47,0],[97,13,97,14,0],[98,17,99,74,0],[100,17,100,49,0],[101,17,101,18,0],[102,21,103,98,0],[106,17,106,74,0],[107,17,107,63,0],[110,13,110,62,0],[111,13,111,59,0],[112,9,112,10,0]]);
+      highlightRanges([[1,2,1,13,0],[4,6,4,12,0],[4,13,4,20,0],[4,60,4,79,0],[5,10,5,20,0],[5,21,5,26,0],[6,14,6,23,0],[6,24,6,31,0],[6,37,6,41,0],[7,24,7,41,0],[8,14,8,23,0],[8,24,8,28,0],[8,54,8,64,0],[9,14,9,23,0],[9,24,9,28,0],[10,14,10,21,0],[10,22,10,31,0],[10,75,10,79,0],[11,14,11,23,0],[11,24,11,28,0],[12,14,12,21,0],[12,22,12,31,0],[12,67,12,71,0],[12,124,12,136,0],[14,14,14,18,0],[14,19,14,36,0],[14,46,14,60,0],[15,18,15,28,0],[15,29,15,33,0],[15,58,15,70,0],[15,93,15,99,0],[16,18,16,28,0],[16,29,16,33,0],[16,58,16,70,0],[16,93,16,99,0],[17,18,17,28,0],[17,29,17,33,0],[17,58,17,70,0],[17,91,17,97,0],[18,18,18,28,0],[18,29,18,33,0],[18,58,18,70,0],[18,91,18,97,0],[20,14,20,18,0],[20,19,20,36,0],[21,18,21,24,0],[21,25,21,29,0],[21,41,21,48,0],[22,22,22,31,0],[22,32,22,45,0],[22,55,22,59,0],[24,18,24,24,0],[24,25,24,29,0],[24,41,24,48,0],[25,22,25,31,0],[25,32,25,45,0],[25,55,25,59,0]]);
     </script>
   </body>
 </html>
