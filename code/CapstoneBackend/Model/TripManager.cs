@@ -76,7 +76,7 @@ namespace CapstoneBackend.Model
             if (startDate.CompareTo(endDate) > 0)
                 return new Response<int>
                 {
-                    StatusCode = 400,
+                    StatusCode = 400U,
                     ErrorMessage = "Start date of a trip cannot be after the end date."
                 };
 

@@ -15,7 +15,7 @@ namespace CapstoneDesktop.ViewModels
         public IScreen HostScreen { get; }
         public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
         
-        public ReactiveCommand<Unit, Unit> CreateTripCommand { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> CreateTripCommand { get; }
 
         public ReactiveCommand<Unit, IRoutableViewModel> LogoutCommand { get; }
         
@@ -28,7 +28,7 @@ namespace CapstoneDesktop.ViewModels
             this._tripManager = tripManager;
             this.HostScreen = screen;
             this.TripViewModels = new ObservableCollection<TripViewModel>();
-            this.CreateTripCommand = ReactiveCommand.Create(this.createTrip);
+            this.CreateTripCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.Navigate.Execute(new CreateTripPageViewModel(this._user, HostScreen)));
             this.LogoutCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.Navigate.Execute(new LoginPageViewModel(this.HostScreen)));
             this.loadTrips();
         }
