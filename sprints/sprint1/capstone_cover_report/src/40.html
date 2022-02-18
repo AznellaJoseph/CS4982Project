@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\Index.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     Index Model
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class IndexModel : PageModel
+    {
+        /// &lt;summary&gt;
+        /// The user id.
+        /// &lt;/summary&gt;
+        public int UserId { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     Called when [get].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; The page to go to when [get] &lt;/returns&gt;
+        public IActionResult OnGet()
+        {
+            if (!HttpContext.Session.Keys.Contains(&quot;userId&quot;)) return RedirectToPage(&quot;login&quot;);
+            UserId = Convert.ToInt32(HttpContext.Session.GetString(&quot;userId&quot;));
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        /// Called when [post logout].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; The action to take when logging out &lt;/returns&gt;
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Remove(&quot;userId&quot;);
+            return RedirectToPage(&quot;index&quot;);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,29,18,33,1],[18,34,18,46,1],[25,9,25,10,1],[26,13,26,62,1],[26,63,26,94,1],[27,13,27,79,1],[28,13,28,27,1],[29,9,29,10,1],[36,9,36,10,1],[37,13,37,50,1],[38,13,38,44,1],[39,9,39,10,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\TripOverviewWindow.axaml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
+
+namespace CapstoneDesktop.Views
+{
+    public partial class TripOverviewWindow : ReactiveWindow&lt;TripOverviewViewModel&gt;
+    {
+        public TripOverviewWindow()
+        {
+            InitializeComponent();
+#if DEBUG
+            this.AttachDevTools();
+#endif
+        }
+
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[11,9,11,36,0],[12,9,12,10,0],[13,13,13,35,0],[15,13,15,35,0],[17,9,17,10,0],[20,9,20,10,0],[21,13,21,43,0],[22,9,22,10,0]]);
+    </script>
+  </body>
+</html>
