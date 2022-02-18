@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\LoginPageViewModel.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/LoginPageViewModel.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -17,7 +17,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// &lt;summary&gt;
-    ///     ViewModel for the LoginPage
+    ///     ViewModel for the MainWindow (Login)
     /// &lt;/summary&gt;
     /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
     public class LoginPageViewModel : ViewModelBase, IRoutableViewModel
@@ -48,27 +48,27 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// &lt;summary&gt;
-        ///     The login command
+        ///     The login command.
         /// &lt;/summary&gt;
         public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; LoginCommand { get; }
 
         /// &lt;summary&gt;
-        ///     The open create account command
+        ///     The open create account command.
         /// &lt;/summary&gt;
         public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; OpenCreateAccountCommand { get; set; }
 
         /// &lt;summary&gt;
-        ///     The username
+        ///     The username.
         /// &lt;/summary&gt;
         public string? Username { get; set; }
 
         /// &lt;summary&gt;
-        ///     The password
+        ///     The password.
         /// &lt;/summary&gt;
         public string? Password { get; set; }
 
         /// &lt;summary&gt;
-        ///     The error message
+        ///     The error message.
         /// &lt;/summary&gt;
         public string ErrorMessage
         {
@@ -82,7 +82,7 @@ namespace CapstoneDesktop.ViewModels
         public IScreen HostScreen { get; }
 
         /// &lt;summary&gt;
-        ///     The url path segment
+        ///     The url path segment.
         /// &lt;/summary&gt;
         public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
 
@@ -98,7 +98,7 @@ namespace CapstoneDesktop.ViewModels
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[16,9,16,46,1],[23,9,23,71,1],[24,9,24,10,1],[25,13,25,36,1],[26,13,26,33,1],[27,13,27,72,1],[28,13,29,17,1],[29,17,29,95,0],[29,95,29,97,1],[30,9,30,10,1],[36,53,36,84,1],[37,9,37,10,1],[38,9,38,10,1],[43,73,43,77,1],[48,85,48,89,1],[48,90,48,94,1],[53,35,53,39,1],[53,40,53,44,1],[58,35,58,39,1],[58,40,58,44,1],[65,20,65,26,1],[66,20,66,64,1],[72,37,72,41,1],[77,41,77,45,0],[77,50,77,91,1],[80,9,80,10,1],[81,13,81,114,1],[82,13,82,74,1],[83,17,83,112,0],[84,13,84,66,1],[85,13,85,59,1],[86,9,86,10,1]]);
+      highlightRanges([[16,9,16,46,1],[23,9,23,71,1],[24,9,24,10,1],[25,13,25,36,1],[26,13,26,33,1],[27,13,27,72,1],[28,13,29,17,1],[29,17,29,95,0],[29,95,29,97,1],[30,9,30,10,1],[36,53,36,84,1],[37,9,37,10,1],[38,9,38,10,1],[43,73,43,77,1],[48,85,48,89,1],[48,90,48,94,1],[53,35,53,39,1],[53,40,53,44,1],[58,35,58,39,1],[58,40,58,44,1],[65,20,65,26,1],[66,20,66,64,1],[72,37,72,41,1],[77,41,77,45,1],[77,50,77,91,1],[80,9,80,10,1],[81,13,81,114,1],[82,13,82,74,1],[83,17,83,112,0],[84,13,84,66,1],[85,13,85,59,1],[86,9,86,10,1]]);
     </script>
   </body>
 </html>

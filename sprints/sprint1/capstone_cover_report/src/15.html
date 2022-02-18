@@ -2,59 +2,43 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/MySqlExceptionBuilder.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestLoginPage/TestOpenCreateAccountCommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
-using System.Reflection;
-using MySql.Data.MySqlClient;
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
 
-namespace CapstoneTest.BackendTests.Model
+namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
 {
-    /// &lt;summary&gt;
-    ///     An Exception Builder for MySQL to be used in testing
-    /// &lt;/summary&gt;
-    public class MySqlExceptionBuilder
+    [TestClass]
+    public class TestOpenCreateAccountCommand
     {
-        private uint? _code;
-        private string? _errorMessage;
-
-        /// &lt;summary&gt;
-        ///     Builds this instance.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;&lt;/returns&gt;
-        public MySqlException Build()
+        public void OpenCreateAccount_CorrectOutput()
         {
-            if (_errorMessage is null &amp;&amp; _code is null)
-            {
-                var ctor1 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0];
-                return (MySqlException) ctor1.Invoke(Array.Empty&lt;object&gt;());
-            }
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            LoginPageViewModel mainWindowViewModel = new(mockUserManager.Object, mockScreen.Object);
+            var testScheduler = new TestScheduler();
 
-            var ctor2 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[7];
-            return (MySqlException) ctor2.Invoke(new object[] {_code ?? 500, &quot;&quot;, _errorMessage ?? &quot;&quot;});
-        }
+            mainWindowViewModel.OpenCreateAccountCommand.ThrownExceptions.Subscribe();
 
-        /// &lt;summary&gt;
-        ///     Withes the error.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;errorCode&quot;&gt;The error code.&lt;/param&gt;
-        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;/returns&gt;
-        public MySqlExceptionBuilder WithError(uint errorCode, string message)
-        {
-            _errorMessage = message;
-            _code = errorCode;
-            return this;
+            testScheduler.Start();
+
+            mockScreen.VerifyGet(ms =&gt; ms.Router);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[20,9,20,10,1],[21,13,21,56,1],[22,13,22,14,0],[23,17,23,119,0],[24,17,24,77,0],[27,13,27,115,1],[28,13,28,104,1],[29,9,29,10,1],[38,9,38,10,1],[39,13,39,37,1],[40,13,40,31,1],[41,13,41,25,1],[42,9,42,10,1]]);
+      highlightRanges([[15,9,15,10,0],[16,13,16,59,0],[17,13,17,50,0],[18,13,18,101,0],[19,13,19,53,0],[21,13,21,87,0],[23,13,23,35,0],[25,13,25,51,0],[26,9,26,10,0]]);
     </script>
   </body>
 </html>

@@ -2,40 +2,41 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/MainWindowViewModel.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Views/MainWindow.axaml.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using ReactiveUI;
+using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
 
-namespace CapstoneDesktop.ViewModels
+namespace CapstoneDesktop.Views
 {
+
     /// &lt;summary&gt;
-    ///     ViewModel for the MainWindow
+    ///     Window for displaying all windows
     /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
-    /// &lt;seealso cref=&quot;ReactiveUI.IScreen&quot; /&gt;
-    public class MainWindowViewModel : ViewModelBase, IScreen
+    public class MainWindow : ReactiveWindow&lt;MainWindowViewModel&gt;
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;MainWindowViewModel&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;MainWindow&quot; /&gt; class.
         /// &lt;/summary&gt;
-        public MainWindowViewModel()
+        public MainWindow()
         {
-            Router.Navigate.Execute(new LoginPageViewModel(this));
+            InitializeComponent();
         }
 
-        /// &lt;summary&gt;
-        ///     The router
-        /// &lt;/summary&gt;
-        public RoutingState Router { get; } = new();
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[15,9,15,37,0],[16,9,16,10,0],[17,13,17,67,0],[18,9,18,10,0],[23,38,23,42,0],[23,47,23,52,0]]);
+      highlightRanges([[16,9,16,28,0],[17,9,17,10,0],[18,13,18,35,0],[19,9,19,10,0],[22,9,22,10,0],[23,13,23,43,0],[24,9,24,10,0]]);
     </script>
   </body>
 </html>

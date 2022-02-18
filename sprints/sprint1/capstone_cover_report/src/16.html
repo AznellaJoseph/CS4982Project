@@ -2,59 +2,69 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestWaypointManager/TestCreateWaypoint.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestLandingPage/TestConstructor.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
-using CapstoneBackend.DAL;
+using System.Collections.Generic;
 using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 
-namespace CapstoneTest.BackendTests.Model.TestWaypointManager
+namespace CapstoneTest.DesktopTests.ViewModels.TestLandingPage
 {
     [TestClass]
-    public class TestCreateWaypoint
+    public class TestConstructor
     {
         [TestMethod]
-        public void Create_InvalidTimes_ReturnsErrorMessage()
+        public void Constructor_ThreeParameters_PropertyCreations()
         {
-            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
-            mockWaypointDal.Setup(db =&gt;
-                    db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now.AddDays(4), DateTime.Now, null))
-                .Returns(400);
+            var mockUser = new Mock&lt;User&gt;
+            {
+                Object =
+                {
+                    UserId = 0
+                }
+            };
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
 
-            WaypointManager waypointManager = new(mockWaypointDal.Object);
+            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(0))
+                .Returns(new Response&lt;IList&lt;Trip&gt;&gt; {Data = new List&lt;Trip&gt; {new()}});
 
-            var resultResponse =
-                waypointManager.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now.AddDays(4), DateTime.Now, null);
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
 
-            Assert.AreEqual(400u, resultResponse.StatusCode);
+
+            Assert.AreEqual(mockScreen.Object, landingPageViewModel.HostScreen);
+            Assert.IsNotNull(landingPageViewModel.CreateTripCommand);
+            Assert.IsNotNull(landingPageViewModel.LogoutCommand);
+            Assert.IsNotNull(landingPageViewModel.UrlPathSegment);
+            Assert.IsNotNull(landingPageViewModel.TripViewModels);
+            Assert.AreEqual(1, landingPageViewModel.TripViewModels.Count);
         }
 
         [TestMethod]
-        public void Create_ValidParameters_ReturnsWaypointNumber()
+        public void Constructor_TwoParameters_PropertyCreations()
         {
-            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
-            mockWaypointDal.Setup(db =&gt;
-                    db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now.AddDays(2), null))
-                .Returns(200);
+            var mockUser = new Mock&lt;User&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockScreen.Object);
 
-            WaypointManager waypointManager = new(mockWaypointDal.Object);
-
-            var resultResponse =
-                waypointManager.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now.AddDays(2), null);
-
-            Assert.AreEqual(200u, resultResponse.StatusCode);
+            Assert.AreEqual(mockScreen.Object, landingPageViewModel.HostScreen);
+            Assert.IsNotNull(landingPageViewModel.CreateTripCommand);
+            Assert.IsNotNull(landingPageViewModel.LogoutCommand);
+            Assert.IsNotNull(landingPageViewModel.UrlPathSegment);
+            Assert.IsNotNull(landingPageViewModel.TripViewModels);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,9,14,10,1],[15,13,15,59,1],[16,13,18,31,1],[20,13,20,75,1],[22,13,23,113,1],[25,13,25,62,1],[26,9,26,10,1],[30,9,30,10,1],[31,13,31,59,1],[32,13,34,31,1],[36,13,36,75,1],[38,13,39,113,1],[41,13,41,62,1],[42,9,42,10,1]]);
+      highlightRanges([[15,9,15,10,1],[16,13,22,15,1],[23,13,23,59,1],[24,13,24,50,1],[26,13,27,85,1],[29,13,29,121,1],[32,13,32,81,1],[33,13,33,70,1],[34,13,34,66,1],[35,13,35,67,1],[36,13,36,67,1],[37,13,37,75,1],[38,9,38,10,1],[42,9,42,10,1],[43,13,43,45,1],[44,13,44,50,1],[45,13,45,97,1],[47,13,47,81,1],[48,13,48,70,1],[49,13,49,66,1],[50,13,50,67,1],[51,13,51,67,1],[52,9,52,10,1]]);
     </script>
   </body>
 </html>
