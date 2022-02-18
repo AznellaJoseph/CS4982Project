@@ -5,7 +5,6 @@
     /// </summary>
     public class User
     {
-
         /// <summary>
         ///     The id of the user.
         /// </summary>

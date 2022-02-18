@@ -23,7 +23,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             testScheduler.Start();
 
             mockScreen.VerifyGet(ms => ms.Router);
-
         }
     }
 }

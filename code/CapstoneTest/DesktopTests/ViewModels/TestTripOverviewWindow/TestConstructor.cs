@@ -1,8 +1,8 @@
-﻿using CapstoneBackend.Model;
+﻿using System;
+using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using ReactiveUI;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
@@ -10,14 +10,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
     [TestClass]
     public class TestConstructor
     {
-
         [TestMethod]
         public void Constructor_NoParameters_PropertyCreations()
         {
             var mockTrip = new Mock<Trip>();
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
+            TripOverviewPageViewModel testViewModel =
+                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
             Assert.IsNotNull(testViewModel.LogoutCommand);
             Assert.IsNotNull(testViewModel.BackCommand);

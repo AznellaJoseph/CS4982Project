@@ -18,7 +18,8 @@ namespace CapstoneTest.WebTests.Pages
         {
             var session = new Mock<ISession>();
             var fakeTripManager = new Mock<TripManager>();
-            fakeTripManager.Setup(um => um.CreateTrip(0, "vacation", "notes", DateTime.Today, DateTime.Today.AddDays(1)))
+            fakeTripManager
+                .Setup(um => um.CreateTrip(0, "vacation", "notes", DateTime.Today, DateTime.Today.AddDays(1)))
                 .Returns(new Response<int> {Data = 0});
             var page = TestPageBuilder.BuildPage<CreateTripModel>(session.Object);
             page.TripManager = fakeTripManager.Object;

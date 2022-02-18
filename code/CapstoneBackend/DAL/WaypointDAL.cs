@@ -126,11 +126,11 @@ namespace CapstoneBackend.DAL
             while (reader.Read())
                 waypointsOnDate.Add(new Waypoint
                 {
-                    TripId = tripId, 
-                    WaypointId = reader.GetInt32(waypointIdOrdinal), 
+                    TripId = tripId,
+                    WaypointId = reader.GetInt32(waypointIdOrdinal),
                     Location = reader.GetString(locationOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
-                    EndDate = reader.GetDateTime(endDateOrdinal), 
+                    EndDate = reader.GetDateTime(endDateOrdinal),
                     Notes = reader.GetString(notesOrdinal)
                 });
 

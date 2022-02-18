@@ -19,6 +19,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             Assert.IsNotNull(mainWindowViewModel.LoginCommand);
             Assert.IsNotNull(mainWindowViewModel.OpenCreateAccountCommand);
             Assert.IsNotNull(mainWindowViewModel.HostScreen);
+            Assert.IsNotNull(mainWindowViewModel.UrlPathSegment);
             Assert.IsNull(mainWindowViewModel.Username);
             Assert.IsNull(mainWindowViewModel.Password);
             Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
@@ -33,6 +34,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             Assert.IsNotNull(mainWindowViewModel.LoginCommand);
             Assert.IsNotNull(mainWindowViewModel.OpenCreateAccountCommand);
             Assert.IsNotNull(mainWindowViewModel.HostScreen);
+            Assert.IsNotNull(mainWindowViewModel.UrlPathSegment);
             Assert.IsNull(mainWindowViewModel.Username);
             Assert.IsNull(mainWindowViewModel.Password);
             Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);

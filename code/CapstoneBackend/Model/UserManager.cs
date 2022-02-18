@@ -50,6 +50,7 @@ namespace CapstoneBackend.Model
                     ErrorMessage = e.Message
                 };
             }
+
             if (user is null)
                 return new Response<User>
                 {
