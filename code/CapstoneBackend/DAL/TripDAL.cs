@@ -29,6 +29,43 @@ namespace CapstoneBackend.DAL
             _connection = connection;
         }
 
+        /// <summary>Gets the trip by trip identifier.</summary>
+        /// <param name="tripId">The trip id.</param>
+        /// <returns>A Trip object if a matching trip exists in the database, null otherwise.</returns>
+        public virtual Trip? GetTripByTripId(int tripId)
+        {
+            _connection.Open();
+            const string query = "uspGetTripsByTripId";
+            using MySqlCommand cmd = new(query, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var userIdOrdinal = reader.GetOrdinal("userId");
+            var nameOrdinal = reader.GetOrdinal("name");
+            var notesOrdinal = reader.GetOrdinal("notes");
+            var startDateOrdinal = reader.GetOrdinal("startDate");
+            var endDateOrdinal = reader.GetOrdinal("endDate");
+
+            Trip? trip = null;
+
+            if (reader.Read()) 
+            {
+                trip = new Trip
+                {
+                    TripId = tripId,
+                    UserId = reader.GetInt32(userIdOrdinal),
+                    Name = reader.GetString(nameOrdinal),
+                    Notes = reader.GetString(notesOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal)
+                };
+            }
+
+            _connection.Close();
+            return trip;
+        }
+
+
         /// <summary>
         ///     Gets trips of the user with the given id.
         /// </summary>
