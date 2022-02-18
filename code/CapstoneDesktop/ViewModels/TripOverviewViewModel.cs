@@ -1,102 +1,112 @@
-﻿using Avalonia;
-using Avalonia.Media;
-using CapstoneBackend.Model;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.Reactive;
-using System.Text;
+using CapstoneBackend.Model;
+using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
+    /// <summary>
+    ///     ViewModel for the Trip Overview
+    /// </summary>
+    /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class TripOverviewViewModel : ViewModelBase
     {
-        private string _tripName = String.Empty;
-        private string _tripNotes = String.Empty;
-        private DateTime _tripStartDate = DateTime.MinValue;
         private DateTime _tripEndDate = DateTime.MaxValue;
+        private string _tripName = string.Empty;
+        private string _tripNotes = string.Empty;
+        private DateTime _tripStartDate = DateTime.MinValue;
 
-        /// <summary>Initializes a new instance of the <see cref="TripOverviewViewModel" /> class.</summary>
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TripOverviewViewModel" /> class.
+        /// </summary>
         /// <param name="selectedTrip">The selected trip to populate the view with info for.</param>
         public TripOverviewViewModel(Trip selectedTrip)
         {
-            this._tripName = selectedTrip.Name;
-            this._tripNotes = selectedTrip.Notes;
-            this._tripStartDate = selectedTrip.StartDate;
-            this._tripEndDate = selectedTrip.EndDate;
+            _tripName = selectedTrip.Name;
+            _tripNotes = selectedTrip.Notes;
+            _tripStartDate = selectedTrip.StartDate;
+            _tripEndDate = selectedTrip.EndDate;
 
-            LogoutCommand = ReactiveCommand.Create(this.Logout);
-            ProfileCommand = ReactiveCommand.Create(this.OpenProfile);
-            BackCommand = ReactiveCommand.Create(this.GoBackToTrips);
+            LogoutCommand = ReactiveCommand.Create(logout);
+            ProfileCommand = ReactiveCommand.Create(openProfile);
+            BackCommand = ReactiveCommand.Create(goBackToTrips);
         }
 
-        /// <summary>Initializes a new instance of the <see cref="TripOverviewViewModel" /> class.</summary>
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TripOverviewViewModel" /> class.
+        /// </summary>
         public TripOverviewViewModel()
         {
-            LogoutCommand = ReactiveCommand.Create(this.Logout);
-            ProfileCommand = ReactiveCommand.Create(this.OpenProfile);
-            BackCommand = ReactiveCommand.Create(this.GoBackToTrips);
+            LogoutCommand = ReactiveCommand.Create(logout);
+            ProfileCommand = ReactiveCommand.Create(openProfile);
+            BackCommand = ReactiveCommand.Create(goBackToTrips);
         }
 
-        /// <summary>Gets or sets the name of the trip.</summary>
-        /// <value>The name of the trip.</value>
-        public string TripName 
+        /// <summary>
+        ///     The trip name
+        /// </summary>
+        public string TripName
         {
             get => _tripName.ToUpper();
             set => this.RaiseAndSetIfChanged(ref _tripName, value);
         }
 
-        /// <summary>Gets or sets the trip notes.</summary>
-        /// <value>The trip notes.</value>
+        /// <summary>
+        ///     The trip notes
+        /// </summary>
         public string TripNotes
         {
             get => _tripNotes;
             set => this.RaiseAndSetIfChanged(ref _tripNotes, value);
         }
 
-        /// <summary>Gets or sets the trip start date.</summary>
-        /// <value>The trip start date.</value>
+        /// <summary>
+        ///     The trip start date
+        /// </summary>
         public DateTime TripStartDate
         {
             get => _tripStartDate;
             set => this.RaiseAndSetIfChanged(ref _tripStartDate, value);
         }
 
-        /// <summary>Gets or sets the trip end date.</summary>
-        /// <value>The trip end date.</value>
+        /// <summary>
+        ///     The trip end date
+        /// </summary>
         public DateTime TripEndDate
         {
             get => _tripEndDate;
             set => this.RaiseAndSetIfChanged(ref _tripEndDate, value);
         }
 
-        /// <summary>Gets or sets the logout command.</summary>
-        /// <value>The logout command.</value>
+        /// <summary>
+        ///     The login command
+        /// </summary>
         public ReactiveCommand<Unit, Unit> LogoutCommand { get; set; }
 
-        /// <summary>Gets or sets the profile command.</summary>
-        /// <value>The profile command.</value>
+        /// <summary>
+        ///     The profile command
+        /// </summary>
         public ReactiveCommand<Unit, Unit> ProfileCommand { get; set; }
 
-        /// <summary>Gets or sets the back command.</summary>
-        /// <value>The back command.</value>
+        /// <summary>
+        ///     The back command
+        /// </summary>
         public ReactiveCommand<Unit, Unit> BackCommand { get; set; }
 
-        private void Logout()
+        private void logout()
         {
             Debug.WriteLine("Log User Out");
         }
 
-        private void OpenProfile()
+        private void openProfile()
         {
             Debug.WriteLine("Open Profile");
         }
 
-        private void GoBackToTrips()
+        private void goBackToTrips()
         {
             Debug.WriteLine("Go back to trips");
         }
-
     }
 }

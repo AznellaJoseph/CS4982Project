@@ -19,11 +19,12 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             LoginPageViewModel mainWindowViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 
-            mainWindowViewModel.OpenCreateAccountCommand.Execute().Subscribe();
+            mainWindowViewModel.OpenCreateAccountCommand.ThrownExceptions.Subscribe();
 
             testScheduler.Start();
 
-            Assert.AreEqual(new CreateAccountPageViewModel(mockScreen.Object), mainWindowViewModel.HostScreen.Router.CurrentViewModel);
+            mockScreen.VerifyGet(ms => ms.Router);
+
         }
     }
 }

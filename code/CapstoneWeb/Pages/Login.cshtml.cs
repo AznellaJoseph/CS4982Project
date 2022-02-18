@@ -36,5 +36,10 @@ namespace CapstoneWeb.Pages
 
             return Page();
         }
+
+        public IActionResult OnPostCreateAccount()
+        {
+            return RedirectToPage("createaccount");
+        }
     }
 }

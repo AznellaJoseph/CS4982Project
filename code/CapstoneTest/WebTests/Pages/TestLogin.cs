@@ -46,5 +46,20 @@ namespace CapstoneTest.WebTests.Pages
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual("Failed.", page.ErrorMessage);
         }
+
+        [TestMethod]
+        public void PostCreateAccountSuccess()
+        {
+            var session = new Mock<ISession>();
+
+            var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
+
+            var result = page.OnPostCreateAccount();
+
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult)result;
+            Assert.AreEqual("createaccount", redirect.PageName);
+        }
+
     }
 }

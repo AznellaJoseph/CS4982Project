@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneDesktop", "Capstone
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneWeb", "CapstoneWeb\CapstoneWeb.csproj", "{B57062CD-EE61-4437-8ED1-D341844CB193}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneVendorPrototype", "CapstoneVendorPrototype\CapstoneVendorPrototype.csproj", "{B270E9F2-46DC-47B4-A8D6-BDB1CC9D7809}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneVendorPrototype", "CapstoneVendorPrototype\CapstoneVendorPrototype.csproj", "{B270E9F2-46DC-47B4-A8D6-BDB1CC9D7809}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
