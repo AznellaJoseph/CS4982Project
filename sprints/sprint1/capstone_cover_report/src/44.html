@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Program.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using Avalonia;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
+using CapstoneDesktop.Views;
+using ReactiveUI;
+using Splat;
+
+namespace CapstoneDesktop
+{
+    internal class Program
+    {
+        [STAThread]
+        public static void Main(string[] args)
+        {
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
+        }
+
+        // Avalonia configuration, don&#39;t remove; also used by visual designer.
+        /// &lt;summary&gt;
+        ///     Builds the avalonia application.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; The app builder creating the application &lt;/returns&gt;
+        public static AppBuilder BuildAvaloniaApp()
+        {
+            Locator.CurrentMutable.Register(() =&gt; new LoginPage(), typeof(IViewFor&lt;LoginPageViewModel&gt;));
+            Locator.CurrentMutable.Register(() =&gt; new CreateAccountPage(), typeof(IViewFor&lt;CreateAccountPageViewModel&gt;));
+            Locator.CurrentMutable.Register(() =&gt; new LandingPage(), typeof(IViewFor&lt;LandingPageViewModel&gt;));
+            return AppBuilder.Configure&lt;App&gt;()
+                .UsePlatformDetect()
+                .LogToTrace()
+                .UseReactiveUI();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,0],[16,13,17,56,0],[18,9,18,10,0],[26,9,26,10,0],[27,13,27,51,0],[27,51,27,66,0],[27,66,27,106,0],[28,13,28,51,0],[28,51,28,74,0],[28,74,28,122,0],[29,13,29,51,0],[29,51,29,68,0],[29,68,29,110,0],[30,13,33,34,0],[34,9,34,10,0]]);
+    </script>
+  </body>
+</html>

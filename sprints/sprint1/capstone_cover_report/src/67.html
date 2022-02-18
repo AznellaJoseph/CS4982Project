@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\TripViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Reactive;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the Trip
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class TripViewModel : ViewModelBase
+    {
+        private readonly IScreen _screen;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TripViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;trip&quot;&gt;The trip.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public TripViewModel(Trip trip, IScreen screen)
+        {
+            _screen = screen;
+            Trip = trip;
+            TripClickCommand = ReactiveCommand.Create(clickTrip);
+        }
+
+        /// &lt;summary&gt;
+        ///     The trip
+        /// &lt;/summary&gt;
+        public Trip Trip { get; }
+
+        /// &lt;summary&gt;
+        ///     The trip click command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; TripClickCommand { get; }
+
+        private void clickTrip()
+        {
+            //TODO redirect to Trip View
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[20,9,20,56,0],[21,9,21,10,0],[22,13,22,30,0],[23,13,23,25,0],[24,13,24,66,0],[25,9,25,10,0],[30,28,30,32,0],[35,63,35,67,0],[38,9,38,10,0],[40,9,40,10,0]]);
+    </script>
+  </body>
+</html>

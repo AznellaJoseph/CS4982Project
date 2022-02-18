@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\CreateTripViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Diagnostics;
+using System.Reactive;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for Create Trip Window
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class CreateTripViewModel : ViewModelBase
+    {
+        private readonly TripManager _tripManager;
+
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateTripViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;manager&quot;&gt;The manager.&lt;/param&gt;
+        public CreateTripViewModel(TripManager manager)
+        {
+            _tripManager = manager;
+            CreateTripCommand = ReactiveCommand.Create(createTrip);
+            CancelCreateTripCommand = ReactiveCommand.Create(cancelCreateTrip);
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateTripViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public CreateTripViewModel() : this(new TripManager())
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        /// The trip name.
+        /// &lt;/summary&gt;
+        public string? TripName { get; set; }
+
+        /// &lt;summary&gt;
+        /// The notes.
+        /// &lt;/summary&gt;
+        public string? Notes { get; set; }
+
+        /// &lt;summary&gt;
+        /// The start date.
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; } = DateTime.Today;
+
+        /// &lt;summary&gt;
+        /// The end date.
+        /// &lt;/summary&gt;
+        public DateTime EndDate { get; set; } = DateTime.Today.AddDays(1);
+
+        /// &lt;summary&gt;
+        /// The create trip command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CreateTripCommand { get; set; }
+
+        /// &lt;summary&gt;
+        /// The cancel create trip command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateTripCommand { get; set; }
+
+        private void createTrip()
+        {
+            if (string.IsNullOrEmpty(TripName))
+            {
+                ErrorMessage = &quot;You must enter a name for the trip&quot;;
+            }
+
+            else
+
+            {
+                var resultResponse = _tripManager.CreateTrip(0, TripName, Notes, StartDate, EndDate);
+                if (!string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                    ErrorMessage = resultResponse.ErrorMessage;
+                else
+                    Debug.WriteLine(&quot;Trip successfully created&quot;);
+            }
+        }
+
+        private void cancelCreateTrip()
+        {
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,46,1],[23,9,23,56,1],[24,9,24,10,1],[25,13,25,36,1],[26,13,26,68,1],[27,13,27,80,1],[28,9,28,10,1],[33,40,33,63,1],[34,9,34,10,1],[35,9,35,10,1],[42,20,42,26,1],[43,20,43,64,1],[49,35,49,39,1],[49,40,49,44,1],[54,32,54,36,1],[54,37,54,41,1],[59,37,59,41,1],[59,42,59,46,1],[59,51,59,65,1],[64,35,64,39,1],[64,40,64,44,1],[64,49,64,74,1],[69,64,69,68,1],[69,69,69,73,1],[74,70,74,74,1],[74,75,74,79,1],[77,9,77,10,1],[78,13,78,48,1],[79,13,79,14,1],[80,17,80,69,1],[81,13,81,14,1],[85,13,85,14,1],[86,17,86,102,1],[87,17,87,72,1],[88,21,88,64,1],[90,21,90,66,1],[91,13,91,14,1],[92,9,92,10,1],[95,9,95,10,0],[96,9,96,10,0]]);
+    </script>
+  </body>
+</html>

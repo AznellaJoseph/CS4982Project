@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\CreateWaypointViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Diagnostics;
+using System.Reactive;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the CreateWaypoint Window
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class CreateWaypointViewModel : ViewModelBase
+    {
+        private readonly WaypointManager _waypointManager;
+
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateWaypointViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;manager&quot;&gt;The manager.&lt;/param&gt;
+        public CreateWaypointViewModel(WaypointManager manager)
+        {
+            _waypointManager = manager;
+            CreateWaypointCommand = ReactiveCommand.Create(createWaypoint);
+            CancelCreateWaypointCommand = ReactiveCommand.Create(cancelCreateWaypoint);
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateWaypointViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public CreateWaypointViewModel() : this(new WaypointManager())
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        /// The start date.
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        /// The start time.
+        /// &lt;/summary&gt;
+        public TimeSpan StartTime { get; set; }
+
+        /// &lt;summary&gt;
+        /// The end date.
+        /// &lt;/summary&gt;
+        public DateTime EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        /// The end time.
+        /// &lt;/summary&gt;
+        public TimeSpan EndTime { get; set; }
+
+        /// &lt;summary&gt;
+        /// The location.
+        /// &lt;/summary&gt;
+        public string? Location { get; set; }
+
+        /// &lt;summary&gt;
+        /// The notes.
+        /// &lt;/summary&gt;
+        public string? Notes { get; set; }
+
+        /// &lt;summary&gt;
+        /// The create waypoint command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CreateWaypointCommand { get; set; }
+
+        /// &lt;summary&gt;
+        /// The cancel create waypoint command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateWaypointCommand { get; set; }
+
+        private void createWaypoint()
+        {
+            if (string.IsNullOrEmpty(Location))
+            {
+                ErrorMessage = &quot;You must enter a location for the waypoint&quot;;
+            }
+            else
+            {
+                var resultResponse = _waypointManager.CreateWaypoint(0, Location, StartDate + StartTime,
+                    EndDate + EndTime, Notes);
+                if (!string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                    ErrorMessage = resultResponse.ErrorMessage;
+                else
+                    Debug.WriteLine(&quot;Successfully created waypoint&quot;);
+            }
+        }
+
+        private void cancelCreateWaypoint()
+        {
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,46,1],[23,9,23,64,1],[24,9,24,10,1],[25,13,25,40,1],[26,13,26,76,1],[27,13,27,88,1],[28,9,28,10,1],[33,44,33,71,1],[34,9,34,10,1],[35,9,35,10,1],[42,20,42,26,1],[43,20,43,64,1],[49,37,49,41,1],[49,42,49,46,1],[54,37,54,41,1],[54,42,54,46,1],[59,35,59,39,1],[59,40,59,44,1],[64,35,64,39,1],[64,40,64,44,1],[69,35,69,39,1],[69,40,69,44,1],[74,32,74,36,1],[74,37,74,41,1],[79,68,79,72,1],[79,73,79,77,1],[84,74,84,78,1],[84,79,84,83,1],[87,9,87,10,1],[88,13,88,48,1],[89,13,89,14,1],[90,17,90,77,1],[91,13,91,14,1],[93,13,93,14,1],[94,17,95,47,1],[96,17,96,72,1],[97,21,97,64,1],[99,21,99,70,1],[100,13,100,14,1],[101,9,101,10,1],[104,9,104,10,0],[105,9,105,10,0]]);
+    </script>
+  </body>
+</html>
