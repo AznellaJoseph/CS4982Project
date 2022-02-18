@@ -35,9 +35,12 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
             TripOverviewPageViewModel testViewModel = new(testTrip, mockScreen.Object);
 
             Assert.IsNotNull(testViewModel.LogoutCommand);
+            Assert.IsNotNull(testViewModel.CreateWaypointCommand);
             Assert.IsNotNull(testViewModel.BackCommand);
-
+            Assert.AreEqual(mockScreen.Object, testViewModel.HostScreen);
             Assert.AreEqual(testTrip, testViewModel.Trip);
+            Assert.IsNotNull(testViewModel.UrlPathSegment);
+            Assert.IsNull(testViewModel.SelectedDate);
         }
     }
 }

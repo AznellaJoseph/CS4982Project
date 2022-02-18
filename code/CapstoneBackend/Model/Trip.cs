@@ -10,7 +10,7 @@ namespace CapstoneBackend.Model
         /// <summary>
         ///     The Id of the Trip
         /// </summary>
-        public int TripId { get; set; }
+        public virtual int TripId { get; set; }
 
         /// <summary>
         ///     The Id of User of The trip
