@@ -82,7 +82,7 @@ namespace CapstoneDesktop.ViewModels
             _waypointManager = manager;
             this.HostScreen = screen;
             CreateWaypointCommand = ReactiveCommand.CreateFromObservable(createWaypoint);
-            CancelCreateWaypointCommand = ReactiveCommand.CreateFromObservable(this.HostScreen.Router.NavigateBack.Execute);
+            CancelCreateWaypointCommand = ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.NavigateBack.Execute());
         }
 
         /// <summary>

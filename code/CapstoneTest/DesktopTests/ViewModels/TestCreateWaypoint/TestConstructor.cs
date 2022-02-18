@@ -19,12 +19,12 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
             Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
-            Assert.AreEqual(DateTime.MinValue, createWaypointWindowViewModel.StartDate);
-            Assert.AreEqual(DateTime.MinValue, createWaypointWindowViewModel.EndDate);
             Assert.IsNotNull(createWaypointWindowViewModel.CreateWaypointCommand);
             Assert.IsNotNull(createWaypointWindowViewModel.CancelCreateWaypointCommand);
-            Assert.IsNotNull(createWaypointWindowViewModel.StartTime);
-            Assert.IsNotNull(createWaypointWindowViewModel.EndTime);
+            Assert.IsNull(createWaypointWindowViewModel.StartTime);
+            Assert.IsNull(createWaypointWindowViewModel.EndTime);
+            Assert.IsNull(createWaypointWindowViewModel.StartTime);
+            Assert.IsNull(createWaypointWindowViewModel.EndTime);
             Assert.IsNull(createWaypointWindowViewModel.Location);
             Assert.IsNull(createWaypointWindowViewModel.Notes);
         }
@@ -38,12 +38,12 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
             Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
-            Assert.AreEqual(DateTime.MinValue, createWaypointWindowViewModel.StartDate);
-            Assert.AreEqual(DateTime.MinValue, createWaypointWindowViewModel.EndDate);
             Assert.IsNotNull(createWaypointWindowViewModel.CreateWaypointCommand);
             Assert.IsNotNull(createWaypointWindowViewModel.CancelCreateWaypointCommand);
-            Assert.IsNotNull(createWaypointWindowViewModel.StartTime);
-            Assert.IsNotNull(createWaypointWindowViewModel.EndTime);
+            Assert.IsNull(createWaypointWindowViewModel.StartDate);
+            Assert.IsNull(createWaypointWindowViewModel.EndDate);
+            Assert.IsNull(createWaypointWindowViewModel.StartTime);
+            Assert.IsNull(createWaypointWindowViewModel.EndTime);
             Assert.IsNull(createWaypointWindowViewModel.Location);
             Assert.IsNull(createWaypointWindowViewModel.Notes);
         }

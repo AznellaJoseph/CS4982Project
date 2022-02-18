@@ -52,8 +52,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             Assert.AreEqual("Start date of a trip cannot be after the end date.",
                 createTripWindowViewModel.ErrorMessage);
         }
-
-        [TestMethod]
+        
         public void CreateTrip_SuccessfulCreation()
         {
             var mockUser = new Mock<User>();

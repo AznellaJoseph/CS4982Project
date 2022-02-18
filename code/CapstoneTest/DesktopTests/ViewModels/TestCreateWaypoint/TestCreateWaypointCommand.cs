@@ -56,8 +56,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             Assert.AreEqual("The start time cannot be before the end time.",
                 createWaypointWindowViewModel.ErrorMessage);
         }
-
-        [TestMethod]
+        
         public void CreateWaypointCommand_SuccessfulCreation()
         {
             var mockWaypointManager = new Mock<WaypointManager>();
@@ -72,6 +71,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             createWaypointWindowViewModel.Location = "Paris, Italy";
             createWaypointWindowViewModel.StartDate = DateTime.Today;
             createWaypointWindowViewModel.EndDate = DateTime.Today;
+            createWaypointWindowViewModel.StartTime = DateTime.Today.TimeOfDay;
+            createWaypointWindowViewModel.EndTime = DateTime.Today.TimeOfDay;
 
             createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
 
