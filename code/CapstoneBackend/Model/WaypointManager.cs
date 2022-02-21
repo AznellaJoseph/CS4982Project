@@ -84,5 +84,27 @@ namespace CapstoneBackend.Model
                 Data = waypointsInTrip
             };
         }
+
+        /// <summary>
+        ///     Removes the waypoint.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns> A response specifying whether or not the waypoint was removed </returns>
+        public virtual Response<bool> RemoveWaypoint(int id)
+        {
+            var removed = _dal.RemoveWaypoint(id);
+
+            if (!removed)
+                return new Response<bool>
+                {
+                    ErrorMessage = "The waypoint could not be removed.",
+                    StatusCode = 400
+                };
+
+            return new Response<bool>
+            {
+                Data = removed
+            };
+        }
     }
 }
