@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/UserManager.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestRegisterUser.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -10,124 +10,105 @@
     <pre id="content" class="source-code">
 using System;
 using CapstoneBackend.DAL;
-using CapstoneBackend.Utils;
-using MySql.Data.MySqlClient;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace CapstoneBackend.Model
+namespace CapstoneTest.BackendTests.Model.TestUserManager
 {
-    /// &lt;summary&gt;
-    ///     A wrapper class for the UserDal. Manages the collection of Users and informs of server errors.
-    /// &lt;/summary&gt;
-    public class UserManager
+    [TestClass]
+    public class TestRegisterUser
     {
-        private readonly UserDal _dal;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;UserManager&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        public UserManager() : this(new UserDal())
+        [TestMethod]
+        public void Register_WithValidInput_Succeeds()
         {
+            const string username = &quot;TestUsername&quot;;
+            const string password = &quot;TestPassword&quot;;
+            const string fname = &quot;FirstName&quot;;
+            const string lname = &quot;LastName&quot;;
+
+            User? fakeExistingUser = null;
+            User fakeCreatedUser = new() {UserId = 1};
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
+            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(fakeCreatedUser.UserId);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+
+            Assert.AreEqual(200U, resultResponse.StatusCode);
+            Assert.AreEqual(1, resultResponse.Data);
         }
 
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;UserManager&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
-        public UserManager(UserDal dal)
+        [TestMethod]
+        public void Register_WithDuplicateUsername_Fails()
         {
-            _dal = dal;
+            const string username = &quot;TestUsername&quot;;
+            const string password = &quot;TestPassword&quot;;
+            const string fname = &quot;FirstName&quot;;
+            const string lname = &quot;LastName&quot;;
+
+            User fakeExistingUser = new() {UserId = 1};
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
+            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(null);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+
+            Assert.AreEqual(400U, resultResponse.StatusCode);
         }
 
-        /// &lt;summary&gt;
-        ///     Gets a user by their credentials, i.e. username and password. If the user does not match any ones credentials then
-        ///     an error is returned.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;username&quot;&gt;the given username&lt;/param&gt;
-        /// &lt;param name=&quot;password&quot;&gt;the given password&lt;/param&gt;
-        /// &lt;returns&gt;the data of the found user or an error&lt;/returns&gt;
-        public virtual Response&lt;User&gt; GetUserByCredentials(string username, string password)
+        [TestMethod]
+        public void Register_InternalServerErrorConfiguration_Fails()
         {
-            User? user = null;
-            try
-            {
-                user = _dal.GetUserByUsername(username);
-            }
-            catch (MySqlException e)
-            {
-                return new Response&lt;User&gt;
-                {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
-            if (user is null)
-                return new Response&lt;User&gt;
-                {
-                    StatusCode = 404,
-                    ErrorMessage = &quot;Username is incorrect.&quot;
-                };
+            const string username = &quot;TestUsername&quot;;
+            const string password = &quot;TestPassword&quot;;
+            const string fname = &quot;FirstName&quot;;
+            const string lname = &quot;LastName&quot;;
 
-            if (!PasswordHasher.ValidatePassword(password, user.Password))
-                return new Response&lt;User&gt;
-                {
-                    StatusCode = 404,
-                    ErrorMessage = &quot;Password is incorrect.&quot;
-                };
+            User? fakeExistingUser = null;
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
+            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname))
+                .Throws(builder.WithError(500, &quot;Internal server error&quot;).Build());
 
-            return new Response&lt;User&gt;
-            {
-                StatusCode = 200,
-                Data = user
-            };
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+
+            Assert.AreEqual(500U, resultResponse.StatusCode);
         }
 
-        /// &lt;summary&gt;Registers the user.&lt;/summary&gt;
-        /// &lt;param name=&quot;username&quot;&gt;The username input.&lt;/param&gt;
-        /// &lt;param name=&quot;password&quot;&gt;The password input.&lt;/param&gt;
-        /// &lt;param name=&quot;fname&quot;&gt;The fname input.&lt;/param&gt;
-        /// &lt;param name=&quot;lname&quot;&gt;The lname input.&lt;/param&gt;
-        /// &lt;returns&gt;Response status 200 for success; 400 for bad username; 500 otherwise.&lt;/returns&gt;
-        public virtual Response&lt;int&gt; RegisterUser(string username, string password, string fname, string lname)
+        [TestMethod]
+        public void Register_ThrowsException_Fails()
         {
-            var user = _dal.GetUserByUsername(username);
-            if (user is not null)
-                return new Response&lt;int&gt;
-                {
-                    StatusCode = 400,
-                    ErrorMessage = &quot;Username is taken.&quot;
-                };
+            const string username = &quot;TestUsername&quot;;
+            const string password = &quot;TestPassword&quot;;
+            const string fname = &quot;FirstName&quot;;
+            const string lname = &quot;LastName&quot;;
 
-            try
-            {
-                var userCreated = _dal.CreateUser(username, password, fname, lname);
-                return new Response&lt;int&gt;
-                {
-                    StatusCode = 200,
-                    Data = userCreated
-                };
-            }
-            catch (MySqlException e)
-            {
-                return new Response&lt;int&gt;
-                {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
-            catch (Exception)
-            {
-                return new Response&lt;int&gt;
-                {
-                    StatusCode = 500,
-                    ErrorMessage = &quot;Internal Server Error.&quot;
-                };
-            }
+            User? fakeExistingUser = null;
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
+            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname))
+                .Throws(new Exception(&quot;Internal server error&quot;));
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+
+            Assert.AreEqual(500U, resultResponse.StatusCode);
+            Assert.AreEqual(&quot;Internal Server Error.&quot;, resultResponse.ErrorMessage);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[18,32,18,51,1],[19,9,19,10,1],[20,9,20,10,1],[26,9,26,40,1],[27,9,27,10,1],[28,13,28,24,1],[29,9,29,10,1],[39,9,39,10,1],[40,13,40,31,1],[42,13,42,14,1],[43,17,43,57,1],[44,13,44,14,1],[45,13,45,37,1],[46,13,46,14,1],[47,17,51,19,1],[53,13,53,30,1],[54,17,58,19,1],[60,13,60,75,1],[61,17,65,19,1],[67,13,71,15,1],[72,9,72,10,1],[81,9,81,10,1],[82,13,82,57,1],[83,13,83,34,1],[84,17,88,19,1],[91,13,91,14,1],[92,17,92,85,1],[93,17,97,19,1],[99,13,99,37,1],[100,13,100,14,1],[101,17,105,19,1],[107,13,107,30,1],[108,13,108,14,1],[109,17,113,19,1],[115,9,115,10,1]]);
+      highlightRanges([[14,9,14,10,1],[20,13,20,43,1],[21,13,21,55,1],[22,13,22,51,1],[23,13,23,95,1],[24,13,24,118,1],[26,13,26,63,1],[28,13,28,93,1],[30,13,30,62,1],[31,13,31,53,1],[32,9,32,10,1],[36,9,36,10,1],[42,13,42,56,1],[43,13,43,51,1],[44,13,44,95,1],[45,13,45,100,1],[47,13,47,63,1],[49,13,49,93,1],[51,13,51,62,1],[52,9,52,10,1],[56,9,56,10,1],[62,13,62,43,1],[63,13,63,51,1],[64,13,64,55,1],[65,13,65,95,1],[66,13,67,82,1],[69,13,69,63,1],[71,13,71,93,1],[73,13,73,62,1],[74,9,74,10,1],[78,9,78,10,1],[84,13,84,43,1],[85,13,85,51,1],[86,13,86,95,1],[87,13,88,65,1],[90,13,90,63,1],[92,13,92,93,1],[94,13,94,62,1],[95,13,95,84,1],[96,9,96,10,1]]);
     </script>
   </body>
 </html>

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\LandingPageViewModel.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/LandingPageViewModel.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -27,7 +27,6 @@ namespace CapstoneDesktop.ViewModels
         private readonly TripManager _tripManager;
         private readonly User _user;
 
-
         /// &lt;summary&gt;
         ///     Initializes a new instance of the &lt;see cref=&quot;LandingPageViewModel&quot; /&gt; class.
         /// &lt;/summary&gt;
@@ -40,7 +39,8 @@ namespace CapstoneDesktop.ViewModels
             _tripManager = tripManager;
             HostScreen = screen;
             TripViewModels = new ObservableCollection&lt;TripViewModel&gt;();
-            CreateTripCommand = ReactiveCommand.Create(createTrip);
+            CreateTripCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new CreateTripPageViewModel(_user, HostScreen)));
             LogoutCommand = ReactiveCommand.CreateFromObservable(() =&gt;
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
             loadTrips();
@@ -58,7 +58,7 @@ namespace CapstoneDesktop.ViewModels
         /// &lt;summary&gt;
         ///     The create trip command
         /// &lt;/summary&gt;
-        public ReactiveCommand&lt;Unit, Unit&gt; CreateTripCommand { get; }
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; CreateTripCommand { get; }
 
         /// &lt;summary&gt;
         ///     The logout command
@@ -86,15 +86,11 @@ namespace CapstoneDesktop.ViewModels
             foreach (var trip in response.Data ?? new List&lt;Trip&gt;())
                 TripViewModels.Add(new TripViewModel(trip, HostScreen));
         }
-
-        private void createTrip()
-        {
-        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[27,9,27,88,0],[28,9,28,10,0],[29,13,29,26,0],[30,13,30,40,0],[31,13,31,33,0],[32,13,32,72,0],[33,13,33,68,0],[34,13,35,17,0],[35,17,35,87,0],[35,87,35,89,0],[36,13,36,25,0],[37,9,37,10,0],[44,66,44,103,0],[45,9,45,10,0],[46,9,46,10,0],[51,64,51,68,0],[56,74,56,78,0],[61,69,61,73,0],[61,74,61,78,0],[66,37,66,41,0],[71,40,71,44,0],[71,49,71,90,0],[74,9,74,10,0],[75,13,75,70,0],[76,13,76,20,0],[76,22,76,30,0],[76,31,76,33,0],[76,34,76,67,0],[77,17,77,73,0],[78,9,78,10,0],[81,9,81,10,0],[82,9,82,10,0]]);
+      highlightRanges([[26,9,26,88,1],[27,9,27,10,1],[28,13,28,26,1],[29,13,29,40,1],[30,13,30,33,1],[31,13,31,72,1],[32,13,33,17,1],[33,17,33,99,0],[33,99,33,101,1],[34,13,35,17,1],[35,17,35,87,0],[35,87,35,89,1],[36,13,36,25,1],[37,9,37,10,1],[44,66,44,103,1],[45,9,45,10,1],[46,9,46,10,1],[51,78,51,82,1],[56,74,56,78,1],[61,69,61,73,1],[61,74,61,78,1],[66,37,66,41,1],[71,40,71,44,1],[71,49,71,90,1],[74,9,74,10,1],[75,13,75,70,1],[76,13,76,20,1],[76,22,76,30,1],[76,31,76,33,1],[76,34,76,67,1],[77,17,77,73,1],[78,9,78,10,1]]);
     </script>
   </body>
 </html>

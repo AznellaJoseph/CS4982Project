@@ -2,55 +2,110 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/Trip.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestWaypointManager/TestGetWaypointsInTrip.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
+using System.Collections.Generic;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace CapstoneBackend.Model
+namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 {
-    /// &lt;summary&gt;
-    ///     A model class for the Trip object
-    /// &lt;/summary&gt;
-    public class Trip
+    [TestClass]
+    public class TestGetWaypointsInTrip
     {
-        /// &lt;summary&gt;
-        ///     The Id of the Trip
-        /// &lt;/summary&gt;
-        public int TripId { get; set; }
+        [TestMethod]
+        public void Call_EmptySet_ReturnsEmptyList()
+        {
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;();
 
-        /// &lt;summary&gt;
-        ///     The Id of User of The trip
-        /// &lt;/summary&gt;
-        public int UserId { get; set; }
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsByTripId(1)).Returns(fakeWaypoints);
 
-        /// &lt;summary&gt;
-        ///     The name of the trip
-        /// &lt;/summary&gt;
-        public string Name { get; set; } = string.Empty;
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
 
-        /// &lt;summary&gt;
-        ///     The notes of the trip;
-        /// &lt;/summary&gt;
-        public string Notes { get; set; } = string.Empty;
+            var resultResponse =
+                waypointManager.GetWaypointsByTripId(1);
 
-        /// &lt;summary&gt;
-        ///     The start date of the  trip
-        /// &lt;/summary&gt;
-        public DateTime StartDate { get; set; }
+            Assert.AreEqual(0, resultResponse.Data?.Count);
+        }
 
-        /// &lt;summary&gt;
-        ///     The end date of the trip
-        /// &lt;/summary&gt;
-        public DateTime EndDate { get; set; }
+        [TestMethod]
+        public void Call_YieldsSetWithOneValue_ReturnsExpectedList()
+        {
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
+            {
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 1,
+                    Location = &quot;1601 Maple St&quot;,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                }
+            };
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsByTripId(1)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsByTripId(1);
+
+            Assert.AreEqual(1, resultResponse.Data?.Count);
+        }
+
+        [TestMethod]
+        public void Call_YieldsSetWithMultipleValues_ReturnsExpectedList()
+        {
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
+            {
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 1,
+                    Location = &quot;1601 Maple St&quot;,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                },
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 2,
+                    Location = &quot;1602 Maple St&quot;,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                }
+            };
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1602 Maple St&quot;, DateTime.Now, DateTime.Now, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsByTripId(1)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsByTripId(1);
+
+            Assert.AreEqual(2, resultResponse.Data?.Count);
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[13,29,13,33,1],[13,34,13,38,1],[18,29,18,33,1],[18,34,18,38,1],[23,30,23,34,1],[23,35,23,39,1],[23,44,23,56,1],[28,31,28,35,1],[28,36,28,40,1],[28,45,28,57,1],[33,37,33,41,1],[33,42,33,46,1],[38,35,38,39,1],[38,40,38,44,1]]);
+      highlightRanges([[15,9,15,10,1],[16,13,16,66,1],[18,13,18,59,1],[19,13,19,92,1],[21,13,21,75,1],[23,13,24,57,1],[26,13,26,60,1],[27,9,27,10,1],[31,9,31,10,1],[32,13,42,15,1],[44,13,44,59,1],[45,13,46,29,1],[47,13,47,92,1],[49,13,49,75,1],[51,13,52,57,1],[54,13,54,60,1],[55,9,55,10,1],[59,9,59,10,1],[60,13,78,15,1],[80,13,80,59,1],[81,13,82,29,1],[83,13,84,29,1],[85,13,85,92,1],[87,13,87,75,1],[89,13,90,57,1],[92,13,92,60,1],[93,9,93,10,1]]);
     </script>
   </body>
 </html>

@@ -2,93 +2,126 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestGetUserByCredentials.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestCreateWaypoint/TestCreateWaypointCommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
-using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
-using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 
-namespace CapstoneTest.BackendTests.Model.TestUserManager
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 {
     [TestClass]
-    public class TestGetUserByCredentials
+    public class TestCreateWaypointCommand
     {
-        private const string TestUsername = &quot;TestUsername&quot;;
-        private const string TestPassword = &quot;TestPassword&quot;;
-
         [TestMethod]
-        public void Call_WithValidCredentials_Succeeds()
+        public void CreateWaypointCommand_NullLocation_ReturnsErrorMessage()
         {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash(TestPassword) };
-            var mockUserDal = new Mock&lt;UserDal&gt;();
-            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateWaypointPageViewModel createWaypointWindowViewModel =
+                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
-            UserManager userManager = new(mockUserDal.Object);
+            var testScheduler = new TestScheduler();
 
-            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
 
-            Assert.AreEqual(200U, resultResponse.StatusCode);
-            Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
-            Assert.AreEqual(resultResponse?.Data?.FirstName, fakeExistingUser.FirstName);
-            Assert.AreEqual(resultResponse?.Data?.LastName, fakeExistingUser.LastName);
-            Assert.AreEqual(resultResponse?.Data?.Username, fakeExistingUser.Username);
-            Assert.AreEqual(resultResponse?.Data?.Password, fakeExistingUser.Password);
-            Assert.AreEqual(resultResponse?.Data?.UserId, fakeExistingUser.UserId);
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;You must enter a location for the waypoint&quot;, createWaypointWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]
-        public void Call_WithUnknownUsername_Fails()
+        public void CreateWaypointCommand_InvalidDates_ReturnsErrorMessage()
         {
-            User? missingUser = null;
-            var mockUserDal = new Mock&lt;UserDal&gt;();
-            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(missingUser);
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockWaypointManager.Setup(um =&gt;
+                    um.CreateWaypoint(0, &quot;Paris, Italy&quot;, DateTime.Today.AddDays(1) + TimeSpan.Zero,
+                        DateTime.Today + TimeSpan.Zero, &quot;notes&quot;))
+                .Returns(new Response&lt;int&gt; {ErrorMessage = &quot;The start time cannot be before the end time.&quot;});
+            CreateWaypointPageViewModel createWaypointWindowViewModel =
+                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
-            UserManager userManager = new(mockUserDal.Object);
+            var testScheduler = new TestScheduler();
 
-            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+            createWaypointWindowViewModel.Location = &quot;Paris, Italy&quot;;
+            createWaypointWindowViewModel.Notes = &quot;notes&quot;;
+            createWaypointWindowViewModel.StartDate = DateTime.Today.AddDays(1);
+            createWaypointWindowViewModel.StartTime = TimeSpan.Zero;
+            createWaypointWindowViewModel.EndDate = DateTime.Today;
+            createWaypointWindowViewModel.EndTime = TimeSpan.Zero;
 
-            Assert.AreEqual(404U, resultResponse.StatusCode);
+            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;The start time cannot be before the end time.&quot;,
+                createWaypointWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]
-        public void Call_WithWrongPassword_Fails()
+        public void CreateWaypointCommand_NullDates_ReturnsErrorMessage()
         {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash(&quot;CorrectPassword&quot;) };
-            var mockUserDal = new Mock&lt;UserDal&gt;();
-            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
 
-            UserManager userManager = new(mockUserDal.Object);
+            CreateWaypointPageViewModel createWaypointWindowViewModel =
+                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
-            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+            var testScheduler = new TestScheduler();
 
-            Assert.AreEqual(404U, resultResponse.StatusCode);
+            createWaypointWindowViewModel.Location = &quot;Paris, Italy&quot;;
+            createWaypointWindowViewModel.Notes = &quot;notes&quot;;
+
+            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;You must enter a start date and time for the waypoint&quot;,
+                createWaypointWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]
-        public void Call_ThrowsMySqlException_Fails()
+        public void CreateWaypointCommand_SuccessfulCreation()
         {
-            var mockUserDal = new Mock&lt;UserDal&gt;();
-            var builder = new MySqlExceptionBuilder();
-            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Throws(builder.WithError(500, &quot;Internal server error&quot;).Build());
-            UserManager userManager = new(mockUserDal.Object);
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            mockWaypointManager.Setup(um =&gt; um.CreateWaypoint(0, &quot;Paris, Italy&quot;, DateTime.Today, DateTime.Today, null))
+                .Returns(new Response&lt;int&gt; {StatusCode = 200});
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateWaypointPageViewModel createWaypointWindowViewModel =
+                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
-            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+            var testScheduler = new TestScheduler();
 
-            Assert.AreEqual(500U, resultResponse.StatusCode);
-            Assert.AreEqual(&quot;Internal server error&quot;, resultResponse.ErrorMessage);
+            createWaypointWindowViewModel.Location = &quot;Paris, Italy&quot;;
+            createWaypointWindowViewModel.StartDate = DateTime.Today;
+            createWaypointWindowViewModel.EndDate = DateTime.Today;
+            createWaypointWindowViewModel.StartTime = DateTime.Today.TimeOfDay;
+            createWaypointWindowViewModel.EndTime = DateTime.Today.TimeOfDay;
+
+            createWaypointWindowViewModel.CreateWaypointCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[18,9,18,10,1],[19,13,19,92,1],[20,13,20,51,1],[21,13,21,99,1],[23,13,23,63,1],[25,13,25,95,1],[27,13,27,62,1],[28,13,28,72,1],[29,13,29,90,1],[30,13,30,88,1],[31,13,31,88,1],[32,13,32,88,1],[33,13,33,84,1],[34,9,34,10,1],[38,9,38,10,1],[39,13,39,38,1],[40,13,40,51,1],[41,13,41,94,1],[43,13,43,63,1],[45,13,45,95,1],[47,13,47,62,1],[48,9,48,10,1],[52,9,52,10,1],[53,13,53,97,1],[54,13,54,51,1],[55,13,55,99,1],[57,13,57,63,1],[59,13,59,95,1],[61,13,61,62,1],[62,9,62,10,1],[66,9,66,10,1],[67,13,67,51,1],[68,13,68,55,1],[69,13,69,137,1],[70,13,70,63,1],[72,13,72,95,1],[74,13,74,62,1],[75,13,75,83,1],[76,9,76,10,1]]);
+      highlightRanges([[16,9,16,10,1],[17,13,17,45,1],[18,13,18,67,1],[19,13,19,50,1],[20,13,21,85,1],[23,13,23,53,1],[25,13,25,87,1],[27,13,27,35,1],[29,13,29,119,1],[30,9,30,10,1],[34,9,34,10,1],[35,13,35,45,1],[36,13,36,67,1],[37,13,37,50,1],[38,13,41,110,1],[42,13,43,85,1],[45,13,45,53,1],[47,13,47,69,1],[48,13,48,59,1],[49,13,49,81,1],[50,13,50,69,1],[51,13,51,68,1],[52,13,52,67,1],[54,13,54,87,1],[56,13,56,35,1],[58,13,59,61,1],[60,9,60,10,1],[64,9,64,10,1],[65,13,65,45,1],[66,13,66,67,1],[67,13,67,50,1],[69,13,70,85,1],[72,13,72,53,1],[74,13,74,69,1],[75,13,75,59,1],[77,13,77,87,1],[79,13,79,35,1],[81,13,82,61,1],[83,9,83,10,1],[87,9,87,10,1],[88,13,88,67,1],[89,13,90,64,1],[91,13,91,45,1],[92,13,92,50,1],[93,13,94,85,1],[96,13,96,53,1],[98,13,98,69,1],[99,13,99,70,1],[100,13,100,68,1],[101,13,101,80,1],[102,13,102,78,1],[104,13,104,94,1],[106,13,106,35,1],[108,13,108,87,1],[109,9,109,10,1]]);
     </script>
   </body>
 </html>

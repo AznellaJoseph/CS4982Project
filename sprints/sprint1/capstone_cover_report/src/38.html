@@ -2,61 +2,133 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Pages/CreateAccount.cshtml.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/UserManager.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using CapstoneBackend.Model;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
 
-namespace CapstoneWeb.Pages
+namespace CapstoneBackend.Model
 {
     /// &lt;summary&gt;
-    ///     Create Account Model
+    ///     A wrapper class for the UserDal. Manages the collection of Users and informs of server errors.
     /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
-    public class CreateAccountModel : PageModel
+    public class UserManager
     {
-        public string ErrorMessage { get; set; }
-
-        [BindProperty] public string Username { get; set; }
-
-        [BindProperty] public string Password { get; set; }
-
-        [BindProperty] public string FirstName { get; set; }
-
-        [BindProperty] public string LastName { get; set; }
-
-        public UserManager FakeUserManager { get; set; }
+        private readonly UserDal _dal;
 
         /// &lt;summary&gt;
-        /// Called when [post].
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserManager&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt; The page to go to after [post] &lt;/returns&gt;
-        public IActionResult OnPost()
+        public UserManager() : this(new UserDal())
         {
-            var userManager = FakeUserManager ?? new UserManager();
-            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
-                FirstName ?? string.Empty, LastName ?? string.Empty);
-            if (response.StatusCode == 200)
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
+        public UserManager(UserDal dal)
+        {
+            _dal = dal;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a user by their credentials, i.e. username and password. If the user does not match any ones credentials then
+        ///     an error is returned.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;the given username&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;the given password&lt;/param&gt;
+        /// &lt;returns&gt;the data of the found user or an error&lt;/returns&gt;
+        public virtual Response&lt;User&gt; GetUserByCredentials(string username, string password)
+        {
+            User? user = null;
+            try
             {
-                HttpContext.Session.SetString(&quot;userId&quot;, $&quot;{response.Data}&quot;);
-                return RedirectToPage(&quot;Index&quot;);
+                user = _dal.GetUserByUsername(username);
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;User&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
             }
 
-            ErrorMessage = response.ErrorMessage ?? &quot;Unknown Error.&quot;;
+            if (user is null)
+                return new Response&lt;User&gt;
+                {
+                    StatusCode = 404,
+                    ErrorMessage = &quot;Username is incorrect.&quot;
+                };
 
-            return Page();
+            if (!PasswordHasher.ValidatePassword(password, user.Password))
+                return new Response&lt;User&gt;
+                {
+                    StatusCode = 404,
+                    ErrorMessage = &quot;Password is incorrect.&quot;
+                };
+
+            return new Response&lt;User&gt;
+            {
+                StatusCode = 200,
+                Data = user
+            };
+        }
+
+        /// &lt;summary&gt;Registers the user.&lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;The username input.&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;The password input.&lt;/param&gt;
+        /// &lt;param name=&quot;fname&quot;&gt;The fname input.&lt;/param&gt;
+        /// &lt;param name=&quot;lname&quot;&gt;The lname input.&lt;/param&gt;
+        /// &lt;returns&gt;Response status 200 for success; 400 for bad username; 500 otherwise.&lt;/returns&gt;
+        public virtual Response&lt;int&gt; RegisterUser(string username, string password, string fname, string lname)
+        {
+            var user = _dal.GetUserByUsername(username);
+            if (user is not null)
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = 400,
+                    ErrorMessage = &quot;Username is taken.&quot;
+                };
+
+            try
+            {
+                var userCreated = _dal.CreateUser(username, password, fname, lname);
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = 200,
+                    Data = userCreated
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = 500,
+                    ErrorMessage = &quot;Internal Server Error.&quot;
+                };
+            }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,38,14,42,1],[14,43,14,47,1],[16,49,16,53,1],[16,54,16,58,1],[18,49,18,53,1],[18,54,18,58,1],[20,50,20,54,1],[20,55,20,59,1],[22,49,22,53,1],[22,54,22,58,1],[24,46,24,50,1],[24,51,24,55,1],[31,9,31,10,1],[32,13,32,68,1],[33,13,34,70,1],[35,13,35,44,1],[36,13,36,14,1],[37,17,37,77,1],[38,17,38,48,1],[41,13,41,70,1],[43,13,43,27,1],[44,9,44,10,1]]);
+      highlightRanges([[18,32,18,51,1],[19,9,19,10,1],[20,9,20,10,1],[26,9,26,40,1],[27,9,27,10,1],[28,13,28,24,1],[29,9,29,10,1],[39,9,39,10,1],[40,13,40,31,1],[42,13,42,14,1],[43,17,43,57,1],[44,13,44,14,1],[45,13,45,37,1],[46,13,46,14,1],[47,17,51,19,1],[54,13,54,30,1],[55,17,59,19,1],[61,13,61,75,1],[62,17,66,19,1],[68,13,72,15,1],[73,9,73,10,1],[82,9,82,10,1],[83,13,83,57,1],[84,13,84,34,1],[85,17,89,19,1],[92,13,92,14,1],[93,17,93,85,1],[94,17,98,19,1],[100,13,100,37,1],[101,13,101,14,1],[102,17,106,19,1],[108,13,108,30,1],[109,13,109,14,1],[110,17,114,19,1],[116,9,116,10,1]]);
     </script>
   </body>
 </html>

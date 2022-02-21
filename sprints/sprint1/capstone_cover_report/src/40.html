@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Pages/CreateWaypoint.cshtml.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/WaypointManager.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -10,44 +10,95 @@
     <pre id="content" class="source-code">
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CapstoneBackend.Model;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CapstoneBackend.DAL;
 
-namespace CapstoneWeb.Pages
+namespace CapstoneBackend.Model
 {
-    public class CreateWaypointModel : PageModel
+    /// &lt;summary&gt;
+    ///     A wrapper class for the WaypointDal. Manages the collection of Waypoints and informs of server errors.
+    /// &lt;/summary&gt;
+    public class WaypointManager
     {
-        [BindProperty] public string ErrorMessage { get; set; }
-        [BindProperty] public string Location { get; set; }
-        [BindProperty] public DateTime StartDate { get; set; } = DateTime.Now;
-        [BindProperty] public DateTime EndDate { get; set; } = DateTime.Now;
-        [BindProperty] public string Notes { get; set; }
+        private readonly WaypointDal _dal;
 
-        public WaypointManager WaypointManager { get; set; }
-
-        public IActionResult OnPost()
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;WaypointManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public WaypointManager() : this(new WaypointDal())
         {
-            var waypointManager = WaypointManager ?? new WaypointManager();
-            var response = waypointManager.CreateWaypoint(Convert.ToInt32(HttpContext.Session.GetString(&quot;tripId&quot;)), Location, StartDate, EndDate, Notes);
-            if (string.IsNullOrEmpty(response.ErrorMessage))
-            {
-                HttpContext.Session.SetString(&quot;waypointId&quot;, $&quot;{response.Data}&quot;);
-                return RedirectToPage(&quot;index&quot;);
-            }
+        }
 
-            ErrorMessage = response.ErrorMessage;
-            return Page();
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;WaypointManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
+        public WaypointManager(WaypointDal dal)
+        {
+            _dal = dal;
+        }
+
+        /// &lt;summary&gt;
+        ///     Creates the waypoint.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;location&quot;&gt;The location.&lt;/param&gt;
+        /// &lt;param name=&quot;notes&quot;&gt;The notes.&lt;/param&gt;
+        /// &lt;param name=&quot;startTime&quot;&gt;The start time.&lt;/param&gt;
+        /// &lt;param name=&quot;endTime&quot;&gt;The end time.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     A response of if the waypoint was created in the database
+        /// &lt;/returns&gt;
+        public virtual Response&lt;int&gt; CreateWaypoint(int tripId, string location, DateTime startTime, DateTime? endTime,
+            string? notes)
+        {
+            if (startTime.CompareTo(endTime) &gt; 0)
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = 400,
+                    ErrorMessage = &quot;The start time cannot be before the end time.&quot;
+                };
+            return new Response&lt;int&gt;
+            {
+                StatusCode = 200,
+                Data = _dal.CreateWaypoint(tripId, location, startTime, endTime, notes ?? string.Empty)
+            };
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the waypoints on date.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;selectedDate&quot;&gt;The selected date.&lt;/param&gt;
+        /// &lt;returns&gt; A response of the waypoints on that date &lt;/returns&gt;
+        public virtual Response&lt;IList&lt;Waypoint&gt;&gt; GetWaypointsOnDate(int tripId, DateTime selectedDate)
+        {
+            var waypointsOnDate = _dal.GetWaypointsOnDate(tripId, selectedDate);
+
+            return new Response&lt;IList&lt;Waypoint&gt;&gt;
+            {
+                Data = waypointsOnDate
+            };
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the waypoints by trip identifier.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt; A response of the waypoints with the entered trip id&lt;/returns&gt;
+        public virtual Response&lt;IList&lt;Waypoint&gt;&gt; GetWaypointsByTripId(int tripId)
+        {
+            var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
+
+            return new Response&lt;IList&lt;Waypoint&gt;&gt;
+            {
+                Data = waypointsInTrip
+            };
         }
     }
 }
-
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,53,14,57,1],[14,58,14,62,1],[15,49,15,53,1],[15,54,15,58,1],[16,52,16,56,1],[16,57,16,61,1],[16,66,16,78,1],[17,50,17,54,1],[17,55,17,59,1],[17,64,17,76,1],[18,46,18,50,1],[18,51,18,55,1],[20,50,20,54,1],[20,55,20,59,1],[23,9,23,10,1],[24,13,24,76,1],[25,13,25,154,1],[26,13,26,61,1],[27,13,27,14,1],[28,17,28,81,1],[29,17,29,48,1],[32,13,32,50,1],[33,13,33,27,1],[34,9,34,10,1]]);
+      highlightRanges([[17,36,17,59,1],[18,9,18,10,1],[19,9,19,10,1],[25,9,25,48,1],[26,9,26,10,1],[27,13,27,24,1],[28,9,28,10,1],[43,9,43,10,1],[44,13,44,50,1],[45,17,49,19,1],[50,13,54,15,1],[55,9,55,10,1],[64,9,64,10,1],[65,13,65,81,1],[67,13,70,15,1],[71,9,71,10,1],[79,9,79,10,1],[80,13,80,69,1],[82,13,85,15,1],[86,9,86,10,1]]);
     </script>
   </body>
 </html>

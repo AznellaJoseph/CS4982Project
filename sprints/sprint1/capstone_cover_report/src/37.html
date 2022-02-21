@@ -2,86 +2,48 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Startup.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/User.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-namespace CapstoneWeb
+namespace CapstoneBackend.Model
 {
     /// &lt;summary&gt;
-    ///     Startup Class
+    ///     User Model Class
     /// &lt;/summary&gt;
-    public class Startup
+    public class User
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;Startup&quot; /&gt; class.
+        ///     The id of the user.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;configuration&quot;&gt;The configuration.&lt;/param&gt;
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public int UserId { get; set; }
 
         /// &lt;summary&gt;
-        ///     The configuration.
+        ///     The username of the user
         /// &lt;/summary&gt;
-        public IConfiguration Configuration { get; }
+        public string Username { get; set; } = string.Empty;
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         /// &lt;summary&gt;
-        ///     Configures the services.
+        ///     The password of the user.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;services&quot;&gt;The services.&lt;/param&gt;
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddRazorPages();
-            services.AddDistributedMemoryCache();
+        public string Password { get; set; } = string.Empty;
 
-            services.AddSession(options =&gt;
-            {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// &lt;summary&gt;
-        ///     Configures the specified application.
+        ///     The first name of the user.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;app&quot;&gt;The application.&lt;/param&gt;
-        /// &lt;param name=&quot;env&quot;&gt;The env.&lt;/param&gt;
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-            else
-                app.UseHsts();
+        public string FirstName { get; set; } = string.Empty;
 
-            app.UseSession();
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =&gt; { endpoints.MapRazorPages(); });
-        }
+        /// &lt;summary&gt;
+        ///     The last name of the user
+        /// &lt;/summary&gt;
+        public string LastName { get; set; } = string.Empty;
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[19,9,19,53,0],[20,9,20,10,0],[21,13,21,43,0],[22,9,22,10,0],[27,47,27,51,0],[35,9,35,10,0],[36,13,36,38,0],[37,13,37,50,0],[39,13,40,13,0],[40,13,40,14,0],[40,14,41,17,0],[41,17,41,64,0],[41,64,42,17,0],[42,17,42,48,0],[42,48,43,17,0],[43,17,43,51,0],[43,51,44,13,0],[44,13,44,14,0],[44,14,44,16,0],[45,9,45,10,0],[54,9,54,10,0],[55,13,55,37,0],[56,17,56,49,0],[58,17,58,31,0],[60,13,60,30,0],[61,13,61,39,0],[62,13,62,34,0],[64,13,64,30,0],[66,13,66,36,0],[68,13,68,43,0],[68,43,68,44,0],[68,44,68,45,0],[68,45,68,71,0],[68,71,68,72,0],[68,72,68,73,0],[68,73,68,75,0],[69,9,69,10,0]]);
+      highlightRanges([[11,29,11,33,1],[11,34,11,38,1],[16,34,16,38,1],[16,39,16,43,1],[16,48,16,60,1],[21,34,21,38,1],[21,39,21,43,1],[21,48,21,60,1],[26,35,26,39,1],[26,40,26,44,1],[26,49,26,61,1],[31,34,31,38,1],[31,39,31,43,1],[31,48,31,60,1]]);
     </script>
   </body>
 </html>

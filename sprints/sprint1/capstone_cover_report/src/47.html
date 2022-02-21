@@ -2,55 +2,83 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\CreateAccountPage.axaml</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Pages/CreateAccount.cshtml.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-&lt;UserControl xmlns=&quot;https://github.com/avaloniaui&quot;
-             xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
-             x:Class=&quot;CapstoneDesktop.Views.CreateAccountPage&quot;&gt;
-    
-    &lt;Border Classes=&quot;container&quot; VerticalAlignment=&quot;Center&quot; HorizontalAlignment=&quot;Center&quot; Padding=&quot;30&quot;&gt;
-        &lt;StackPanel Spacing=&quot;10&quot; Width=&quot;500&quot;&gt;
-            &lt;TextBlock Classes=&quot;h1&quot; Text=&quot;CREATE ACCOUNT&quot; FontSize=&quot;24&quot; TextAlignment=&quot;Center&quot; /&gt;
-            
-            &lt;TextBlock Text=&quot;{Binding ErrorMessage}&quot; Foreground=&quot;Red&quot; /&gt;
+using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-            &lt;TextBlock Text=&quot;USERNAME:&quot; /&gt;
-            &lt;TextBox Watermark=&quot;USERNAME&quot; Text=&quot;{Binding Username, Mode=TwoWay}&quot; /&gt;
-            
-            &lt;TextBlock Text=&quot;FIRST NAME:&quot; /&gt;
-            &lt;TextBox Watermark=&quot;FIRST NAME&quot; Text=&quot;{Binding FirstName, Mode=TwoWay}&quot; /&gt;
-            
-            &lt;TextBlock Text=&quot;LAST NAME:&quot; /&gt;
-            &lt;TextBox Watermark=&quot;LAST NAME&quot; Text=&quot;{Binding LastName, Mode=TwoWay}&quot; /&gt;
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     Create Account Model
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class CreateAccountModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage { get; set; }
 
-            &lt;TextBlock Text=&quot;PASSWORD:&quot; /&gt;
-            &lt;TextBox PasswordChar=&quot;*&quot; Watermark=&quot;PASSWORD&quot; Text=&quot;{Binding Password, Mode=TwoWay}&quot; /&gt;
+        /// &lt;summary&gt;
+        ///     The username.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Username { get; set; }
 
-            &lt;TextBlock Text=&quot;RE-ENTER PASSWORD:&quot; /&gt;
-            &lt;TextBox PasswordChar=&quot;*&quot; Watermark=&quot;PASSWORD&quot; Text=&quot;{Binding ConfirmedPassword, Mode=TwoWay}&quot; /&gt;
+        /// &lt;summary&gt;
+        ///     The password.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Password { get; set; }
 
-            &lt;Grid ColumnDefinitions=&quot;*,10,*&quot;&gt;
-                &lt;Button Grid.Column=&quot;0&quot; HorizontalAlignment=&quot;Stretch&quot; Command=&quot;{Binding SubmitAccountCommand}&quot;&gt;
-                    &lt;Button.Content&gt;
-                        &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;CREATE ACCOUNT&quot;/&gt;
-                    &lt;/Button.Content&gt;
-                &lt;/Button&gt;
-                &lt;Button Grid.Column=&quot;2&quot; HorizontalAlignment=&quot;Stretch&quot; Command=&quot;{Binding CancelCreateAccountCommand}&quot;&gt;
-                    &lt;Button.Content&gt;
-                        &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;CANCEL&quot;/&gt;
-                    &lt;/Button.Content&gt;
-                &lt;/Button&gt;
-            &lt;/Grid&gt;
-        &lt;/StackPanel&gt;
-    &lt;/Border&gt;
-&lt;/UserControl&gt;
+        /// &lt;summary&gt;
+        ///     The first name.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string FirstName { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The last name.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string LastName { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The fake user manager.
+        /// &lt;/summary&gt;
+        public UserManager FakeUserManager { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Called when [post].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; The page to go to after [post] &lt;/returns&gt;
+        public IActionResult OnPost()
+        {
+            var userManager = FakeUserManager ?? new UserManager();
+            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
+                FirstName ?? string.Empty, LastName ?? string.Empty);
+            if (response.StatusCode == 200)
+            {
+                HttpContext.Session.SetString(&quot;userId&quot;, $&quot;{response.Data}&quot;);
+                return RedirectToPage(&quot;Index&quot;);
+            }
+
+            ErrorMessage = response.ErrorMessage ?? &quot;Unknown Error.&quot;;
+
+            return Page();
+        }
+    }
+}
     </pre>
     <script type="text/javascript">
-      highlightRanges([[1,2,1,13,0],[5,6,5,12,0],[5,13,5,20,0],[5,60,5,79,0],[6,10,6,20,0],[6,21,6,28,0],[7,14,7,23,0],[7,24,7,31,0],[7,37,7,41,0],[7,73,7,86,0],[9,14,9,23,0],[9,24,9,28,0],[9,54,9,64,0],[11,14,11,23,0],[11,24,11,28,0],[12,14,12,21,0],[12,22,12,31,0],[12,43,12,47,0],[14,14,14,23,0],[14,24,14,28,0],[15,14,15,21,0],[15,22,15,31,0],[15,45,15,49,0],[17,14,17,23,0],[17,24,17,28,0],[18,14,18,21,0],[18,22,18,31,0],[18,44,18,48,0],[20,14,20,23,0],[20,24,20,28,0],[21,14,21,21,0],[21,22,21,34,0],[21,39,21,48,0],[21,60,21,64,0],[23,14,23,23,0],[23,24,23,28,0],[24,14,24,21,0],[24,22,24,34,0],[24,39,24,48,0],[24,60,24,64,0],[26,14,26,18,0],[26,19,26,36,0],[27,18,27,24,0],[27,25,27,29,0],[27,71,27,78,0],[29,26,29,35,0],[29,36,29,49,0],[29,59,29,63,0],[32,18,32,24,0],[32,25,32,29,0],[32,71,32,78,0],[34,26,34,35,0],[34,36,34,49,0],[34,59,34,63,0]]);
+      highlightRanges([[17,38,17,42,1],[17,43,17,47,1],[23,34,23,38,1],[23,39,23,43,1],[29,34,29,38,1],[29,39,29,43,1],[35,35,35,39,1],[35,40,35,44,1],[41,34,41,38,1],[41,39,41,43,1],[46,46,46,50,1],[46,51,46,55,1],[53,9,53,10,1],[54,13,54,68,1],[55,13,56,70,1],[57,13,57,44,1],[58,13,58,14,1],[59,17,59,77,1],[60,17,60,48,1],[63,13,63,70,1],[65,13,65,27,1],[66,9,66,10,1]]);
     </script>
   </body>
 </html>

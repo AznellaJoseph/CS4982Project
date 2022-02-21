@@ -2,82 +2,124 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestTripManager/TestGetTripsByUserId.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestCreateAccount/TestSubmitAccount.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
-using System.Collections.Generic;
-using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 
-namespace CapstoneTest.BackendTests.Model.TestTripManager
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
 {
     [TestClass]
-    public class TestGetTripsByUserId
+    public class TestSubmitAccount
     {
         [TestMethod]
-        public void GetTrips_Success()
+        public void CreateAccount_ValidCredentials_ReturnsNoError()
         {
-            var mockDal = new Mock&lt;TripDal&gt;();
-            var startDate = DateTime.Now;
-            var endDate = DateTime.Now;
-            mockDal.Setup(dal =&gt; dal.GetTripsByUserId(1)).Returns(new List&lt;Trip&gt;
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            mockUserManager.Setup(mu =&gt; mu.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt;
             {
-                new()
-                {
-                    TripId = 1,
-                    UserId = 1,
-                    Name = &quot;test&quot;,
-                    StartDate = startDate,
-                    EndDate = endDate,
-                    Notes = &quot;notes&quot;
-                }
+                Data = 1
             });
-            var tripManager = new TripManager(mockDal.Object);
-            var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual(200U, result.StatusCode);
-            Assert.IsFalse(result.Data?.Count == 0);
-            var trip = result.Data?[0];
-            Assert.AreEqual(1, trip?.TripId);
-            Assert.AreEqual(1, trip?.UserId);
-            Assert.AreEqual(&quot;test&quot;, trip?.Name);
-            Assert.AreEqual(&quot;notes&quot;, trip?.Notes);
-            Assert.AreEqual(startDate, trip?.StartDate);
-            Assert.AreEqual(endDate, trip?.EndDate);
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+            var testScheduler = new TestScheduler();
+
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;admin&quot;;
+
+            createAccountPageViewModel.SubmitAccountCommand.ThrownExceptions.Subscribe();
+            testScheduler.Start();
+            Assert.AreEqual(string.Empty, createAccountPageViewModel.ErrorMessage);
+        }
+        
+        [TestMethod]
+        public void CreateAccount_DifferentPassword_ReturnsErrorMessage()
+        {
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+            var testScheduler = new TestScheduler();
+
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;notadmin&quot;;
+
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;The given passwords must match.&quot;, createAccountPageViewModel.ErrorMessage);
         }
 
         [TestMethod]
-        public void GetTrips_MySqlException_Failure()
+        public void Login_SomeServerError_ReturnsErrorMessage()
         {
-            var mockDal = new Mock&lt;TripDal&gt;();
-            var builder = new MySqlExceptionBuilder();
-            mockDal.Setup(dal =&gt; dal.GetTripsByUserId(1)).Throws(builder.WithError(500, &quot;test&quot;).Build());
-            var tripManager = new TripManager(mockDal.Object);
-            var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual(500U, result.StatusCode);
-            Assert.AreEqual(&quot;test&quot;, result.ErrorMessage);
-        }
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockUserManager.Setup(mu =&gt; mu.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt;
+            {
+                StatusCode = 400U,
+                ErrorMessage = &quot;test&quot;
+            });
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+            TestScheduler testScheduler = new TestScheduler();
+            
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;admin&quot;;
+            
+            
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
 
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;test&quot;, createAccountPageViewModel.ErrorMessage);
+        }
+        
         [TestMethod]
-        public void GetTrips_Exception_Failure()
+        public void Login_SomeServerError_ReturnsNoErrorMessage()
         {
-            var mockDal = new Mock&lt;TripDal&gt;();
-            mockDal.Setup(dal =&gt; dal.GetTripsByUserId(1)).Throws(new Exception(&quot;test&quot;));
-            var tripManager = new TripManager(mockDal.Object);
-            var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual(500U, result.StatusCode);
-            Assert.AreEqual(&quot;test&quot;, result.ErrorMessage);
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockUserManager.Setup(mu =&gt; mu.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt;
+            {
+                StatusCode = 400U
+            });
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+            TestScheduler testScheduler = new TestScheduler();
+            
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;admin&quot;;
+            
+            
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;Unknown Error.&quot;, createAccountPageViewModel.ErrorMessage);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[15,9,15,10,1],[16,13,16,47,1],[17,13,17,42,1],[18,13,18,40,1],[19,13,30,16,1],[31,13,31,63,1],[32,13,32,56,1],[33,13,33,54,1],[34,13,34,53,1],[35,13,35,40,1],[36,13,36,46,1],[37,13,37,46,1],[38,13,38,49,1],[39,13,39,51,1],[40,13,40,57,1],[41,13,41,53,1],[42,9,42,10,1],[46,9,46,10,1],[47,13,47,47,1],[48,13,48,55,1],[49,13,49,106,1],[50,13,50,63,1],[51,13,51,56,1],[52,13,52,54,1],[53,13,53,58,1],[54,9,54,10,1],[58,9,58,10,1],[59,13,59,47,1],[60,13,60,89,1],[61,13,61,63,1],[62,13,62,56,1],[63,13,63,54,1],[64,13,64,58,1],[65,9,65,10,1]]);
+      highlightRanges([[16,9,16,10,1],[17,13,17,59,1],[18,13,21,16,1],[22,13,22,50,1],[23,13,23,116,1],[24,13,24,53,1],[26,13,26,60,1],[27,13,27,59,1],[28,13,28,59,1],[29,13,29,59,1],[30,13,30,68,1],[32,13,32,90,1],[33,13,33,35,1],[34,13,34,84,1],[35,9,35,10,1],[39,9,39,10,1],[40,13,40,59,1],[41,13,41,50,1],[42,13,42,116,1],[43,13,43,53,1],[45,13,45,59,1],[46,13,46,59,1],[47,13,47,71,1],[49,13,49,83,1],[51,13,51,35,1],[53,13,53,105,1],[54,9,54,10,1],[58,9,58,10,1],[59,13,59,59,1],[60,13,60,50,1],[61,13,65,16,1],[66,13,66,116,1],[67,13,67,63,1],[69,13,69,60,1],[70,13,70,59,1],[71,13,71,59,1],[72,13,72,59,1],[73,13,73,68,1],[76,13,76,83,1],[78,13,78,35,1],[80,13,80,78,1],[81,9,81,10,1],[85,9,85,10,1],[86,13,86,59,1],[87,13,87,50,1],[88,13,91,16,1],[92,13,92,116,1],[93,13,93,63,1],[95,13,95,60,1],[96,13,96,59,1],[97,13,97,59,1],[98,13,98,59,1],[99,13,99,68,1],[102,13,102,83,1],[104,13,104,35,1],[106,13,106,88,1],[107,9,107,10,1]]);
     </script>
   </body>
 </html>

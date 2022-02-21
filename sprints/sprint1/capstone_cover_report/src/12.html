@@ -2,99 +2,31 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestCreateWaypoint/TestCreateWaypointCommand.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestMainWindow/TestConstructor.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
-using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
-using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using ReactiveUI;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
+namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
 {
     [TestClass]
-    public class TestCreateWaypointCommand
+    public class TestConstructor
     {
         [TestMethod]
-        public void CreateWaypointCommand_NullLocation_ReturnsErrorMessage()
+        public void Constructor_PropertyCreation()
         {
-            var mockTrip = new Mock&lt;Trip&gt;();
-            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
-            var mockScreen = new Mock&lt;IScreen&gt;();
-            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
-
-            var testScheduler = new TestScheduler();
-
-            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(&quot;You must enter a location for the waypoint&quot;, createWaypointWindowViewModel.ErrorMessage);
-        }
-
-        [TestMethod]
-        public void CreateWaypointCommand_InvalidDates_ReturnsErrorMessage()
-        {
-
-            var mockTrip = new Mock&lt;Trip&gt;();
-            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
-            var mockScreen = new Mock&lt;IScreen&gt;();
-            mockWaypointManager.Setup(um =&gt;
-                    um.CreateWaypoint(0, &quot;Paris, Italy&quot;, DateTime.Today.AddDays(1) + TimeSpan.Zero, DateTime.Today + TimeSpan.Zero, &quot;notes&quot;))
-                .Returns(new Response&lt;int&gt; { ErrorMessage = &quot;The start time cannot be before the end time.&quot; });
-            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
-
-            var testScheduler = new TestScheduler();
-
-            createWaypointWindowViewModel.Location = &quot;Paris, Italy&quot;;
-            createWaypointWindowViewModel.Notes = &quot;notes&quot;;
-            createWaypointWindowViewModel.StartDate = DateTime.Today.AddDays(1);
-            createWaypointWindowViewModel.StartTime = TimeSpan.Zero;
-            createWaypointWindowViewModel.EndDate = DateTime.Today;
-            createWaypointWindowViewModel.EndTime = TimeSpan.Zero;
-
-            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(&quot;The start time cannot be before the end time.&quot;,
-                createWaypointWindowViewModel.ErrorMessage);
-        }
-        
-        public void CreateWaypointCommand_SuccessfulCreation()
-        {
-            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
-            mockWaypointManager.Setup(um =&gt; um.CreateWaypoint(0, &quot;Paris, Italy&quot;, DateTime.Today, DateTime.Today, null))
-                .Returns(new Response&lt;int&gt; { StatusCode = 200 });
-            var mockTrip = new Mock&lt;Trip&gt;();
-            var mockScreen = new Mock&lt;IScreen&gt;();
-            CreateWaypointPageViewModel createWaypointWindowViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
-            
-            var testScheduler = new TestScheduler();
-
-            createWaypointWindowViewModel.Location = &quot;Paris, Italy&quot;;
-            createWaypointWindowViewModel.StartDate = DateTime.Today;
-            createWaypointWindowViewModel.EndDate = DateTime.Today;
-            createWaypointWindowViewModel.StartTime = DateTime.Today.TimeOfDay;
-            createWaypointWindowViewModel.EndTime = DateTime.Today.TimeOfDay;
-
-            createWaypointWindowViewModel.CreateWaypointCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
+            MainWindowViewModel mainWindowViewModel = new();
+            Assert.IsNotNull(mainWindowViewModel.Router);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[16,9,16,10,1],[17,13,17,45,1],[18,13,18,67,1],[19,13,19,50,1],[20,13,20,141,1],[22,13,22,53,1],[24,13,24,87,1],[26,13,26,35,1],[28,13,28,119,1],[29,9,29,10,1],[33,9,33,10,1],[35,13,35,45,1],[36,13,36,67,1],[37,13,37,50,1],[38,13,40,112,1],[41,13,41,141,1],[43,13,43,53,1],[45,13,45,69,1],[46,13,46,59,1],[47,13,47,81,1],[48,13,48,69,1],[49,13,49,68,1],[50,13,50,67,1],[52,13,52,87,1],[54,13,54,35,1],[56,13,57,61,1],[58,9,58,10,1],[61,9,61,10,0],[62,13,62,67,0],[63,13,64,66,0],[65,13,65,45,0],[66,13,66,50,0],[67,13,67,141,0],[69,13,69,53,0],[71,13,71,69,0],[72,13,72,70,0],[73,13,73,68,0],[74,13,74,80,0],[75,13,75,78,0],[77,13,77,87,0],[79,13,79,35,0],[81,13,81,87,0],[82,9,82,10,0]]);
+      highlightRanges([[11,9,11,10,1],[12,13,12,61,1],[13,13,13,58,1],[14,9,14,10,1]]);
     </script>
   </body>
 </html>

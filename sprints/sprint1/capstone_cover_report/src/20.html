@@ -2,113 +2,66 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestRegisterUser.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestCreateTrip/TestConstructor.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
-using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 
-namespace CapstoneTest.BackendTests.Model.TestUserManager
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 {
     [TestClass]
-    public class TestRegisterUser
+    public class TestConstructor
     {
         [TestMethod]
-        public void Register_WithValidInput_Succeeds()
+        public void Constructor_ThreeParameter_PropertyCreations()
         {
-            const string username = &quot;TestUsername&quot;;
-            const string password = &quot;TestPassword&quot;;
-            const string fname = &quot;FirstName&quot;;
-            const string lname = &quot;LastName&quot;;
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
 
-            User? fakeExistingUser = null;
-            User fakeCreatedUser = new() { UserId = 1 };
-            var mockUserDal = new Mock&lt;UserDal&gt;();
-            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(fakeCreatedUser.UserId);
-
-            UserManager userManager = new(mockUserDal.Object);
-
-            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
-
-            Assert.AreEqual(200U, resultResponse.StatusCode);
-            Assert.AreEqual(1, resultResponse.Data);
+            Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
+            Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);
+            Assert.IsNotNull(createTripWindowViewModel.UrlPathSegment);
+            Assert.AreEqual(mockScreen.Object, createTripWindowViewModel.HostScreen);
+            Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
+            Assert.IsNull(createTripWindowViewModel.StartDate);
+            Assert.IsNull(createTripWindowViewModel.EndDate);
+            Assert.IsNull(createTripWindowViewModel.TripName);
+            Assert.IsNull(createTripWindowViewModel.Notes);
         }
 
         [TestMethod]
-        public void Register_WithDuplicateUsername_Fails()
+        public void Constructor_TwoParameters_PropertyCreations()
         {
-            const string username = &quot;TestUsername&quot;;
-            const string password = &quot;TestPassword&quot;;
-            const string fname = &quot;FirstName&quot;;
-            const string lname = &quot;LastName&quot;;
+            var mockUser = new Mock&lt;User&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockScreen.Object);
 
-            User fakeExistingUser = new() { UserId = 1 };
-            var mockUserDal = new Mock&lt;UserDal&gt;();
-            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(null);
-
-            UserManager userManager = new(mockUserDal.Object);
-
-            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
-
-            Assert.AreEqual(400U, resultResponse.StatusCode);
-        }
-
-        [TestMethod]
-        public void Register_InternalServerErrorConfiguration_Fails()
-        {
-            const string username = &quot;TestUsername&quot;;
-            const string password = &quot;TestPassword&quot;;
-            const string fname = &quot;FirstName&quot;;
-            const string lname = &quot;LastName&quot;;
-
-            User? fakeExistingUser = null;
-            var mockUserDal = new Mock&lt;UserDal&gt;();
-            var builder = new MySqlExceptionBuilder();
-            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname))
-                .Throws(builder.WithError(500, &quot;Internal server error&quot;).Build());
-
-            UserManager userManager = new(mockUserDal.Object);
-
-            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
-
-            Assert.AreEqual(500U, resultResponse.StatusCode);
-        }
-
-        [TestMethod]
-        public void Register_ThrowsException_Fails()
-        {
-            const string username = &quot;TestUsername&quot;;
-            const string password = &quot;TestPassword&quot;;
-            const string fname = &quot;FirstName&quot;;
-            const string lname = &quot;LastName&quot;;
-
-            User? fakeExistingUser = null;
-            var mockUserDal = new Mock&lt;UserDal&gt;();
-            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
-            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname))
-                .Throws(new Exception(&quot;Internal server error&quot;));
-
-            UserManager userManager = new(mockUserDal.Object);
-
-            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
-
-            Assert.AreEqual(500U, resultResponse.StatusCode);
-            Assert.AreEqual(&quot;Internal Server Error.&quot;, resultResponse.ErrorMessage);
+            Assert.IsNotNull(createTripWindowViewModel.CancelCreateTripCommand);
+            Assert.IsNotNull(createTripWindowViewModel.CreateTripCommand);
+            Assert.IsNotNull(createTripWindowViewModel.UrlPathSegment);
+            Assert.AreEqual(mockScreen.Object, createTripWindowViewModel.HostScreen);
+            Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
+            Assert.IsNull(createTripWindowViewModel.StartDate);
+            Assert.IsNull(createTripWindowViewModel.EndDate);
+            Assert.IsNull(createTripWindowViewModel.TripName);
+            Assert.IsNull(createTripWindowViewModel.Notes);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,9,14,10,1],[20,13,20,43,1],[21,13,21,57,1],[22,13,22,51,1],[23,13,23,95,1],[24,13,24,118,1],[26,13,26,63,1],[28,13,28,93,1],[30,13,30,62,1],[31,13,31,53,1],[32,9,32,10,1],[36,9,36,10,1],[42,13,42,58,1],[43,13,43,51,1],[44,13,44,95,1],[45,13,45,100,1],[47,13,47,63,1],[49,13,49,93,1],[51,13,51,62,1],[52,9,52,10,1],[56,9,56,10,1],[62,13,62,43,1],[63,13,63,51,1],[64,13,64,55,1],[65,13,65,95,1],[66,13,67,82,1],[69,13,69,63,1],[71,13,71,93,1],[73,13,73,62,1],[74,9,74,10,1],[78,9,78,10,1],[84,13,84,43,1],[85,13,85,51,1],[86,13,86,95,1],[87,13,88,65,1],[90,13,90,63,1],[92,13,92,93,1],[94,13,94,62,1],[95,13,95,84,1],[96,9,96,10,1]]);
+      highlightRanges([[14,9,14,10,1],[15,13,15,45,1],[16,13,16,59,1],[17,13,17,50,1],[18,13,19,81,1],[21,13,21,81,1],[22,13,22,75,1],[23,13,23,72,1],[24,13,24,86,1],[25,13,25,83,1],[26,13,26,64,1],[27,13,27,62,1],[28,13,28,63,1],[29,13,29,60,1],[30,9,30,10,1],[34,9,34,10,1],[35,13,35,45,1],[36,13,36,50,1],[37,13,38,57,1],[40,13,40,81,1],[41,13,41,75,1],[42,13,42,72,1],[43,13,43,86,1],[44,13,44,83,1],[45,13,45,64,1],[46,13,46,62,1],[47,13,47,63,1],[48,13,48,60,1],[49,9,49,10,1]]);
     </script>
   </body>
 </html>

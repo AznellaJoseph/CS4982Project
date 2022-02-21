@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestCreateTrip/TestCreateTripCommand.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestLoginPage/TestLoginCommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -16,81 +16,101 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ReactiveUI;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
+namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
 {
     [TestClass]
-    public class TestCreateTripCommand
+    public class TestLoginCommand
     {
         [TestMethod]
-        public void CreateTrip_EmptyTripName_ReturnsErrorMessage()
+        public void Login_ValidCredentials_ReturnsNoError()
         {
-            var mockUser = new Mock&lt;User&gt;();
-            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var user = new User
+            {
+                FirstName = &quot;admin&quot;,
+                LastName = &quot;admin&quot;,
+                Username = &quot;admin&quot;,
+                Password = &quot;admin&quot;,
+                UserId = 0
+            };
+            var mockUserManager = new Mock&lt;UserManager&gt;();
             var mockScreen = new Mock&lt;IScreen&gt;();
-            CreateTripPageViewModel createTripWindowViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;))
+                .Returns(new Response&lt;User&gt; {Data = user});
+            LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 
-            createTripWindowViewModel.TripName = &quot;&quot;;
+            loginPageViewModel.Username = &quot;admin&quot;;
+            loginPageViewModel.Password = &quot;admin&quot;;
 
-            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
-
+            loginPageViewModel.LoginCommand.ThrownExceptions.Subscribe();
             testScheduler.Start();
-
-            Assert.AreEqual(&quot;You must enter a name for the trip.&quot;, createTripWindowViewModel.ErrorMessage);
+            Assert.AreEqual(string.Empty, loginPageViewModel.ErrorMessage);
         }
 
         [TestMethod]
-        public void CreateTrip_InvalidDates_ReturnsErrorMessage()
+        public void Login_IncorrectUsername_ReturnsErrorMessage()
         {
-            var mockUser = new Mock&lt;User&gt;();
-            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockUserManager = new Mock&lt;UserManager&gt;();
             var mockScreen = new Mock&lt;IScreen&gt;();
-            CreateTripPageViewModel createTripWindowViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
-            mockTripManager.Setup(um =&gt; um.CreateTrip(0, &quot;name&quot;, null, DateTime.Today.AddDays(1), DateTime.Today))
-                .Returns(new Response&lt;int&gt;
-                    {StatusCode = 400, ErrorMessage = &quot;Start date of a trip cannot be after the end date.&quot;});
+            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;))
+                .Returns(new Response&lt;User&gt; {ErrorMessage = &quot;Username is incorrect.&quot;});
+            LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 
-            createTripWindowViewModel.TripName = &quot;name&quot;;
-            createTripWindowViewModel.StartDate = DateTime.Today.AddDays(1);
-            createTripWindowViewModel.EndDate = DateTime.Today;
+            loginPageViewModel.Username = &quot;admin&quot;;
+            loginPageViewModel.Password = &quot;admin&quot;;
 
-            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+            loginPageViewModel.LoginCommand.Execute().Subscribe();
 
             testScheduler.Start();
 
-            Assert.AreEqual(&quot;Start date of a trip cannot be after the end date.&quot;,
-                createTripWindowViewModel.ErrorMessage);
+            Assert.AreEqual(&quot;Username is incorrect.&quot;, loginPageViewModel.ErrorMessage);
         }
-        
-        public void CreateTrip_SuccessfulCreation()
+
+        [TestMethod]
+        public void Login_NullErrorMessage_ReturnsEmptyErrorMessage()
         {
-            var mockUser = new Mock&lt;User&gt;();
-            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockUserManager = new Mock&lt;UserManager&gt;();
             var mockScreen = new Mock&lt;IScreen&gt;();
-            var startDate = DateTime.Today;
-            var endDate = DateTime.Today.AddDays(1);
-            CreateTripPageViewModel createTripWindowViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
-            mockTripManager.Setup(um =&gt; um.CreateTrip(0, &quot;name&quot;, &quot;notes&quot;, startDate, endDate))
-                .Returns(new Response&lt;int&gt; {StatusCode = 200});
+            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;))
+                .Returns(new Response&lt;User&gt; {ErrorMessage = null});
+            LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 
-            createTripWindowViewModel.TripName = &quot;name&quot;;
-            createTripWindowViewModel.StartDate = startDate;
-            createTripWindowViewModel.EndDate = endDate;
-            createTripWindowViewModel.Notes = &quot;notes&quot;;
-            
-            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
-            
+            loginPageViewModel.Username = &quot;admin&quot;;
+            loginPageViewModel.Password = &quot;admin&quot;;
+
+            loginPageViewModel.LoginCommand.Execute().Subscribe();
+
             testScheduler.Start();
-            
-            Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
+
+            Assert.AreEqual(string.Empty, loginPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Login_NullCredentials_ReturnsErrorMessage()
+        {
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;&quot;, &quot;&quot;))
+                .Returns(new Response&lt;User&gt; {ErrorMessage = &quot;Username is incorrect.&quot;});
+            LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+            var testScheduler = new TestScheduler();
+
+            loginPageViewModel.Username = null;
+            loginPageViewModel.Password = null;
+
+            loginPageViewModel.LoginCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;Username is incorrect.&quot;, loginPageViewModel.ErrorMessage);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[16,9,16,10,1],[17,13,17,45,1],[18,13,18,59,1],[19,13,19,50,1],[20,13,20,129,1],[21,13,21,53,1],[23,13,23,53,1],[25,13,25,79,1],[27,13,27,35,1],[29,13,29,108,1],[30,9,30,10,1],[34,9,34,10,1],[35,13,35,45,1],[36,13,36,59,1],[37,13,37,50,1],[38,13,38,129,1],[39,13,41,110,1],[42,13,42,53,1],[44,13,44,57,1],[45,13,45,77,1],[46,13,46,64,1],[48,13,48,79,1],[50,13,50,35,1],[52,13,53,57,1],[54,9,54,10,1],[57,9,57,10,0],[58,13,58,45,0],[59,13,59,59,0],[60,13,60,50,0],[61,13,61,44,0],[62,13,62,53,0],[63,13,63,129,0],[64,13,65,64,0],[66,13,66,53,0],[68,13,68,57,0],[69,13,69,61,0],[70,13,70,57,0],[71,13,71,55,0],[73,13,73,79,0],[75,13,75,35,0],[77,13,77,83,0],[78,9,78,10,0]]);
+      highlightRanges([[16,9,16,10,1],[17,13,24,15,1],[25,13,25,59,1],[26,13,26,50,1],[27,13,28,60,1],[29,13,29,100,1],[30,13,30,53,1],[32,13,32,51,1],[33,13,33,51,1],[35,13,35,74,1],[36,13,36,35,1],[37,13,37,76,1],[38,9,38,10,1],[42,9,42,10,1],[43,13,43,59,1],[44,13,44,50,1],[45,13,46,88,1],[47,13,47,100,1],[48,13,48,53,1],[50,13,50,51,1],[51,13,51,51,1],[53,13,53,67,1],[55,13,55,35,1],[57,13,57,88,1],[58,9,58,10,1],[62,9,62,10,1],[63,13,63,59,1],[64,13,64,50,1],[65,13,66,68,1],[67,13,67,100,1],[68,13,68,53,1],[70,13,70,51,1],[71,13,71,51,1],[73,13,73,67,1],[75,13,75,35,1],[77,13,77,76,1],[78,9,78,10,1],[82,9,82,10,1],[83,13,83,59,1],[84,13,84,50,1],[85,13,86,88,1],[87,13,87,100,1],[88,13,88,53,1],[90,13,90,48,1],[91,13,91,48,1],[93,13,93,67,1],[95,13,95,35,1],[97,13,97,88,1],[98,9,98,10,1]]);
     </script>
   </body>
 </html>

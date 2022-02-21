@@ -2,37 +2,76 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\LandingPage.axaml.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Pages/TripOverview.cshtml.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
-using CapstoneDesktop.ViewModels;
-using ReactiveUI;
+using System;
+using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CapstoneDesktop.Views
+namespace CapstoneWeb.Pages
 {
-    public class LandingPage : ReactiveUserControl&lt;LandingPageViewModel&gt;
+    /// &lt;summary&gt;
+    ///     TripOverview Model
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class TripOverviewModel : PageModel
     {
+        public Trip CurrentTrip;
 
-        public LandingPage()
+        public TripManager FakeTripManager;
+
+        /// &lt;summary&gt;
+        ///     Called when [get].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        ///     Redirects to Index when ID passed in query params
+        ///     Should redirect to 404 page when Trip not found
+        ///     Returns full Trip Overview Page otherwise
+        /// &lt;/returns&gt;
+        public IActionResult OnGet()
         {
-            InitializeComponent();
+            var tripId = GetTripIdFromQuery();
+
+            if (tripId is null) return RedirectToPage(&quot;Index&quot;);
+
+            var tripManager = FakeTripManager ?? new TripManager();
+            var response = tripManager.GetTripByTripId((int) tripId);
+
+            if (response.StatusCode.Equals(200))
+            {
+                CurrentTrip = response.Data;
+                return Page();
+            }
+
+            return RedirectToPage(&quot;Index&quot;);
         }
 
-        private void InitializeComponent()
+        private int? GetTripIdFromQuery()
         {
-            this.WhenActivated(disposables =&gt; { });
-            AvaloniaXamlLoader.Load(this);
+            int result;
+
+            try
+            {
+                var query = HttpContext.Request.Query[&quot;id&quot;][0];
+                result = Convert.ToInt32(query);
+            }
+            catch
+            {
+                return null;
+            }
+
+            return result;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[11,9,11,29,0],[12,9,12,10,0],[13,13,13,35,0],[14,9,14,10,0],[17,9,17,10,0],[18,13,18,47,0],[18,47,18,48,0],[18,48,18,49,0],[18,49,18,50,0],[18,50,18,52,0],[19,13,19,43,0],[20,9,20,10,0]]);
+      highlightRanges([[27,9,27,10,1],[28,13,28,47,1],[30,13,30,32,1],[30,33,30,64,1],[32,13,32,68,1],[33,13,33,70,1],[35,13,35,49,1],[36,13,36,14,1],[37,17,37,45,1],[38,17,38,31,1],[41,13,41,44,1],[42,9,42,10,1],[45,9,45,10,1],[49,13,49,14,1],[50,17,50,64,1],[51,17,51,49,1],[52,13,52,14,1],[53,13,53,18,1],[54,13,54,14,1],[55,17,55,29,1],[58,13,58,27,1],[59,9,59,10,1]]);
     </script>
   </body>
 </html>
