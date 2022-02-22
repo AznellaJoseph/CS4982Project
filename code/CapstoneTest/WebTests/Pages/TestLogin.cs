@@ -1,5 +1,6 @@
 using System.Text;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using CapstoneWeb.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
             fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> {Data = new User {UserId = 0}});
+                .Returns(new Response<User> { Data = new User { UserId = 0 } });
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
@@ -27,7 +28,7 @@ namespace CapstoneTest.WebTests.Pages
             var outBytes = Encoding.UTF8.GetBytes("0");
             session.Verify(s => s.Set("userId", outBytes));
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult) result;
+            var redirect = (RedirectToPageResult)result;
             Assert.AreEqual("Index", redirect.PageName);
         }
 
@@ -37,14 +38,14 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
             fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> {ErrorMessage = "Failed."});
+                .Returns(new Response<User> { ErrorMessage = ErrorMessages.InternalServerError });
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
             var result = page.OnPost();
             Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual("Failed.", page.ErrorMessage);
+            Assert.AreEqual(ErrorMessages.InternalServerError, page.ErrorMessage);
         }
 
         [TestMethod]
@@ -57,7 +58,7 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPostCreateAccount();
 
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult) result;
+            var redirect = (RedirectToPageResult)result;
             Assert.AreEqual("createaccount", redirect.PageName);
         }
     }

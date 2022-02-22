@@ -1,5 +1,6 @@
 using System.Text;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using CapstoneWeb.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
             fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
-                .Returns(new Response<int> {Data = 0});
+                .Returns(new Response<int> { Data = 0 });
             var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
@@ -29,7 +30,7 @@ namespace CapstoneTest.WebTests.Pages
             var outBytes = Encoding.UTF8.GetBytes("0");
             session.Verify(s => s.Set("userId", outBytes));
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult) result;
+            var redirect = (RedirectToPageResult)result;
             Assert.AreEqual("Index", redirect.PageName);
         }
 
@@ -39,7 +40,7 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
             fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
-                .Returns(new Response<int> {StatusCode = 404, ErrorMessage = "Failed."});
+                .Returns(new Response<int> { StatusCode = 404, ErrorMessage = ErrorMessages.InternalServerError });
             var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
@@ -48,7 +49,7 @@ namespace CapstoneTest.WebTests.Pages
             page.LastName = "admin";
             var result = page.OnPost();
             Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual("Failed.", page.ErrorMessage);
+            Assert.AreEqual(ErrorMessages.InternalServerError, page.ErrorMessage);
         }
     }
 }

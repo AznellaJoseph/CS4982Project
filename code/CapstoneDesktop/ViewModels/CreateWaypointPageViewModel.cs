@@ -2,6 +2,7 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
@@ -105,13 +106,13 @@ namespace CapstoneDesktop.ViewModels
         {
             if (string.IsNullOrEmpty(Location))
             {
-                ErrorMessage = "You must enter a location for the waypoint";
+                ErrorMessage = ErrorMessages.EmptyWaypointLocation;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
             if (StartDate is null || StartTime is null)
             {
-                ErrorMessage = "You must enter a start date and time for the waypoint";
+                ErrorMessage = ErrorMessages.NullDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

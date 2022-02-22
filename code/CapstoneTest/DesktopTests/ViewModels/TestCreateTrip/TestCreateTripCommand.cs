@@ -1,5 +1,6 @@
 ﻿using System;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using CapstoneDesktop.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -27,7 +28,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 
             testScheduler.Start();
 
-            Assert.AreEqual("You must enter a name for the trip.", createTripWindowViewModel.ErrorMessage);
+            Assert.AreEqual(ErrorMessages.EmptyTripName, createTripWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]
@@ -40,7 +41,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
                 new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
             mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", DateTime.Today.AddDays(1), DateTime.Today))
                 .Returns(new Response<int>
-                { StatusCode = 400, ErrorMessage = "Start date of a trip cannot be after the end date." });
+                { StatusCode = 400, ErrorMessage = ErrorMessages.InvalidStartDate });
             var testScheduler = new TestScheduler();
 
             createTripWindowViewModel.TripName = "name";
@@ -52,7 +53,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 
             testScheduler.Start();
 
-            Assert.AreEqual("Start date of a trip cannot be after the end date.",
+            Assert.AreEqual(ErrorMessages.InvalidStartDate,
                 createTripWindowViewModel.ErrorMessage);
         }
 
@@ -76,7 +77,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 
             testScheduler.Start();
 
-            Assert.AreEqual("You must enter a start and end date for the trip.", createTripWindowViewModel.ErrorMessage);
+            Assert.AreEqual(ErrorMessages.NullDate, createTripWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]

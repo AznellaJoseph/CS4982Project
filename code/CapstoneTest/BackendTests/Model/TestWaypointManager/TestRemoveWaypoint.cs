@@ -1,6 +1,7 @@
 ﻿using System;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -22,7 +23,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             var resultResponse = manager.RemoveWaypoint(2);
 
             Assert.AreEqual(400U, resultResponse.StatusCode);
-            Assert.AreEqual("The waypoint could not be removed.", resultResponse.ErrorMessage);
+            Assert.AreEqual(ErrorMessages.WaypointNotFound, resultResponse.ErrorMessage);
         }
 
         [TestMethod]

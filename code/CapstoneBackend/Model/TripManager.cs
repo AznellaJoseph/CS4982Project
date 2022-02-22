@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
+using CapstoneBackend.Utils;
 using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.Model
@@ -54,7 +55,7 @@ namespace CapstoneBackend.Model
                 return new Response<Trip>
                 {
                     StatusCode = 500,
-                    ErrorMessage = "Internal Server Error."
+                    ErrorMessage = ErrorMessages.InternalServerError
                 };
             }
 
@@ -62,7 +63,7 @@ namespace CapstoneBackend.Model
                 return new Response<Trip>
                 {
                     StatusCode = 404,
-                    ErrorMessage = "No trip found with given ID."
+                    ErrorMessage = ErrorMessages.TripNotFound
                 };
             return new Response<Trip>
             {
@@ -120,7 +121,7 @@ namespace CapstoneBackend.Model
                 return new Response<int>
                 {
                     StatusCode = 400U,
-                    ErrorMessage = "Start date of a trip cannot be after the end date."
+                    ErrorMessage = ErrorMessages.InvalidStartDate
                 };
 
             try

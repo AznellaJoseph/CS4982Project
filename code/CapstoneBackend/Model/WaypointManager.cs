@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
+using CapstoneBackend.Utils;
 
 namespace CapstoneBackend.Model
 {
@@ -45,7 +46,7 @@ namespace CapstoneBackend.Model
                 return new Response<int>
                 {
                     StatusCode = 400,
-                    ErrorMessage = "The start time cannot be before the end time."
+                    ErrorMessage = ErrorMessages.InvalidStartDate
                 };
             return new Response<int>
             {
@@ -97,7 +98,7 @@ namespace CapstoneBackend.Model
             if (!removed)
                 return new Response<bool>
                 {
-                    ErrorMessage = "A waypoint with the specified waypointId does not exist.",
+                    ErrorMessage = ErrorMessages.WaypointNotFound,
                     StatusCode = 400
                 };
 

@@ -1,4 +1,5 @@
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -60,7 +61,7 @@ namespace CapstoneWeb.Pages
                 return RedirectToPage("Index");
             }
 
-            ErrorMessage = response.ErrorMessage ?? "Unknown Error.";
+            ErrorMessage = response.ErrorMessage ?? ErrorMessages.UnknownError;
 
             return Page();
         }

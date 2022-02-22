@@ -55,14 +55,14 @@ namespace CapstoneBackend.Model
                 return new Response<User>
                 {
                     StatusCode = 404,
-                    ErrorMessage = "Username is incorrect."
+                    ErrorMessage = ErrorMessages.IncorrectUsername
                 };
 
             if (!PasswordHasher.ValidatePassword(password, user.Password))
                 return new Response<User>
                 {
                     StatusCode = 404,
-                    ErrorMessage = "Password is incorrect."
+                    ErrorMessage = ErrorMessages.IncorrectPassword
                 };
 
             return new Response<User>
@@ -85,7 +85,7 @@ namespace CapstoneBackend.Model
                 return new Response<int>
                 {
                     StatusCode = 400,
-                    ErrorMessage = "Username is taken."
+                    ErrorMessage = ErrorMessages.UsernameTaken
                 };
 
             try
@@ -110,7 +110,7 @@ namespace CapstoneBackend.Model
                 return new Response<int>
                 {
                     StatusCode = 500,
-                    ErrorMessage = "Internal Server Error."
+                    ErrorMessage = ErrorMessages.InternalServerError
                 };
             }
         }
