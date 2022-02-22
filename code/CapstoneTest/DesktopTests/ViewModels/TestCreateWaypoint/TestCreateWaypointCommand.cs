@@ -27,7 +27,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 
             testScheduler.Start();
 
-            Assert.AreEqual(ErrorMessages.EmptyWaypointLocation, createWaypointWindowViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.EmptyWaypointLocation, createWaypointWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             mockWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "Paris, Italy", DateTime.Today.AddDays(1) + TimeSpan.Zero,
                         DateTime.Today + TimeSpan.Zero, "notes"))
-                .Returns(new Response<int> { ErrorMessage = ErrorMessages.InvalidStartDate });
+                .Returns(new Response<int> { ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
             CreateWaypointPageViewModel createWaypointWindowViewModel =
                 new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
@@ -56,7 +56,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 
             testScheduler.Start();
 
-            Assert.AreEqual(ErrorMessages.InvalidStartDate,
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate,
                 createWaypointWindowViewModel.ErrorMessage);
         }
 
@@ -79,7 +79,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 
             testScheduler.Start();
 
-            Assert.AreEqual(ErrorMessages.NullDate,
+            Assert.AreEqual(Ui.ErrorMessages.NullDate,
                 createWaypointWindowViewModel.ErrorMessage);
         }
 

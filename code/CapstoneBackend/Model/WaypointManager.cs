@@ -46,7 +46,7 @@ namespace CapstoneBackend.Model
                 return new Response<int>
                 {
                     StatusCode = 400,
-                    ErrorMessage = ErrorMessages.InvalidStartDate
+                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
             return new Response<int>
             {
@@ -98,7 +98,7 @@ namespace CapstoneBackend.Model
             if (!removed)
                 return new Response<bool>
                 {
-                    ErrorMessage = ErrorMessages.WaypointNotFound,
+                    ErrorMessage = Ui.ErrorMessages.WaypointNotFound,
                     StatusCode = 400
                 };
 

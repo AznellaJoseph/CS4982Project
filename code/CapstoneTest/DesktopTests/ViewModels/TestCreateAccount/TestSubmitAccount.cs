@@ -51,7 +51,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
 
             testScheduler.Start();
 
-            Assert.AreEqual(ErrorMessages.PasswordsDoNotMatch, createAccountPageViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.PasswordsDoNotMatch, createAccountPageViewModel.ErrorMessage);
         }
 
         [TestMethod]
@@ -104,7 +104,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
 
             testScheduler.Start();
 
-            Assert.AreEqual(ErrorMessages.UnknownError, createAccountPageViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.UnknownError, createAccountPageViewModel.ErrorMessage);
         }
     }
 }

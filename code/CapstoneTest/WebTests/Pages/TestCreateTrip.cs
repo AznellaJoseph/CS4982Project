@@ -45,7 +45,7 @@ namespace CapstoneTest.WebTests.Pages
             var fakeTripManager = new Mock<TripManager>();
             fakeTripManager.Setup(um =>
                     um.CreateTrip(0, "vacation", "notes", DateTime.Today.AddDays(1), DateTime.Today))
-                .Returns(new Response<int> { ErrorMessage = ErrorMessages.InvalidStartDate });
+                .Returns(new Response<int> { ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
             var page = TestPageBuilder.BuildPage<CreateTripModel>(session.Object);
             page.TripManager = fakeTripManager.Object;
 
@@ -56,7 +56,7 @@ namespace CapstoneTest.WebTests.Pages
 
             var result = page.OnPost();
             Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual(ErrorMessages.InvalidStartDate, page.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, page.ErrorMessage);
         }
     }
 }

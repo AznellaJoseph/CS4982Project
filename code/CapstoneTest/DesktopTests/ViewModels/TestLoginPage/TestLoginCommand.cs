@@ -44,7 +44,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> { ErrorMessage = ErrorMessages.IncorrectUsername });
+                .Returns(new Response<User> { ErrorMessage = Ui.ErrorMessages.IncorrectUsername });
             LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 
@@ -55,7 +55,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
 
             testScheduler.Start();
 
-            Assert.AreEqual(ErrorMessages.IncorrectUsername, loginPageViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.IncorrectUsername, loginPageViewModel.ErrorMessage);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("", ""))
-                .Returns(new Response<User> { ErrorMessage = ErrorMessages.IncorrectUsername });
+                .Returns(new Response<User> { ErrorMessage = Ui.ErrorMessages.IncorrectUsername });
             LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 
@@ -95,7 +95,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
 
             testScheduler.Start();
 
-            Assert.AreEqual(ErrorMessages.IncorrectUsername, loginPageViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.IncorrectUsername, loginPageViewModel.ErrorMessage);
         }
     }
 }

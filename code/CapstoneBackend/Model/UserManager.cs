@@ -37,7 +37,7 @@ namespace CapstoneBackend.Model
         /// <returns>the data of the found user or an error</returns>
         public virtual Response<User> GetUserByCredentials(string username, string password)
         {
-            User? user = null;
+            User? user;
             try
             {
                 user = _dal.GetUserByUsername(username);
@@ -55,14 +55,14 @@ namespace CapstoneBackend.Model
                 return new Response<User>
                 {
                     StatusCode = 404,
-                    ErrorMessage = ErrorMessages.IncorrectUsername
+                    ErrorMessage = Ui.ErrorMessages.IncorrectUsername
                 };
 
             if (!PasswordHasher.ValidatePassword(password, user.Password))
                 return new Response<User>
                 {
                     StatusCode = 404,
-                    ErrorMessage = ErrorMessages.IncorrectPassword
+                    ErrorMessage = Ui.ErrorMessages.IncorrectPassword
                 };
 
             return new Response<User>
@@ -85,7 +85,7 @@ namespace CapstoneBackend.Model
                 return new Response<int>
                 {
                     StatusCode = 400,
-                    ErrorMessage = ErrorMessages.UsernameTaken
+                    ErrorMessage = Ui.ErrorMessages.UsernameTaken
                 };
 
             try
@@ -110,7 +110,7 @@ namespace CapstoneBackend.Model
                 return new Response<int>
                 {
                     StatusCode = 500,
-                    ErrorMessage = ErrorMessages.InternalServerError
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }
         }

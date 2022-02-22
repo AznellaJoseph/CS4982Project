@@ -65,7 +65,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             var builder = new MySqlExceptionBuilder();
             mockUserDal.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
             mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname))
-                .Throws(builder.WithError(500, ErrorMessages.InternalServerError).Build());
+                .Throws(builder.WithError(500, Ui.ErrorMessages.InternalServerError).Build());
 
             UserManager userManager = new(mockUserDal.Object);
 
@@ -86,14 +86,14 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
             mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname))
-                .Throws(new Exception(ErrorMessages.InternalServerError));
+                .Throws(new Exception(Ui.ErrorMessages.InternalServerError));
 
             UserManager userManager = new(mockUserDal.Object);
 
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
             Assert.AreEqual(500U, resultResponse.StatusCode);
-            Assert.AreEqual(ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
         }
     }
 }

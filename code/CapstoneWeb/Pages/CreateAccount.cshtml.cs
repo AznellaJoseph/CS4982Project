@@ -61,7 +61,7 @@ namespace CapstoneWeb.Pages
                 return RedirectToPage("Index");
             }
 
-            ErrorMessage = response.ErrorMessage ?? ErrorMessages.UnknownError;
+            ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
 
             return Page();
         }

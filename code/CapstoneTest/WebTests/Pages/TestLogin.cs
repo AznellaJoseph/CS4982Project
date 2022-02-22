@@ -38,14 +38,14 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
             fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> { ErrorMessage = ErrorMessages.InternalServerError });
+                .Returns(new Response<User> { ErrorMessage = Ui.ErrorMessages.InternalServerError });
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
             var result = page.OnPost();
             Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual(ErrorMessages.InternalServerError, page.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, page.ErrorMessage);
         }
 
         [TestMethod]

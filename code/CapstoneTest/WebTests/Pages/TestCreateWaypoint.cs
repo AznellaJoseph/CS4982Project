@@ -47,7 +47,7 @@ namespace CapstoneTest.WebTests.Pages
             var currentTime = DateTime.Now;
             fakeWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "1601 Maple St", currentTime.AddDays(1), currentTime, "notes"))
-                .Returns(new Response<int> { ErrorMessage = ErrorMessages.InvalidStartDate });
+                .Returns(new Response<int> { ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.WaypointManager = fakeWaypointManager.Object;
 
@@ -59,7 +59,7 @@ namespace CapstoneTest.WebTests.Pages
 
             var result = page.OnPost();
             Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual(ErrorMessages.InvalidStartDate, page.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, page.ErrorMessage);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.CreateTrip(1, string.Empty, null, DateTime.Now.AddDays(1), DateTime.Now);
             Assert.AreEqual(400U, result.StatusCode);
-            Assert.AreEqual(ErrorMessages.InvalidStartDate, result.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, result.ErrorMessage);
         }
 
         [TestMethod]

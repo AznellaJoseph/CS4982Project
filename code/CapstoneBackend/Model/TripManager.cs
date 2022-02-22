@@ -55,7 +55,7 @@ namespace CapstoneBackend.Model
                 return new Response<Trip>
                 {
                     StatusCode = 500,
-                    ErrorMessage = ErrorMessages.InternalServerError
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }
 
@@ -63,7 +63,7 @@ namespace CapstoneBackend.Model
                 return new Response<Trip>
                 {
                     StatusCode = 404,
-                    ErrorMessage = ErrorMessages.TripNotFound
+                    ErrorMessage = Ui.ErrorMessages.TripNotFound
                 };
             return new Response<Trip>
             {
@@ -121,7 +121,7 @@ namespace CapstoneBackend.Model
                 return new Response<int>
                 {
                     StatusCode = 400U,
-                    ErrorMessage = ErrorMessages.InvalidStartDate
+                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
 
             try
