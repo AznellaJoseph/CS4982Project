@@ -44,7 +44,7 @@ namespace CapstoneWeb.Pages
             if (response.Data is not null)
             {
                 HttpContext.Session.SetString("userId", $"{response.Data.UserId}");
-                return RedirectToPage("Index");
+                return RedirectToPage("index");
             }
 
             ErrorMessage = response.ErrorMessage;

@@ -11,7 +11,7 @@ namespace CapstoneWeb.Pages
     ///     TripOverview Model
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
-    public class TripOverviewModel : PageModel
+    public class TripModel : PageModel
     {
         public int UserId { get; set; }
 
@@ -60,8 +60,9 @@ namespace CapstoneWeb.Pages
             int result;
 
             try
-            {
+            { 
                 var query = HttpContext.Request.Query["id"][0];
+                Console.WriteLine(query);
                 result = Convert.ToInt32(query);
             }
             catch
