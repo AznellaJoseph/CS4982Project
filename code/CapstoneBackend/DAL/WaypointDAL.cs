@@ -139,18 +139,20 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        ///     Removes the waypoint.
+        /// Removes the waypoint.
         /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>True if the waypoint was removed, false otherwise </returns>
-        public virtual bool RemoveWaypoint(int id)
+        /// <param name="waypointId">The waypoint identifier.</param>
+        /// <returns>
+        /// True if the waypoint was removed, false otherwise
+        /// </returns>
+        public virtual bool RemoveWaypoint(int waypointId)
         {
             _connection.Open();
             const string procedure = "uspRemoveWaypoint";
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+            cmd.Parameters.Add("@waypointId", MySqlDbType.Int32).Value = waypointId;
 
             return cmd.ExecuteNonQuery() == 1;
         }

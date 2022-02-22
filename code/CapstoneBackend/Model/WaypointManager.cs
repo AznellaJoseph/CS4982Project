@@ -74,7 +74,7 @@ namespace CapstoneBackend.Model
         ///     Gets the waypoints by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns> A response of the waypoints with the entered trip id</returns>
+        /// <returns> A response of the waypoints with the entered trip waypointId</returns>
         public virtual Response<IList<Waypoint>> GetWaypointsByTripId(int tripId)
         {
             var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
@@ -88,16 +88,16 @@ namespace CapstoneBackend.Model
         /// <summary>
         ///     Removes the waypoint.
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="waypointId">The identifier.</param>
         /// <returns> A response specifying whether or not the waypoint was removed </returns>
-        public virtual Response<bool> RemoveWaypoint(int id)
+        public virtual Response<bool> RemoveWaypoint(int waypointId)
         {
-            var removed = _dal.RemoveWaypoint(id);
+            var removed = _dal.RemoveWaypoint(waypointId);
 
             if (!removed)
                 return new Response<bool>
                 {
-                    ErrorMessage = "The waypoint could not be removed.",
+                    ErrorMessage = "A waypoint with the specified waypointId does not exist.",
                     StatusCode = 400
                 };
 
