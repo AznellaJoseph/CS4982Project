@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -11,9 +13,11 @@ namespace CapstoneWeb.Pages
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class TripOverviewModel : PageModel
     {
-        public Trip CurrentTrip;
+        public int UserId { get; set; }
 
-        public TripManager FakeTripManager;
+        public Trip CurrentTrip { get; set; }
+
+        public TripManager FakeTripManager { get; set; }
 
         /// <summary>
         ///     Called when [get].
@@ -25,20 +29,30 @@ namespace CapstoneWeb.Pages
         /// </returns>
         public IActionResult OnGet()
         {
+            if (!HttpContext.Session.Keys.Contains("userId")) 
+                return RedirectToPage("Index");
+
+            UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
             var tripId = GetTripIdFromQuery();
 
-            if (tripId is null) return RedirectToPage("Index");
+            if (tripId is null) 
+                return RedirectToPage("Index");
 
             var tripManager = FakeTripManager ?? new TripManager();
             var response = tripManager.GetTripByTripId((int) tripId);
 
-            if (response.StatusCode.Equals(200))
+            if (response.StatusCode.Equals(200) && TripBelongsToUser(response.Data))
             {
                 CurrentTrip = response.Data;
                 return Page();
             }
 
             return RedirectToPage("Index");
+        }
+
+        private bool TripBelongsToUser(Trip trip)
+        {
+            return trip.UserId == UserId;
         }
 
         private int? GetTripIdFromQuery()

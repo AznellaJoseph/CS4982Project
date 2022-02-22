@@ -1,0 +1,15 @@
+Use Case Scenario: Remove Transportation
+
+Context: The user is logged in and has selected a trip
+
+Primary Flow:
+1. The user selects a trip
+2. The user selects a date on the calendar in the range of the trip
+3. The user selects the "X" button on a transportation from the list of events on that date
+4. The user confirms the removal
+
+Alternative Flows:
+
+The user cancels the remove operation
+A4. The user clicks the “Cancel” button
+A5. The user is redirected to the day overview of the trip
