@@ -1,16 +1,34 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Trips";
 }
 
 <div>
-    <h1>Homepage</h1>
-    <p>Your Id is @Model.UserId</p>
-
-    <form method="post">
-        <button type="submit" asp-page-handler="logout">Logout</button>
-    </form>
-
-
+    <section>
+    </section>
+    <section>
+        <form method="post">
+            <button type="submit" asp-page-handler="profile">Profile</button>
+        </form>
+        <form method="post">
+            <button type="submit" asp-page-handler="logout">Logout</button>
+        </form>
+    </section>
+    <section>
+    </section>
+    <section>
+        @foreach (var trip in Model.Trips)
+        {
+            <div>
+                <p>
+                    @trip.StartDate - @trip.EndDate
+                </p>
+                <p>
+                    @trip.Name
+                </p>
+                <a asp-page="./Trip" asp-route-id="@trip.TripId">View</a>
+            </div>
+        }
+    </section>
 </div>
