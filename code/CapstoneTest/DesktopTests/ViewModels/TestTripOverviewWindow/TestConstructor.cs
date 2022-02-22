@@ -26,11 +26,13 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
         [TestMethod]
         public void Constructor_OneParameter_PropertyCreations()
         {
-            Trip testTrip = new();
-            testTrip.Name = "Test Trip";
-            testTrip.Notes = "Some Notes";
-            testTrip.StartDate = new DateTime(2022, 2, 2);
-            testTrip.EndDate = new DateTime(3033, 3, 3);
+            Trip testTrip = new()
+            {
+                Name = "Test Trip",
+                Notes = "Some Notes",
+                StartDate = new DateTime(2022, 2, 2),
+                EndDate = new DateTime(3033, 3, 3)
+            };
             var mockScreen = new Mock<IScreen>();
             TripOverviewPageViewModel testViewModel = new(testTrip, mockScreen.Object);
 

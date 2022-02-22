@@ -2,7 +2,7 @@ const startDateString = document.getElementById("startDate").value;
 const endDateString = document.getElementById("endDate").value;
 
 const tripStartDate = new Date(startDateString);
-const tripEndDate = new Date(endDateString)
+const tripEndDate = new Date(endDateString);
 
 
 Date.prototype.addDays = function (days) {

@@ -96,13 +96,13 @@ namespace CapstoneDesktop.ViewModels
         {
             if (string.IsNullOrEmpty(TripName))
             {
-                ErrorMessage = ErrorMessages.EmptyTripName;
+                ErrorMessage = Ui.ErrorMessages.EmptyTripName;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
             if (StartDate is null || EndDate is null)
             {
-                ErrorMessage = ErrorMessages.NullDate;
+                ErrorMessage = Ui.ErrorMessages.NullDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

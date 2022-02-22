@@ -65,7 +65,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
                 ErrorMessage = "test"
             });
             CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
-            TestScheduler testScheduler = new TestScheduler();
+            TestScheduler testScheduler = new();
 
             createAccountPageViewModel.FirstName = "admin";
             createAccountPageViewModel.LastName = "admin";
@@ -91,7 +91,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
                 StatusCode = 400U
             });
             CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
-            TestScheduler testScheduler = new TestScheduler();
+            TestScheduler testScheduler = new();
 
             createAccountPageViewModel.FirstName = "admin";
             createAccountPageViewModel.LastName = "admin";

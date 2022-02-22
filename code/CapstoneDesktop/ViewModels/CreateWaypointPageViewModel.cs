@@ -106,13 +106,13 @@ namespace CapstoneDesktop.ViewModels
         {
             if (string.IsNullOrEmpty(Location))
             {
-                ErrorMessage = ErrorMessages.EmptyWaypointLocation;
+                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
             if (StartDate is null || StartTime is null)
             {
-                ErrorMessage = ErrorMessages.NullDate;
+                ErrorMessage = Ui.ErrorMessages.NullDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

@@ -28,22 +28,15 @@ namespace CapstoneDesktop.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var date = (DateTime) value;
-            DataShown type;
 
-            if (Enum.TryParse((string) parameter, out type))
-                switch (type)
-                {
-                    case DataShown.Both:
-                        return date.ToString("MM/dd/yyyy hh:mm tt", culture);
-                    case DataShown.Date:
-                        return date.ToString("MM/dd/yyyy", culture);
-                    case DataShown.Time:
-                        return date.ToString("hh:mm tt", culture);
-                    default:
-                        return date.ToString(culture);
-                }
-
-            return date.ToString(culture);
+            if (!Enum.TryParse((string) parameter, out DataShown type)) return date.ToString(culture);
+            return type switch
+            {
+                DataShown.Both => date.ToString("MM/dd/yyyy hh:mm tt", culture),
+                DataShown.Date => date.ToString("MM/dd/yyyy", culture),
+                DataShown.Time => date.ToString("hh:mm tt", culture),
+                _ => date.ToString(culture),
+            };
         }
 
         /// <summary>

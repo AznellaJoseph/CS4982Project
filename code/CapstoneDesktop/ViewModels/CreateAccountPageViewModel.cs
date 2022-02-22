@@ -105,11 +105,11 @@ namespace CapstoneDesktop.ViewModels
                         new LandingPageViewModel(new User { UserId = response.Data }, HostScreen));
                 }
 
-                ErrorMessage = response.ErrorMessage ?? ErrorMessages.UnknownError;
+                ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            ErrorMessage = ErrorMessages.PasswordsDoNotMatch;
+            ErrorMessage = Ui.ErrorMessages.PasswordsDoNotMatch;
             return Observable.Empty<IRoutableViewModel>();
         }
     }

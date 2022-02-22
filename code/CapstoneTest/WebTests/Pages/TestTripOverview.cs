@@ -41,7 +41,7 @@ namespace CapstoneTest.WebTests.Pages
             page.FakeTripManager = fakeTripManager.Object;
             page.HttpContext.Request.QueryString = new QueryString("?id=1");
 
-            var result = page.OnGet();
+            page.OnGet();
             var resultTrip = page.CurrentTrip;
 
             Assert.AreEqual(1, page.UserId);
@@ -118,8 +118,6 @@ namespace CapstoneTest.WebTests.Pages
             session.Setup(s => s.TryGetValue("userId", out outBytes)).Returns(true);
 
             var fakeTripManager = new Mock<TripManager>();
-            var startDate = DateTime.Now;
-            var endDate = DateTime.Now;
             fakeTripManager.Setup(mngr => mngr.GetTripByTripId(8)).Returns(new Response<Trip>
             {
                 StatusCode = 404U
