@@ -2,6 +2,7 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
@@ -95,13 +96,13 @@ namespace CapstoneDesktop.ViewModels
         {
             if (string.IsNullOrEmpty(TripName))
             {
-                ErrorMessage = "You must enter a name for the trip.";
+                ErrorMessage = Ui.ErrorMessages.EmptyTripName;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
             if (StartDate is null || EndDate is null)
             {
-                ErrorMessage = "You must enter a start and end date for the trip.";
+                ErrorMessage = Ui.ErrorMessages.NullDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

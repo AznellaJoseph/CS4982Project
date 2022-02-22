@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
+using CapstoneBackend.Utils;
 
 namespace CapstoneBackend.Model
 {
@@ -45,7 +46,7 @@ namespace CapstoneBackend.Model
                 return new Response<int>
                 {
                     StatusCode = 400,
-                    ErrorMessage = "The start time cannot be before the end time."
+                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
             return new Response<int>
             {
@@ -74,7 +75,7 @@ namespace CapstoneBackend.Model
         ///     Gets the waypoints by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns> A response of the waypoints with the entered trip id</returns>
+        /// <returns> A response of the waypoints with the entered trip waypointId</returns>
         public virtual Response<IList<Waypoint>> GetWaypointsByTripId(int tripId)
         {
             var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
@@ -82,6 +83,28 @@ namespace CapstoneBackend.Model
             return new Response<IList<Waypoint>>
             {
                 Data = waypointsInTrip
+            };
+        }
+
+        /// <summary>
+        ///     Removes the waypoint.
+        /// </summary>
+        /// <param name="waypointId">The identifier.</param>
+        /// <returns> A response specifying whether or not the waypoint was removed </returns>
+        public virtual Response<bool> RemoveWaypoint(int waypointId)
+        {
+            var removed = _dal.RemoveWaypoint(waypointId);
+
+            if (!removed)
+                return new Response<bool>
+                {
+                    ErrorMessage = Ui.ErrorMessages.WaypointNotFound,
+                    StatusCode = 400
+                };
+
+            return new Response<bool>
+            {
+                Data = removed
             };
         }
     }

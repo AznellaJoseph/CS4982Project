@@ -1,6 +1,7 @@
 using System;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -16,7 +17,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.CreateTrip(1, string.Empty, null, DateTime.Now.AddDays(1), DateTime.Now);
             Assert.AreEqual(400U, result.StatusCode);
-            Assert.AreEqual("Start date of a trip cannot be after the end date.", result.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, result.ErrorMessage);
         }
 
         [TestMethod]

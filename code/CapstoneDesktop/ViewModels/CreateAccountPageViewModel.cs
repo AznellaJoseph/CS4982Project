@@ -2,6 +2,7 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
@@ -104,11 +105,11 @@ namespace CapstoneDesktop.ViewModels
                         new LandingPageViewModel(new User { UserId = response.Data }, HostScreen));
                 }
 
-                ErrorMessage = response.ErrorMessage ?? "Unknown Error.";
+                ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            ErrorMessage = "The given passwords must match.";
+            ErrorMessage = Ui.ErrorMessages.PasswordsDoNotMatch;
             return Observable.Empty<IRoutableViewModel>();
         }
     }

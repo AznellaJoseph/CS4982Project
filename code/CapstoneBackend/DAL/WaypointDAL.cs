@@ -137,5 +137,24 @@ namespace CapstoneBackend.DAL
             _connection.Close();
             return waypointsOnDate;
         }
+
+        /// <summary>
+        /// Removes the waypoint.
+        /// </summary>
+        /// <param name="waypointId">The waypoint identifier.</param>
+        /// <returns>
+        /// True if the waypoint was removed, false otherwise
+        /// </returns>
+        public virtual bool RemoveWaypoint(int waypointId)
+        {
+            _connection.Open();
+            const string procedure = "uspRemoveWaypoint";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@waypointId", MySqlDbType.Int32).Value = waypointId;
+
+            return cmd.ExecuteNonQuery() == 1;
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using CapstoneDesktop.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,7 +34,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
             testScheduler.Start();
             Assert.AreEqual(string.Empty, createAccountPageViewModel.ErrorMessage);
         }
-        
+
         [TestMethod]
         public void CreateAccount_DifferentPassword_ReturnsErrorMessage()
         {
@@ -50,7 +51,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
 
             testScheduler.Start();
 
-            Assert.AreEqual("The given passwords must match.", createAccountPageViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.PasswordsDoNotMatch, createAccountPageViewModel.ErrorMessage);
         }
 
         [TestMethod]
@@ -64,22 +65,22 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
                 ErrorMessage = "test"
             });
             CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
-            TestScheduler testScheduler = new TestScheduler();
-            
+            TestScheduler testScheduler = new();
+
             createAccountPageViewModel.FirstName = "admin";
             createAccountPageViewModel.LastName = "admin";
             createAccountPageViewModel.Username = "admin";
             createAccountPageViewModel.Password = "admin";
             createAccountPageViewModel.ConfirmedPassword = "admin";
-            
-            
+
+
             createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
 
             testScheduler.Start();
 
             Assert.AreEqual("test", createAccountPageViewModel.ErrorMessage);
         }
-        
+
         [TestMethod]
         public void Login_SomeServerError_ReturnsNoErrorMessage()
         {
@@ -90,20 +91,20 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
                 StatusCode = 400U
             });
             CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
-            TestScheduler testScheduler = new TestScheduler();
-            
+            TestScheduler testScheduler = new();
+
             createAccountPageViewModel.FirstName = "admin";
             createAccountPageViewModel.LastName = "admin";
             createAccountPageViewModel.Username = "admin";
             createAccountPageViewModel.Password = "admin";
             createAccountPageViewModel.ConfirmedPassword = "admin";
-            
-            
+
+
             createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
 
             testScheduler.Start();
 
-            Assert.AreEqual("Unknown Error.", createAccountPageViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.UnknownError, createAccountPageViewModel.ErrorMessage);
         }
     }
 }

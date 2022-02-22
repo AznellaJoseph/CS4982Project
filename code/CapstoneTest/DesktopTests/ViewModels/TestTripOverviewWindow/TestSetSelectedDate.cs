@@ -27,10 +27,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
                         new()
                     }
                 });
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
-            
-            testViewModel.SelectedDate = startDate;
-            
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object)
+                {
+                    SelectedDate = startDate
+                };
+
             Assert.AreEqual(1, testViewModel.WaypointViewModels.Count);
             
         }
