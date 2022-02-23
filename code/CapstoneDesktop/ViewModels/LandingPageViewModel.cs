@@ -12,7 +12,7 @@ namespace CapstoneDesktop.ViewModels
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
-    public class LandingPageViewModel : ViewModelBase, IRoutableViewModel
+    public class LandingPageViewModel : ReactiveViewModelBase
     {
         private readonly TripManager _tripManager;
         private readonly User _user;
@@ -23,7 +23,7 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="user">The user.</param>
         /// <param name="tripManager">The trip manager.</param>
         /// <param name="screen">The screen.</param>
-        public LandingPageViewModel(User user, TripManager tripManager, IScreen screen)
+        public LandingPageViewModel(User user, TripManager tripManager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
         {
             _user = user;
             _tripManager = tripManager;
@@ -59,16 +59,6 @@ namespace CapstoneDesktop.ViewModels
         ///     The trip view models
         /// </summary>
         public ObservableCollection<TripViewModel> TripViewModels { get; set; }
-
-        /// <summary>
-        ///     The host screen
-        /// </summary>
-        public IScreen HostScreen { get; }
-
-        /// <summary>
-        ///     The url path segment
-        /// </summary>
-        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
 
         private void loadTrips()
         {

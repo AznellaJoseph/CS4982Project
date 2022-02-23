@@ -11,7 +11,7 @@ namespace CapstoneDesktop.ViewModels
     ///     ViewModel for the CreateWaypoint Window
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
-    public class CreateWaypointPageViewModel : ViewModelBase, IRoutableViewModel
+    public class CreateWaypointPageViewModel : ReactiveViewModelBase
     {
         private readonly Trip _trip;
         private readonly WaypointManager _waypointManager;
@@ -24,7 +24,7 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="trip">the trip that the waypoint will be created for.</param>
         /// <param name="manager">The manager.</param>
         /// <param name="screen">The host screen</param>
-        public CreateWaypointPageViewModel(Trip trip, WaypointManager manager, IScreen screen)
+        public CreateWaypointPageViewModel(Trip trip, WaypointManager manager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
         {
             _trip = trip;
             _waypointManager = manager;
@@ -91,16 +91,6 @@ namespace CapstoneDesktop.ViewModels
         ///     The notes.
         /// </summary>
         public string? Notes { get; set; }
-
-        /// <summary>
-        ///     The host screen
-        /// </summary>
-        public IScreen HostScreen { get; }
-
-        /// <summary>
-        ///     The url path segment
-        /// </summary>
-        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
 
         private IObservable<IRoutableViewModel> createWaypoint()
         {

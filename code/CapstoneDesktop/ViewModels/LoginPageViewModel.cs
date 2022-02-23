@@ -2,6 +2,7 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
@@ -10,7 +11,7 @@ namespace CapstoneDesktop.ViewModels
     ///     ViewModel for the MainWindow (Login)
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
-    public class LoginPageViewModel : ViewModelBase, IRoutableViewModel
+    public class LoginPageViewModel : ReactiveViewModelBase
     {
         private readonly UserManager _userManager;
         private string _error = string.Empty;
@@ -20,7 +21,7 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         /// <param name="manager">The manager.</param>
         /// <param name="screen">The screen.</param>
-        public LoginPageViewModel(UserManager manager, IScreen screen)
+        public LoginPageViewModel(UserManager manager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
         {
             _userManager = manager;
             HostScreen = screen;
@@ -66,20 +67,10 @@ namespace CapstoneDesktop.ViewModels
             set => this.RaiseAndSetIfChanged(ref _error, value);
         }
 
-        /// <summary>
-        ///     The host screen
-        /// </summary>
-        public IScreen HostScreen { get; }
-
-        /// <summary>
-        ///     The url path segment.
-        /// </summary>
-        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
         private IObservable<IRoutableViewModel> login()
         {
             var response = _userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
-            if (response.StatusCode == 200U && response.Data is not null)
+            if (response.StatusCode == (uint)Ui.StatusCode.Success && response.Data is not null)
                 return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, HostScreen));
             ErrorMessage = response.ErrorMessage ?? string.Empty;
             return Observable.Empty<IRoutableViewModel>();

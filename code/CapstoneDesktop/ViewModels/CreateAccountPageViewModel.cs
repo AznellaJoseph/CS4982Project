@@ -12,7 +12,7 @@ namespace CapstoneDesktop.ViewModels
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
-    public class CreateAccountPageViewModel : ViewModelBase, IRoutableViewModel
+    public class CreateAccountPageViewModel : ReactiveViewModelBase
     {
         private readonly UserManager _userManager;
         private string _error = string.Empty;
@@ -22,7 +22,7 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         /// <param name="manager">The manager.</param>
         /// <param name="screen">The screen.</param>
-        public CreateAccountPageViewModel(UserManager manager, IScreen screen)
+        public CreateAccountPageViewModel(UserManager manager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
         {
             _userManager = manager;
             HostScreen = screen;
@@ -83,23 +83,13 @@ namespace CapstoneDesktop.ViewModels
             set => this.RaiseAndSetIfChanged(ref _error, value);
         }
 
-        /// <summary>
-        ///     The host screen.
-        /// </summary>
-        public IScreen HostScreen { get; }
-
-        /// <summary>
-        ///     The url path segment.
-        /// </summary>
-        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
         private IObservable<IRoutableViewModel> submitAccount()
         {
             if (Password == ConfirmedPassword)
             {
                 var response = _userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
                     FirstName ?? string.Empty, LastName ?? string.Empty);
-                if (response.StatusCode == 200U)
+                if (response.StatusCode == (uint)Ui.StatusCode.Success)
                 {
                     return HostScreen.Router.Navigate.Execute(
                         new LandingPageViewModel(new User { UserId = response.Data }, HostScreen));
