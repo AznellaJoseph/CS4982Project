@@ -61,7 +61,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(mu => mu.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int>
             {
-                StatusCode = 400U,
+                StatusCode = (uint)Ui.StatusCode.BadRequest,
                 ErrorMessage = "test"
             });
             CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
@@ -88,7 +88,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(mu => mu.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int>
             {
-                StatusCode = 400U
+                StatusCode = (uint)Ui.StatusCode.BadRequest
             });
             CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             TestScheduler testScheduler = new();

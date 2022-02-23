@@ -6,6 +6,18 @@
     public class Ui
     {
         /// <summary>
+        /// StatusCode enum for Request status codes
+        /// </summary>
+        public enum StatusCode
+        {
+            Success = 200,
+            BadRequest = 400,
+            UnauthorizedAccess = 401,
+            DataNotFound = 404,
+            InternalServerError = 500
+        }
+
+        /// <summary>
         /// Error Messages Class to hold possible error messages for the entire solution
         /// </summary>
         public static class ErrorMessages

@@ -45,12 +45,12 @@ namespace CapstoneBackend.Model
             if (startTime.CompareTo(endTime) > 0)
                 return new Response<int>
                 {
-                    StatusCode = 400,
+                    StatusCode = (uint)Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
             return new Response<int>
             {
-                StatusCode = 200,
+                StatusCode = (uint)Ui.StatusCode.Success,
                 Data = _dal.CreateWaypoint(tripId, location, startTime, endTime, notes ?? string.Empty)
             };
         }
@@ -99,7 +99,7 @@ namespace CapstoneBackend.Model
                 return new Response<bool>
                 {
                     ErrorMessage = Ui.ErrorMessages.WaypointNotFound,
-                    StatusCode = 400
+                    StatusCode = (uint)Ui.StatusCode.BadRequest
                 };
 
             return new Response<bool>

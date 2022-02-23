@@ -40,7 +40,7 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
             fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
-                .Returns(new Response<int> { StatusCode = 404, ErrorMessage = Ui.ErrorMessages.InternalServerError });
+                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.DataNotFound, ErrorMessage = Ui.ErrorMessages.InternalServerError });
             var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";

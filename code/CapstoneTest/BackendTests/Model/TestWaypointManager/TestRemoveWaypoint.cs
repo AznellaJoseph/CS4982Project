@@ -22,7 +22,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 
             var resultResponse = manager.RemoveWaypoint(2);
 
-            Assert.AreEqual(400U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.BadRequest, resultResponse.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.WaypointNotFound, resultResponse.ErrorMessage);
         }
 
@@ -38,7 +38,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 
             var resultResponse = manager.RemoveWaypoint(1);
 
-            Assert.AreEqual(200U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.Success, resultResponse.StatusCode);
             Assert.AreEqual(true, resultResponse.Data);
         }
     }

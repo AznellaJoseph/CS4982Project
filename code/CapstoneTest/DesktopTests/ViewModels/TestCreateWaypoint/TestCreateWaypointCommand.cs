@@ -88,7 +88,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         {
             var mockWaypointManager = new Mock<WaypointManager>();
             mockWaypointManager.Setup(um => um.CreateWaypoint(0, "Paris, Italy", DateTime.Today, DateTime.Today, null))
-                .Returns(new Response<int> { StatusCode = 200 });
+                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
             var mockTrip = new Mock<Trip>();
             var mockScreen = new Mock<IScreen>();
             CreateWaypointPageViewModel createWaypointWindowViewModel =

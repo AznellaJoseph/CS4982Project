@@ -23,7 +23,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-            Assert.AreEqual(200U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.Success, resultResponse.StatusCode);
             Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
             Assert.AreEqual(resultResponse.Data?.FirstName, fakeExistingUser.FirstName);
             Assert.AreEqual(resultResponse.Data?.LastName, fakeExistingUser.LastName);
@@ -43,7 +43,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-            Assert.AreEqual(404U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.DataNotFound, resultResponse.StatusCode);
         }
 
         [TestMethod]
@@ -57,7 +57,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-            Assert.AreEqual(404U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.DataNotFound, resultResponse.StatusCode);
         }
 
         [TestMethod]
@@ -66,12 +66,12 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             var mockUserDal = new Mock<UserDal>();
             var builder = new MySqlExceptionBuilder();
             mockUserDal.Setup(db => db.GetUserByUsername(TestUsername))
-                .Throws(builder.WithError(500, Ui.ErrorMessages.InternalServerError).Build());
+                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
             UserManager userManager = new(mockUserDal.Object);
 
             var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-            Assert.AreEqual(500U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
         }
     }

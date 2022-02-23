@@ -32,7 +32,7 @@ namespace CapstoneBackend.Model
         /// <summary>Gets the trip by trip ID.</summary>
         /// <param name="tripId">The trip ID.</param>
         /// <returns>
-        ///     A response with the Trip object and staus 200 if successful,
+        ///     A response with the Trip object and success status code,
         ///     An error message with status 404 if not found, an error otherwise.
         /// </returns>
         public virtual Response<Trip> GetTripByTripId(int tripId)
@@ -54,7 +54,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<Trip>
                 {
-                    StatusCode = 500,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }
@@ -62,13 +62,12 @@ namespace CapstoneBackend.Model
             if (trip is null)
                 return new Response<Trip>
                 {
-                    StatusCode = 404,
+                    StatusCode = (uint)Ui.StatusCode.DataNotFound,
                     ErrorMessage = Ui.ErrorMessages.TripNotFound
                 };
             return new Response<Trip>
             {
-                Data = trip,
-                StatusCode = 200
+                Data = trip
             };
         }
 
@@ -99,7 +98,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<IList<Trip>>
                 {
-                    StatusCode = 500,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = e.Message
                 };
             }
@@ -120,7 +119,7 @@ namespace CapstoneBackend.Model
             if (startDate.CompareTo(endDate) > 0)
                 return new Response<int>
                 {
-                    StatusCode = 400U,
+                    StatusCode = (uint)Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
 
@@ -144,7 +143,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<int>
                 {
-                    StatusCode = 500,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = e.Message
                 };
             }

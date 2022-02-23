@@ -1,6 +1,7 @@
 ﻿using System;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -15,14 +16,14 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             var mockWaypointDal = new Mock<WaypointDal>();
             mockWaypointDal.Setup(db =>
                     db.CreateWaypoint(1, "1601 Maple St", DateTime.Now.AddDays(4), DateTime.Now, null))
-                .Returns(400);
+                .Returns((int)Ui.StatusCode.BadRequest);
 
             WaypointManager waypointManager = new(mockWaypointDal.Object);
 
             var resultResponse =
                 waypointManager.CreateWaypoint(1, "1601 Maple St", DateTime.Now.AddDays(4), DateTime.Now, null);
 
-            Assert.AreEqual(400u, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.BadRequest, resultResponse.StatusCode);
         }
 
         [TestMethod]
@@ -31,7 +32,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             var mockWaypointDal = new Mock<WaypointDal>();
             mockWaypointDal.Setup(db =>
                     db.CreateWaypoint(1, "1601 Maple St", DateTime.Now, DateTime.Now.AddDays(2), null))
-                .Returns(200);
+                .Returns((int)Ui.StatusCode.Success);
 
             WaypointManager waypointManager = new(mockWaypointDal.Object);
 

@@ -1,4 +1,6 @@
-﻿namespace CapstoneBackend.Model
+﻿using CapstoneBackend.Utils;
+
+namespace CapstoneBackend.Model
 {
     /// <summary>
     ///     Response Class
@@ -9,7 +11,7 @@
         /// <summary>
         ///     The status code of the response
         /// </summary>
-        public uint StatusCode { get; set; } = 200;
+        public uint StatusCode { get; set; } = (uint)Ui.StatusCode.Success;
 
         /// <summary>
         ///     The data of the response

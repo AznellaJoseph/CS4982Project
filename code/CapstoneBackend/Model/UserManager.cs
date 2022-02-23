@@ -54,20 +54,20 @@ namespace CapstoneBackend.Model
             if (user is null)
                 return new Response<User>
                 {
-                    StatusCode = 404,
+                    StatusCode = (uint)Ui.StatusCode.DataNotFound,
                     ErrorMessage = Ui.ErrorMessages.IncorrectUsername
                 };
 
             if (!PasswordHasher.ValidatePassword(password, user.Password))
                 return new Response<User>
                 {
-                    StatusCode = 404,
+                    StatusCode = (uint)Ui.StatusCode.DataNotFound,
                     ErrorMessage = Ui.ErrorMessages.IncorrectPassword
                 };
 
             return new Response<User>
             {
-                StatusCode = 200,
+                StatusCode = (uint)Ui.StatusCode.Success,
                 Data = user
             };
         }
@@ -77,14 +77,14 @@ namespace CapstoneBackend.Model
         /// <param name="password">The password input.</param>
         /// <param name="fname">The fname input.</param>
         /// <param name="lname">The lname input.</param>
-        /// <returns>Response status 200 for success; 400 for bad username; 500 otherwise.</returns>
+        /// <returns>Response with appropriate status code.</returns>
         public virtual Response<int> RegisterUser(string username, string password, string fname, string lname)
         {
             var user = _dal.GetUserByUsername(username);
             if (user is not null)
                 return new Response<int>
                 {
-                    StatusCode = 400,
+                    StatusCode = (uint)Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.UsernameTaken
                 };
 
@@ -93,7 +93,7 @@ namespace CapstoneBackend.Model
                 var userCreated = _dal.CreateUser(username, password, fname, lname);
                 return new Response<int>
                 {
-                    StatusCode = 200,
+                    StatusCode = (uint)Ui.StatusCode.Success,
                     Data = userCreated
                 };
             }
@@ -109,7 +109,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<int>
                 {
-                    StatusCode = 500,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }

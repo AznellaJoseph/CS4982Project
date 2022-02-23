@@ -55,7 +55,7 @@ namespace CapstoneWeb.Pages
             var userManager = FakeUserManager ?? new UserManager();
             var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
                 FirstName ?? string.Empty, LastName ?? string.Empty);
-            if (response.StatusCode == 200)
+            if (response.StatusCode == (uint)Ui.StatusCode.Success)
             {
                 HttpContext.Session.SetString("userId", $"{response.Data}");
                 return RedirectToPage("Index");

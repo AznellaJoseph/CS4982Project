@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -29,19 +30,19 @@ namespace CapstoneWeb.Pages
         /// </returns>
         public IActionResult OnGet()
         {
-            if (!HttpContext.Session.Keys.Contains("userId")) 
+            if (!HttpContext.Session.Keys.Contains("userId"))
                 return RedirectToPage("Index");
 
             UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
             var tripId = GetTripIdFromQuery();
 
-            if (tripId is null) 
+            if (tripId is null)
                 return RedirectToPage("Index");
 
             var tripManager = FakeTripManager ?? new TripManager();
-            var response = tripManager.GetTripByTripId((int) tripId);
+            var response = tripManager.GetTripByTripId((int)tripId);
 
-            if (response.StatusCode.Equals(200) && TripBelongsToUser(response.Data))
+            if (response.StatusCode.Equals((uint)Ui.StatusCode.Success) && TripBelongsToUser(response.Data))
             {
                 CurrentTrip = response.Data;
                 return Page();
