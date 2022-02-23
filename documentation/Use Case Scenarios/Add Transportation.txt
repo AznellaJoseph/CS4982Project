@@ -3,13 +3,12 @@ Use Case Scenario: Add Transportation
 Context: The user is logged in and has selected a trip
 
 Primary Flow:
-1. The user selects a date on the calendar in the range of the trip
-2. The user clicks the “Create Transportation” button
-3. The user enters the information for the transportation
-4. The user submits the new transportation 
+1. The user clicks the “Create Transportation” button
+2. The user enters the information for the transportation
+3. The user submits the new transportation 
 
 Alternative Flows:
 
 The user cancels the add operation
-A4. The user clicks the “Cancel” button
-A5. The user is taken back to the overview of the date chosen
+A3. The user clicks the “Cancel” button
+A4. The user is taken back to the overview of the date chosen
