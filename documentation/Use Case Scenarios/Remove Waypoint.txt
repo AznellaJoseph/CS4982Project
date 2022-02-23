@@ -3,13 +3,12 @@ Use Case Scenario: Remove Waypoint
 Context: The user is logged in and has selected a trip
 
 Primary Flow:
-1. The user selects a trip
-2. The user selects a date on the calendar in the range of the trip
-3. The user selects the "X" button on a waypoint from the list of events for that date
-4. The user confirms the removal of the waypoint from the trip
+1. The user selects a date on the calendar in the range of the trip
+2. The user selects the "X" button on a waypoint from the list of events for that date
+3. The user confirms the removal of the waypoint from the trip
 
 Alternative Flows:
 
 The user cancels the remove operation
-A4. The user does not confirm the removal of the waypoint
-A5. The user is redirected to the list of waypoints for the chosen date
+A3. The user does not confirm the removal of the waypoint
+A4. The user is redirected to the list of waypoints for the chosen date
