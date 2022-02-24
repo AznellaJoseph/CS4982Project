@@ -18,7 +18,7 @@
 			<TextBox PasswordChar="*" Watermark="PASSWORD" VerticalAlignment="Bottom" Text="{Binding Password, Mode=TwoWay}"/>
 
 			<Grid ColumnDefinitions="*,10,*">
-				<Button Grid.Column="0" HorizontalAlignment="Stretch" Command="{Binding LoginCommand}">
+				<Button Grid.Column="0" HorizontalAlignment="Stretch" Command="{Binding LoginCommand}" IsDefault="True">
 					<Button.Content>
 						<TextBlock TextAlignment="Center" Text="LOGIN"/>
 					</Button.Content>

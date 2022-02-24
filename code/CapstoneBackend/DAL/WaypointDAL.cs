@@ -40,7 +40,7 @@ namespace CapstoneBackend.DAL
         /// <returns>
         ///     The waypoint id
         /// </returns>
-        public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime? endDate,
+        public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate,
             string? notes)
         {
             _connection.Open();
