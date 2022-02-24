@@ -27,6 +27,34 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         }
 
         [TestMethod]
+        public void CreateWaypoint_ServerMySqlException_Failure()
+        {
+            var mockDal = new Mock<WaypointDal>();
+            var builder = new MySqlExceptionBuilder();
+            var currentTime = DateTime.Now;
+            mockDal.Setup(dal => dal.CreateWaypoint(1, "1601 Maple St", currentTime, currentTime.AddDays(2), null))
+                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+            var waypointManager = new WaypointManager(mockDal.Object);
+            var result = waypointManager.CreateWaypoint(1, "1601 Maple St", currentTime, currentTime.AddDays(2), null);
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateWaypoint_ServerException_Failure()
+        {
+            var mockDal = new Mock<WaypointDal>();
+            var currentTime = DateTime.Now;
+            mockDal.Setup(dal => dal.CreateWaypoint(1, "1601 Maple St", currentTime, currentTime, null))
+                .Throws(new Exception());
+            var waypointManager = new WaypointManager(mockDal.Object);
+            var result = waypointManager.CreateWaypoint(1, "1601 Maple St", currentTime, currentTime, null);
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
+
+        [TestMethod]
         public void Create_ValidParameters_ReturnsWaypointNumber()
         {
             var mockWaypointDal = new Mock<WaypointDal>();

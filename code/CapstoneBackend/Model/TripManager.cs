@@ -50,7 +50,7 @@ namespace CapstoneBackend.Model
                     ErrorMessage = e.Message
                 };
             }
-            catch
+            catch (Exception)
             {
                 return new Response<Trip>
                 {

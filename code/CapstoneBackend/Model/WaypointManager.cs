@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.Model
 {
@@ -39,7 +40,7 @@ namespace CapstoneBackend.Model
         /// <returns>
         ///     A response of if the waypoint was created in the database
         /// </returns>
-        public virtual Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime? endTime,
+        public virtual Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime,
             string? notes)
         {
             if (startTime.CompareTo(endTime) > 0)
@@ -48,11 +49,33 @@ namespace CapstoneBackend.Model
                     StatusCode = (uint)Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
-            return new Response<int>
+
+            try
             {
-                StatusCode = (uint)Ui.StatusCode.Success,
-                Data = _dal.CreateWaypoint(tripId, location, startTime, endTime, notes ?? string.Empty)
-            };
+                var waypointId = _dal.CreateWaypoint(tripId, location, startTime, endTime, notes);
+                return new Response<int>
+                {
+
+                    Data = waypointId
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response<int>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<int>
+                {
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+
         }
 
         /// <summary>
@@ -63,12 +86,31 @@ namespace CapstoneBackend.Model
         /// <returns> A response of the waypoints on that date </returns>
         public virtual Response<IList<Waypoint>> GetWaypointsOnDate(int tripId, DateTime selectedDate)
         {
-            var waypointsOnDate = _dal.GetWaypointsOnDate(tripId, selectedDate);
-
-            return new Response<IList<Waypoint>>
+            try
             {
-                Data = waypointsOnDate
-            };
+                var waypointsOnDate = _dal.GetWaypointsOnDate(tripId, selectedDate);
+
+                return new Response<IList<Waypoint>>
+                {
+                    Data = waypointsOnDate
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response<IList<Waypoint>>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<IList<Waypoint>>
+                {
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
         }
 
         /// <summary>
@@ -78,12 +120,32 @@ namespace CapstoneBackend.Model
         /// <returns> A response of the waypoints with the entered trip waypointId</returns>
         public virtual Response<IList<Waypoint>> GetWaypointsByTripId(int tripId)
         {
-            var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
 
-            return new Response<IList<Waypoint>>
+            try
             {
-                Data = waypointsInTrip
-            };
+                var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
+
+                return new Response<IList<Waypoint>>
+                {
+                    Data = waypointsInTrip
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response<IList<Waypoint>>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<IList<Waypoint>>
+                {
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
         }
 
         /// <summary>
@@ -93,19 +155,40 @@ namespace CapstoneBackend.Model
         /// <returns> A response specifying whether or not the waypoint was removed </returns>
         public virtual Response<bool> RemoveWaypoint(int waypointId)
         {
-            var removed = _dal.RemoveWaypoint(waypointId);
+            try
+            {
 
-            if (!removed)
+
+                var removed = _dal.RemoveWaypoint(waypointId);
+
+                if (!removed)
+                    return new Response<bool>
+                    {
+                        ErrorMessage = Ui.ErrorMessages.WaypointNotFound,
+                        StatusCode = (uint)Ui.StatusCode.BadRequest
+                    };
+
                 return new Response<bool>
                 {
-                    ErrorMessage = Ui.ErrorMessages.WaypointNotFound,
-                    StatusCode = (uint)Ui.StatusCode.BadRequest
+                    Data = removed
                 };
-
-            return new Response<bool>
+            }
+            catch (MySqlException e)
             {
-                Data = removed
-            };
+                return new Response<bool>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<bool>
+                {
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
         }
     }
 }

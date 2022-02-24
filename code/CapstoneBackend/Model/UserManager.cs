@@ -67,7 +67,6 @@ namespace CapstoneBackend.Model
 
             return new Response<User>
             {
-                StatusCode = (uint)Ui.StatusCode.Success,
                 Data = user
             };
         }
@@ -93,7 +92,6 @@ namespace CapstoneBackend.Model
                 var userCreated = _dal.CreateUser(username, password, fname, lname);
                 return new Response<int>
                 {
-                    StatusCode = (uint)Ui.StatusCode.Success,
                     Data = userCreated
                 };
             }
