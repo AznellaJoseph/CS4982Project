@@ -4,9 +4,9 @@ DELIMITER $
 
 CREATE PROCEDURE uspCreateTransportation(
 	tripId int,
-	method VARCHAR(45),
-	startTime DATE,
-	endTime DATE
+	method VARCHAR(50),
+	startTime DATETIME,
+	endTime DATETIME
 )
 
 BEGIN
