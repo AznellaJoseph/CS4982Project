@@ -32,8 +32,12 @@
             public static readonly string PasswordsDoNotMatch = "The passwords must match.";
             public static readonly string UnknownError = "Unknown Error.";
             public static readonly string EmptyTripName = "You must enter a name for the trip.";
-            public static readonly string NullDate = "You must enter a start and end date.";
+            public static readonly string NullTripDate = "You must enter a start and end date.";
+            public static readonly string NullWaypointStartDate =
+                "You must enter a start date. The end date will default to the trip end date if end date and time are not entered.";
             public static readonly string EmptyWaypointLocation = "You must enter a location for the waypoint.";
+            public static readonly string InvalidWaypointDate =
+                "Waypoint dates cannot be before the trip start date or after the trip end date.";
         }
     }
 }

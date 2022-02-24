@@ -77,7 +77,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 
             testScheduler.Start();
 
-            Assert.AreEqual(Ui.ErrorMessages.NullDate, createTripWindowViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.NullTripDate, createTripWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]

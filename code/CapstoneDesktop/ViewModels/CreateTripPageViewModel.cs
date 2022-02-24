@@ -92,19 +92,18 @@ namespace CapstoneDesktop.ViewModels
 
             if (StartDate is null || EndDate is null)
             {
-                ErrorMessage = Ui.ErrorMessages.NullDate;
+                ErrorMessage = Ui.ErrorMessages.NullTripDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
             var resultResponse =
                 _tripManager.CreateTrip(_user.UserId, TripName, Notes, StartDate.Value.Date, EndDate.Value.Date);
-            if (resultResponse.StatusCode != (uint)Ui.StatusCode.Success || resultResponse.ErrorMessage is not null)
-            {
-                ErrorMessage = resultResponse.ErrorMessage ?? string.Empty;
-                return Observable.Empty<IRoutableViewModel>();
-            }
+            if (resultResponse.StatusCode == (uint)Ui.StatusCode.Success && resultResponse.ErrorMessage is null)
+                return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(_user, HostScreen));
 
-            return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(_user, HostScreen));
+            ErrorMessage = resultResponse.ErrorMessage ?? string.Empty;
+            return Observable.Empty<IRoutableViewModel>();
+
         }
     }
 }

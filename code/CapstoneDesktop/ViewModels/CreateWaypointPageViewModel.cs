@@ -102,21 +102,28 @@ namespace CapstoneDesktop.ViewModels
 
             if (StartDate is null || StartTime is null)
             {
-                ErrorMessage = Ui.ErrorMessages.NullDate;
+                ErrorMessage = Ui.ErrorMessages.NullWaypointStartDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var startDate = StartDate?.Date + StartTime;
-            var endTime = EndDate is null || EndTime is null ? null : EndDate?.Date + EndTime;
-            var resultResponse = _waypointManager.CreateWaypoint(_trip.TripId, Location, startDate ?? DateTime.Now,
-                endTime, Notes);
-            if (!string.IsNullOrEmpty(resultResponse.ErrorMessage))
+            var startDate = StartDate.Value.Date + StartTime.Value;
+
+            var endTime = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
+
+            if (startDate.CompareTo(_trip.StartDate) < 0 || startDate.CompareTo(_trip.EndDate) > 0 || endTime.CompareTo(_trip.StartDate) < 0 || endTime.CompareTo(_trip.EndDate) > 0)
             {
-                ErrorMessage = resultResponse.ErrorMessage;
+                ErrorMessage = Ui.ErrorMessages.InvalidWaypointDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
+            var resultResponse = _waypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
+                endTime, Notes);
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
+
+            ErrorMessage = resultResponse.ErrorMessage;
+            return Observable.Empty<IRoutableViewModel>();
+
         }
     }
 }
