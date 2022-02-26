@@ -1,19 +1,17 @@
-﻿@page
+﻿@page "{tripId:int?}"
 @model CapstoneWeb.Pages.TripModel
 @{
+    Layout = "Shared/_Layout";
     ViewData["Title"] = "Trip Overview";
 }
 
-<head>
-    <link rel="stylesheet" href="~/css/vanilla-calendar.css">
-</head>
-
-@Html.Hidden("startDate", Model.CurrentTrip.StartDate.ToShortDateString());
-@Html.Hidden("endDate", Model.CurrentTrip.EndDate.ToShortDateString());
-
+@Html.AntiForgeryToken()
+@Html.Hidden("startDate", Model.CurrentTrip.StartDate.ToShortDateString())
+@Html.Hidden("endDate", Model.CurrentTrip.EndDate.ToShortDateString())
+@Html.Hidden("tripId", Model.CurrentTrip.TripId)
 
 <div class="container">
-
+    
     <h1>@Model.CurrentTrip.Name</h1>
 
     <div>
@@ -24,23 +22,17 @@
 
     <div>
         <h2>Events</h2>
-
-        <ol>
-            <li>
-                <div class="event">
-
-                </div>
-            </li>
-        </ol>
-
+        <div id="events"></div>
         <button>Add Event</button>
     </div>
 
-    <div id="myCalendar" class="vanilla-calendar"></div>
-
-
+    <div id="myCalendar" class="vanilla-calendar">
+    </div>
 </div>
-
+@section Scripts {
 <script src="~/js/vanilla-calendar.js"></script>
 <script src="~/js/calendarGenerator.js"></script>
+<script src="~/js/calendarDayClick.js"></script>
+}
+
 

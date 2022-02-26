@@ -13,4 +13,22 @@
         <ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\.gitattributes" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\.gitignore" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\build.cmd" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\build.msbuild" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\CONTRIBUTING.md" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\gulpfile.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\LICENSE.txt" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\Microsoft.jQuery.Unobtrusive.Ajax.nuspec" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\package-lock.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\package.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\README.md" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\run.ps1" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\src\jquery.unobtrusive-ajax.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-ajax-unobtrusive-3.2.6\version.props" />
+      <_ContentIncludedByDefault Remove="Pages\Ajax\Waypoints.cshtml" />
+    </ItemGroup>
+
 </Project>
