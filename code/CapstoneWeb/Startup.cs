@@ -53,9 +53,14 @@ namespace CapstoneWeb
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
+            }    
             else
+            {
                 app.UseHsts();
+            }   
 
             app.UseSession();
             app.UseHttpsRedirection();

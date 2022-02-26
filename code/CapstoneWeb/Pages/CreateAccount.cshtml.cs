@@ -30,6 +30,12 @@ namespace CapstoneWeb.Pages
         public string Password { get; set; }
 
         /// <summary>
+        ///     The confirmed password.
+        /// </summary>
+        [BindProperty]
+        public string ConfirmedPassword { get; set; }
+
+        /// <summary>
         ///     The first name.
         /// </summary>
         [BindProperty]
@@ -52,6 +58,12 @@ namespace CapstoneWeb.Pages
         /// <returns> The page to go to after [post] </returns>
         public IActionResult OnPost()
         {
+            if (Password != ConfirmedPassword)
+            {
+                ErrorMessage = Ui.ErrorMessages.PasswordsDoNotMatch;
+                return Page();
+            }
+
             var userManager = FakeUserManager ?? new UserManager();
             var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
                 FirstName ?? string.Empty, LastName ?? string.Empty);
@@ -64,6 +76,14 @@ namespace CapstoneWeb.Pages
             ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
 
             return Page();
+        }
+
+
+        /// <summary>Called when [post cancel].</summary>
+        /// <returns>Redirect to login page</returns>
+        public IActionResult OnPostCancel()
+        {
+            return RedirectToPage("login");
         }
     }
 }
