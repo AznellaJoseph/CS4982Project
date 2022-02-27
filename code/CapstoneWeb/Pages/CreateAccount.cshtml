@@ -1,46 +1,51 @@
-﻿@page
+﻿@page "/account/create"
 @model CapstoneWeb.Pages.CreateAccountModel
 @{
+    Layout = "Shared/_Layout";
     ViewData["Title"] = "Create Account";
+    var isErrorVisible = string.IsNullOrEmpty(Model.ErrorMessage) ? "hide" : "";
 }
 
-<div>
+<div class="container data-entry-window">
     <h1>Create Account</h1>
 
-    <p>
+    <p class="error @isErrorVisible">
         @Model.ErrorMessage
     </p>
 
-    <form method="post">
+    <form method="post" class="create-account-form">
 
         <div>
-            <label for="username">Username*:</label>
-            <input id="username" asp-for="Username" required />
-
+            <label for="firstname">First Name*</label>
+            <input id="firstname" asp-for="FirstName" placeholder="First Name" required />
         </div>
 
         <div>
-            <label for="password">Password*:</label>
-            <input id="password" asp-for="Password" required />
+            <label for="lastname">Last Name*</label>
+            <input id="lastname" asp-for="LastName" placeholder="Last Name" required />
         </div>
 
         <div>
-            <label for="firstname">First Name*:</label>
-            <input id="firstname" asp-for="FirstName" required />
-
+            <label for="username">Username*</label>
+            <input id="username" asp-for="Username" placeholder="Username" required />
         </div>
 
         <div>
-            <label for="lastname">Last Name*:</label>
-            <input id="lastname" asp-for="LastName" required />
-
+            <label for="password">Password*</label>
+            <input id="password" asp-for="Password" type="password" placeholder="Password" required />
         </div>
 
         <div>
-            <p>* These fields are required</p>
+            <label for="password">Confirm Password*</label>
+            <input id="password" asp-for="ConfirmedPassword" type="password" placeholder="Confirm Password" required />
         </div>
 
-        <button type="submit">Create Account</button>
+        <p class="warning">* These fields are required</p>
+
+        <div class="button-group">
+            <button type="submit">Create Account</button>
+            <button type="submit" asp-page-handler="cancel" formnovalidate>Cancel</button>
+        </div>
 
     </form>
 

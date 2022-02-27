@@ -24,19 +24,15 @@ namespace CapstoneTest.WebTests.Pages
                 .Returns(new Response<int> { Data = 0 });
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.WaypointManager = fakeWaypointManager.Object;
-
-            page.HttpContext.Session.SetString("tripId", "0");
+            
             page.Location = "1601 Maple St";
             page.Notes = "notes";
             page.StartDate = currentTime;
             page.EndDate = currentTime;
-
-            var result = page.OnPost();
-            var outBytes = Encoding.UTF8.GetBytes("0");
-            session.Verify(s => s.Set("waypointId", outBytes));
+            var result = page.OnPost(0);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
-            Assert.AreEqual("index", redirect.PageName);
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual("Trip", redirect.PageName);
         }
 
         [TestMethod]
@@ -47,17 +43,16 @@ namespace CapstoneTest.WebTests.Pages
             var currentTime = DateTime.Now;
             fakeWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "1601 Maple St", currentTime.AddDays(1), currentTime, "notes"))
-                .Returns(new Response<int> { ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
+                .Returns(new Response<int> {StatusCode = 400U, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.WaypointManager = fakeWaypointManager.Object;
-
-            page.HttpContext.Session.SetString("tripId", "0");
+            
             page.Location = "1601 Maple St";
             page.Notes = "notes";
             page.StartDate = currentTime.AddDays(1);
             page.EndDate = currentTime;
 
-            var result = page.OnPost();
+            var result = page.OnPost(0);
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, page.ErrorMessage);
         }

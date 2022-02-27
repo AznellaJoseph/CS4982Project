@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using CapstoneBackend.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
 
 namespace CapstoneWeb.Pages
 {
@@ -47,17 +49,18 @@ namespace CapstoneWeb.Pages
         ///     Called when [post].
         /// </summary>
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
-        public IActionResult OnPost()
+        public IActionResult OnPost(int tripId)
         {
             var waypointManager = WaypointManager ?? new WaypointManager();
-            var response = waypointManager.CreateWaypoint(Convert.ToInt32(HttpContext.Session.GetString("tripId")),
-                Location, StartDate, EndDate, Notes);
-            if (string.IsNullOrEmpty(response.ErrorMessage))
+            var response = waypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
+            if (response.StatusCode.Equals(200U))
             {
-                HttpContext.Session.SetString("waypointId", $"{response.Data}");
-                return RedirectToPage("index");
+                var routeValue = new RouteValueDictionary
+                {
+                    {"tripId", tripId}
+                };
+                return RedirectToPage($"Trip", routeValue);
             }
-
             ErrorMessage = response.ErrorMessage;
             return Page();
         }

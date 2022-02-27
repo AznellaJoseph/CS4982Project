@@ -24,7 +24,7 @@ namespace CapstoneTest.WebTests.Pages
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
-            var result = page.OnPost();
+            var result = page.OnPostLogin();
             var outBytes = Encoding.UTF8.GetBytes("0");
             session.Verify(s => s.Set("userId", outBytes));
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
@@ -43,7 +43,7 @@ namespace CapstoneTest.WebTests.Pages
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
-            var result = page.OnPost();
+            var result = page.OnPostLogin();
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, page.ErrorMessage);
         }
@@ -58,8 +58,8 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPostCreateAccount();
 
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
-            Assert.AreEqual("createaccount", redirect.PageName);
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual("CreateAccount", redirect.PageName);
         }
     }
 }

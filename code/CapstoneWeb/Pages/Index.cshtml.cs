@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using CapstoneBackend.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,6 +18,9 @@ namespace CapstoneWeb.Pages
         ///     The user id.
         /// </summary>
         public int UserId { get; private set; }
+        public IList<Trip> Trips { get; private set; }
+        
+        public TripManager FakeTripManager { get; set; }
 
         /// <summary>
         ///     Called when [get].
@@ -23,9 +28,20 @@ namespace CapstoneWeb.Pages
         /// <returns> The page to go to when [get] </returns>
         public IActionResult OnGet()
         {
-            if (!HttpContext.Session.Keys.Contains("userId")) return RedirectToPage("login");
+            if (!HttpContext.Session.Keys.Contains("userId")) return RedirectToPage("Login");
+            var tripManager = FakeTripManager ?? new TripManager();
             UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
+            Trips = tripManager.GetTripsByUser(UserId).Data;
             return Page();
+        }
+        
+        /// <summary>
+        ///     Called when [post create].
+        /// </summary>
+        /// <returns> The action to take when going to create trip form </returns>
+        public IActionResult OnPostCreate()
+        {
+            return RedirectToPage("CreateTrip");
         }
 
         /// <summary>
@@ -35,7 +51,7 @@ namespace CapstoneWeb.Pages
         public IActionResult OnPostLogout()
         {
             HttpContext.Session.Remove("userId");
-            return RedirectToPage("index");
+            return RedirectToPage("Index");
         }
     }
 }

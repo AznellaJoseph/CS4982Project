@@ -1,16 +1,40 @@
-﻿@page
+﻿@page "/"
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Trips";
 }
 
 <div>
-    <h1>Homepage</h1>
-    <p>Your Id is @Model.UserId</p>
-
-    <form method="post">
-        <button type="submit" asp-page-handler="logout">Logout</button>
-    </form>
-
-
+    <section>
+    </section>
+    <section>
+        <form method="post">
+            <button type="submit" asp-page-handler="profile">Profile</button>
+        </form>
+        <form method="post">
+            <button type="submit" asp-page-handler="logout">Logout</button>
+        </form>
+    </section>
+    <section>
+    </section>
+    <section>
+        <div>
+            @foreach (var trip in Model.Trips)
+                    {
+                        <div>
+                            <p>
+                                @trip.StartDate - @trip.EndDate
+                            </p>
+                            <p>
+                                @trip.Name
+                            </p>
+                            <a asp-page="/trip" asp-route-tripId="@trip.TripId">View</a>
+                        </div>
+                    }
+        </div>
+        <form method="post">
+            <button type="submit" asp-page-handler="create">Create Trip</button>
+        </form>
+    </section>
 </div>

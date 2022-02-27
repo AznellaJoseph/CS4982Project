@@ -1,0 +1,44 @@
+﻿@page "/trip/{tripId:int}"
+@model CapstoneWeb.Pages.TripModel
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Trip Overview";
+}
+
+@Html.AntiForgeryToken()
+@Html.Hidden("startDate", Model.CurrentTrip.StartDate.ToShortDateString())
+@Html.Hidden("endDate", Model.CurrentTrip.EndDate.ToShortDateString())
+@Html.Hidden("tripId", Model.CurrentTrip.TripId)
+
+<div class="container">
+    
+    <h1>@Model.CurrentTrip.Name</h1>
+
+    <div>
+        <form method="post">
+            <button type="submit" asp-page-handler="profile">Profile</button>
+        </form>
+        <form method="post">
+            <button type="submit" asp-page-handler="back">Back To Trips</button>
+        </form>
+        <form method="post">
+            <button type="submit" asp-page-handler="logout">Logout</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Events</h2>
+        <div id="events"></div>
+        <form method="post">
+            <button type="submit" asp-page-handler="create">Create Waypoint</button>
+        </form>
+    </div>
+
+    <div id="myCalendar" class="vanilla-calendar">
+    </div>
+</div>
+@section Scripts {
+<script src="~/js/vanilla-calendar.js"></script>
+<script src="~/js/calendarGenerator.js"></script>
+<script src="~/js/calendarDayClick.js"></script>
+}
