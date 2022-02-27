@@ -58,7 +58,7 @@ namespace CapstoneWeb.Pages
         /// <returns>A redirect to the next page or the current page if there was an error </returns>
         public IActionResult OnPostCreateAccount()
         {
-            return RedirectToPage("createaccount");
+            return RedirectToPage("CreateAccount");
         }
     }
 }

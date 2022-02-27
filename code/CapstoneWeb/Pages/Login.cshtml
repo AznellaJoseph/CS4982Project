@@ -1,8 +1,8 @@
-﻿@page
+﻿@page "/login"
 @model CapstoneWeb.Pages.LoginModel
 @{
+    Layout = "Shared/_Layout";
     ViewData["Title"] = "Login";
-
     var isErrorVisible = string.IsNullOrEmpty(Model.ErrorMessage) ? "hide" : "";
 }
 
