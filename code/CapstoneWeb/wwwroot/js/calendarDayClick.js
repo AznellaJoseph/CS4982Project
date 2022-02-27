@@ -9,17 +9,14 @@ $(".vanilla-calendar-date").click(
         let tripId = parseInt($("#tripId").attr("value"))
         $.ajax({
             method: "GET",
-            url:"/trip/?handler=Ajax",
+            url:`/trip/${tripId}/?handler=Ajax`,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("XSRF-TOKEN",
                     $('input:hidden[name="__RequestVerificationToken"]').val());
             },
-            data: { tripId: tripId, selectedDate: date },
+            data: { selectedDate: date },
             success: function (result) {
                 result.data.forEach(function(waypoint) {
-                    console.log(waypoint)
-                    let element = document.createElement("p");
-                    element.innerHTML = waypoint.location;
                     let events = $("#events")
                     events.empty();
                     events.append(
