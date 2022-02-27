@@ -1,8 +1,8 @@
 ﻿@page "/account/create"
 @model CapstoneWeb.Pages.CreateAccountModel
 @{
+    Layout = "Shared/_Layout";
     ViewData["Title"] = "Create Account";
-
     var isErrorVisible = string.IsNullOrEmpty(Model.ErrorMessage) ? "hide" : "";
 }
 
