@@ -56,7 +56,7 @@ namespace CapstoneBackend.Model
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
         /// <returns> A response of the transportation on that date </returns>
-        public virtual Response<IList<Transportation>> GetWaypointsOnDate(int tripId, DateTime selectedDate)
+        public virtual Response<IList<Transportation>> GetTransportationsOnDate(int tripId, DateTime selectedDate)
         {
             var transportationsOnDate = _dal.GetTransportationsOnDate(tripId, selectedDate);
 
