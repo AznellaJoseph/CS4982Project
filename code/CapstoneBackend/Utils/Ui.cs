@@ -38,6 +38,7 @@
             public static readonly string EmptyWaypointLocation = "You must enter a location for the waypoint.";
             public static readonly string InvalidWaypointDate =
                 "Waypoint dates cannot be before the trip start date or after the trip end date.";
+            public static readonly string InvalidFields = "You must enter all of the fields.";
         }
     }
 }

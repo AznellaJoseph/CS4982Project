@@ -85,10 +85,16 @@ namespace CapstoneDesktop.ViewModels
 
         private IObservable<IRoutableViewModel> submitAccount()
         {
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(FirstName) ||
+                string.IsNullOrEmpty(LastName) || string.IsNullOrEmpty(ConfirmedPassword))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidFields;
+                return Observable.Empty<IRoutableViewModel>();
+            }
             if (Password == ConfirmedPassword)
             {
-                var response = _userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
-                    FirstName ?? string.Empty, LastName ?? string.Empty);
+                var response = _userManager.RegisterUser(Username, Password,
+                    FirstName, LastName);
                 if (response.StatusCode == (uint)Ui.StatusCode.Success)
                 {
                     return HostScreen.Router.Navigate.Execute(

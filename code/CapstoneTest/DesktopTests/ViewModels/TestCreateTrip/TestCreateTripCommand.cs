@@ -105,5 +105,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 
             Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
         }
+
     }
 }

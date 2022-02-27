@@ -69,10 +69,16 @@ namespace CapstoneDesktop.ViewModels
 
         private IObservable<IRoutableViewModel> login()
         {
-            var response = _userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
-            if (response.StatusCode == (uint)Ui.StatusCode.Success && response.Data is not null)
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidFields;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+            var response = _userManager.GetUserByCredentials(Username, Password);
+            if (string.IsNullOrEmpty(response.ErrorMessage) && response.Data is not null)
                 return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, HostScreen));
-            ErrorMessage = response.ErrorMessage ?? string.Empty;
+
+            ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
             return Observable.Empty<IRoutableViewModel>();
         }
     }

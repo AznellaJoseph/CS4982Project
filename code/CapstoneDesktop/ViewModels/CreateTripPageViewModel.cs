@@ -98,10 +98,10 @@ namespace CapstoneDesktop.ViewModels
 
             var resultResponse =
                 _tripManager.CreateTrip(_user.UserId, TripName, Notes, StartDate.Value.Date, EndDate.Value.Date);
-            if (resultResponse.StatusCode == (uint)Ui.StatusCode.Success && resultResponse.ErrorMessage is null)
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
                 return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(_user, HostScreen));
 
-            ErrorMessage = resultResponse.ErrorMessage ?? string.Empty;
+            ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
 
         }
