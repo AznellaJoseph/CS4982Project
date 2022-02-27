@@ -53,9 +53,9 @@ namespace CapstoneWeb.Pages
         }
         
         /// <summary>
-        ///     Called when [post logout].
+        ///     Called when [post create].
         /// </summary>
-        /// <returns> The action to take when logging out </returns>
+        /// <returns> The action to take when going to create waypoint form </returns>
         public IActionResult OnPostCreate(int tripId)
         {
             var routeValue = new RouteValueDictionary

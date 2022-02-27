@@ -34,6 +34,15 @@ namespace CapstoneWeb.Pages
             Trips = tripManager.GetTripsByUser(UserId).Data;
             return Page();
         }
+        
+        /// <summary>
+        ///     Called when [post create].
+        /// </summary>
+        /// <returns> The action to take when going to create trip form </returns>
+        public IActionResult OnPostCreate()
+        {
+            return RedirectToPage("CreateTrip");
+        }
 
         /// <summary>
         ///     Called when [post logout].
