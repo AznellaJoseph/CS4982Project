@@ -22,6 +22,7 @@
             public static readonly string EmptyTripName = "You must enter a name for the trip.";
             public static readonly string NullDate = "You must enter a start and end date.";
             public static readonly string EmptyWaypointLocation = "You must enter a location for the waypoint.";
+            public static readonly string TransportationNotFound = "A transportation with the given ID was not found.";
         }
     }
 }
