@@ -37,7 +37,7 @@ namespace CapstoneWeb.Pages
         ///     Called when [post].
         /// </summary>
         /// <returns> A redirect to the next page or the current page if there was an error </returns>
-        public IActionResult OnPost()
+        public IActionResult OnPostLogin()
         {
             var userManager = FakeUserManager ?? new UserManager();
             var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
