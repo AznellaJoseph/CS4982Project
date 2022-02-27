@@ -56,13 +56,26 @@ namespace CapstoneWeb.Pages
         ///     Called when [post create].
         /// </summary>
         /// <returns> The action to take when going to create waypoint form </returns>
-        public IActionResult OnPostCreate(int tripId)
+        public IActionResult OnPostCreateWaypoint(int tripId)
         {
             var routeValue = new RouteValueDictionary
             {
                 {"tripId", tripId}
             };
             return RedirectToPage("CreateWaypoint", routeValue);
+        }
+        
+        /// <summary>
+        ///     Called when [post create].
+        /// </summary>
+        /// <returns> The action to take when going to create Transportation form </returns>
+        public IActionResult OnPostCreateTransportation(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {"tripId", tripId}
+            };
+            return RedirectToPage("CreateTransportation", routeValue);
         }
         
         /// <summary>

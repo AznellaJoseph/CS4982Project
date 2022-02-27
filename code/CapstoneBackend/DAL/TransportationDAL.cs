@@ -60,10 +60,10 @@ namespace CapstoneBackend.DAL
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
         /// <returns> A list of the transportations of the trip on the specified date </returns>
-        public virtual IList<Transportation> GetTransportationsOnDate(int tripId, DateTime selectedDate)
+        public virtual IList<Transportation> GetTransportationOnDate(int tripId, DateTime selectedDate)
         {
             _connection.Open();
-            const string procedure = "uspGetWaypointsOnDate";
+            const string procedure = "uspGetTransportationOnDate";
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
             IList<Transportation> transportationsOnDate = new List<Transportation>();

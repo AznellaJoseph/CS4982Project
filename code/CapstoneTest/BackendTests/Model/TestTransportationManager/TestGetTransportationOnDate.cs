@@ -17,12 +17,12 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             IList<Transportation> transportations = new List<Transportation>();
 
             var mockTransportationDal = new Mock<TransportationDal>();
-            mockTransportationDal.Setup(db => db.GetTransportationsOnDate(1, currentTime)).Returns(transportations);
+            mockTransportationDal.Setup(db => db.GetTransportationOnDate(1, currentTime)).Returns(transportations);
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
-                transportationManager.GetTransportationsOnDate(1, currentTime);
+                transportationManager.GetTransportationOnDate(1, currentTime);
 
             Assert.AreEqual(0, resultResponse.Data?.Count);
         }
@@ -44,12 +44,12 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             };
 
             var mockTransportationDal = new Mock<TransportationDal>();
-            mockTransportationDal.Setup(db => db.GetTransportationsOnDate(1, currentTime)).Returns(transportations);
+            mockTransportationDal.Setup(db => db.GetTransportationOnDate(1, currentTime)).Returns(transportations);
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
-                transportationManager.GetTransportationsOnDate(1, currentTime);
+                transportationManager.GetTransportationOnDate(1, currentTime);
 
             Assert.AreEqual(1, resultResponse.Data?.Count);
             Assert.AreEqual(1, resultResponse.Data?[0].TripId);

@@ -35,7 +35,7 @@ namespace CapstoneBackend.Model
         /// <returns>
         ///     A response of if the transportation was created in the database
         /// </returns>
-        public virtual Response<int> CreateWaypoint(int tripId, string method, DateTime startTime, DateTime? endTime)
+        public virtual Response<int> CreateTransportation(int tripId, string method, DateTime startTime, DateTime? endTime)
         {
             if (startTime.CompareTo(endTime) > 0)
                 return new Response<int>
@@ -56,9 +56,9 @@ namespace CapstoneBackend.Model
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
         /// <returns> A response of the transportation on that date </returns>
-        public virtual Response<IList<Transportation>> GetTransportationsOnDate(int tripId, DateTime selectedDate)
+        public virtual Response<IList<Transportation>> GetTransportationOnDate(int tripId, DateTime selectedDate)
         {
-            var transportationsOnDate = _dal.GetTransportationsOnDate(tripId, selectedDate);
+            var transportationsOnDate = _dal.GetTransportationOnDate(tripId, selectedDate);
 
             return new Response<IList<Transportation>>
             {

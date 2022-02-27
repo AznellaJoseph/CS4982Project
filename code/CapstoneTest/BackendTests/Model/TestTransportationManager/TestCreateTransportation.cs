@@ -20,7 +20,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
-                transportationManager.CreateWaypoint(1, "Car", DateTime.Now.AddDays(4), DateTime.Now);
+                transportationManager.CreateTransportation(1, "Car", DateTime.Now.AddDays(4), DateTime.Now);
 
             Assert.AreEqual(400u, resultResponse.StatusCode);
         }
@@ -36,7 +36,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
-                transportationManager.CreateWaypoint(1, "Car", DateTime.Now, DateTime.Now.AddDays(2));
+                transportationManager.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2));
 
             Assert.AreEqual(200u, resultResponse.StatusCode);
         }
