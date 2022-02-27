@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CapstoneBackend.Model;
@@ -29,7 +28,7 @@ namespace CapstoneWeb.Pages
         /// <returns> The page to go to when [get] </returns>
         public IActionResult OnGet()
         {
-            if (!HttpContext.Session.Keys.Contains("userId")) return RedirectToPage("login");
+            if (!HttpContext.Session.Keys.Contains("userId")) return RedirectToPage("Login");
             var tripManager = FakeTripManager ?? new TripManager();
             UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
             Trips = tripManager.GetTripsByUser(UserId).Data;
@@ -43,7 +42,7 @@ namespace CapstoneWeb.Pages
         public IActionResult OnPostLogout()
         {
             HttpContext.Session.Remove("userId");
-            return RedirectToPage("index");
+            return RedirectToPage("Index");
         }
     }
 }
