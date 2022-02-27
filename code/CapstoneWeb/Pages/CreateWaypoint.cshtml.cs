@@ -45,19 +45,12 @@ namespace CapstoneWeb.Pages
         /// </summary>
         public WaypointManager WaypointManager { get; set; }
 
-        public IActionResult OnGet(int tripId)
-        {
-            Console.WriteLine(tripId);
-            return Page();
-        }
-
         /// <summary>
         ///     Called when [post].
         /// </summary>
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
-            Console.WriteLine(tripId);
             var waypointManager = WaypointManager ?? new WaypointManager();
             var response = waypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
             if (response.StatusCode.Equals(200U))
