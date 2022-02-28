@@ -35,7 +35,7 @@ namespace CapstoneBackend.DAL
         public virtual Trip? GetTripByTripId(int tripId)
         {
             _connection.Open();
-            const string query = "uspGetTripsByTripId";
+            const string query = "uspGetTripByTripId";
             using MySqlCommand cmd = new(query, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;

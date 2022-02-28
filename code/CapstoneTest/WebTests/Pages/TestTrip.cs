@@ -137,17 +137,31 @@ namespace CapstoneTest.WebTests.Pages
         }
         
         [TestMethod]
-        public void PostCreate()
+        public void PostCreateWaypoint()
         {
             var session = new Mock<ISession>();
             session.SetupGet(s => s.Keys).Returns(new List<string> {"userId"});
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-            var result = page.OnPostCreate(1);
+            var result = page.OnPostCreateWaypoint(1);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
             var redirect = (RedirectToPageResult) result;
             Assert.IsTrue(redirect.RouteValues.ContainsKey("tripId"));
             Assert.AreEqual(1, redirect.RouteValues["tripId"]);
             Assert.AreEqual("CreateWaypoint", redirect.PageName);
+        }
+        
+        [TestMethod]
+        public void PostCreateTransportation()
+        {
+            var session = new Mock<ISession>();
+            session.SetupGet(s => s.Keys).Returns(new List<string> {"userId"});
+            var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
+            var result = page.OnPostCreateTransportation(1);
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult) result;
+            Assert.IsTrue(redirect.RouteValues.ContainsKey("tripId"));
+            Assert.AreEqual(1, redirect.RouteValues["tripId"]);
+            Assert.AreEqual("CreateTransportation", redirect.PageName);
         }
         
         [TestMethod]

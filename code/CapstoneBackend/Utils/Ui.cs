@@ -39,6 +39,7 @@
             public static readonly string InvalidWaypointDate =
                 "Waypoint dates cannot be before the trip start date or after the trip end date.";
             public static readonly string InvalidFields = "You must enter all of the fields.";
+            public static readonly string TransportationNotFound = "A transportation with the given ID was not found.";
         }
     }
 }
