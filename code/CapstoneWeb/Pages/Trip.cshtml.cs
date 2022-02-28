@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using CapstoneBackend.Model;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +47,12 @@ namespace CapstoneWeb.Pages
             return RedirectToPage("Index");
         }
 
+        /// <summary>
+        /// Called when [get ajax].
+        /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="selectedDate">The selected date.</param>
+        /// <returns></returns>
         public IActionResult OnGetAjax(int tripId, string selectedDate)
         {
             var manager = FakeWaypointManager ?? new WaypointManager();
@@ -82,6 +89,21 @@ namespace CapstoneWeb.Pages
         {
             HttpContext.Session.Remove("userId");
             return RedirectToPage("Index");
+        }
+
+        /// <summary>
+        /// Called when [post remove].
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult OnGetRemove(int tripId, int waypointId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {"tripId", tripId}
+            };
+
+            var manager = FakeWaypointManager ?? new WaypointManager();
+            return new JsonResult(manager.RemoveWaypoint(waypointId));
         }
         
     }

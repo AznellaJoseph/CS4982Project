@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using CapstoneWeb.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace CapstoneTest.WebTests.Pages
             var endDate = DateTime.Now;
             fakeTripManager.Setup(mngr => mngr.GetTripByTripId(1)).Returns(new Response<Trip>
             {
-                StatusCode = 200U,
+                StatusCode = (uint)Ui.StatusCode.Success,
                 Data = new Trip
                 {
                     UserId = 1,
@@ -65,7 +66,7 @@ namespace CapstoneTest.WebTests.Pages
             var endDate = DateTime.Now;
             fakeTripManager.Setup(mngr => mngr.GetTripByTripId(1)).Returns(new Response<Trip>
             {
-                StatusCode = 200U,
+                StatusCode = (uint)Ui.StatusCode.Success,
                 Data = new Trip
                 {
                     UserId = 1,
@@ -105,7 +106,7 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnGet(8);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
 
-            var redirect = (RedirectToPageResult) result;
+            var redirect = (RedirectToPageResult)result;
             Assert.AreEqual("Index", redirect.PageName);
         }
         
