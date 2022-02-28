@@ -44,13 +44,9 @@ namespace CapstoneDesktop.ViewModels
         private void removeWaypoint()
         {
             var manager = FakeTransportationManager ?? new TransportationManager();
-            if (manager.RemoveTransportation(Transportation.TransportationId).StatusCode.Equals(200U))
+            if (manager.RemoveTransportation(Transportation.TransportationId).Data)
             { 
                 RemoveEvent?.Invoke(this, EventArgs.Empty);
-            }
-            else
-            {
-                Console.WriteLine("FAILED REMOVE");
             }
         }
     }

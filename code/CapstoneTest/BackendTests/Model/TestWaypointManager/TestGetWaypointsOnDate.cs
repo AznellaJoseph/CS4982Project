@@ -60,6 +60,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             Assert.AreEqual(1, resultResponse.Data?[0].TripId);
             Assert.AreEqual(1, resultResponse.Data?[0].WaypointId);
             Assert.AreEqual("1601 Maple St", resultResponse.Data?[0].Location);
+            Assert.AreEqual("1601 Maple St", resultResponse.Data?[0].DisplayName);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
             Assert.AreEqual("notes", resultResponse.Data?[0].Notes);

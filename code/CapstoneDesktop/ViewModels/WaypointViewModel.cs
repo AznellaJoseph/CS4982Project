@@ -44,7 +44,7 @@ namespace CapstoneDesktop.ViewModels
         private void removeWaypoint()
         {
             var manager = FakeWaypointManager ?? new WaypointManager();
-            if (manager.RemoveWaypoint(Waypoint.WaypointId).StatusCode.Equals(200U))
+            if (manager.RemoveWaypoint(Waypoint.WaypointId).Data)
             {
                 RemoveEvent?.Invoke(this, EventArgs.Empty);
             }

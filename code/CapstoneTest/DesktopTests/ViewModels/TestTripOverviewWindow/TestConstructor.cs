@@ -14,10 +14,10 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
         public void Constructor_NoParameters_PropertyCreations()
         {
             var mockTrip = new Mock<Trip>();
-            var mockWaypointManager = new Mock<WaypointManager>();
+            var mockEventManager = new Mock<EventManager>();
             var mockScreen = new Mock<IScreen>();
             TripOverviewPageViewModel testViewModel =
-                new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
+                new(mockTrip.Object, mockEventManager.Object, mockScreen.Object);
 
             Assert.IsNotNull(testViewModel.LogoutCommand);
             Assert.IsNotNull(testViewModel.BackCommand);

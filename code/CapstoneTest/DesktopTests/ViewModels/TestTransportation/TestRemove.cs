@@ -1,0 +1,69 @@
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
+{
+    [TestClass]
+    public class TestRemove
+    {
+        [TestMethod]
+        public void Remove_Success()
+        {
+            var mockTransportationManager = new Mock<TransportationManager>();
+            var transportation = new Transportation
+            {
+                TransportationId = 1
+            };
+            var mockScreen = new Mock<IScreen>();
+            mockTransportationManager.Setup(wm => wm.RemoveTransportation(1))
+                .Returns(new Response<bool>
+                {
+                    Data = true
+                });
+            bool didRemovedEvent = false;
+            TransportationViewModel viewModel = new TransportationViewModel(transportation, mockScreen.Object)
+            {
+                FakeTransportationManager = mockTransportationManager.Object
+            };
+            viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
+            var testScheduler = new TestScheduler();
+            viewModel.RemoveCommand.Execute().Subscribe();
+            testScheduler.Start();
+            Assert.IsTrue(didRemovedEvent);
+            
+        }
+        
+        [TestMethod]
+        public void Remove_Failure()
+        {
+            var mockTransportationManager = new Mock<TransportationManager>();
+            var transportation = new Transportation
+            {
+                TransportationId = 1
+            };
+            var mockScreen = new Mock<IScreen>();
+            mockTransportationManager.Setup(wm => wm.RemoveTransportation(1))
+                .Returns(new Response<bool>
+                {
+                    Data = false
+                });
+            bool didRemovedEvent = false;
+            TransportationViewModel viewModel = new TransportationViewModel(transportation, mockScreen.Object)
+            {
+                FakeTransportationManager = mockTransportationManager.Object
+            };
+            viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
+            var testScheduler = new TestScheduler();
+            viewModel.RemoveCommand.Execute().Subscribe();
+            testScheduler.Start();
+            Assert.IsFalse(didRemovedEvent);
+            
+        }
+    }
+}
