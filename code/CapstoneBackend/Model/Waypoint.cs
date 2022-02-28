@@ -36,5 +36,7 @@ namespace CapstoneBackend.Model
         ///     The notes.
         /// </summary>
         public string Notes { get; set; } = string.Empty;
+        
+        public string DisplayName => Location;
     }
 }

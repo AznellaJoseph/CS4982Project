@@ -26,7 +26,7 @@
             <Grid RowDefinitions="Auto,10,*,10,Auto">
                 <TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="{Binding SelectedDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}"/>
                 <ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
-                    <ItemsControl Items="{Binding WaypointViewModels}">
+                    <ItemsControl Items="{Binding EventViewModels}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Vertical" Spacing="10" />
@@ -35,10 +35,10 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*,Auto,*">
-                                        <TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Waypoint.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
+                                        <TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
                                         <TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
-                                        <TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Waypoint.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
-                                        <TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Waypoint.Location}"/>
+                                        <TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
+                                        <TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Event.DisplayName}"/>
                                         <Button Grid.Column="8" Command="{Binding RemoveCommand}">X</Button>
                                 </Grid>
                             </DataTemplate>

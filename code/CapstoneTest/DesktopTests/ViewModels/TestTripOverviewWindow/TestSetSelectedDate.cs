@@ -32,7 +32,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
                     SelectedDate = startDate
                 };
 
-            Assert.AreEqual(1, testViewModel.WaypointViewModels.Count);
+            Assert.AreEqual(1, testViewModel.EventViewModels.Count);
             
         }
     }

@@ -14,26 +14,27 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
     public class TripOverviewPageViewModel : ViewModelBase, IRoutableViewModel
     {
-        private readonly WaypointManager _waypointManager;
+        private readonly EventManager _eventManager;
+        
         private DateTime? _selectedDate;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">The trip.</param>
-        /// <param name="waypointManager">The waypoint manager.</param>
+        /// <param name="eventManager">The event manager.</param>
         /// <param name="screen">The screen.</param>
-        public TripOverviewPageViewModel(Trip trip, WaypointManager waypointManager, IScreen screen)
+        public TripOverviewPageViewModel(Trip trip, EventManager eventManager, IScreen screen)
         {
             Trip = trip;
-            _waypointManager = waypointManager;
+            _eventManager = eventManager;
             HostScreen = screen;
             LogoutCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
             CreateWaypointCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new CreateWaypointPageViewModel(Trip, HostScreen)));
             BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
-            WaypointViewModels = new ObservableCollection<WaypointViewModel>();
+            EventViewModels = new ObservableCollection<IEventViewModel>();
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         /// <param name="trip">The trip.</param>
         /// <param name="screen">The screen.</param>
-        public TripOverviewPageViewModel(Trip trip, IScreen screen) : this(trip, new WaypointManager(), screen)
+        public TripOverviewPageViewModel(Trip trip, IScreen screen) : this(trip, new EventManager(), screen)
         {
         }
 
@@ -63,7 +64,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The waypoint viewmodels.
         /// </summary>
-        public ObservableCollection<WaypointViewModel> WaypointViewModels { get; }
+        public ObservableCollection<IEventViewModel> EventViewModels { get; }
 
         /// <summary>
         ///     The trip.
@@ -95,19 +96,27 @@ namespace CapstoneDesktop.ViewModels
 
         private void updateWaypoints()
         {
-            WaypointViewModels.Clear();
+            EventViewModels.Clear();
             if (SelectedDate is not null)
             {
-                var response = _waypointManager.GetWaypointsOnDate(Trip.TripId, (DateTime) SelectedDate);
-                foreach (var waypoint in response.Data ?? new List<Waypoint>())
-                {
-                    var viewModel = new WaypointViewModel(waypoint, HostScreen);
+                var response = _eventManager.GetEventsOnDate(Trip.TripId, (DateTime) SelectedDate);
+
+                foreach (var aEvent in response.Data ?? new List<IEvent>())
+                { 
+                    IEventViewModel viewModel;
+                    if (aEvent is Waypoint waypoint)
+                        viewModel = new WaypointViewModel(waypoint, HostScreen);
+                    else if (aEvent is Transportation transportation)
+                        viewModel = new TransportationViewModel(transportation, HostScreen);
+                    else
+                        return;
+                    
                     viewModel.RemoveEvent += (sender, e) =>
                     {
                         if (sender is not null)
-                            this.WaypointViewModels.Remove((WaypointViewModel)sender);
+                            this.EventViewModels.Remove((IEventViewModel)sender);
                     };
-                    WaypointViewModels.Add(viewModel);
+                    EventViewModels.Add(viewModel);
                 }
                    
             }

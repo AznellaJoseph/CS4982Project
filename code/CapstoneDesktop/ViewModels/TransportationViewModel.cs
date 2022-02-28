@@ -9,7 +9,7 @@ namespace CapstoneDesktop.ViewModels
     ///     ViewModel for a single Waypoint
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
-    public class WaypointViewModel : ViewModelBase, IEventViewModel
+    public class TransportationViewModel : ViewModelBase, IEventViewModel
     {
         private readonly IScreen _screen;
         
@@ -20,33 +20,37 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The Waypoint
         /// </summary>
-        public Waypoint Waypoint { get; }
+        public Transportation Transportation { get; }
 
         /// <summary>
         ///     The Event.
         /// </summary>
-        public IEvent Event => Waypoint;
+        public IEvent Event => Transportation;
         
-        public WaypointManager? FakeWaypointManager { get; set; }
+        public TransportationManager? FakeTransportationManager { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="WaypointViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="TransportationViewModel" /> class.
         /// </summary>
-        /// <param name="waypoint">The waypoint.</param>
+        /// <param name="transportation">The transportation.</param>
         /// <param name="screen">The screen.</param>
-        public WaypointViewModel(Waypoint waypoint, IScreen screen)
+        public TransportationViewModel(Transportation transportation, IScreen screen)
         {
             _screen = screen;
-            Waypoint = waypoint;
+            Transportation = transportation;
             RemoveCommand = ReactiveCommand.Create(removeWaypoint);
         }
 
         private void removeWaypoint()
         {
-            var manager = FakeWaypointManager ?? new WaypointManager();
-            if (manager.RemoveWaypoint(Waypoint.WaypointId).StatusCode.Equals(200U))
-            {
+            var manager = FakeTransportationManager ?? new TransportationManager();
+            if (manager.RemoveTransportation(Transportation.TransportationId).StatusCode.Equals(200U))
+            { 
                 RemoveEvent?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                Console.WriteLine("FAILED REMOVE");
             }
         }
     }
