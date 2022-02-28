@@ -18,7 +18,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             TransportationManager manager = new(mock.Object);
             var resultResponse = manager.RemoveTransportation(2);
 
-            Assert.AreEqual(Ui.StatusCode.BadRequest, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.BadRequest, resultResponse.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.TransportationNotFound, resultResponse.ErrorMessage);
         }
 
@@ -31,7 +31,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             TransportationManager manager = new(mock.Object);
             var resultResponse = manager.RemoveTransportation(1);
 
-            Assert.AreEqual(Ui.StatusCode.Success, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.Success, resultResponse.StatusCode);
             Assert.AreEqual(true, resultResponse.Data);
         }
     }

@@ -24,6 +24,7 @@ namespace CapstoneTest.WebTests.Pages
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
+            page.ConfirmedPassword = "admin";
             page.FirstName = "admin";
             page.LastName = "admin";
             var result = page.OnPost();
@@ -45,6 +46,7 @@ namespace CapstoneTest.WebTests.Pages
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
+            page.ConfirmedPassword = "admin";
             page.FirstName = "admin";
             page.LastName = "admin";
             var result = page.OnPost();
