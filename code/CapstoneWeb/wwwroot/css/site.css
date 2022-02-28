@@ -33,8 +33,8 @@ h1 {
 }
 
 .data-entry-window {
-    width: 700px;
-    min-height: 700px;
+    width: 45vw;
+    height: 50vh;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -94,7 +94,7 @@ label {
     font-size: 14px;
 }
 
-.button-group {
+.button-group, .button-group form{
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -114,3 +114,98 @@ label {
 .hide {
     display: none;
 }
+
+.panel {
+    background: #002E3D;
+    border-radius: 10px;
+}
+
+.list {
+    background: #002E3D;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.list-item {
+    width: 98%;
+    background: #007EA7;
+    border-radius: 10px;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.end {
+    margin-top: auto;
+}
+
+.landing-page {
+    background: #000F14;
+    height: 60vh;
+    width: 70vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.landing-page form {
+    min-height: auto;
+    margin: 10px;
+}
+
+#trip-list {
+    flex: 1;
+}
+
+.landing-page .left, .landing-page .right {
+    height: 100%;
+    gap: 12px;
+}
+
+.landing-page .left {
+    width: 40%;
+}
+.landing-page .right {
+    width: 60%;
+}
+
+.landing-page .logo {
+    height: 25%;
+    width: 100%;
+}
+
+.landing-page button {
+    padding: 15px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width-button {
+    width: 100%;
+}
+
+.upcoming {
+    height: 100%;
+}
+
+.info-section {
+    font-size: 12px;
+}
+
+.name-section {
+    font-weight: bold;
+}
+

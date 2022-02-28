@@ -5,36 +5,53 @@
     ViewData["Title"] = "Trips";
 }
 
-<div>
-    <section>
-    </section>
-    <section>
-        <form method="post">
-            <button type="submit" asp-page-handler="profile">Profile</button>
-        </form>
-        <form method="post">
-            <button type="submit" asp-page-handler="logout">Logout</button>
-        </form>
-    </section>
-    <section>
-    </section>
-    <section>
-        <div>
+<div class="container landing-page">
+    <div class="left column">
+        <section title="logo" class="panel logo">
+            INSERT LOGO HERE
+        </section>
+
+        <section title="navigation" class="panel button-group">
+            <form method="post">
+                <button type="submit" asp-page-handler="profile">Profile</button>
+                <button type="submit" asp-page-handler="logout">Logout</button>
+            </form>
+        </section>
+
+        <section title="upcoming" class="panel upcoming">
+            <h1>Upcoming</h1>
+
+            <div class="list">
+
+            </div>
+        </section>
+    </div>
+
+    <section title="trips" class="panel right column">
+
+        <h1>Trips</h1>
+
+        <div class="list" id="trip-list">
             @foreach (var trip in Model.Trips)
-                    {
-                        <div>
-                            <p>
-                                @trip.StartDate - @trip.EndDate
-                            </p>
-                            <p>
-                                @trip.Name
-                            </p>
-                            <a asp-page="/trip" asp-route-tripId="@trip.TripId">View</a>
-                        </div>
-                    }
+            {
+            <div class="list-item">
+                <div class="info-section">
+                    @trip.StartDate.ToShortDateString() >> @trip.EndDate.ToShortDateString()
+                </div>
+
+                <div class="name-section">
+                    @trip.Name
+                </div>
+
+                <div class="icon-section">
+                    <a asp-page="/trip" asp-route-tripId="@trip.TripId">View</a>
+                </div>
+            </div>
+            }
         </div>
-        <form method="post">
-            <button type="submit" asp-page-handler="create">Create Trip</button>
+
+        <form method="post" class="end">
+            <button type="submit" class="full-width-button" asp-page-handler="create">Create Trip</button>
         </form>
     </section>
 </div>
