@@ -23,7 +23,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="user">The user.</param>
         /// <param name="tripManager">The trip manager.</param>
         /// <param name="screen">The screen.</param>
-        public LandingPageViewModel(User user, TripManager tripManager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        public LandingPageViewModel(User user, TripManager tripManager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
         {
             _user = user;
             _tripManager = tripManager;

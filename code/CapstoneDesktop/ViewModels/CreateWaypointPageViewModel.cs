@@ -24,7 +24,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="trip">the trip that the waypoint will be created for.</param>
         /// <param name="manager">The manager.</param>
         /// <param name="screen">The host screen</param>
-        public CreateWaypointPageViewModel(Trip trip, WaypointManager manager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        public CreateWaypointPageViewModel(Trip trip, WaypointManager manager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
         {
             _trip = trip;
             _waypointManager = manager;
@@ -110,7 +111,8 @@ namespace CapstoneDesktop.ViewModels
 
             var endTime = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
 
-            if (startDate.CompareTo(_trip.StartDate) < 0 || startDate.CompareTo(_trip.EndDate) > 0 || endTime.CompareTo(_trip.StartDate) < 0 || endTime.CompareTo(_trip.EndDate) > 0)
+            if (startDate.CompareTo(_trip.StartDate) < 0 || startDate.CompareTo(_trip.EndDate) > 0 ||
+                endTime.CompareTo(_trip.StartDate) < 0 || endTime.CompareTo(_trip.EndDate) > 0)
             {
                 ErrorMessage = Ui.ErrorMessages.InvalidWaypointDate;
                 return Observable.Empty<IRoutableViewModel>();
@@ -123,7 +125,6 @@ namespace CapstoneDesktop.ViewModels
 
             ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
-
         }
     }
 }

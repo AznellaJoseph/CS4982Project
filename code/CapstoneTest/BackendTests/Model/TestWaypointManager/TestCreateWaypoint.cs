@@ -67,7 +67,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             var resultResponse =
                 waypointManager.CreateWaypoint(1, "1601 Maple St", DateTime.Now, DateTime.Now.AddDays(2), null);
 
-            Assert.AreEqual(200u, resultResponse.StatusCode);
+            Assert.AreEqual(Ui.StatusCode.Success, resultResponse.StatusCode);
         }
     }
 }

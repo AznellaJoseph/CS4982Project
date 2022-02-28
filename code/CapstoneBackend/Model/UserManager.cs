@@ -29,12 +29,11 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Gets a user by their credentials, i.e. username and password. If the user does not match any ones credentials then
-        ///     an error is returned.
+        ///     Gets a user by the given credentials
         /// </summary>
         /// <param name="username">the given username</param>
         /// <param name="password">the given password</param>
-        /// <returns>the data of the found user or an error</returns>
+        /// <returns>A response of the user with the given credentials or a non-success status code and error message</returns>
         public virtual Response<User> GetUserByCredentials(string username, string password)
         {
             User? user;
@@ -54,14 +53,14 @@ namespace CapstoneBackend.Model
             if (user is null)
                 return new Response<User>
                 {
-                    StatusCode = (uint)Ui.StatusCode.DataNotFound,
+                    StatusCode = (uint) Ui.StatusCode.DataNotFound,
                     ErrorMessage = Ui.ErrorMessages.IncorrectUsername
                 };
 
             if (!PasswordHasher.ValidatePassword(password, user.Password))
                 return new Response<User>
                 {
-                    StatusCode = (uint)Ui.StatusCode.DataNotFound,
+                    StatusCode = (uint) Ui.StatusCode.DataNotFound,
                     ErrorMessage = Ui.ErrorMessages.IncorrectPassword
                 };
 
@@ -71,19 +70,19 @@ namespace CapstoneBackend.Model
             };
         }
 
-        /// <summary>Registers the user.</summary>
+        /// <summary>Registers the user with the given credentials.</summary>
         /// <param name="username">The username input.</param>
         /// <param name="password">The password input.</param>
         /// <param name="fname">The fname input.</param>
         /// <param name="lname">The lname input.</param>
-        /// <returns>Response with appropriate status code.</returns>
+        /// <returns>A response of the new user's id or a non-success status code and error message.</returns>
         public virtual Response<int> RegisterUser(string username, string password, string fname, string lname)
         {
             var user = _dal.GetUserByUsername(username);
             if (user is not null)
                 return new Response<int>
                 {
-                    StatusCode = (uint)Ui.StatusCode.BadRequest,
+                    StatusCode = (uint) Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.UsernameTaken
                 };
 
@@ -107,7 +106,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<int>
                 {
-                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }

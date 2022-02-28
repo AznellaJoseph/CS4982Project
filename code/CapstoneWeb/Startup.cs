@@ -41,7 +41,6 @@ namespace CapstoneWeb
                 options.LowercaseUrls = true;
                 options.LowercaseQueryStrings = true;
                 options.AppendTrailingSlash = true;
-
             });
             services.AddSession(options =>
             {
@@ -63,11 +62,11 @@ namespace CapstoneWeb
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
-            }    
+            }
             else
             {
                 app.UseHsts();
-            }   
+            }
 
             app.UseSession();
             app.UseHttpsRedirection();

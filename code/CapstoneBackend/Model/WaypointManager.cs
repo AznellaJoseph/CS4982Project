@@ -38,7 +38,7 @@ namespace CapstoneBackend.Model
         /// <param name="startTime">The start time.</param>
         /// <param name="endTime">The end time.</param>
         /// <returns>
-        ///     A response of if the waypoint was created in the database
+        ///     A response of if the waypoint was created in the database or a non-success status code and error message
         /// </returns>
         public virtual Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime,
             string? notes)
@@ -46,7 +46,7 @@ namespace CapstoneBackend.Model
             if (startTime.CompareTo(endTime) > 0)
                 return new Response<int>
                 {
-                    StatusCode = (uint)Ui.StatusCode.BadRequest,
+                    StatusCode = (uint) Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
 
@@ -55,7 +55,6 @@ namespace CapstoneBackend.Model
                 var waypointId = _dal.CreateWaypoint(tripId, location, startTime, endTime, notes);
                 return new Response<int>
                 {
-
                     Data = waypointId
                 };
             }
@@ -71,11 +70,10 @@ namespace CapstoneBackend.Model
             {
                 return new Response<int>
                 {
-                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }
-
         }
 
         /// <summary>
@@ -83,7 +81,7 @@ namespace CapstoneBackend.Model
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
-        /// <returns> A response of the waypoints on that date </returns>
+        /// <returns> A response of the waypoints on that date or a non-success status code and error message. </returns>
         public virtual Response<IList<Waypoint>> GetWaypointsOnDate(int tripId, DateTime selectedDate)
         {
             try
@@ -107,7 +105,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<IList<Waypoint>>
                 {
-                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }
@@ -117,10 +115,9 @@ namespace CapstoneBackend.Model
         ///     Gets the waypoints by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns> A response of the waypoints with the entered trip waypointId</returns>
+        /// <returns> A response of the waypoints with the entered trip waypointId or a non-success status code and error message.</returns>
         public virtual Response<IList<Waypoint>> GetWaypointsByTripId(int tripId)
         {
-
             try
             {
                 var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
@@ -142,7 +139,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<IList<Waypoint>>
                 {
-                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }
@@ -152,20 +149,18 @@ namespace CapstoneBackend.Model
         ///     Removes the waypoint.
         /// </summary>
         /// <param name="waypointId">The identifier.</param>
-        /// <returns> A response specifying whether or not the waypoint was removed </returns>
+        /// <returns> A response specifying whether or not the waypoint was removed or a non-success status code and error message. </returns>
         public virtual Response<bool> RemoveWaypoint(int waypointId)
         {
             try
             {
-
-
                 var removed = _dal.RemoveWaypoint(waypointId);
 
                 if (!removed)
                     return new Response<bool>
                     {
                         ErrorMessage = Ui.ErrorMessages.WaypointNotFound,
-                        StatusCode = (uint)Ui.StatusCode.BadRequest
+                        StatusCode = (uint) Ui.StatusCode.BadRequest
                     };
 
                 return new Response<bool>
@@ -185,7 +180,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<bool>
                 {
-                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }

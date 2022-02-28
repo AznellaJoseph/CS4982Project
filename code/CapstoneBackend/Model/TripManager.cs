@@ -29,11 +29,10 @@ namespace CapstoneBackend.Model
             _dal = dal;
         }
 
-        /// <summary>Gets the trip by trip ID.</summary>
+        /// <summary>Gets the trip specified by the given trip ID.</summary>
         /// <param name="tripId">The trip ID.</param>
         /// <returns>
-        ///     A response with the Trip object and success status code,
-        ///     An error message with status 404 if not found, an error otherwise.
+        ///     A response with the Trip object or a non-success status code and error message
         /// </returns>
         public virtual Response<Trip> GetTripByTripId(int tripId)
         {
@@ -54,7 +53,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<Trip>
                 {
-                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }
@@ -62,7 +61,7 @@ namespace CapstoneBackend.Model
             if (trip is null)
                 return new Response<Trip>
                 {
-                    StatusCode = (uint)Ui.StatusCode.DataNotFound,
+                    StatusCode = (uint) Ui.StatusCode.DataNotFound,
                     ErrorMessage = Ui.ErrorMessages.TripNotFound
                 };
             return new Response<Trip>
@@ -72,10 +71,10 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Gets the trips by user.
+        ///     Gets the trips by the user specified by the given id.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns> A response of the list of trips or an error message </returns>
+        /// <returns> A response of the list of trips or a non-success status code and error message </returns>
         public virtual Response<IList<Trip>> GetTripsByUser(int userId)
         {
             try
@@ -98,28 +97,28 @@ namespace CapstoneBackend.Model
             {
                 return new Response<IList<Trip>>
                 {
-                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = e.Message
                 };
             }
         }
 
         /// <summary>
-        ///     Creates the trip.
+        ///     Creates a trip with the entered values.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <param name="name">The name.</param>
         /// <param name="notes">The notes.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns> A response of the id of the newly created trip or an error message if it failed </returns>
+        /// <returns> A response of the id of the newly created trip or a non-success status code and error message </returns>
         public virtual Response<int> CreateTrip(int userId, string name, string? notes, DateTime startDate,
             DateTime endDate)
         {
             if (startDate.CompareTo(endDate) > 0)
                 return new Response<int>
                 {
-                    StatusCode = (uint)Ui.StatusCode.BadRequest,
+                    StatusCode = (uint) Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
 
@@ -143,7 +142,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<int>
                 {
-                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = e.Message
                 };
             }

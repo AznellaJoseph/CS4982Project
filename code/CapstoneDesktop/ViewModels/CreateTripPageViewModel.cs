@@ -24,7 +24,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="user">The current user</param>
         /// <param name="manager">The manager.</param>
         /// <param name="screen">the host screen</param>
-        public CreateTripPageViewModel(User user, TripManager manager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        public CreateTripPageViewModel(User user, TripManager manager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
         {
             _tripManager = manager;
             _user = user;
@@ -103,7 +104,6 @@ namespace CapstoneDesktop.ViewModels
 
             ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
-
         }
     }
 }

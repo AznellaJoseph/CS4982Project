@@ -22,12 +22,13 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         /// <param name="manager">The manager.</param>
         /// <param name="screen">The screen.</param>
-        public CreateAccountPageViewModel(UserManager manager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        public CreateAccountPageViewModel(UserManager manager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
         {
             _userManager = manager;
             HostScreen = screen;
             CancelCreateAccountCommand =
-                ReactiveCommand.CreateFromObservable(() => this.HostScreen.Router.NavigateBack.Execute());
+                ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
             SubmitAccountCommand = ReactiveCommand.CreateFromObservable(submitAccount);
         }
 
@@ -91,15 +92,14 @@ namespace CapstoneDesktop.ViewModels
                 ErrorMessage = Ui.ErrorMessages.InvalidFields;
                 return Observable.Empty<IRoutableViewModel>();
             }
+
             if (Password == ConfirmedPassword)
             {
                 var response = _userManager.RegisterUser(Username, Password,
                     FirstName, LastName);
-                if (response.StatusCode == (uint)Ui.StatusCode.Success)
-                {
+                if (response.StatusCode == (uint) Ui.StatusCode.Success)
                     return HostScreen.Router.Navigate.Execute(
-                        new LandingPageViewModel(new User { UserId = response.Data }, HostScreen));
-                }
+                        new LandingPageViewModel(new User {UserId = response.Data}, HostScreen));
 
                 ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
                 return Observable.Empty<IRoutableViewModel>();

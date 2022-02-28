@@ -4,12 +4,12 @@ using Microsoft.Extensions.Hosting;
 namespace CapstoneWeb
 {
     /// <summary>
-    /// Program Class
+    ///     Program Class
     /// </summary>
     public class Program
     {
         /// <summary>
-        /// Defines the entry point of the application.
+        ///     Defines the entry point of the application.
         /// </summary>
         /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
@@ -18,7 +18,7 @@ namespace CapstoneWeb
         }
 
         /// <summary>
-        /// Creates the host builder.
+        ///     Creates the host builder.
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns> The host builder </returns>

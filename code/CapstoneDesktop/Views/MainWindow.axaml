@@ -7,9 +7,9 @@
         x:Class="CapstoneDesktop.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Waypointz" WindowState="Maximized">
-	<rxui:RoutedViewHost Router="{Binding Router}" >
-		<rxui:RoutedViewHost.DefaultContent>
-			<TextBlock>LOGO</TextBlock>
-		</rxui:RoutedViewHost.DefaultContent>
-	</rxui:RoutedViewHost>
+    <rxui:RoutedViewHost Router="{Binding Router}">
+        <rxui:RoutedViewHost.DefaultContent>
+            <TextBlock>LOGO</TextBlock>
+        </rxui:RoutedViewHost.DefaultContent>
+    </rxui:RoutedViewHost>
 </Window>

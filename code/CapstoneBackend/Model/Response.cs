@@ -3,7 +3,7 @@
 namespace CapstoneBackend.Model
 {
     /// <summary>
-    ///     Response Class
+    ///     Response Class used in the managers to specify the status and error messages of server actions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class Response<T>

@@ -1,7 +1,6 @@
 using System;
-using System.Linq;
 using CapstoneBackend.Model;
-using Microsoft.AspNetCore.Http;
+using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
@@ -47,7 +46,7 @@ namespace CapstoneWeb.Pages
         {
             var transportationManager = FakeTransportationManager ?? new TransportationManager();
             var response = transportationManager.CreateTransportation(tripId, Method, StartDate, EndDate);
-            if (response.StatusCode.Equals(200U))
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary
                 {
@@ -55,6 +54,7 @@ namespace CapstoneWeb.Pages
                 };
                 return RedirectToPage("Trip", routeValue);
             }
+
             ErrorMessage = response.ErrorMessage;
             return Page();
         }

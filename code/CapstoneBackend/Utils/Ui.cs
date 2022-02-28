@@ -1,12 +1,12 @@
 ﻿namespace CapstoneBackend.Utils
 {
     /// <summary>
-    /// UI Class
+    ///     UI Class that holds resources that are used by different areas of the project
     /// </summary>
     public class Ui
     {
         /// <summary>
-        /// StatusCode enum for Request status codes
+        ///     StatusCode enum for Request status codes
         /// </summary>
         public enum StatusCode
         {
@@ -18,7 +18,7 @@
         }
 
         /// <summary>
-        /// Error Messages Class to hold possible error messages for the entire solution
+        ///     Error Messages Class to hold possible error messages for the solution
         /// </summary>
         public static class ErrorMessages
         {

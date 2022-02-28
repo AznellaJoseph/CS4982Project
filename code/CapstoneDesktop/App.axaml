@@ -5,7 +5,7 @@
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
-    
+
     <Application.Resources>
         <Color x:Key="ThemeLightTextColor">#EBF2FA</Color>
         <Color x:Key="ThemeDarkTextColor">#100B00</Color>
@@ -13,79 +13,79 @@
         <Color x:Key="ThemeForegroundColor">#002E3D</Color>
         <Color x:Key="ThemeControlColor">#007EA7</Color>
         <Color x:Key="ThemeAccentColor">#809848</Color>
-        
-        <SolidColorBrush x:Key="ThemeLightTextBrush" Color="{StaticResource ThemeLightTextColor}"/>
-        <SolidColorBrush x:Key="ThemeDarkTextBrush" Color="{StaticResource ThemeDarkTextColor}"/>
-        <SolidColorBrush x:Key="ThemeBackgroundBrush" Color="{StaticResource ThemeBackgroundColor}"/>
-        <SolidColorBrush x:Key="ThemeForegroundBrush" Color="{StaticResource ThemeForegroundColor}"/>
-        <SolidColorBrush x:Key="ThemeControlBrush" Color="{StaticResource ThemeControlColor}"/>
-        <SolidColorBrush x:Key="ThemeAccentBrush" Color="{StaticResource ThemeAccentColor}"/>
+
+        <SolidColorBrush x:Key="ThemeLightTextBrush" Color="{StaticResource ThemeLightTextColor}" />
+        <SolidColorBrush x:Key="ThemeDarkTextBrush" Color="{StaticResource ThemeDarkTextColor}" />
+        <SolidColorBrush x:Key="ThemeBackgroundBrush" Color="{StaticResource ThemeBackgroundColor}" />
+        <SolidColorBrush x:Key="ThemeForegroundBrush" Color="{StaticResource ThemeForegroundColor}" />
+        <SolidColorBrush x:Key="ThemeControlBrush" Color="{StaticResource ThemeControlColor}" />
+        <SolidColorBrush x:Key="ThemeAccentBrush" Color="{StaticResource ThemeAccentColor}" />
     </Application.Resources>
     <Application.Styles>
-        <FluentTheme Mode="Dark"/>
+        <FluentTheme Mode="Dark" />
         <Style Selector="Window">
-            <Setter Property="Background" Value="{StaticResource ThemeBackgroundBrush}"/>
+            <Setter Property="Background" Value="{StaticResource ThemeBackgroundBrush}" />
         </Style>
         <Style Selector="TextBox">
-            <Setter Property="CornerRadius" Value="5"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="Background" Value="{StaticResource ThemeControlBrush}"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="{StaticResource ThemeDarkTextBrush}"/>
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Background" Value="{StaticResource ThemeControlBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{StaticResource ThemeDarkTextBrush}" />
         </Style>
         <Style Selector="TextBox /template/ Border">
-            <Setter Property="CornerRadius" Value="5"/>
-            <Setter Property="Background" Value="{StaticResource ThemeControlBrush}"/>
-            <Setter Property="BoxShadow" Value="inset 0 0 5 0 #002E3D"/>
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Background" Value="{StaticResource ThemeControlBrush}" />
+            <Setter Property="BoxShadow" Value="inset 0 0 5 0 #002E3D" />
         </Style>
         <Style Selector="TextBox:focus /template/ Border">
-            <Setter Property="BoxShadow" Value="inset 0 0 10 0 #002E3D"/>
+            <Setter Property="BoxShadow" Value="inset 0 0 10 0 #002E3D" />
         </Style>
         <Style Selector="TextBox:pointerover /template/ Border">
-            <Setter Property="BoxShadow" Value="inset 0 0 10 0 #002E3D"/>
+            <Setter Property="BoxShadow" Value="inset 0 0 10 0 #002E3D" />
         </Style>
         <Style Selector="Border.container">
-            <Setter Property="Background" Value="{StaticResource ThemeForegroundBrush}"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Background" Value="{StaticResource ThemeForegroundBrush}" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="CornerRadius" Value="5" />
         </Style>
         <Style Selector="Button">
-            <Setter Property="Background" Value="{StaticResource ThemeControlBrush}"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Background" Value="{StaticResource ThemeControlBrush}" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="CornerRadius" Value="5" />
         </Style>
         <Style Selector="Button:pointerover /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource ThemeAccentBrush}" />
         </Style>
         <Style Selector="TextBlock.light">
-            <Setter Property="Foreground" Value="{StaticResource ThemeLightTextBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ThemeLightTextBrush}" />
         </Style>
         <Style Selector="TextBlock.dark">
-            <Setter Property="Foreground" Value="{StaticResource ThemeDarkTextBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ThemeDarkTextBrush}" />
         </Style>
         <Style Selector="TextBlock.h1">
-            <Setter Property="FontSize" Value="24"/>
-            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontWeight" Value="Bold" />
         </Style>
         <Style Selector="Calendar CalendarDayButton:blackout">
-            <Setter Property="Background" Value="{StaticResource ThemeControlBrush}"/>
+            <Setter Property="Background" Value="{StaticResource ThemeControlBrush}" />
         </Style>
         <Style Selector="Calendar CalendarDayButton">
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="Background" Value="{StaticResource ThemeAccentBrush}"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="DemiBold"/>
-            <Setter Property="Foreground" Value="{StaticResource ThemeDarkTextBrush}"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Background" Value="{StaticResource ThemeAccentBrush}" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="DemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource ThemeDarkTextBrush}" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
         </Style>
         <Style Selector="Calendar">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="HeaderBackground" Value="Transparent"/>
-            <Setter Property="FontSize" Value="32"/>
-            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="HeaderBackground" Value="Transparent" />
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="FontWeight" Value="DemiBold" />
         </Style>
     </Application.Styles>
 </Application>

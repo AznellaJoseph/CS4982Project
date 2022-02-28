@@ -23,7 +23,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="trip">The trip.</param>
         /// <param name="waypointManager">The waypoint manager.</param>
         /// <param name="screen">The screen.</param>
-        public TripOverviewPageViewModel(Trip trip, WaypointManager waypointManager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        public TripOverviewPageViewModel(Trip trip, WaypointManager waypointManager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
         {
             Trip = trip;
             _waypointManager = waypointManager;
@@ -86,12 +87,10 @@ namespace CapstoneDesktop.ViewModels
         private void updateWaypoints()
         {
             WaypointViewModels.Clear();
-            if (SelectedDate is not null)
-            {
-                var response = _waypointManager.GetWaypointsOnDate(Trip.TripId, (DateTime)SelectedDate);
-                foreach (var waypoint in response.Data ?? new List<Waypoint>())
-                    WaypointViewModels.Add(new WaypointViewModel(waypoint, HostScreen));
-            }
+            if (SelectedDate is null) return;
+            var response = _waypointManager.GetWaypointsOnDate(Trip.TripId, (DateTime) SelectedDate);
+            foreach (var waypoint in response.Data ?? new List<Waypoint>())
+                WaypointViewModels.Add(new WaypointViewModel(waypoint, HostScreen));
         }
     }
 }

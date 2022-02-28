@@ -21,17 +21,17 @@
     <section>
         <div>
             @foreach (var trip in Model.Trips)
-                    {
-                        <div>
-                            <p>
-                                @trip.StartDate - @trip.EndDate
-                            </p>
-                            <p>
-                                @trip.Name
-                            </p>
-                            <a asp-page="/trip" asp-route-tripId="@trip.TripId">View</a>
-                        </div>
-                    }
+            {
+                <div>
+                    <p>
+                        @trip.StartDate - @trip.EndDate
+                    </p>
+                    <p>
+                        @trip.Name
+                    </p>
+                    <a asp-page="/trip" asp-route-tripId="@trip.TripId">View</a>
+                </div>
+            }
         </div>
         <form method="post">
             <button type="submit" asp-page-handler="create">Create Trip</button>

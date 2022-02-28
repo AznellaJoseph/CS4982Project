@@ -5,11 +5,11 @@ const tripStartDate = new Date(startDateString);
 const tripEndDate = new Date(endDateString);
 
 
-Date.prototype.addDays = function (days) {
+Date.prototype.addDays = function(days) {
     const date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
-}
+};
 
 function getDateRange(startDate, endDate) {
     const dateRange = [];
@@ -29,7 +29,7 @@ function formatAvailableDates(dateRange) {
     dateRange.forEach(date => {
         const calendarItem = {
             date: date.toISOString().slice(0, 10)
-        }
+        };
 
         calendarObject.push(calendarItem);
     });

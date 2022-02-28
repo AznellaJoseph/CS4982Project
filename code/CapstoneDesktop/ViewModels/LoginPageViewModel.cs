@@ -74,6 +74,7 @@ namespace CapstoneDesktop.ViewModels
                 ErrorMessage = Ui.ErrorMessages.InvalidFields;
                 return Observable.Empty<IRoutableViewModel>();
             }
+
             var response = _userManager.GetUserByCredentials(Username, Password);
             if (string.IsNullOrEmpty(response.ErrorMessage) && response.Data is not null)
                 return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, HostScreen));
