@@ -1,15 +1,12 @@
-DROP PROCEDURE IF EXISTS uspTransportationTrip;
+DROP PROCEDURE IF EXISTS uspRemoveTransportation;
 
 DELIMITER $
 
 CREATE PROCEDURE uspRemoveTransportation(
-	trasportationId int,
+	transportationId INT
 )
-
 BEGIN
-	DELETE FROM transportation WHERE trasportationId = trasportationId;
+	DELETE FROM transportation WHERE transportationId = transportationId;
 END$
 
 DELIMITER ;
-
-

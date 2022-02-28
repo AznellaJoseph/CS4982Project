@@ -5,8 +5,8 @@ CREATE TABLE transportation
 	transportationId INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	tripId INT UNSIGNED NOT NULL,
 	method VARCHAR(50) NOT NULL,
-	startTime DATETIME NOT NULL,
-	endTime DATETIME NOT NULL,
+	startDate DATETIME NOT NULL,
+	endDate DATETIME NOT NULL,
 	PRIMARY KEY (transportationId),
 	CONSTRAINT fk_transportation_tripId
 	FOREIGN KEY (tripId)
