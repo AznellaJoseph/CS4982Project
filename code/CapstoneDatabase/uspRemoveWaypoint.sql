@@ -7,7 +7,6 @@ CREATE PROCEDURE uspRemoveWaypoint(
 )
 BEGIN
 	DELETE FROM waypoint WHERE waypointId = waypointId;
-
 END$
 
 DELIMITER ;

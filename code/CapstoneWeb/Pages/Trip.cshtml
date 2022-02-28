@@ -29,9 +29,15 @@
     <div>
         <h2>Events</h2>
         <div id="events"></div>
-        <form method="post">
-            <button type="submit" asp-page-handler="create">Create Waypoint</button>
-        </form>
+        <div>
+            <form method="post">
+                <button type="submit" asp-page-handler="CreateTransportation">Create Transportation</button>
+            </form>
+            <form method="post">
+                <button type="submit" asp-page-handler="CreateWaypoint">Create Waypoint</button>
+            </form>
+            
+        </div>
     </div>
 
     <div id="myCalendar" class="vanilla-calendar">
