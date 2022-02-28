@@ -34,14 +34,13 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button HorizontalAlignment="Stretch">
-                                    <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*">
+                                <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*,Auto,*">
                                         <TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Waypoint.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
                                         <TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
                                         <TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Waypoint.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
                                         <TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Waypoint.Location}"/>
-                                    </Grid>
-                                </Button>
+                                        <Button Grid.Column="8" Command="{Binding RemoveCommand}">X</Button>
+                                </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

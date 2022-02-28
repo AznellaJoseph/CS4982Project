@@ -1,3 +1,5 @@
+using System;
+using System.Reactive;
 using CapstoneBackend.Model;
 using ReactiveUI;
 
@@ -7,9 +9,20 @@ namespace CapstoneDesktop.ViewModels
     ///     ViewModel for a single Waypoint
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
-    public class WaypointViewModel : ViewModelBase
+    public class WaypointViewModel : ViewModelBase, IRemovable
     {
         private readonly IScreen _screen;
+        
+        public ReactiveCommand<Unit, Unit> RemoveCommand { get; }
+
+        public event EventHandler<EventArgs> RemoveEvent;
+        
+        /// <summary>
+        ///     The waypoint.
+        /// </summary>
+        public Waypoint Waypoint { get; }
+        
+        public WaypointManager? FakeWaypointManager { get; set; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="WaypointViewModel" /> class.
@@ -20,11 +33,16 @@ namespace CapstoneDesktop.ViewModels
         {
             _screen = screen;
             Waypoint = waypoint;
+            RemoveCommand = ReactiveCommand.Create(removeWaypoint);
         }
 
-        /// <summary>
-        ///     The waypoint.
-        /// </summary>
-        public Waypoint Waypoint { get; }
+        private void removeWaypoint()
+        {
+            var manager = FakeWaypointManager ?? new WaypointManager();
+            if (manager.RemoveWaypoint(Waypoint.WaypointId).StatusCode.Equals(200U))
+            {
+                RemoveEvent?.Invoke(this, EventArgs.Empty);
+            }
+        }
     }
 }

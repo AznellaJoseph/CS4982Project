@@ -100,7 +100,16 @@ namespace CapstoneDesktop.ViewModels
             {
                 var response = _waypointManager.GetWaypointsOnDate(Trip.TripId, (DateTime) SelectedDate);
                 foreach (var waypoint in response.Data ?? new List<Waypoint>())
-                    WaypointViewModels.Add(new WaypointViewModel(waypoint, HostScreen));
+                {
+                    var viewModel = new WaypointViewModel(waypoint, HostScreen);
+                    viewModel.RemoveEvent += (sender, e) =>
+                    {
+                        if (sender is not null)
+                            this.WaypointViewModels.Remove((WaypointViewModel)sender);
+                    };
+                    WaypointViewModels.Add(viewModel);
+                }
+                   
             }
         }
     }
