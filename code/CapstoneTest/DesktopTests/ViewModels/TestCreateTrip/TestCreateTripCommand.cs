@@ -41,7 +41,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
                 new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
             mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", DateTime.Today.AddDays(1), DateTime.Today))
                 .Returns(new Response<int>
-                { StatusCode = 400, ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
+                { StatusCode = (uint)Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
             var testScheduler = new TestScheduler();
 
             createTripWindowViewModel.TripName = "name";
@@ -77,7 +77,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 
             testScheduler.Start();
 
-            Assert.AreEqual(Ui.ErrorMessages.NullDate, createTripWindowViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.NullTripDate, createTripWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             CreateTripPageViewModel createTripWindowViewModel =
                 new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
             mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", startDate, endDate))
-                .Returns(new Response<int> { StatusCode = 200 });
+                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
             var testScheduler = new TestScheduler();
 
             createTripWindowViewModel.TripName = "name";
@@ -105,5 +105,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 
             Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
         }
+
     }
 }

@@ -11,7 +11,7 @@ namespace CapstoneDesktop.ViewModels
     ///     ViewModel for the CreateWaypoint Window
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
-    public class CreateWaypointPageViewModel : ViewModelBase, IRoutableViewModel
+    public class CreateWaypointPageViewModel : ReactiveViewModelBase
     {
         private readonly Trip _trip;
         private readonly WaypointManager _waypointManager;
@@ -24,7 +24,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="trip">the trip that the waypoint will be created for.</param>
         /// <param name="manager">The manager.</param>
         /// <param name="screen">The host screen</param>
-        public CreateWaypointPageViewModel(Trip trip, WaypointManager manager, IScreen screen)
+        public CreateWaypointPageViewModel(Trip trip, WaypointManager manager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
         {
             _trip = trip;
             _waypointManager = manager;
@@ -92,16 +93,6 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public string? Notes { get; set; }
 
-        /// <summary>
-        ///     The host screen
-        /// </summary>
-        public IScreen HostScreen { get; }
-
-        /// <summary>
-        ///     The url path segment
-        /// </summary>
-        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
         private IObservable<IRoutableViewModel> createWaypoint()
         {
             if (string.IsNullOrEmpty(Location))
@@ -112,21 +103,28 @@ namespace CapstoneDesktop.ViewModels
 
             if (StartDate is null || StartTime is null)
             {
-                ErrorMessage = Ui.ErrorMessages.NullDate;
+                ErrorMessage = Ui.ErrorMessages.NullWaypointStartDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var startDate = StartDate?.Date + StartTime;
-            var endTime = EndDate is null || EndTime is null ? null : EndDate?.Date + EndTime;
-            var resultResponse = _waypointManager.CreateWaypoint(_trip.TripId, Location, startDate ?? DateTime.Now,
-                endTime, Notes);
-            if (!string.IsNullOrEmpty(resultResponse.ErrorMessage))
+            var startDate = StartDate.Value.Date + StartTime.Value;
+
+            var endTime = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
+
+            if (startDate.CompareTo(_trip.StartDate) < 0 || startDate.CompareTo(_trip.EndDate) > 0 ||
+                endTime.CompareTo(_trip.StartDate) < 0 || endTime.CompareTo(_trip.EndDate) > 0)
             {
-                ErrorMessage = resultResponse.ErrorMessage;
+                ErrorMessage = Ui.ErrorMessages.InvalidWaypointDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
+            var resultResponse = _waypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
+                endTime, Notes);
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
+
+            ErrorMessage = resultResponse.ErrorMessage;
+            return Observable.Empty<IRoutableViewModel>();
         }
     }
 }

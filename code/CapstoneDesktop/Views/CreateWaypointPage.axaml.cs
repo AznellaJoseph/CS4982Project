@@ -5,7 +5,7 @@ using CapstoneDesktop.ViewModels;
 namespace CapstoneDesktop.Views
 {
     /// <summary>
-    ///     Page for Create Waypoint Functionality
+    ///     User Control for Create Waypoint Functionality
     /// </summary>
     public class CreateWaypointPage : ReactiveUserControl<CreateWaypointPageViewModel>
     {

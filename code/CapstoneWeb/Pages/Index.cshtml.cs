@@ -18,8 +18,15 @@ namespace CapstoneWeb.Pages
         ///     The user id.
         /// </summary>
         public int UserId { get; private set; }
+
+        /// <summary>
+        ///     The trips.
+        /// </summary>
         public IList<Trip> Trips { get; private set; }
-        
+
+        /// <summary>
+        ///     The fake trip manager used for testing.
+        /// </summary>
         public TripManager FakeTripManager { get; set; }
 
         /// <summary>
@@ -34,7 +41,7 @@ namespace CapstoneWeb.Pages
             Trips = tripManager.GetTripsByUser(UserId).Data;
             return Page();
         }
-        
+
         /// <summary>
         ///     Called when [post create].
         /// </summary>

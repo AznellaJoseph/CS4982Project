@@ -7,25 +7,27 @@
     </UserControl.Resources>
     <Grid RowDefinitions="Auto,20,Auto,20,*" ColumnDefinitions="2*,20,3*" Margin="20">
         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-            <TextBlock Classes="h1" Text="{Binding Trip.Name}" TextAlignment="Center"/>
+            <TextBlock Classes="h1" Text="{Binding Trip.Name}" TextAlignment="Center" />
         </Border>
         <Border Classes="container" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
             <Grid ColumnDefinitions="*,10,*,10,*">
                 <Button HorizontalAlignment="Stretch" Grid.Column="0">
-                    <TextBlock Classes="dark" Text="PROFILE" TextAlignment="Center"/>
+                    <TextBlock Classes="dark" Text="PROFILE" TextAlignment="Center" />
                 </Button>
                 <Button HorizontalAlignment="Stretch" Grid.Column="2" Command="{Binding BackCommand}">
-                    <TextBlock Classes="dark" Text="BACK" TextAlignment="Center"/>
+                    <TextBlock Classes="dark" Text="BACK" TextAlignment="Center" />
                 </Button>
                 <Button HorizontalAlignment="Stretch" Grid.Column="4" Command="{Binding LogoutCommand}">
-                    <TextBlock Classes="dark" Text="LOGOUT" TextAlignment="Center"/>
+                    <TextBlock Classes="dark" Text="LOGOUT" TextAlignment="Center" />
                 </Button>
             </Grid>
         </Border>
         <Border Classes="container" Grid.Row="4" Grid.Column="0">
             <Grid RowDefinitions="Auto,10,*,10,Auto">
-                <TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="{Binding SelectedDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}"/>
-                <ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+                <TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center"
+                           Text="{Binding SelectedDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}" />
+                <ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden">
                     <ItemsControl Items="{Binding WaypointViewModels}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -36,23 +38,29 @@
                             <DataTemplate>
                                 <Button HorizontalAlignment="Stretch">
                                     <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*">
-                                        <TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Waypoint.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
-                                        <TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
-                                        <TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Waypoint.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
-                                        <TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Waypoint.Location}"/>
+                                        <TextBlock Grid.Column="0" TextAlignment="Center"
+                                                   Text="{Binding Waypoint.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}" />
+                                        <TextBlock Grid.Column="2" TextAlignment="Center" Text="-" />
+                                        <TextBlock Grid.Column="4" TextAlignment="Center"
+                                                   Text="{Binding Waypoint.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}" />
+                                        <TextBlock Grid.Column="6" TextAlignment="Center"
+                                                   Text="{Binding Waypoint.Location}" />
                                     </Grid>
                                 </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-                <Button Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding CreateWaypointCommand}">
-                    <TextBlock Classes="dark" Text="CREATE WAYPOINT" VerticalAlignment="Center" TextAlignment="Center"/>
+                <Button Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        Command="{Binding CreateWaypointCommand}">
+                    <TextBlock Classes="dark" Text="CREATE WAYPOINT" VerticalAlignment="Center" TextAlignment="Center" />
                 </Button>
             </Grid>
         </Border>
         <Border Classes="container" Grid.Row="4" Grid.Column="2">
-            <Calendar Name="TripCalendar" IsTodayHighlighted="False" SelectionMode="SingleDate" DisplayMode="Month" DisplayDate="{Binding Trip.StartDate}" SelectedDate="{Binding SelectedDate}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <Calendar Name="TripCalendar" IsTodayHighlighted="False" SelectionMode="SingleDate" DisplayMode="Month"
+                      DisplayDate="{Binding Trip.StartDate}" SelectedDate="{Binding SelectedDate}"
+                      VerticalAlignment="Center" HorizontalAlignment="Center" />
         </Border>
     </Grid>
 </UserControl>

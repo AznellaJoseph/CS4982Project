@@ -13,7 +13,7 @@
 
     <form method="post">
         <label for="name">Name* </label>
-        <input id="name" asp-for="Name" required />
+        <input id="name" asp-for="TripName" required/>
 
         <label for="notes">Notes</label>
         <textarea id="notes" asp-for="Notes"></textarea>
@@ -35,7 +35,7 @@
             <button type="submit">Cancel</button>
         </div>
 
-        <div>
+        <div class="warning">
             <p>* Indicates a required field</p>
         </div>
     </form>

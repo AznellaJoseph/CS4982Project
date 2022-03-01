@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CapstoneDesktop.Converters
 {
@@ -28,18 +27,15 @@ namespace CapstoneDesktop.Converters
         /// </remarks>
         public object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is null)
-            {
-                return null;
-            }
-            var date = (DateTime)value;
-            if (!Enum.TryParse((string)parameter, out DataShown type)) return date.ToString(culture);
+            if (value is null) return null;
+            var date = (DateTime) value;
+            if (!Enum.TryParse((string) parameter, out DataShown type)) return date.ToString(culture);
+
             return type switch
             {
                 DataShown.Both => date.ToString("MM/dd/yyyy hh:mm tt", culture),
                 DataShown.Date => date.ToString("MM/dd/yyyy", culture),
-                DataShown.Time => date.ToString("hh:mm tt", culture),
-                _ => date.ToString(culture),
+                DataShown.Time => date.ToString("hh:mm tt", culture)
             };
         }
 

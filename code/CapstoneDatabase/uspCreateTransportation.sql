@@ -5,13 +5,13 @@ DELIMITER $
 CREATE PROCEDURE uspCreateTransportation(
 	tripId int,
 	method VARCHAR(50),
-	startTime DATETIME,
-	endTime DATETIME
+	startDate DATETIME,
+	endDate DATETIME
 )
 
 BEGIN
-	INSERT INTO transportation(tripId, method, startTime, endTime)
-	VALUES (tripId, method, startTime, endTime);
+	INSERT INTO transportation(tripId, method, startDate, endDate)
+	VALUES (tripId, method, startDate, endDate);
 
 	SELECT LAST_INSERT_ID();
 

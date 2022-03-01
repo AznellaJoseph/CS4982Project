@@ -6,7 +6,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.Views
 {
     /// <summary>
-    ///     Page for Login Functionality
+    ///     User Control for Login Functionality
     /// </summary>
     /// <seealso cref="Avalonia.ReactiveUI.ReactiveUserControl&lt;LoginPageViewModel&gt;" />
     public class LoginPage : ReactiveUserControl<LoginPageViewModel>
