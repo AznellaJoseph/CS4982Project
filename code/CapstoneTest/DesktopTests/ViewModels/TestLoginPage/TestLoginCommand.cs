@@ -71,7 +71,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             loginPageViewModel.Username = "admin";
             loginPageViewModel.Password = "admin";
 
-            loginPageViewModel.LoginCommand.Execute().Subscribe();
+            loginPageViewModel.LoginCommand.ThrownExceptions.Subscribe();
 
             testScheduler.Start();
 
@@ -81,21 +81,16 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
         [TestMethod]
         public void Login_NullCredentials_ReturnsErrorMessage()
         {
-            var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
-            mockUserManager.Setup(um => um.GetUserByCredentials("", ""))
-                .Returns(new Response<User> { ErrorMessage = Ui.ErrorMessages.IncorrectUsername });
-            LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
-            var testScheduler = new TestScheduler();
 
-            loginPageViewModel.Username = null;
-            loginPageViewModel.Password = null;
+            LoginPageViewModel loginPageViewModel = new(mockScreen.Object);
+            var testScheduler = new TestScheduler();
 
             loginPageViewModel.LoginCommand.Execute().Subscribe();
 
             testScheduler.Start();
 
-            Assert.AreEqual(Ui.ErrorMessages.IncorrectUsername, loginPageViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.InvalidFields, loginPageViewModel.ErrorMessage);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -105,6 +106,33 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
                 waypointManager.GetWaypointsOnDate(1, currentTime);
 
             Assert.AreEqual(2, resultResponse.Data?.Count);
+        }
+
+        [TestMethod]
+        public void Call_ServerMySqlException_Failure()
+        {
+            var mockDal = new Mock<WaypointDal>();
+            var builder = new MySqlExceptionBuilder();
+            var currentTime = DateTime.Now;
+            mockDal.Setup(dal => dal.GetWaypointsOnDate(1, currentTime))
+                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+            var waypointManager = new WaypointManager(mockDal.Object);
+            var result = waypointManager.GetWaypointsOnDate(1, currentTime);
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Call_ServerException_Failure()
+        {
+            var mockDal = new Mock<WaypointDal>();
+            var currentTime = DateTime.Now;
+            mockDal.Setup(dal => dal.GetWaypointsOnDate(1, currentTime))
+                .Throws(new Exception());
+            var waypointManager = new WaypointManager(mockDal.Object);
+            var result = waypointManager.GetWaypointsOnDate(1, currentTime);
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
     }
 }

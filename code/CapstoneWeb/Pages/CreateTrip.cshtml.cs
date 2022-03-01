@@ -18,7 +18,7 @@ namespace CapstoneWeb.Pages
         ///     The name.
         /// </summary>
         [BindProperty]
-        public string Name { get; set; }
+        public string TripName { get; set; }
 
         /// <summary>
         ///     The start date.
@@ -46,11 +46,12 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post].
         /// </summary>
-        /// <returns>The next page to redirect to or the current page if there is an error </returns>
+        /// <returns>Redirect to index or the current page if there is an error </returns>
         public IActionResult OnPost()
         {
             var tripManager = TripManager ?? new TripManager();
-            var response = tripManager.CreateTrip(Convert.ToInt32(HttpContext.Session.GetString("userId")), Name, Notes,
+            var response = tripManager.CreateTrip(Convert.ToInt32(HttpContext.Session.GetString("userId")), TripName,
+                Notes,
                 StartDate, EndDate);
             if (string.IsNullOrEmpty(response.ErrorMessage))
             {

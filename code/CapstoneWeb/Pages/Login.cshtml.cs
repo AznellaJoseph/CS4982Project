@@ -29,7 +29,7 @@ namespace CapstoneWeb.Pages
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        ///     The fake user manager.
+        ///     The fake user manager used for testing.
         /// </summary>
         public UserManager FakeUserManager { get; set; }
 

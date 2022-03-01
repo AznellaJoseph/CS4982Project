@@ -1,6 +1,7 @@
 ﻿using System;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -15,14 +16,14 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             var mockTransportationDal = new Mock<TransportationDal>();
             mockTransportationDal.Setup(db =>
                     db.CreateTransportation(1, "Car", DateTime.Now.AddDays(4), DateTime.Now))
-                .Returns(400);
+                .Returns((int) Ui.StatusCode.BadRequest);
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
                 transportationManager.CreateTransportation(1, "Car", DateTime.Now.AddDays(4), DateTime.Now);
 
-            Assert.AreEqual(400u, resultResponse.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, resultResponse.StatusCode);
         }
 
         [TestMethod]
@@ -31,14 +32,14 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             var mockTransportationDal = new Mock<TransportationDal>();
             mockTransportationDal.Setup(db =>
                     db.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2)))
-                .Returns(200);
-            
+                .Returns((int) Ui.StatusCode.Success);
+
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
                 transportationManager.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2));
 
-            Assert.AreEqual(200u, resultResponse.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
         }
     }
 }

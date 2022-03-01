@@ -12,7 +12,7 @@ namespace CapstoneDesktop.ViewModels
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
-    public class TripOverviewPageViewModel : ViewModelBase, IRoutableViewModel
+    public class TripOverviewPageViewModel : ReactiveViewModelBase
     {
         private readonly EventManager _eventManager;
         
@@ -24,7 +24,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="trip">The trip.</param>
         /// <param name="eventManager">The event manager.</param>
         /// <param name="screen">The screen.</param>
-        public TripOverviewPageViewModel(Trip trip, EventManager eventManager, IScreen screen)
+
+        public TripOverviewPageViewModel(Trip trip, EventManager eventManager, IScreen screen): base(screen, Guid.NewGuid().ToString()[..5])
         {
             Trip = trip;
             _eventManager = eventManager;
@@ -84,16 +85,6 @@ namespace CapstoneDesktop.ViewModels
             }
         }
 
-        /// <summary>
-        ///     The host screen.
-        /// </summary>
-        public IScreen HostScreen { get; }
-
-        /// <summary>
-        ///     The url path segment.
-        /// </summary>
-        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
         private void updateWaypoints()
         {
             EventViewModels.Clear();
@@ -120,6 +111,7 @@ namespace CapstoneDesktop.ViewModels
                 }
                    
             }
+
         }
     }
 }

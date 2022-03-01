@@ -4,7 +4,6 @@ using CapstoneDesktop.ViewModels;
 
 namespace CapstoneDesktop.Views
 {
-
     /// <summary>
     ///     Window for displaying all windows
     /// </summary>

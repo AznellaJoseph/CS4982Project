@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 namespace CapstoneBackend.Utils
 {
     /// <summary>
-    ///     Handing Hashing and Validating Passwords
+    ///     Static Class PasswordHasher that handles hashing and validating passwords
     /// </summary>
     public static class PasswordHasher
     {

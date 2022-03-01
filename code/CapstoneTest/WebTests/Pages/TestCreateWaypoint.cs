@@ -43,7 +43,7 @@ namespace CapstoneTest.WebTests.Pages
             var currentTime = DateTime.Now;
             fakeWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "1601 Maple St", currentTime.AddDays(1), currentTime, "notes"))
-                .Returns(new Response<int> {StatusCode = 400U, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
+                .Returns(new Response<int> {StatusCode = (uint)Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.WaypointManager = fakeWaypointManager.Object;
             

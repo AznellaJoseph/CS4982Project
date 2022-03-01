@@ -1,7 +1,6 @@
 using System;
-using System.Linq;
 using CapstoneBackend.Model;
-using Microsoft.AspNetCore.Http;
+using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
@@ -53,14 +52,15 @@ namespace CapstoneWeb.Pages
         {
             var waypointManager = WaypointManager ?? new WaypointManager();
             var response = waypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
-            if (response.StatusCode.Equals(200U))
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary
                 {
                     {"tripId", tripId}
                 };
-                return RedirectToPage($"Trip", routeValue);
+                return RedirectToPage("Trip", routeValue);
             }
+
             ErrorMessage = response.ErrorMessage;
             return Page();
         }

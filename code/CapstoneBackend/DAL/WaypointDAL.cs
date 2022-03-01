@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 namespace CapstoneBackend.DAL
 {
     /// <summary>
-    ///     Data Access Layer (DAL) for Waypoint
+    ///     Data Access Layer (DAL) for accessing Waypoint information from the database
     /// </summary>
     public class WaypointDal
     {
@@ -40,7 +40,7 @@ namespace CapstoneBackend.DAL
         /// <returns>
         ///     The waypoint id
         /// </returns>
-        public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime? endDate,
+        public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate,
             string? notes)
         {
             _connection.Open();
@@ -100,7 +100,7 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        ///     Gets the waypyoints on date.
+        ///     Gets the waypyoints on the specified date.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
@@ -139,11 +139,11 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        /// Removes the waypoint.
+        ///     Removes the waypoint.
         /// </summary>
         /// <param name="waypointId">The waypoint identifier.</param>
         /// <returns>
-        /// True if the waypoint was removed, false otherwise
+        ///     True if the waypoint was removed, false otherwise
         /// </returns>
         public virtual bool RemoveWaypoint(int waypointId)
         {
