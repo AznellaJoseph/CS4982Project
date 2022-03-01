@@ -16,6 +16,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestWaypoint
             var mockScreen = new Mock<IScreen>();
             var result = new WaypointViewModel(mockWaypoint.Object, mockScreen.Object);
             Assert.AreEqual(mockWaypoint.Object, result.Waypoint);
+            Assert.AreEqual(mockWaypoint.Object, result.Event);
         }
     }
 }

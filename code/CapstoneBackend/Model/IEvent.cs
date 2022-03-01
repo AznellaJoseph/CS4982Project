@@ -4,8 +4,7 @@ namespace CapstoneBackend.Model
 {
     /// <summary>
     /// IEvent Interface to maintain the events (waypoints, transportation) in a trip
-    /// </summary>
-    public interface IEvent
+    public interface IEvent : IComparable<IEvent>
     {
         /// <summary>
         ///     The trip id.
@@ -21,5 +20,12 @@ namespace CapstoneBackend.Model
         ///     The end date.
         /// </summary>
         public DateTime? EndDate { get; set; }
+        
+        public string DisplayName { get; }
+
+        int IComparable<IEvent>.CompareTo(IEvent? other)
+        {
+            return StartDate.CompareTo(other?.StartDate);
+        }
     }
 }

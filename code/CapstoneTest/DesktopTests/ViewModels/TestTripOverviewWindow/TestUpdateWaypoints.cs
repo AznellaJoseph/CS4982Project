@@ -18,21 +18,23 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
             var mockTrip = new Mock<Trip>();
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();
-            var mockWaypointManager = new Mock<WaypointManager>();
-            mockWaypointManager.Setup(wm => wm.GetWaypointsOnDate(1, startDate))
-                .Returns(new Response<IList<Waypoint>>
+            var mockEventManager = new Mock<EventManager>();
+            mockEventManager.Setup(wm => wm.GetEventsOnDate(1, startDate))
+                .Returns(new Response<IList<IEvent>>
                 {
-                    Data = new List<Waypoint>
+                    Data = new List<IEvent>
                     {
-                        new()
+                        new Waypoint() 
                     }
                 });
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object)
+
+
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockEventManager.Object, mockScreen.Object)
             {
                 SelectedDate = startDate
             };
 
-            Assert.AreEqual(1, testViewModel.WaypointViewModels.Count);
+            Assert.AreEqual(1, testViewModel.EventViewModels.Count);
 
         }
 
@@ -44,19 +46,18 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
             var mockTrip = new Mock<Trip>();
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();
-            var mockWaypointManager = new Mock<WaypointManager>();
-            mockWaypointManager.Setup(wm => wm.GetWaypointsOnDate(1, startDate))
-                .Returns(new Response<IList<Waypoint>>
+            var mockEventManager = new Mock<EventManager>();
+            mockEventManager.Setup(em => em.GetEventsOnDate(1, startDate))
+                .Returns(new Response<IList<IEvent>>
                 {
                     Data = null
                 });
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object)
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockEventManager.Object, mockScreen.Object)
             {
                 SelectedDate = startDate
             };
 
-            Assert.AreEqual(0, testViewModel.WaypointViewModels.Count);
-
+            Assert.AreEqual(0, testViewModel.EventViewModels.Count);
         }
     }
 }

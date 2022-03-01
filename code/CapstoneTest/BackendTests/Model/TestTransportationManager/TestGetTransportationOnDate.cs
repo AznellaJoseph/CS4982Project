@@ -55,6 +55,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             Assert.AreEqual(1, resultResponse.Data?[0].TripId);
             Assert.AreEqual(1, resultResponse.Data?[0].TransportationId);
             Assert.AreEqual("Car", resultResponse.Data?[0].Method);
+            Assert.AreEqual("Car", resultResponse.Data?[0].DisplayName);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
         }
