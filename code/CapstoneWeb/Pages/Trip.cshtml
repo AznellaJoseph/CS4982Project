@@ -10,13 +10,15 @@
 @Html.Hidden("endDate", Model.CurrentTrip.EndDate.ToShortDateString())
 @Html.Hidden("tripId", Model.CurrentTrip.TripId)
 
-<div class="container">
+<div class="container trip-overview">
     
-    <h1>@Model.CurrentTrip.Name</h1>
+    <div class="panel">
+        <h1>@Model.CurrentTrip.Name</h1>
+    </div>
 
     <div class="panel button-group">
         <form method="post">
-            <button type="submit" asp-page-handler="profile">Profile</button>
+            <button type="submit" asp-page-handler="profile" disabled>Profile</button>
             <button type="submit" asp-page-handler="back">Back To Trips</button>
             <button type="submit" asp-page-handler="logout">Logout</button>
         </form>
@@ -31,8 +33,10 @@
             </div>
 
             <form method="post" class="end">
-                <button type="submit" asp-page-handler="CreateTransportation">Create Transportation</button>
-                <button type="submit" class="full-width-button" asp-page-handler="create">Create Waypoint</button>
+                <div class="button-group">
+                    <button type="submit" asp-page-handler="CreateTransportation">Create Transportation</button>
+                    <button type="submit" asp-page-handler="CreateWaypoint">Create Waypoint</button>
+                </div>
             </form>
         </div>
 

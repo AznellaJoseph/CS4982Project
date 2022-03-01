@@ -1,8 +1,8 @@
-DROP PROCEDURE IF EXISTS uspGetTripsByTripId;
+DROP PROCEDURE IF EXISTS uspGetTripByTripId;
 
 DELIMITER $
 
-CREATE PROCEDURE uspGetTripsByTripId(tripId int)
+CREATE PROCEDURE uspGetTripByTripId(tripId int)
 BEGIN
     SELECT tripId, name, notes, startDate, endDate, userId
     FROM trip

@@ -17,20 +17,22 @@ $(".vanilla-calendar-date").click(
                         $('input:hidden[name="__RequestVerificationToken"]').val());
                 },
                 data: { selectedDate: date },
-                success: function(result) {
+            success: function (result) {
                     result.data.forEach(function(waypoint) {
                         const events = $("#events");
                         events.empty();
                         events.append(
-                            `
-                        <div class="event" data-id=${waypoint.waypointId}>
-                            <p>
+                         `
+                        <div class="event list-item" data-id=${waypoint.waypointId}>
+                            <div class="info-section">
                                 ${waypoint.startDate} - ${waypoint.startDate}
-                            </p>
-                            <p>
+                            </div>
+                            <div class="name-section">
                                 ${waypoint.location}
-                            </p>
-                            <button class="removeButton" data-id=${waypoint.waypointId}>Remove</button>
+                            </div>
+                            <div class="icon-section">
+                                <button class="removeButton" data-id=${waypoint.waypointId}>Remove</button>
+                            </div>
                         </div>
                         `
                         );
