@@ -12,7 +12,7 @@ namespace CapstoneDesktop.ViewModels
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
-    public class TripOverviewPageViewModel : ViewModelBase, IRoutableViewModel
+    public class TripOverviewPageViewModel : ReactiveViewModelBase
     {
         private readonly WaypointManager _waypointManager;
         private DateTime? _selectedDate;
@@ -23,7 +23,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="trip">The trip.</param>
         /// <param name="waypointManager">The waypoint manager.</param>
         /// <param name="screen">The screen.</param>
-        public TripOverviewPageViewModel(Trip trip, WaypointManager waypointManager, IScreen screen)
+        public TripOverviewPageViewModel(Trip trip, WaypointManager waypointManager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
         {
             Trip = trip;
             _waypointManager = waypointManager;
@@ -83,25 +84,13 @@ namespace CapstoneDesktop.ViewModels
             }
         }
 
-        /// <summary>
-        ///     The host screen.
-        /// </summary>
-        public IScreen HostScreen { get; }
-
-        /// <summary>
-        ///     The url path segment.
-        /// </summary>
-        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
         private void updateWaypoints()
         {
             WaypointViewModels.Clear();
-            if (SelectedDate is not null)
-            {
-                var response = _waypointManager.GetWaypointsOnDate(Trip.TripId, (DateTime) SelectedDate);
-                foreach (var waypoint in response.Data ?? new List<Waypoint>())
-                    WaypointViewModels.Add(new WaypointViewModel(waypoint, HostScreen));
-            }
+            if (SelectedDate is null) return;
+            var response = _waypointManager.GetWaypointsOnDate(Trip.TripId, (DateTime) SelectedDate);
+            foreach (var waypoint in response.Data ?? new List<Waypoint>())
+                WaypointViewModels.Add(new WaypointViewModel(waypoint, HostScreen));
         }
     }
 }

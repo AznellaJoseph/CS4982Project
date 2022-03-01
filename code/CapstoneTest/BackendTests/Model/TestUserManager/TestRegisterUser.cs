@@ -28,7 +28,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
-            Assert.AreEqual(200U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.Success, resultResponse.StatusCode);
             Assert.AreEqual(1, resultResponse.Data);
         }
 
@@ -49,7 +49,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
-            Assert.AreEqual(400U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.BadRequest, resultResponse.StatusCode);
         }
 
         [TestMethod]
@@ -65,13 +65,13 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             var builder = new MySqlExceptionBuilder();
             mockUserDal.Setup(db => db.GetUserByUsername(username)).Returns(fakeExistingUser);
             mockUserDal.Setup(db => db.CreateUser(username, password, fname, lname))
-                .Throws(builder.WithError(500, Ui.ErrorMessages.InternalServerError).Build());
+                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
 
             UserManager userManager = new(mockUserDal.Object);
 
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
-            Assert.AreEqual(500U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
         }
 
         [TestMethod]
@@ -92,7 +92,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.RegisterUser(username, password, fname, lname);
 
-            Assert.AreEqual(500U, resultResponse.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
         }
     }

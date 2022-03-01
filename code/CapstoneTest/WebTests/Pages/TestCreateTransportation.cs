@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using CapstoneWeb.Pages;
@@ -21,10 +20,10 @@ namespace CapstoneTest.WebTests.Pages
             var manager = new Mock<TransportationManager>();
             var currentTime = DateTime.Now;
             manager.Setup(um => um.CreateTransportation(0, "Car", currentTime, currentTime))
-                .Returns(new Response<int> { Data = 0 });
+                .Returns(new Response<int> {Data = 0});
             var page = TestPageBuilder.BuildPage<CreateTransportationModel>(session.Object);
             page.FakeTransportationManager = manager.Object;
-            
+
             page.Method = "Car";
             page.StartDate = currentTime;
             page.EndDate = currentTime;
@@ -42,10 +41,11 @@ namespace CapstoneTest.WebTests.Pages
             var currentTime = DateTime.Now;
             manager.Setup(um =>
                     um.CreateTransportation(0, "Car", currentTime.AddDays(1), currentTime))
-                .Returns(new Response<int> {StatusCode = 400U, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
+                .Returns(new Response<int>
+                    {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
             var page = TestPageBuilder.BuildPage<CreateTransportationModel>(session.Object);
             page.FakeTransportationManager = manager.Object;
-            
+
             page.Method = "Car";
             page.StartDate = currentTime.AddDays(1);
             page.EndDate = currentTime;

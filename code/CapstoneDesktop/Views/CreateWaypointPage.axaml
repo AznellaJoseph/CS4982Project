@@ -1,6 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="CapstoneDesktop.Views.CreateWaypointPage">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CapstoneDesktop.Views.CreateWaypointPage">
     <Border Classes="container" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="30">
         <StackPanel Width="700" Spacing="10">
             <TextBlock Classes="h1" Text="CREATE WAYPOINT" HorizontalAlignment="Center"
@@ -9,7 +9,8 @@
             <TextBlock Text="WAYPOINT LOCATION:" />
             <TextBox Watermark="LOCATION NAME" VerticalAlignment="Bottom" Text="{Binding Location, Mode=TwoWay}" />
             <TextBlock Text="WAYPOINT NOTES" />
-            <TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
+            <TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
+                     AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
 
             <Grid ColumnDefinitions="*,10,*" RowDefinitions="*,10,*">
                 <DatePicker Grid.Column="0" Grid.Row="0" SelectedDate="{Binding StartDate}" Header="START DATE" />

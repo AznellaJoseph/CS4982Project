@@ -6,6 +6,9 @@ using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.DAL
 {
+    /// <summary>
+    ///     Data Access Layer (DAL) for accessing Transportation information from the database
+    /// </summary>
     public class TransportationDal
     {
         private readonly MySqlConnection _connection;
@@ -53,20 +56,20 @@ namespace CapstoneBackend.DAL
             _connection.Close();
             return transportationId;
         }
-        
+
         /// <summary>
-        ///     Gets the transportations on date.
+        ///     Gets the transportation on date.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
-        /// <returns> A list of the transportations of the trip on the specified date </returns>
+        /// <returns> A list of the transportation of the trip on the specified date </returns>
         public virtual IList<Transportation> GetTransportationOnDate(int tripId, DateTime selectedDate)
         {
             _connection.Open();
             const string procedure = "uspGetTransportationOnDate";
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
-            IList<Transportation> transportationsOnDate = new List<Transportation>();
+            IList<Transportation> transportationOnDate = new List<Transportation>();
 
             cmd.Parameters.Add("@selectedDate", MySqlDbType.DateTime).Value = selectedDate;
             cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
@@ -78,7 +81,7 @@ namespace CapstoneBackend.DAL
             var methodOrdinal = reader.GetOrdinal("method");
 
             while (reader.Read())
-                transportationsOnDate.Add(new Transportation
+                transportationOnDate.Add(new Transportation
                 {
                     TripId = tripId,
                     TransportationId = reader.GetInt32(transportationIdOrdinal),
@@ -88,15 +91,15 @@ namespace CapstoneBackend.DAL
                 });
 
             _connection.Close();
-            return transportationsOnDate;
+            return transportationOnDate;
         }
 
         /// <summary>
-        /// Removes the transportation.
+        ///     Removes the transportation.
         /// </summary>
         /// <param name="transportationId">The transportation identifier.</param>
         /// <returns>
-        /// True if the transport was removed, false otherwise
+        ///     True if the transport was removed, false otherwise
         /// </returns>
         public virtual bool RemoveTransportation(int transportationId)
         {

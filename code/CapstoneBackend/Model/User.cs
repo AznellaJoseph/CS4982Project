@@ -1,7 +1,7 @@
 ﻿namespace CapstoneBackend.Model
 {
     /// <summary>
-    ///     User Model Class
+    ///     A model class for the User object
     /// </summary>
     public class User
     {

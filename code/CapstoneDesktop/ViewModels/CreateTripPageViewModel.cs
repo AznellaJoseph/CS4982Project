@@ -11,7 +11,7 @@ namespace CapstoneDesktop.ViewModels
     ///     ViewModel for Create Trip Window
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
-    public class CreateTripPageViewModel : ViewModelBase, IRoutableViewModel
+    public class CreateTripPageViewModel : ReactiveViewModelBase
     {
         private readonly TripManager _tripManager;
         private readonly User _user;
@@ -24,7 +24,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="user">The current user</param>
         /// <param name="manager">The manager.</param>
         /// <param name="screen">the host screen</param>
-        public CreateTripPageViewModel(User user, TripManager manager, IScreen screen)
+        public CreateTripPageViewModel(User user, TripManager manager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
         {
             _tripManager = manager;
             _user = user;
@@ -82,16 +83,6 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public DateTimeOffset? EndDate { get; set; }
 
-        /// <summary>
-        ///     The host screen
-        /// </summary>
-        public IScreen HostScreen { get; }
-
-        /// <summary>
-        ///     The url path segment
-        /// </summary>
-        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
         private IObservable<IRoutableViewModel> createTrip()
         {
             if (string.IsNullOrEmpty(TripName))
@@ -102,19 +93,17 @@ namespace CapstoneDesktop.ViewModels
 
             if (StartDate is null || EndDate is null)
             {
-                ErrorMessage = Ui.ErrorMessages.NullDate;
+                ErrorMessage = Ui.ErrorMessages.NullTripDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
             var resultResponse =
                 _tripManager.CreateTrip(_user.UserId, TripName, Notes, StartDate.Value.Date, EndDate.Value.Date);
-            if (resultResponse.StatusCode != 200U || resultResponse.ErrorMessage is not null)
-            {
-                ErrorMessage = resultResponse.ErrorMessage ?? string.Empty;
-                return Observable.Empty<IRoutableViewModel>();
-            }
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(_user, HostScreen));
 
-            return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(_user, HostScreen));
+            ErrorMessage = resultResponse.ErrorMessage;
+            return Observable.Empty<IRoutableViewModel>();
         }
     }
 }

@@ -2,22 +2,26 @@ using System;
 
 namespace CapstoneBackend.Model
 {
+    /// <summary>
+    ///     A model class for the Transportation object
+    /// </summary>
+    /// <seealso cref="CapstoneBackend.Model.IEvent" />
     public class Transportation : IEvent
     {
         /// <summary>
-        ///     The trip id.
-        /// </summary>
-        public int TripId { get; set; }
-
-        /// <summary>
-        ///     The waypoint id.
+        ///     The transportation id.
         /// </summary>
         public int TransportationId { get; set; }
 
         /// <summary>
-        ///     The location.
+        ///     The method.
         /// </summary>
         public string Method { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     The trip id.
+        /// </summary>
+        public int TripId { get; set; }
 
         /// <summary>
         ///     The start date.

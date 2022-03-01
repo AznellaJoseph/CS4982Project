@@ -26,7 +26,7 @@ namespace CapstoneTest.WebTests.Pages
             page.TripManager = fakeTripManager.Object;
 
             page.HttpContext.Session.SetString("userId", "0");
-            page.Name = "vacation";
+            page.TripName = "vacation";
             page.Notes = "notes";
             page.EndDate = DateTime.Today.AddDays(1);
 
@@ -50,7 +50,7 @@ namespace CapstoneTest.WebTests.Pages
             page.TripManager = fakeTripManager.Object;
 
             page.HttpContext.Session.SetString("userId", "0");
-            page.Name = "vacation";
+            page.TripName = "vacation";
             page.Notes = "notes";
             page.StartDate = DateTime.Today.AddDays(1);
 

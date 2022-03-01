@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -30,7 +31,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             });
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual(200U, result.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.Success, result.StatusCode);
             Assert.IsFalse(result.Data?.Count == 0);
             var trip = result.Data?[0];
             Assert.AreEqual(1, trip?.TripId);
@@ -46,10 +47,10 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
         {
             var mockDal = new Mock<TripDal>();
             var builder = new MySqlExceptionBuilder();
-            mockDal.Setup(dal => dal.GetTripsByUserId(1)).Throws(builder.WithError(500, "test").Build());
+            mockDal.Setup(dal => dal.GetTripsByUserId(1)).Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, "test").Build());
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual(500U, result.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
 
@@ -60,7 +61,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             mockDal.Setup(dal => dal.GetTripsByUserId(1)).Throws(new Exception("test"));
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.GetTripsByUser(1);
-            Assert.AreEqual(500U, result.StatusCode);
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
     }
