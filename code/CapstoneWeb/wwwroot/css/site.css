@@ -36,12 +36,18 @@ h1 {
 
 .data-entry-window {
     width: 45vw;
-    min-height: 50vh;
+    min-height: 30vh;
+    height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: stretch;
 }
+
+.data-entry-window form {
+    height: 90%;
+}
+
 
 form {
     display: flex;
@@ -60,7 +66,7 @@ form {
     gap: 20px;
 }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=date], textarea {
     width: 100%;
     padding: 15px 20px;
     box-sizing: border-box;
@@ -69,6 +75,7 @@ input[type=text], input[type=password] {
     border: none;
     font-size: 14px;
     box-shadow: inset 1px 0px 10px rgba(0, 0, 0, 0.5);
+    font-family: 'Roboto', sans-serif;
 }
 
 input[type=button], button {
@@ -80,6 +87,13 @@ input[type=button], button {
     border-radius: 5px;
     text-transform: uppercase;
     font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+}
+
+textarea {
+    width: 100%;
+    height: 33%;
+    font-size: 1em;
 }
 
 ::placeholder {
@@ -96,13 +110,21 @@ label {
     font-size: 14px;
 }
 
-.button-group, .button-group form{
+.button-group, .button-group form, .input-row {
     width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
     gap: 10px;
+}
+
+.input-row {
+    padding: 20px 0;
+}
+
+.input-group{
+    width: 100%;
 }
 
 .error {
@@ -283,3 +305,4 @@ label {
 .trip-header {
     padding: 1% 0;
 }
+
