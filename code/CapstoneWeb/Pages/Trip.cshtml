@@ -11,19 +11,21 @@
 @Html.Hidden("tripId", Model.CurrentTrip.TripId)
 
 <div class="container trip-overview">
-    
-    <div class="left column">
+
+    <div class="panel trip-header">
         <h1>@Model.CurrentTrip.Name</h1>
+    </div>
 
-        <div class="panel button-group">
-            <form method="post">
-                <button type="submit" asp-page-handler="profile">Profile</button>
-                <button type="submit" asp-page-handler="back">Back To Trips</button>
-                <button type="submit" asp-page-handler="logout">Logout</button>
-            </form>
-        </div>
+    <div class="panel button-group">
+        <form method="post">
+            <button type="submit" asp-page-handler="profile">Profile</button>
+            <button type="submit" asp-page-handler="back">Back To Trips</button>
+            <button type="submit" asp-page-handler="logout">Logout</button>
+        </form>
+    </div>
 
-        <div class="panel">
+    <div class="row">
+        <div class="panel left column">
             <h1>Events</h1>
 
             <div id="events" class="list">
@@ -31,13 +33,13 @@
             </div>
 
             <form method="post" class="end">
-                <button type="submit" asp-page-handler="create">Create Waypoint</button>
+                <button type="submit" class="full-width-button" asp-page-handler="create">Create Waypoint</button>
             </form>
         </div>
-    </div>
 
-    <div class="right column">
-        <div id="myCalendar" class="vanilla-calendar">
+        <div class="panel right column">
+            <div id="myCalendar" class="vanilla-calendar">
+            </div>
         </div>
     </div>
 

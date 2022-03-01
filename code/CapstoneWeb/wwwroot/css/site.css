@@ -14,6 +14,8 @@ body {
     background: #002E3D;
     width: auto;
     height: auto;
+    max-width: 1500px;
+    max-height: 1000px;
     padding: 50px;
     border-radius: 20px;
 }
@@ -148,7 +150,14 @@ label {
     margin-top: auto;
 }
 
-.landing-page, .trip-overview {
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.landing-page {
     background: #000F14;
     height: 75vh;
     width: 70vw;
@@ -163,7 +172,7 @@ label {
     margin: 5px;
 }
 
-#trip-list {
+#trip-list, #events {
     flex: 1;
 }
 
@@ -172,10 +181,10 @@ label {
     gap: 12px;
 }
 
-.landing-page .left, .trip-overview .left {
+.landing-page .left, .trip-overview .row .left {
     width: 40%;
 }
-.landing-page .right, .trip-overview .right {
+.landing-page .right, .trip-overview .row .right {
     width: 60%;
 }
 
@@ -211,5 +220,66 @@ label {
 
 
 .trip-overview {
+    width: 65vw;
+    max-width: 1500px;
+    height: 70vh;
+    background: #000F14;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
+.trip-overview .row {
+    height: 75%;
+}
+
+#myCalendar {
+    width: 100%;
+    height: 100%;
+    background: #002E3D;
+    border: none;
+}
+
+#events {
+    height: 100%;
+}
+
+
+#myCalendar .vanilla-calendar-btn {
+    background: #007EA7;
+    padding: 5px;
+}
+
+#myCalendar .vanilla-calendar-btn svg {
+    fill: black;
+}
+
+#myCalendar .vanilla-calendar-week {
+    background: #007EA7;
+}
+
+#myCalendar .vanilla-calendar-week span {
+    color: black;
+}
+    
+#myCalendar .vanilla-calendar-date {
+    padding-top: 3%;
+    padding-bottom: 3%;
+    background: #809848;
+    border: 3px solid #002E3D;
+    border-radius: 9px;
+}
+
+#myCalendar .vanilla-calendar-date--disabled {
+    background: #007EA7;
+    opacity: 1;
+}
+
+#myCalendar .vanilla-calendar-date--selected {
+    background: #809848;
+    opacity: 1;
+}
+
+.trip-header {
+    padding: 1% 0;
 }
