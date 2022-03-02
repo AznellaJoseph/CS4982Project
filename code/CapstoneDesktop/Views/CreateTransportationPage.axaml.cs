@@ -10,7 +10,7 @@ namespace CapstoneDesktop.Views
     public class CreateTransportationPage : ReactiveUserControl<CreateTransportationPageViewModel>
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateWaypointPage" /> class.
+        ///     Initializes a new instance of the <see cref="CreateTransportationPage" /> class.
         /// </summary>
         public CreateTransportationPage()
         {

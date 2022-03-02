@@ -36,7 +36,7 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="CreateTransportationPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">The trip.</param>
         /// <param name="screen">The screen.</param>
