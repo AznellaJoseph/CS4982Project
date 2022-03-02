@@ -25,8 +25,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             Assert.IsNotNull(createWaypointWindowViewModel.CancelCreateWaypointCommand);
             Assert.IsNull(createWaypointWindowViewModel.StartTime);
             Assert.IsNull(createWaypointWindowViewModel.EndTime);
-            Assert.IsNull(createWaypointWindowViewModel.StartTime);
-            Assert.IsNull(createWaypointWindowViewModel.EndTime);
+            Assert.IsNull(createWaypointWindowViewModel.StartDate);
+            Assert.IsNull(createWaypointWindowViewModel.EndDate);
             Assert.IsNull(createWaypointWindowViewModel.Location);
             Assert.IsNull(createWaypointWindowViewModel.Notes);
         }

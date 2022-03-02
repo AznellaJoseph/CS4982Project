@@ -34,6 +34,8 @@ namespace CapstoneDesktop.ViewModels
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
             CreateWaypointCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new CreateWaypointPageViewModel(Trip, HostScreen)));
+            CreateTransportationCommand = ReactiveCommand.CreateFromObservable(() =>
+                HostScreen.Router.Navigate.Execute(new CreateTransportationPageViewModel(Trip, HostScreen)));
             BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
             EventViewModels = new ObservableCollection<IEventViewModel>();
         }
@@ -61,6 +63,11 @@ namespace CapstoneDesktop.ViewModels
         ///     The create waypoint command.
         /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> CreateWaypointCommand { get; }
+
+        /// <summary>
+        ///   The create transportation command.
+        /// </summary>
+        public ReactiveCommand<Unit, IRoutableViewModel> CreateTransportationCommand { get; }
 
         /// <summary>
         ///     The waypoint viewmodels.

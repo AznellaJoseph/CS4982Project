@@ -46,10 +46,16 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-                <Button Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                        Command="{Binding CreateWaypointCommand}">
-                    <TextBlock Classes="dark" Text="CREATE WAYPOINT" VerticalAlignment="Center" TextAlignment="Center" />
-                </Button>
+				<Grid ColumnDefinitions="*,*" Grid.Row="4">
+					<Button Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        Command="{Binding CreateTransportationCommand}">
+						<TextBlock Classes="dark" Text="CREATE TRANSPORTATION" VerticalAlignment="Center" TextAlignment="Center" />
+					</Button>
+					<Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+							Command="{Binding CreateWaypointCommand}">
+						<TextBlock Classes="dark" Text="CREATE WAYPOINT" VerticalAlignment="Center" TextAlignment="Center" />
+					</Button>
+				</Grid>
             </Grid>
         </Border>
         <Border Classes="container" Grid.Row="4" Grid.Column="2">
