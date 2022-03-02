@@ -20,6 +20,9 @@
         <ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj" />
     </ItemGroup>
     <ItemGroup>
+      <Compile Update="Views\CreateTransportationPage.axaml.cs">
+        <DependentUpon>CreateTransportationPage.axaml</DependentUpon>
+      </Compile>
       <Compile Update="Views\LandingPage.axaml.cs">
         <DependentUpon>LandingPage.axaml</DependentUpon>
         <SubType>Code</SubType>
