@@ -38,6 +38,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
 
             Assert.IsNotNull(testViewModel.LogoutCommand);
             Assert.IsNotNull(testViewModel.CreateWaypointCommand);
+            Assert.IsNotNull(testViewModel.CreateTransportationCommand);
             Assert.IsNotNull(testViewModel.BackCommand);
             Assert.AreEqual(mockScreen.Object, testViewModel.HostScreen);
             Assert.AreEqual(testTrip, testViewModel.Trip);
