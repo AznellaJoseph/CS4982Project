@@ -24,7 +24,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
                 {
                     Data = new List<IEvent>
                     {
-                        new Waypoint() 
+                        new Waypoint(), new Transportation()
                     }
                 });
 
@@ -34,7 +34,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
                 SelectedDate = startDate
             };
 
-            Assert.AreEqual(1, testViewModel.EventViewModels.Count);
+            Assert.AreEqual(2, testViewModel.EventViewModels.Count);
 
         }
 
