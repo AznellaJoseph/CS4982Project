@@ -34,7 +34,7 @@ namespace CapstoneDesktop.ViewModels
             CreateWaypointCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new CreateWaypointPageViewModel(Trip, HostScreen)));
             CreateTransportationCommand = ReactiveCommand.CreateFromObservable(() =>
-                HostScreen.Router.Navigate.Execute(new CreateWaypointPageViewModel(Trip, HostScreen)));
+                HostScreen.Router.Navigate.Execute(new CreateTransportationPageViewModel(Trip, HostScreen)));
             BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
             WaypointViewModels = new ObservableCollection<WaypointViewModel>();
         }
