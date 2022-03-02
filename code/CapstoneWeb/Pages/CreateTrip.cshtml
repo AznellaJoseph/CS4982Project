@@ -3,32 +3,41 @@
 @{
     Layout = "Shared/_Layout";
     ViewData["Title"] = "Create Trip";
+    var isErrorVisible = string.IsNullOrEmpty(Model.ErrorMessage) ? "hide" : "";
 }
 
-<div>
+<div class="container data-entry-window column">
     <h1>Create Trip </h1>
 
-    <p>@Model.ErrorMessage</p>
+    <p class="error @isErrorVisible">@Model.ErrorMessage</p>
 
     <form method="post">
         <label for="name">Name* </label>
         <input id="name" asp-for="TripName" required/>
 
-        <label for="startDate">Start Date*</label>
-        <input id="startDate" asp-for="StartDate" type="date" required/>
-
-        <label for="endDate">End Date*</label>
-        <input id="endDate" asp-for="EndDate" type="date" required/>
-
         <label for="notes">Notes</label>
-        <input id="notes" asp-for="Notes"/>
+        <textarea id="notes" asp-for="Notes"></textarea>
 
-        <button type="submit">Create Trip</button>
+        <div class="row input-row">
+            <div class="input-group">
+                <label for="startDate">Start Date*</label>
+                <input id="startDate" asp-for="StartDate" type="date" required />
+            </div>
 
-        <div>
-            <p>* Indicates a required field</p>
+            <div class="input-group">
+                <label for="endDate">End Date*</label>
+                <input id="endDate" asp-for="EndDate" type="date" required />
+            </div>
         </div>
 
+        <div class="button-group">
+            <button type="submit">Create Trip</button>
+            <button type="submit" asp-page-handler="cancel" formnovalidate>Cancel</button>
+        </div>
+
+        <div class="warning">
+            <p>* Indicates a required field</p>
+        </div>
     </form>
 
 </div>

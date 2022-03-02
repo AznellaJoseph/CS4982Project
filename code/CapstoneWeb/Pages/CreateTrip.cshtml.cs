@@ -62,5 +62,14 @@ namespace CapstoneWeb.Pages
             ErrorMessage = response.ErrorMessage;
             return Page();
         }
+
+        /// <summary>
+        ///     Called when [post cancel].
+        /// </summary>
+        /// <returns>Redirects to landing page.</returns>
+        public IActionResult OnPostCancel()
+        {
+            return RedirectToPage("index");
+        }
     }
 }
