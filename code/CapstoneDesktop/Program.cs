@@ -32,6 +32,8 @@ namespace CapstoneDesktop
             Locator.CurrentMutable.Register(() => new CreateTripPage(), typeof(IViewFor<CreateTripPageViewModel>));
             Locator.CurrentMutable.Register(() => new CreateWaypointPage(),
                 typeof(IViewFor<CreateWaypointPageViewModel>));
+            Locator.CurrentMutable.Register(() => new CreateTransportationPage(),
+                typeof(IViewFor<CreateTransportationPageViewModel>));
             Locator.CurrentMutable.Register(() => new CreateAccountPage(),
                 typeof(IViewFor<CreateAccountPageViewModel>));
             Locator.CurrentMutable.Register(() => new LandingPage(), typeof(IViewFor<LandingPageViewModel>));
