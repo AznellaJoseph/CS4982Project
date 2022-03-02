@@ -58,5 +58,19 @@ namespace CapstoneWeb.Pages
             ErrorMessage = response.ErrorMessage;
             return Page();
         }
+
+        /// <summary>
+        ///     Called when [post cancel].
+        /// </summary>
+        /// <param name="tripId">The trip identifier to add transportation to.</param>
+        /// <returns>Redirects to the trip overview page for this trip ID</returns>
+        public IActionResult OnPostCancel(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+                {
+                    {"tripId", tripId}
+                };
+            return RedirectToPage("Trip", routeValue);
+        }
     }
 }

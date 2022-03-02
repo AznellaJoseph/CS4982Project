@@ -14,6 +14,8 @@ body {
     background: #002E3D;
     width: auto;
     height: auto;
+    max-width: 1500px;
+    max-height: 1000px;
     padding: 50px;
     border-radius: 20px;
 }
@@ -33,13 +35,19 @@ h1 {
 }
 
 .data-entry-window {
-    width: 700px;
-    min-height: 700px;
+    width: 45vw;
+    min-height: 30vh;
+    height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: stretch;
 }
+
+.data-entry-window form {
+    height: 90%;
+}
+
 
 form {
     display: flex;
@@ -58,7 +66,7 @@ form {
     gap: 20px;
 }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=date], input[type=datetime-local], textarea {
     width: 100%;
     padding: 15px 20px;
     box-sizing: border-box;
@@ -67,6 +75,7 @@ input[type=text], input[type=password] {
     border: none;
     font-size: 14px;
     box-shadow: inset 1px 0px 10px rgba(0, 0, 0, 0.5);
+    font-family: 'Roboto', sans-serif;
 }
 
 input[type=button], button {
@@ -78,6 +87,13 @@ input[type=button], button {
     border-radius: 5px;
     text-transform: uppercase;
     font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+}
+
+textarea {
+    width: 100%;
+    height: 33%;
+    font-size: 1em;
 }
 
 ::placeholder {
@@ -94,13 +110,21 @@ label {
     font-size: 14px;
 }
 
-.button-group {
+.button-group, .button-group form, .input-row {
     width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
     gap: 10px;
+}
+
+.input-row {
+    padding: 20px 0;
+}
+
+.input-group{
+    width: 100%;
 }
 
 .error {
@@ -114,3 +138,171 @@ label {
 .hide {
     display: none;
 }
+
+.panel {
+    background: #002E3D;
+    border-radius: 10px;
+}
+
+.list {
+    background: #002E3D;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.list-item {
+    width: 98%;
+    background: #007EA7;
+    border-radius: 10px;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.end {
+    margin-top: auto;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.landing-page {
+    background: #000F14;
+    height: 75vh;
+    width: 70vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.landing-page form, .trip-overview form {
+    min-height: auto;
+    margin: 5px;
+}
+
+#trip-list, #events {
+    flex: 1;
+}
+
+.landing-page .left, .landing-page .right {
+    height: 100%;
+    gap: 12px;
+}
+
+.landing-page .left, .trip-overview .row .left {
+    width: 40%;
+}
+.landing-page .right, .trip-overview .row .right {
+    width: 60%;
+}
+
+.landing-page .logo {
+    height: 25%;
+    width: 100%;
+}
+
+.landing-page button {
+    padding: 15px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width-button {
+    width: 100%;
+}
+
+.upcoming {
+    height: 100%;
+}
+
+.info-section {
+    font-size: 12px;
+}
+
+.name-section {
+    font-weight: bold;
+}
+
+
+.trip-overview {
+    width: 65vw;
+    max-width: 1500px;
+    height: 70vh;
+    background: #000F14;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.trip-overview .row {
+    height: 75%;
+}
+
+#myCalendar {
+    width: 100%;
+    height: 100%;
+    background: #002E3D;
+    border: none;
+}
+
+#events {
+    height: 100%;
+}
+
+
+#myCalendar .vanilla-calendar-btn {
+    background: #007EA7;
+    padding: 5px;
+}
+
+#myCalendar .vanilla-calendar-btn svg {
+    fill: black;
+}
+
+#myCalendar .vanilla-calendar-week {
+    background: #007EA7;
+}
+
+#myCalendar .vanilla-calendar-week span {
+    color: black;
+}
+    
+#myCalendar .vanilla-calendar-date {
+    padding-top: 3%;
+    padding-bottom: 3%;
+    background: #809848;
+    border: 3px solid #002E3D;
+    border-radius: 9px;
+}
+
+#myCalendar .vanilla-calendar-date--disabled {
+    background: #007EA7;
+    opacity: 1;
+}
+
+#myCalendar .vanilla-calendar-date--selected {
+    background: #809848;
+    opacity: 1;
+}
+
+.trip-header {
+    padding: 1% 0;
+}
+

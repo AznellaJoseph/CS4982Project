@@ -58,5 +58,18 @@ namespace CapstoneTest.WebTests.Pages
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, page.ErrorMessage);
         }
+
+        [TestMethod]
+        public void PostCancel_Success()
+        {
+            var session = new Mock<ISession>();
+            var page = TestPageBuilder.BuildPage<CreateTripModel>(session.Object);
+
+            var result = page.OnPostCancel();
+
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult)result;
+            Assert.AreEqual("index", redirect.PageName);
+        }
     }
 }

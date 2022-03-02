@@ -10,38 +10,42 @@
 @Html.Hidden("endDate", Model.CurrentTrip.EndDate.ToShortDateString())
 @Html.Hidden("tripId", Model.CurrentTrip.TripId)
 
-<div class="container">
+<div class="container trip-overview">
+    
+    <div class="panel">
+        <h1>@Model.CurrentTrip.Name</h1>
+    </div>
 
-    <h1>@Model.CurrentTrip.Name</h1>
-
-    <div>
+    <div class="panel button-group">
         <form method="post">
-            <button type="submit" asp-page-handler="profile">Profile</button>
-        </form>
-        <form method="post">
+            <button type="submit" asp-page-handler="profile" disabled>Profile</button>
             <button type="submit" asp-page-handler="back">Back To Trips</button>
-        </form>
-        <form method="post">
             <button type="submit" asp-page-handler="logout">Logout</button>
         </form>
     </div>
 
-    <div>
-        <h2>Events</h2>
-        <div id="events"></div>
-        <div>
-            <form method="post">
-                <button type="submit" asp-page-handler="CreateTransportation">Create Transportation</button>
-            </form>
-            <form method="post">
-                <button type="submit" asp-page-handler="CreateWaypoint">Create Waypoint</button>
-            </form>
+    <div class="row">
+        <div class="panel left column">
+            <h1>Events</h1>
 
+            <div id="events" class="list">
+
+            </div>
+
+            <form method="post" class="end">
+                <div class="button-group">
+                    <button type="submit" asp-page-handler="CreateTransportation">Create Transportation</button>
+                    <button type="submit" asp-page-handler="CreateWaypoint">Create Waypoint</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="panel right column">
+            <div id="myCalendar" class="vanilla-calendar">
+            </div>
         </div>
     </div>
 
-    <div id="myCalendar" class="vanilla-calendar">
-    </div>
 </div>
 
 @section Scripts {
