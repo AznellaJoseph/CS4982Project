@@ -88,16 +88,11 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public string? Method { get; set; }
 
-        /// <summary>
-        ///     The notes.
-        /// </summary>
-        public string? Notes { get; set; }
-
         private IObservable<IRoutableViewModel> createTransportation()
         {
             if (string.IsNullOrEmpty(Method))
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
+                ErrorMessage = Ui.ErrorMessages.EmptyTransportationMethod;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
@@ -114,7 +109,7 @@ namespace CapstoneDesktop.ViewModels
             if (startDate.CompareTo(_trip.StartDate) < 0 || startDate.CompareTo(_trip.EndDate) > 0 ||
                 endTime.CompareTo(_trip.StartDate) < 0 || endTime.CompareTo(_trip.EndDate) > 0)
             {
-                ErrorMessage = Ui.ErrorMessages.InvalidWaypointDate;
+                ErrorMessage = Ui.ErrorMessages.InvalidTransportationDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
