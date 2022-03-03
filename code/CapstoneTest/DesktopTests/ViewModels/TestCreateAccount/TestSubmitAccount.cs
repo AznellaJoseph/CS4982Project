@@ -63,7 +63,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(mu => mu.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int>
             {
-                StatusCode = (uint)Ui.StatusCode.BadRequest,
+                StatusCode = (uint) Ui.StatusCode.BadRequest,
                 ErrorMessage = "test"
             });
             CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
@@ -90,7 +90,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(mu => mu.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int>
             {
-                StatusCode = (uint)Ui.StatusCode.BadRequest
+                StatusCode = (uint) Ui.StatusCode.BadRequest
             });
             CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             TestScheduler testScheduler = new();
@@ -110,18 +110,98 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
         }
 
         [TestMethod]
-        public void CreateAccount_EmptyCredentials_ReturnsErrorMessage()
+        public void CreateAccount_EmptyFirstName_ReturnsErrorMessage()
         {
             var mockScreen = new Mock<IScreen>();
 
             CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
             TestScheduler testScheduler = new();
 
+            createAccountPageViewModel.LastName = "admin";
+            createAccountPageViewModel.Username = "admin";
+            createAccountPageViewModel.Password = "admin";
+            createAccountPageViewModel.ConfirmedPassword = "admin";
             createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
 
             testScheduler.Start();
 
-            Assert.AreEqual(Ui.ErrorMessages.InvalidFields, createAccountPageViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.InvalidFirstName, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateAccount_EmptyLastName_ReturnsErrorMessage()
+        {
+            var mockScreen = new Mock<IScreen>();
+
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.FirstName = "admin";
+            createAccountPageViewModel.Username = "admin";
+            createAccountPageViewModel.Password = "admin";
+            createAccountPageViewModel.ConfirmedPassword = "admin";
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidLastName, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateAccount_EmptyUsername_ReturnsErrorMessage()
+        {
+            var mockScreen = new Mock<IScreen>();
+
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.FirstName = "admin";
+            createAccountPageViewModel.LastName = "admin";
+            createAccountPageViewModel.Password = "admin";
+            createAccountPageViewModel.ConfirmedPassword = "admin";
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidUsername, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateAccount_EmptyPassword_ReturnsErrorMessage()
+        {
+            var mockScreen = new Mock<IScreen>();
+
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.FirstName = "admin";
+            createAccountPageViewModel.LastName = "admin";
+            createAccountPageViewModel.Username = "admin";
+            createAccountPageViewModel.ConfirmedPassword = "admin";
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidPassword, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateAccount_EmptyConfirmedPassword_ReturnsErrorMessage()
+        {
+            var mockScreen = new Mock<IScreen>();
+
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.FirstName = "admin";
+            createAccountPageViewModel.LastName = "admin";
+            createAccountPageViewModel.Username = "admin";
+            createAccountPageViewModel.Password = "admin";
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidConfirmedPassword, createAccountPageViewModel.ErrorMessage);
         }
     }
 }

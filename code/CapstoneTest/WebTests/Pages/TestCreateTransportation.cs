@@ -19,7 +19,7 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var manager = new Mock<TransportationManager>();
             var currentTime = DateTime.Now;
-            manager.Setup(um => um.CreateTransportation(0, "Car", currentTime, currentTime))
+            manager.Setup(um => um.CreateTransportation(0, "Car", currentTime, currentTime, null))
                 .Returns(new Response<int> {Data = 0});
             var page = TestPageBuilder.BuildPage<CreateTransportationModel>(session.Object);
             page.FakeTransportationManager = manager.Object;
@@ -40,7 +40,7 @@ namespace CapstoneTest.WebTests.Pages
             var manager = new Mock<TransportationManager>();
             var currentTime = DateTime.Now;
             manager.Setup(um =>
-                    um.CreateTransportation(0, "Car", currentTime.AddDays(1), currentTime))
+                    um.CreateTransportation(0, "Car", currentTime.AddDays(1), currentTime, null))
                 .Returns(new Response<int>
                     {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
             var page = TestPageBuilder.BuildPage<CreateTransportationModel>(session.Object);

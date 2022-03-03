@@ -34,6 +34,12 @@ namespace CapstoneWeb.Pages
         public DateTime EndDate { get; set; } = DateTime.Now;
 
         /// <summary>
+        ///     The end date.
+        /// </summary>
+        [BindProperty]
+        public string Notes { get; set; }
+
+        /// <summary>
         ///     The transportation manager used for testing.
         /// </summary>
         public TransportationManager FakeTransportationManager { get; set; }
@@ -45,7 +51,7 @@ namespace CapstoneWeb.Pages
         public IActionResult OnPost(int tripId)
         {
             var transportationManager = FakeTransportationManager ?? new TransportationManager();
-            var response = transportationManager.CreateTransportation(tripId, Method, StartDate, EndDate);
+            var response = transportationManager.CreateTransportation(tripId, Method, StartDate, EndDate, Notes);
             if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary

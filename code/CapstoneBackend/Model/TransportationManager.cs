@@ -29,17 +29,18 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Creates the transportation.
+        /// Creates the transportation.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="method">The method.</param>
         /// <param name="startTime">The start time.</param>
         /// <param name="endTime">The end time.</param>
+        /// <param name="notes">The notes.</param>
         /// <returns>
-        ///     A response of if the transportation was created in the database or a non-success status code and error message
+        /// A response of if the transportation was created in the database or a non-success status code and error message
         /// </returns>
         public virtual Response<int> CreateTransportation(int tripId, string method, DateTime startTime,
-            DateTime? endTime)
+            DateTime endTime, string? notes)
         {
             if (startTime.CompareTo(endTime) > 0)
                 return new Response<int>
@@ -49,7 +50,7 @@ namespace CapstoneBackend.Model
                 };
             return new Response<int>
             {
-                Data = _dal.CreateTransportation(tripId, method, startTime, endTime)
+                Data = _dal.CreateTransportation(tripId, method, startTime, endTime, notes)
             };
         }
 

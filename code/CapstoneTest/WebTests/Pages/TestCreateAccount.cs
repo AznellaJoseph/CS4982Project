@@ -53,5 +53,44 @@ namespace CapstoneTest.WebTests.Pages
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, page.ErrorMessage);
         }
+
+        [TestMethod]
+        public void Post_MismatchPasswordsFailure()
+        {
+            var session = new Mock<ISession>();
+            var fakeUserManager = new Mock<UserManager>();
+            fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
+                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.DataNotFound, ErrorMessage = Ui.ErrorMessages.InternalServerError });
+            var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
+            page.FakeUserManager = fakeUserManager.Object;
+            page.Username = "admin";
+            page.Password = "admin";
+            page.ConfirmedPassword = "test";
+            page.FirstName = "admin";
+            page.LastName = "admin";
+            var result = page.OnPost();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.PasswordsDoNotMatch, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void PostCancel_Redirects()
+        {
+            var session = new Mock<ISession>();
+            var fakeUserManager = new Mock<UserManager>();
+            fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
+                .Returns(new Response<int> { Data = 0 });
+            var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
+            page.FakeUserManager = fakeUserManager.Object;
+            page.Username = "admin";
+            page.Password = "admin";
+            page.ConfirmedPassword = "admin";
+            page.FirstName = "admin";
+            page.LastName = "admin";
+            var result = page.OnPostCancel();
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult)result;
+            Assert.AreEqual("login", redirect.PageName);
+        }
     }
 }

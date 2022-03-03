@@ -103,23 +103,40 @@ namespace CapstoneDesktop.ViewModels
 
             if (StartDate is null || StartTime is null)
             {
-                ErrorMessage = Ui.ErrorMessages.NullWaypointStartDate;
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
             var startDate = StartDate.Value.Date + StartTime.Value;
 
-            var endTime = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
+            var endDate = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
 
-            if (startDate.CompareTo(_trip.StartDate) < 0 || startDate.CompareTo(_trip.EndDate) > 0 ||
-                endTime.CompareTo(_trip.StartDate) < 0 || endTime.CompareTo(_trip.EndDate) > 0)
+            if (startDate.CompareTo(_trip.StartDate) < 0)
             {
-                ErrorMessage = Ui.ErrorMessages.InvalidWaypointDate;
+                ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (startDate.CompareTo(_trip.EndDate) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventStartDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (endDate.CompareTo(_trip.StartDate) < 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventEndDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (endDate.CompareTo(_trip.EndDate) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventEndDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
                 return Observable.Empty<IRoutableViewModel>();
             }
 
             var resultResponse = _waypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
-                endTime, Notes);
+                endDate, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
                 return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
 

@@ -13,8 +13,8 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateTransportationPageViewModel : ReactiveViewModelBase
     {
-        private readonly Trip _trip;
         private readonly TransportationManager _transportationManager;
+        private readonly Trip _trip;
 
         private string _error = string.Empty;
 
@@ -24,7 +24,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="trip">the trip that the transportation is for.</param>
         /// <param name="manager">The transportation manager.</param>
         /// <param name="screen">The host screen</param>
-        public CreateTransportationPageViewModel(Trip trip, TransportationManager manager, IScreen screen) : base(screen,
+        public CreateTransportationPageViewModel(Trip trip, TransportationManager manager, IScreen screen) : base(
+            screen,
             Guid.NewGuid().ToString()[..5])
         {
             _trip = trip;
@@ -40,7 +41,8 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         /// <param name="trip">The trip.</param>
         /// <param name="screen">The screen.</param>
-        public CreateTransportationPageViewModel(Trip trip, IScreen screen) : this(trip, new TransportationManager(), screen)
+        public CreateTransportationPageViewModel(Trip trip, IScreen screen) : this(trip, new TransportationManager(),
+            screen)
         {
         }
 
@@ -88,6 +90,11 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public string? Method { get; set; }
 
+        /// <summary>
+        ///     The notes.
+        /// </summary>
+        public string? Notes { get; set; }
+
         private IObservable<IRoutableViewModel> createTransportation()
         {
             if (string.IsNullOrEmpty(Method))
@@ -98,7 +105,7 @@ namespace CapstoneDesktop.ViewModels
 
             if (StartDate is null || StartTime is null)
             {
-                ErrorMessage = Ui.ErrorMessages.NullWaypointStartDate;
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
@@ -106,14 +113,31 @@ namespace CapstoneDesktop.ViewModels
 
             var endTime = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
 
-            if (startDate.CompareTo(_trip.StartDate) < 0 || startDate.CompareTo(_trip.EndDate) > 0 ||
-                endTime.CompareTo(_trip.StartDate) < 0 || endTime.CompareTo(_trip.EndDate) > 0)
+            if (startDate.CompareTo(_trip.StartDate) < 0)
             {
-                ErrorMessage = Ui.ErrorMessages.InvalidTransportationDate;
+                ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var resultResponse = _transportationManager.CreateTransportation(_trip.TripId, Method, startDate, endTime);
+            if (startDate.CompareTo(_trip.EndDate) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventStartDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (endTime.CompareTo(_trip.StartDate) < 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventEndDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (endTime.CompareTo(_trip.EndDate) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventEndDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            var resultResponse = _transportationManager.CreateTransportation(_trip.TripId, Method, startDate, endTime, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
                 return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
 

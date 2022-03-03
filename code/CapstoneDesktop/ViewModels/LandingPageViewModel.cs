@@ -8,8 +8,9 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the Landing Page
+    /// ViewModel for the Landing Page
     /// </summary>
+    /// <seealso cref="CapstoneDesktop.ViewModels.ReactiveViewModelBase" />
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
     public class LandingPageViewModel : ReactiveViewModelBase

@@ -1,5 +1,5 @@
 $(".vanilla-calendar-date").click(
-    function () {
+    function() {
         const events = $("#events");
         events.empty();
         const pad = function(num) { return (`00${num}`).slice(-2) };
@@ -19,10 +19,10 @@ $(".vanilla-calendar-date").click(
                         $('input:hidden[name="__RequestVerificationToken"]').val());
                 },
                 data: { selectedDate: date },
-                success: function (result) {
+                success: function(result) {
                     result.data.forEach(function(waypoint, index) {
                         events.append(
-                         `
+                            `
                         <div class="event list-item" data-id=${waypoint.waypointId} data-listIndex=${index}>
                             <div class="info-section">
                                 ${waypoint.startDate.slice(0, 10)} - ${waypoint.startDate.slice(0, 10)}
