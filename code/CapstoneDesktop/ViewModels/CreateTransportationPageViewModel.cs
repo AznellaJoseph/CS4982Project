@@ -90,6 +90,11 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public string? Method { get; set; }
 
+        /// <summary>
+        ///     The notes.
+        /// </summary>
+        public string? Notes { get; set; }
+
         private IObservable<IRoutableViewModel> createTransportation()
         {
             if (string.IsNullOrEmpty(Method))
@@ -132,7 +137,7 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var resultResponse = _transportationManager.CreateTransportation(_trip.TripId, Method, startDate, endTime);
+            var resultResponse = _transportationManager.CreateTransportation(_trip.TripId, Method, startDate, endTime, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
                 return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
 

@@ -39,7 +39,8 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
                     TransportationId = 1,
                     Method = "Car",
                     StartDate = currentTime,
-                    EndDate = currentTime
+                    EndDate = currentTime,
+                    Notes = "notes"
                 }
             };
 
@@ -58,6 +59,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             Assert.AreEqual("Car", resultResponse.Data?[0].DisplayName);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
+            Assert.AreEqual("notes", resultResponse.Data?[0].Notes);
         }
     }
 }
