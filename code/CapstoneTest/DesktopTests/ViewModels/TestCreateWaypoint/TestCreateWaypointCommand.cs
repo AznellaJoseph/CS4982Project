@@ -33,9 +33,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_InvalidDates_ReturnsErrorMessage()
         {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.Object.StartDate = DateTime.Today;
-            mockTrip.Object.EndDate = DateTime.Today.AddDays(2);
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today,
+                    EndDate = DateTime.Today.AddDays(2)
+                }
+            };
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
             mockWaypointManager.Setup(um =>
@@ -89,9 +94,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_NullEndDate_SuccessfulCreation()
         {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.Object.TripId = 0;
-            mockTrip.Object.EndDate = DateTime.Today;
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    TripId = 0,
+                    EndDate = DateTime.Today
+                }
+            };
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
             mockWaypointManager.Setup(um =>
@@ -119,9 +129,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_NullEndTime_SuccessfulCreation()
         {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.Object.TripId = 0;
-            mockTrip.Object.EndDate = DateTime.Today.AddHours(2);
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    TripId = 0,
+                    EndDate = DateTime.Today.AddHours(2)
+                }
+            };
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
             mockWaypointManager.Setup(um =>
@@ -149,9 +164,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_NullEndDateAndTime_SuccessfulCreation()
         {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.Object.TripId = 0;
-            mockTrip.Object.EndDate = DateTime.Today;
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    TripId = 0,
+                    EndDate = DateTime.Today
+                }
+            };
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
             mockWaypointManager.Setup(um =>
@@ -179,9 +199,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_InvalidEnteredDates_ReturnsErrorMessage()
         {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
-            mockTrip.Object.EndDate = DateTime.Now;
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
 
@@ -209,9 +234,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_EventStartBeforeTripStart_ReturnsErrorMessage()
         {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
-            mockTrip.Object.EndDate = DateTime.Now;
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
 
@@ -238,9 +268,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_EventEndBeforeTripStart_ReturnsErrorMessage()
         {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
-            mockTrip.Object.EndDate = DateTime.Now;
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
 
@@ -267,9 +302,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateWaypointCommand_EventStartAfterTripEnd_ReturnsErrorMessage()
         {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
-            mockTrip.Object.EndDate = DateTime.Now;
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
 
@@ -296,9 +336,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         [TestMethod]
         public void CreateTransportationCommand_EventEndAfterTripEnd_ReturnsErrorMessage()
         {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
-            mockTrip.Object.EndDate = DateTime.Now;
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
 
