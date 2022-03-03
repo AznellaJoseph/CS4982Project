@@ -11,7 +11,7 @@ namespace CapstoneBackend.Model
         /// <summary>
         ///     The status code of the response
         /// </summary>
-        public uint StatusCode { get; set; } = (uint)Ui.StatusCode.Success;
+        public uint StatusCode { get; set; } = (uint) Ui.StatusCode.Success;
 
         /// <summary>
         ///     The data of the response

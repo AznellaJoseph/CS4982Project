@@ -103,7 +103,7 @@ namespace CapstoneDesktop.ViewModels
 
             if (StartDate is null || StartTime is null)
             {
-                ErrorMessage = Ui.ErrorMessages.NullWaypointStartDate;
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
@@ -111,10 +111,27 @@ namespace CapstoneDesktop.ViewModels
 
             var endTime = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
 
-            if (startDate.CompareTo(_trip.StartDate) < 0 || startDate.CompareTo(_trip.EndDate) > 0 ||
-                endTime.CompareTo(_trip.StartDate) < 0 || endTime.CompareTo(_trip.EndDate) > 0)
+            if (startDate.CompareTo(_trip.StartDate) < 0)
             {
-                ErrorMessage = Ui.ErrorMessages.InvalidWaypointDate;
+                ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (startDate.CompareTo(_trip.EndDate) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventStartDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (endTime.CompareTo(_trip.StartDate) < 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventEndDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (endTime.CompareTo(_trip.EndDate) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventEndDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
                 return Observable.Empty<IRoutableViewModel>();
             }
 

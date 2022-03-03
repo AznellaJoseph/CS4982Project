@@ -1,11 +1,11 @@
-﻿using CapstoneBackend.Model;
+﻿using System;
+using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using CapstoneDesktop.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ReactiveUI;
-using System;
 
 namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
 {
@@ -18,7 +18,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             var mockTrip = new Mock<Trip>();
             var mockTransportationManager = new Mock<TransportationManager>();
             var mockScreen = new Mock<IScreen>();
-            CreateTransportationPageViewModel createTransportationViewModel = 
+            CreateTransportationPageViewModel createTransportationViewModel =
                 new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
 
             var testScheduler = new TestScheduler();
@@ -47,7 +47,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
 
             testScheduler.Start();
 
-            Assert.AreEqual(Ui.ErrorMessages.NullWaypointStartDate, createTransportationViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.InvalidEventDate, createTransportationViewModel.ErrorMessage);
         }
 
         [TestMethod]
@@ -58,8 +58,9 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             mockTrip.Object.EndDate = DateTime.Today;
             var mockTransportationManager = new Mock<TransportationManager>();
             var mockScreen = new Mock<IScreen>();
-            mockTransportationManager.Setup(um => um.CreateTransportation(0, "Plane", DateTime.Today.AddDays(-2), DateTime.Today))
-                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
+            mockTransportationManager.Setup(um =>
+                    um.CreateTransportation(0, "Plane", DateTime.Today.AddDays(-2), DateTime.Today))
+                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
             CreateTransportationPageViewModel createTransportationViewModel =
                 new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
 
@@ -77,7 +78,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
         }
 
         [TestMethod]
-        public void CreateTransportationCommand_InvalidEnteredDates_ReturnsErrorMessage()
+        public void CreateTransportationCommand_EventStartBeforeTripStart_ReturnsErrorMessage()
         {
             var mockTrip = new Mock<Trip>();
             mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
@@ -100,16 +101,133 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
 
             testScheduler.Start();
 
-            Assert.AreEqual(Ui.ErrorMessages.InvalidTransportationDate,
+            Assert.AreEqual(
+                Ui.ErrorMessages.EventStartDateBeforeTripStartDate + mockTrip.Object.StartDate.ToShortDateString(),
                 createTransportationViewModel.ErrorMessage);
         }
+
+        [TestMethod]
+        public void CreateTransportationCommand_EventEndBeforeTripStart_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock<Trip>();
+            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
+            mockTrip.Object.EndDate = DateTime.Now;
+            var mockTransportationManager = new Mock<TransportationManager>();
+            var mockScreen = new Mock<IScreen>();
+
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = "Plane";
+            createTransportationViewModel.StartDate = DateTimeOffset.Now.AddDays(-1);
+            createTransportationViewModel.StartTime = TimeSpan.Zero;
+            createTransportationViewModel.EndDate = DateTime.Today.AddDays(-3);
+            createTransportationViewModel.EndTime = TimeSpan.Zero;
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(
+                Ui.ErrorMessages.EventEndDateBeforeTripStartDate + mockTrip.Object.StartDate.ToShortDateString(),
+                createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_EventStartAfterTripEnd_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock<Trip>();
+            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
+            mockTrip.Object.EndDate = DateTime.Now;
+            var mockTransportationManager = new Mock<TransportationManager>();
+            var mockScreen = new Mock<IScreen>();
+
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = "Plane";
+            createTransportationViewModel.StartDate = DateTimeOffset.Now.AddDays(1);
+            createTransportationViewModel.StartTime = TimeSpan.Zero;
+            createTransportationViewModel.EndDate = DateTime.Today;
+            createTransportationViewModel.EndTime = TimeSpan.Zero;
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(
+                Ui.ErrorMessages.EventStartDateAfterTripEndDate + mockTrip.Object.EndDate.ToShortDateString(),
+                createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_EventEndAfterTripEnd_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock<Trip>();
+            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
+            mockTrip.Object.EndDate = DateTime.Now;
+            var mockTransportationManager = new Mock<TransportationManager>();
+            var mockScreen = new Mock<IScreen>();
+
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = "Plane";
+            createTransportationViewModel.StartDate = DateTimeOffset.Now.AddDays(-1);
+            createTransportationViewModel.StartTime = TimeSpan.Zero;
+            createTransportationViewModel.EndDate = DateTime.Today.AddDays(3);
+            createTransportationViewModel.EndTime = TimeSpan.Zero;
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.EventEndDateAfterTripEndDate + mockTrip.Object.EndDate.ToShortDateString(),
+                createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_StartBeforeEnd_ReturnsErrorMessage()
+        {
+            var mockTransportationManager = new Mock<TransportationManager>();
+            mockTransportationManager.Setup(um =>
+                    um.CreateTransportation(0, "Plane", DateTime.Today.AddDays(2), DateTime.Today))
+                .Returns(new Response<int> {ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
+            var mockTrip = new Mock<Trip>();
+            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
+            mockTrip.Object.EndDate = DateTime.Today.AddDays(3);
+            var mockScreen = new Mock<IScreen>();
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = "Plane";
+            createTransportationViewModel.StartDate = DateTime.Today.AddDays(2);
+            createTransportationViewModel.StartTime = TimeSpan.Zero;
+            createTransportationViewModel.EndDate = DateTime.Today;
+            createTransportationViewModel.EndTime = TimeSpan.Zero;
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, createTransportationViewModel.ErrorMessage);
+        }
+
 
         [TestMethod]
         public void CreateTransportationCommand_SuccessfulCreation()
         {
             var mockTransportationManager = new Mock<TransportationManager>();
             mockTransportationManager.Setup(um => um.CreateTransportation(0, "Plane", DateTime.Today, DateTime.Today))
-                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
+                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
             var mockTrip = new Mock<Trip>();
             var mockScreen = new Mock<IScreen>();
             CreateTransportationPageViewModel createTransportationViewModel =
@@ -129,6 +247,5 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
 
             Assert.AreEqual(string.Empty, createTransportationViewModel.ErrorMessage);
         }
-
     }
 }
