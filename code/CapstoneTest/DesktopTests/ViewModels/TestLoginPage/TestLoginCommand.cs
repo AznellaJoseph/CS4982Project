@@ -98,7 +98,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> { Data = null });
+                .Returns(new Response<User> {Data = null});
             LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
             var testScheduler = new TestScheduler();
 

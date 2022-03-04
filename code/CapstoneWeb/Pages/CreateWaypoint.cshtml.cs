@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Routing;
 
 namespace CapstoneWeb.Pages
 {
+    /// <summary>
+    ///     PageModel for Create Waypoint Site
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class CreateWaypointModel : PageModel
     {
         /// <summary>
@@ -50,6 +54,11 @@ namespace CapstoneWeb.Pages
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
+            if (string.IsNullOrEmpty(Location))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
+                return Page();
+            }
             var waypointManager = WaypointManager ?? new WaypointManager();
             var response = waypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
             if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
@@ -69,13 +78,13 @@ namespace CapstoneWeb.Pages
         ///     Called when [post cancel].
         /// </summary>
         /// <param name="tripId">The trip identifier to add a waypoint to.</param>
-        /// <returns>Redirects to the trip overview page for this trip ID</returns>
+        /// <returns>Redirects to the trip overview page for the trip the waypoint was added to </returns>
         public IActionResult OnPostCancel(int tripId)
         {
             var routeValue = new RouteValueDictionary
-                {
-                    {"tripId", tripId}
-                };
+            {
+                {"tripId", tripId}
+            };
             return RedirectToPage("Trip", routeValue);
         }
     }

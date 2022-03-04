@@ -15,7 +15,7 @@ namespace CapstoneTest.WebTests.Pages
     public class TestCreateTrip
     {
         [TestMethod]
-        public void Post_Success()
+        public void Post_Success_Redirects()
         {
             var session = new Mock<ISession>();
             var fakeTripManager = new Mock<TripManager>();
@@ -39,7 +39,7 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
-        public void Post_Failure()
+        public void Post_InvalidStartDate_ReturnsErrorMessage()
         {
             var session = new Mock<ISession>();
             var fakeTripManager = new Mock<TripManager>();
@@ -60,7 +60,23 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
-        public void PostCancel_Success()
+        public void Post_NullTripName_ReturnsErrorMessage()
+        {
+            var session = new Mock<ISession>();
+
+            var page = TestPageBuilder.BuildPage<CreateTripModel>(session.Object);
+
+            page.HttpContext.Session.SetString("userId", "0");
+            page.Notes = "notes";
+            page.StartDate = DateTime.Today.AddDays(1);
+
+            var result = page.OnPost();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.EmptyTripName, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void PostCancel_Success_RedirectsToIndex()
         {
             var session = new Mock<ISession>();
             var page = TestPageBuilder.BuildPage<CreateTripModel>(session.Object);

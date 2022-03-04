@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\TripOverviewPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Reactive;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the Trip Overview Page
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;ReactiveUI.IRoutableViewModel&quot; /&gt;
+    public class TripOverviewPageViewModel : ReactiveViewModelBase
+    {
+        private readonly EventManager _eventManager;
+
+        private DateTime? _selectedDate;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TripOverviewPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;trip&quot;&gt;The trip.&lt;/param&gt;
+        /// &lt;param name=&quot;eventManager&quot;&gt;The event manager.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public TripOverviewPageViewModel(Trip trip, EventManager eventManager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            Trip = trip;
+            _eventManager = eventManager;
+            HostScreen = screen;
+            LogoutCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
+            CreateWaypointCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new CreateWaypointPageViewModel(Trip, HostScreen)));
+            CreateTransportationCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new CreateTransportationPageViewModel(Trip, HostScreen)));
+            BackCommand = ReactiveCommand.CreateFromObservable(() =&gt; HostScreen.Router.NavigateBack.Execute());
+            EventViewModels = new ObservableCollection&lt;IEventViewModel&gt;();
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TripOverviewPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;trip&quot;&gt;The trip.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public TripOverviewPageViewModel(Trip trip, IScreen screen) : this(trip, new EventManager(), screen)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     The logout command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; LogoutCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The back command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; BackCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The create waypoint command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; CreateWaypointCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The create transportation command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; CreateTransportationCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The waypoint viewmodels.
+        /// &lt;/summary&gt;
+        public ObservableCollection&lt;IEventViewModel&gt; EventViewModels { get; }
+
+        /// &lt;summary&gt;
+        ///     The trip.
+        /// &lt;/summary&gt;
+        public Trip Trip { get; }
+
+        /// &lt;summary&gt;
+        ///     The selected date.
+        /// &lt;/summary&gt;
+        public DateTime? SelectedDate
+        {
+            get =&gt; _selectedDate;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedDate, value, nameof(SelectedDate));
+                updateWaypoints();
+            }
+        }
+
+        private void updateWaypoints()
+        {
+            EventViewModels.Clear();
+            if (SelectedDate is null) return;
+            var response = _eventManager.GetEventsOnDate(Trip.TripId, (DateTime) SelectedDate);
+
+            foreach (var aEvent in response.Data ?? new List&lt;IEvent&gt;())
+            {
+                IEventViewModel viewModel;
+                switch (aEvent)
+                {
+                    case Waypoint waypoint:
+                        viewModel = new WaypointViewModel(waypoint, HostScreen);
+                        break;
+                    case Transportation transportation:
+                        viewModel = new TransportationViewModel(transportation, HostScreen);
+                        break;
+                    default:
+                        return;
+                }
+
+                viewModel.RemoveEvent += (sender, e) =&gt;
+                {
+                    if (sender is not null)
+                        EventViewModels.Remove((IEventViewModel) sender);
+                };
+                EventViewModels.Add(viewModel);
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[27,98,28,44,1],[29,9,29,10,1],[30,13,30,25,1],[31,13,31,42,1],[32,13,32,33,1],[33,13,34,17,1],[34,17,34,87,0],[34,87,34,89,1],[35,13,36,17,1],[36,17,36,102,0],[36,102,36,104,1],[37,13,38,17,1],[38,17,38,108,0],[38,108,38,110,1],[39,13,39,70,1],[39,70,39,110,0],[39,110,39,112,1],[40,13,40,75,1],[41,9,41,10,1],[48,71,48,109,1],[49,9,49,10,1],[50,9,50,10,1],[55,74,55,78,1],[60,58,60,62,1],[65,82,65,86,1],[70,88,70,92,1],[75,72,75,76,1],[80,28,80,32,1],[87,20,87,33,1],[89,13,89,14,1],[90,17,90,91,1],[91,17,91,35,1],[92,13,92,14,1],[96,9,96,10,1],[97,13,97,37,1],[98,13,98,38,1],[98,39,98,46,1],[99,13,99,96,1],[101,13,101,20,1],[101,22,101,32,1],[101,33,101,35,1],[101,36,101,71,1],[102,13,102,14,1],[104,17,104,32,1],[107,25,107,81,1],[108,25,108,31,1],[110,25,110,93,1],[111,25,111,31,1],[113,25,113,32,0],[116,17,117,17,1],[117,17,117,18,0],[117,18,118,21,1],[118,21,118,44,0],[118,44,119,25,1],[119,25,119,74,0],[119,74,120,17,1],[120,17,120,18,0],[120,18,120,19,1],[121,17,121,48,1],[122,13,122,14,1],[123,9,123,10,1]]);
+    </script>
+  </body>
+</html>

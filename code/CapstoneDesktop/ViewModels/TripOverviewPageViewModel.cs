@@ -15,7 +15,7 @@ namespace CapstoneDesktop.ViewModels
     public class TripOverviewPageViewModel : ReactiveViewModelBase
     {
         private readonly EventManager _eventManager;
-        
+
         private DateTime? _selectedDate;
 
         /// <summary>
@@ -24,8 +24,8 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="trip">The trip.</param>
         /// <param name="eventManager">The event manager.</param>
         /// <param name="screen">The screen.</param>
-
-        public TripOverviewPageViewModel(Trip trip, EventManager eventManager, IScreen screen): base(screen, Guid.NewGuid().ToString()[..5])
+        public TripOverviewPageViewModel(Trip trip, EventManager eventManager, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
         {
             Trip = trip;
             _eventManager = eventManager;
@@ -65,7 +65,7 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> CreateWaypointCommand { get; }
 
         /// <summary>
-        ///   The create transportation command.
+        ///     The create transportation command.
         /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> CreateTransportationCommand { get; }
 
@@ -99,7 +99,7 @@ namespace CapstoneDesktop.ViewModels
             var response = _eventManager.GetEventsOnDate(Trip.TripId, (DateTime) SelectedDate);
 
             foreach (var aEvent in response.Data ?? new List<IEvent>())
-            { 
+            {
                 IEventViewModel viewModel;
                 switch (aEvent)
                 {
@@ -112,15 +112,14 @@ namespace CapstoneDesktop.ViewModels
                     default:
                         return;
                 }
-                    
+
                 viewModel.RemoveEvent += (sender, e) =>
                 {
                     if (sender is not null)
-                        this.EventViewModels.Remove((IEventViewModel)sender);
+                        EventViewModels.Remove((IEventViewModel) sender);
                 };
                 EventViewModels.Add(viewModel);
             }
-
         }
     }
 }

@@ -22,7 +22,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 
             var resultResponse = manager.RemoveWaypoint(2);
 
-            Assert.AreEqual((uint)Ui.StatusCode.BadRequest, resultResponse.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, resultResponse.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.WaypointNotFound, resultResponse.ErrorMessage);
         }
 
@@ -38,7 +38,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 
             var resultResponse = manager.RemoveWaypoint(1);
 
-            Assert.AreEqual((uint)Ui.StatusCode.Success, resultResponse.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
             Assert.AreEqual(true, resultResponse.Data);
         }
 
@@ -48,10 +48,11 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             var mockDal = new Mock<WaypointDal>();
             var builder = new MySqlExceptionBuilder();
             mockDal.Setup(dal => dal.RemoveWaypoint(1))
-                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+                .Throws(builder
+                    .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
             var waypointManager = new WaypointManager(mockDal.Object);
             var result = waypointManager.RemoveWaypoint(1);
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
 
@@ -63,9 +64,8 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
                 .Throws(new Exception());
             var waypointManager = new WaypointManager(mockDal.Object);
             var result = waypointManager.RemoveWaypoint(1);
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
-
     }
 }

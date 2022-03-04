@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\DAL\UserDAL.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Data;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneBackend.DAL
+{
+    /// &lt;summary&gt;
+    ///     Data Access Layer (DAL) for accessing User information from the database
+    /// &lt;/summary&gt;
+    public class UserDal
+    {
+        private readonly MySqlConnection _connection;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserDal&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public UserDal() : this(new MySqlConnection(Connection.ConnectionString))
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserDal&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;connection&quot;&gt;The connection.&lt;/param&gt;
+        public UserDal(MySqlConnection connection)
+        {
+            _connection = connection;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the user with the specified username
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;The username.&lt;/param&gt;
+        /// &lt;returns&gt; The user with the given username or null if a user with the specified username does not exist&lt;/returns&gt;
+        public virtual User? GetUserByUsername(string username)
+        {
+            _connection.Open();
+            const string query = &quot;uspGetUserByUsername&quot;;
+            using MySqlCommand cmd = new(query, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(&quot;@username&quot;, MySqlDbType.VarChar).Value = username;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var idOrdinal = reader.GetOrdinal(&quot;userId&quot;);
+            var fnameOrdinal = reader.GetOrdinal(&quot;fname&quot;);
+            var lnameOrdinal = reader.GetOrdinal(&quot;lname&quot;);
+            var passwordOrdinal = reader.GetOrdinal(&quot;password&quot;);
+
+            User? user = null;
+
+            if (reader.Read())
+                user = new User
+                {
+                    UserId = reader.GetInt32(idOrdinal),
+                    Username = username,
+                    FirstName = reader.GetString(fnameOrdinal),
+                    LastName = reader.GetString(lnameOrdinal),
+                    Password = reader.GetString(passwordOrdinal)
+                };
+
+            _connection.Close();
+            return user;
+        }
+
+        /// &lt;summary&gt;Creates a new user.&lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;The username.&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;The password.&lt;/param&gt;
+        /// &lt;param name=&quot;fname&quot;&gt;The first name.&lt;/param&gt;
+        /// &lt;param name=&quot;lname&quot;&gt;The last name.&lt;/param&gt;
+        /// &lt;returns&gt;ID of new user.&lt;/returns&gt;
+        public virtual int CreateUser(string username, string password, string fname, string lname)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspCreateUser&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@username&quot;, MySqlDbType.VarChar).Value = username;
+            cmd.Parameters.Add(&quot;@password&quot;, MySqlDbType.VarChar).Value = PasswordHasher.Hash(password);
+            cmd.Parameters.Add(&quot;@fname&quot;, MySqlDbType.VarChar).Value = fname;
+            cmd.Parameters.Add(&quot;@lname&quot;, MySqlDbType.VarChar).Value = lname;
+
+            try
+            {
+                var userId = cmd.ExecuteScalar();
+                _connection.Close();
+                return Convert.ToInt32(userId);
+            }
+            catch
+            {
+                _connection.Close();
+                throw;
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,28,19,82,1],[20,9,20,10,1],[21,9,21,10,1],[27,9,27,51,1],[28,9,28,10,1],[29,13,29,38,1],[30,9,30,10,1],[38,9,38,10,1],[39,13,39,32,1],[41,13,41,62,1],[42,13,42,59,1],[43,13,43,83,1],[45,13,45,64,1],[46,13,46,57,1],[47,13,47,59,1],[48,13,48,59,1],[49,13,49,65,1],[51,13,51,31,1],[53,13,53,31,1],[54,17,61,19,1],[63,13,63,33,1],[64,13,64,25,1],[65,9,65,10,1],[74,9,74,10,1],[75,13,75,32,1],[77,13,77,66,1],[78,13,78,59,1],[80,13,80,83,1],[81,13,81,104,1],[82,13,82,77,1],[83,13,83,77,1],[86,13,86,14,1],[87,17,87,50,1],[88,17,88,37,1],[89,17,89,48,1],[91,13,91,18,1],[92,13,92,14,1],[93,17,93,37,1],[94,17,94,23,1],[96,9,96,10,1]]);
+    </script>
+  </body>
+</html>

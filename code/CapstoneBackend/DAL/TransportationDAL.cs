@@ -30,7 +30,7 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        /// Creates a transportation.
+        ///     Creates a transportation.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="method">The method of transportation.</param>
@@ -38,9 +38,10 @@ namespace CapstoneBackend.DAL
         /// <param name="endDate">The end date.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        /// The transportation id
+        ///     The transportation id
         /// </returns>
-        public virtual int CreateTransportation(int tripId, string method, DateTime startDate, DateTime endDate, string? notes)
+        public virtual int CreateTransportation(int tripId, string method, DateTime startDate, DateTime endDate,
+            string? notes)
         {
             _connection.Open();
             const string procedure = "uspCreateTransportation";

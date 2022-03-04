@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ReactiveUI;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
+namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
 {
     [TestClass]
     public class TestUpdateWaypoints
@@ -35,7 +35,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
             };
 
             Assert.AreEqual(2, testViewModel.EventViewModels.Count);
-
         }
 
 

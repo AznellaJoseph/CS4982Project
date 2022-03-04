@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestMainWindow\TestConstructor.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneDesktop.ViewModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
+{
+    [TestClass]
+    public class TestConstructor
+    {
+        [TestMethod]
+        public void Constructor_PropertyCreation()
+        {
+            MainWindowViewModel mainWindowViewModel = new();
+            Assert.IsNotNull(mainWindowViewModel.Router);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[11,9,11,10,1],[12,13,12,61,1],[13,13,13,58,1],[14,9,14,10,1]]);
+    </script>
+  </body>
+</html>

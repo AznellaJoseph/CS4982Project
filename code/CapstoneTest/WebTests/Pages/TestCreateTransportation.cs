@@ -34,7 +34,7 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
-        public void Post_Failure()
+        public void Post_InvalidStartDate_ReturnsErrorMessage()
         {
             var session = new Mock<ISession>();
             var manager = new Mock<TransportationManager>();
@@ -53,6 +53,22 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPost(0);
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Post_InvalidMethod_ReturnsErrorMessage()
+        {
+            var session = new Mock<ISession>();
+            var currentTime = DateTime.Now;
+
+            var page = TestPageBuilder.BuildPage<CreateTransportationModel>(session.Object);
+
+            page.StartDate = currentTime.AddDays(1);
+            page.EndDate = currentTime;
+
+            var result = page.OnPost(0);
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.EmptyTransportationMethod, page.ErrorMessage);
         }
 
         [TestMethod]

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\IEvent.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     IEvent Interface to maintain the events (waypoints, transportation) in a trip
+    /// &lt;/summary&gt;
+    public interface IEvent : IComparable&lt;IEvent&gt;
+    {
+        /// &lt;summary&gt;
+        ///     The trip id.
+        /// &lt;/summary&gt;
+        public int TripId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTime? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The display name.
+        /// &lt;/summary&gt;
+        public string DisplayName { get; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Compares the current instance with another object of the same type and returns an integer that indicates whether
+        ///     the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;other&quot;&gt;An object to compare with this instance.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     A value that indicates the relative order of the objects being compared. The return value has these meanings:
+        /// &lt;/returns&gt;
+        int IComparable&lt;IEvent&gt;.CompareTo(IEvent? other)
+        {
+            return StartDate.CompareTo(other?.StartDate);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[44,9,44,10,1],[45,13,45,58,1],[46,9,46,10,1]]);
+    </script>
+  </body>
+</html>

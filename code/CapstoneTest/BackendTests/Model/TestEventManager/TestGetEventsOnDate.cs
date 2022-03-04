@@ -6,7 +6,6 @@ using Moq;
 
 namespace CapstoneTest.BackendTests.Model.TestEventManager
 {
-    
     [TestClass]
     public class TestGetEventsOnDate
     {
@@ -34,17 +33,18 @@ namespace CapstoneTest.BackendTests.Model.TestEventManager
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockTransportationManager = new Mock<TransportationManager>();
 
-            mockTransportationManager.Setup(tm => tm.GetTransportationOnDate(1, currentTime)).Returns(new Response<IList<Transportation>>
-            {
-                Data = fakeTransportation
-            });
-            
+            mockTransportationManager.Setup(tm => tm.GetTransportationOnDate(1, currentTime)).Returns(
+                new Response<IList<Transportation>>
+                {
+                    Data = fakeTransportation
+                });
+
             mockWaypointManager.Setup(tm => tm.GetWaypointsOnDate(1, currentTime)).Returns(new Response<IList<Waypoint>>
             {
                 Data = fakeWaypoints
             });
 
-            EventManager eventManager = new EventManager
+            var eventManager = new EventManager
             {
                 WaypointManager = mockWaypointManager.Object,
                 TransportationManager = mockTransportationManager.Object
@@ -67,10 +67,11 @@ namespace CapstoneTest.BackendTests.Model.TestEventManager
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockTransportationManager = new Mock<TransportationManager>();
 
-            mockTransportationManager.Setup(tm => tm.GetTransportationOnDate(1, currentTime)).Returns(new Response<IList<Transportation>>
-            {
-                Data = fakeTransportation
-            });
+            mockTransportationManager.Setup(tm => tm.GetTransportationOnDate(1, currentTime)).Returns(
+                new Response<IList<Transportation>>
+                {
+                    Data = fakeTransportation
+                });
 
             mockWaypointManager.Setup(tm => tm.GetWaypointsOnDate(1, currentTime)).Returns(new Response<IList<Waypoint>>
             {

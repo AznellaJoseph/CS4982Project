@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\Trip.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A model class for the Trip object
+    /// &lt;/summary&gt;
+    public class Trip
+    {
+        /// &lt;summary&gt;
+        ///     The Id of the Trip
+        /// &lt;/summary&gt;
+        public virtual int TripId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The Id of User of The trip
+        /// &lt;/summary&gt;
+        public int UserId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The name of the trip
+        /// &lt;/summary&gt;
+        public string Name { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The notes of the trip;
+        /// &lt;/summary&gt;
+        public string Notes { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The start date of the  trip
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date of the trip
+        /// &lt;/summary&gt;
+        public DateTime EndDate { get; set; }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[13,37,13,41,1],[13,42,13,46,1],[18,29,18,33,1],[18,34,18,38,1],[23,30,23,34,1],[23,35,23,39,1],[23,44,23,56,1],[28,31,28,35,1],[28,36,28,40,1],[28,45,28,57,1],[33,37,33,41,1],[33,42,33,46,1],[38,35,38,39,1],[38,40,38,44,1]]);
+    </script>
+  </body>
+</html>

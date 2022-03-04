@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\LoginPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the MainWindow (Login)
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class LoginPageViewModel : ReactiveViewModelBase
+    {
+        private readonly UserManager _userManager;
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;LoginPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;manager&quot;&gt;The manager.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public LoginPageViewModel(UserManager manager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        {
+            _userManager = manager;
+            HostScreen = screen;
+            LoginCommand = ReactiveCommand.CreateFromObservable(login);
+            OpenCreateAccountCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new CreateAccountPageViewModel(HostScreen)));
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;MainWindowViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public LoginPageViewModel(IScreen screen) : this(new UserManager(), screen)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     The login command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; LoginCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The open create account command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; OpenCreateAccountCommand { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The username.
+        /// &lt;/summary&gt;
+        public string? Username { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The password.
+        /// &lt;/summary&gt;
+        public string? Password { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        private IObservable&lt;IRoutableViewModel&gt; login()
+        {
+            if (string.IsNullOrEmpty(Username))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidUsername;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidPassword;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var response = _userManager.GetUserByCredentials(Username, Password);
+            if (response.Data is not null)
+                return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, HostScreen));
+
+            ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,46,1],[24,74,24,118,1],[25,9,25,10,1],[26,13,26,36,1],[27,13,27,33,1],[28,13,28,72,1],[29,13,30,17,1],[30,17,30,95,0],[30,95,30,97,1],[31,9,31,10,1],[37,53,37,84,1],[38,9,38,10,1],[39,9,39,10,1],[44,73,44,77,1],[49,85,49,89,1],[49,90,49,94,1],[54,35,54,39,1],[54,40,54,44,1],[59,35,59,39,1],[59,40,59,44,1],[66,20,66,26,1],[67,20,67,64,1],[71,9,71,10,1],[72,13,72,48,1],[73,13,73,14,1],[74,17,74,65,1],[75,17,75,63,1],[78,13,78,48,1],[79,13,79,14,1],[80,17,80,65,1],[81,17,81,63,1],[84,13,84,82,1],[85,13,85,43,1],[86,17,86,112,0],[88,13,88,83,1],[89,13,89,59,1],[90,9,90,10,1]]);
+    </script>
+  </body>
+</html>

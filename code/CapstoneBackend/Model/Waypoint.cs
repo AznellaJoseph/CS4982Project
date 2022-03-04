@@ -37,7 +37,9 @@ namespace CapstoneBackend.Model
         /// </summary>
         public DateTime? EndDate { get; set; }
 
-
+        /// <summary>
+        ///     The display name.
+        /// </summary>
         public string DisplayName => Location;
     }
 }

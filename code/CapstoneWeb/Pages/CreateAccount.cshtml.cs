@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     Create Account Model
+    ///     PageModel for Create Account Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class CreateAccountModel : PageModel
@@ -58,6 +58,36 @@ namespace CapstoneWeb.Pages
         /// <returns> The page to go to after [post] </returns>
         public IActionResult OnPost()
         {
+            if (string.IsNullOrEmpty(Username))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidUsername;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidPassword;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(FirstName))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidFirstName;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(LastName))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidLastName;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(ConfirmedPassword))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidConfirmedPassword;
+                return Page();
+            }
+
             if (Password != ConfirmedPassword)
             {
                 ErrorMessage = Ui.ErrorMessages.PasswordsDoNotMatch;
@@ -65,9 +95,9 @@ namespace CapstoneWeb.Pages
             }
 
             var userManager = FakeUserManager ?? new UserManager();
-            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
-                FirstName ?? string.Empty, LastName ?? string.Empty);
-            if (response.StatusCode == (uint) Ui.StatusCode.Success)
+            var response = userManager.RegisterUser(Username, Password,
+                FirstName, LastName);
+            if (response.StatusCode == (uint)Ui.StatusCode.Success)
             {
                 HttpContext.Session.SetString("userId", $"{response.Data}");
                 return RedirectToPage("Index");
