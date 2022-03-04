@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Routing;
 
 namespace CapstoneWeb.Pages
 {
+    /// <summary>
+    ///     PageModel for Create Transportation Site
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class CreateTransportationModel : PageModel
     {
         /// <summary>
@@ -73,9 +77,9 @@ namespace CapstoneWeb.Pages
         public IActionResult OnPostCancel(int tripId)
         {
             var routeValue = new RouteValueDictionary
-                {
-                    {"tripId", tripId}
-                };
+            {
+                {"tripId", tripId}
+            };
             return RedirectToPage("Trip", routeValue);
         }
     }

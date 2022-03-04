@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     TripOverview Model
+    ///     PageModel for Single Trip Overview
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class TripModel : PageModel
@@ -61,7 +61,7 @@ namespace CapstoneWeb.Pages
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
-        /// <returns></returns>
+        /// <returns> The json result of getting the waypoints on the selected date. </returns>
         public IActionResult OnGetAjax(int tripId, string selectedDate)
         {
             var manager = FakeWaypointManager ?? new WaypointManager();
@@ -71,7 +71,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post create].
         /// </summary>
-        /// <returns> The action to take when going to create waypoint form </returns>
+        /// <returns> Redirect to create waypoint form </returns>
         public IActionResult OnPostCreateWaypoint(int tripId)
         {
             var routeValue = new RouteValueDictionary
@@ -84,7 +84,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post create].
         /// </summary>
-        /// <returns> The action to take when going to create Transportation form </returns>
+        /// <returns> Redirect to create Transportation form </returns>
         public IActionResult OnPostCreateTransportation(int tripId)
         {
             var routeValue = new RouteValueDictionary
@@ -97,7 +97,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post back].
         /// </summary>
-        /// <returns> The action to take when going back to trips page </returns>
+        /// <returns> Redirect to index </returns>
         public IActionResult OnPostBack()
         {
             return RedirectToPage("Index");
@@ -106,7 +106,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post logout].
         /// </summary>
-        /// <returns> The action to take when logging out </returns>
+        /// <returns> Redirect to index </returns>
         public IActionResult OnPostLogout()
         {
             HttpContext.Session.Remove("userId");
@@ -116,7 +116,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post remove].
         /// </summary>
-        /// <returns></returns>
+        /// <returns> The json result of removing the waypoint specified by the waypointId </returns>
         public IActionResult OnGetRemove(int tripId, int waypointId)
         {
             var routeValue = new RouteValueDictionary

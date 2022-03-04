@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     Create Account Model
+    ///     PageModel for Create Account Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class CreateAccountModel : PageModel

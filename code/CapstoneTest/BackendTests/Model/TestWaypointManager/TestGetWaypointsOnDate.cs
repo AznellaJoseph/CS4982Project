@@ -115,10 +115,11 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             var builder = new MySqlExceptionBuilder();
             var currentTime = DateTime.Now;
             mockDal.Setup(dal => dal.GetWaypointsOnDate(1, currentTime))
-                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+                .Throws(builder
+                    .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
             var waypointManager = new WaypointManager(mockDal.Object);
             var result = waypointManager.GetWaypointsOnDate(1, currentTime);
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
 
@@ -131,7 +132,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
                 .Throws(new Exception());
             var waypointManager = new WaypointManager(mockDal.Object);
             var result = waypointManager.GetWaypointsOnDate(1, currentTime);
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
     }

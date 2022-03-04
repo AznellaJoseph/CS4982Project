@@ -7,7 +7,11 @@ namespace CapstoneVendorPrototype
     /// </summary>
     public class Place
     {
-        [JsonPropertyName("fsq_id")] public string Id { get; set; }
+        /// <summary>
+        ///     The id.
+        /// </summary>
+        [JsonPropertyName("fsq_id")]
+        public string Id { get; set; }
 
         /// <summary>
         ///     The categories.

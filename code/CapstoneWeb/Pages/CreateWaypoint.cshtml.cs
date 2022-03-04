@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Routing;
 
 namespace CapstoneWeb.Pages
 {
+    /// <summary>
+    ///     PageModel for Create Waypoint Site
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class CreateWaypointModel : PageModel
     {
         /// <summary>
@@ -69,13 +73,13 @@ namespace CapstoneWeb.Pages
         ///     Called when [post cancel].
         /// </summary>
         /// <param name="tripId">The trip identifier to add a waypoint to.</param>
-        /// <returns>Redirects to the trip overview page for this trip ID</returns>
+        /// <returns>Redirects to the trip overview page for the trip the waypoint was added to </returns>
         public IActionResult OnPostCancel(int tripId)
         {
             var routeValue = new RouteValueDictionary
-                {
-                    {"tripId", tripId}
-                };
+            {
+                {"tripId", tripId}
+            };
             return RedirectToPage("Trip", routeValue);
         }
     }

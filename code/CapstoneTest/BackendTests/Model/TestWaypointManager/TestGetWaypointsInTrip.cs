@@ -100,10 +100,10 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             var mockDal = new Mock<WaypointDal>();
             var builder = new MySqlExceptionBuilder();
             mockDal.Setup(dal => dal.GetWaypointsByTripId(1))
-                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, "test").Build());
+                .Throws(builder.WithError((uint) Ui.StatusCode.InternalServerError, "test").Build());
             var waypointManager = new WaypointManager(mockDal.Object);
             var result = waypointManager.GetWaypointsByTripId(1);
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
 
@@ -116,9 +116,8 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
                 .Throws(new Exception());
             var waypointManager = new WaypointManager(mockDal.Object);
             var result = waypointManager.GetWaypointsByTripId(1);
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
-
     }
 }

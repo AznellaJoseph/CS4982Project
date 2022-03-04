@@ -33,10 +33,8 @@
             public static readonly string UnknownError = "Unknown Error.";
             public static readonly string EmptyTripName = "You must enter a name for the trip.";
             public static readonly string NullTripDate = "You must enter a start and end date.";
-
             public static readonly string InvalidEventDate =
                 "You must enter a start date. The end date will default to the trip end date if end date and time are not entered.";
-
             public static readonly string EmptyWaypointLocation = "You must enter a location for the waypoint.";
             public static readonly string EmptyTransportationMethod = "You must enter a method for the transportation.";
             public static readonly string InvalidUsername = "You must enter a username.";

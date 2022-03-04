@@ -4,11 +4,7 @@ using CapstoneBackend.Model;
 using CapstoneWeb.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -38,7 +34,7 @@ namespace CapstoneTest.WebTests.Pages
             session.SetupGet(s => s.Keys).Returns(new List<string> {"userId"});
             session.Setup(s => s.TryGetValue("userId", out outBytes)).Returns(true);
             mockTripManager.Setup(tm => tm.GetTripsByUser(0))
-                .Returns(new Response<IList<Trip>> {Data = new List<Trip> { new() }});
+                .Returns(new Response<IList<Trip>> {Data = new List<Trip> {new()}});
             var page = TestPageBuilder.BuildPage<IndexModel>(session.Object);
             page.FakeTripManager = mockTripManager.Object;
             var result = page.OnGet();
@@ -59,7 +55,7 @@ namespace CapstoneTest.WebTests.Pages
             var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Index", redirect.PageName);
         }
-        
+
         [TestMethod]
         public void PostCreate()
         {

@@ -15,7 +15,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             var mockTrip = new Mock<Trip>();
             var mockTransportationManager = new Mock<TransportationManager>();
             var mockScreen = new Mock<IScreen>();
-            CreateTransportationPageViewModel createTransportationViewModel = new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
 
             Assert.AreEqual(string.Empty, createTransportationViewModel.ErrorMessage);
             Assert.AreEqual(mockScreen.Object, createTransportationViewModel.HostScreen);
@@ -47,6 +48,5 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             Assert.IsNull(createTransportationViewModel.EndDate);
             Assert.IsNull(createTransportationViewModel.Method);
         }
-
     }
 }

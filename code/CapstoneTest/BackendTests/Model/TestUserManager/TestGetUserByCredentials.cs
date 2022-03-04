@@ -15,7 +15,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
         [TestMethod]
         public void Call_WithValidCredentials_Succeeds()
         {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash(TestPassword) };
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash(TestPassword)};
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
 
@@ -23,7 +23,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-            Assert.AreEqual((uint)Ui.StatusCode.Success, resultResponse.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
             Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
             Assert.AreEqual(resultResponse.Data?.FirstName, fakeExistingUser.FirstName);
             Assert.AreEqual(resultResponse.Data?.LastName, fakeExistingUser.LastName);
@@ -43,13 +43,13 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-            Assert.AreEqual((uint)Ui.StatusCode.DataNotFound, resultResponse.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.DataNotFound, resultResponse.StatusCode);
         }
 
         [TestMethod]
         public void Call_WithWrongPassword_Fails()
         {
-            User fakeExistingUser = new() { Password = PasswordHasher.Hash("CorrectPassword") };
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash("CorrectPassword")};
             var mockUserDal = new Mock<UserDal>();
             mockUserDal.Setup(db => db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
 
@@ -57,7 +57,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
 
             var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-            Assert.AreEqual((uint)Ui.StatusCode.DataNotFound, resultResponse.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.DataNotFound, resultResponse.StatusCode);
         }
 
         [TestMethod]
@@ -66,12 +66,13 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
             var mockUserDal = new Mock<UserDal>();
             var builder = new MySqlExceptionBuilder();
             mockUserDal.Setup(db => db.GetUserByUsername(TestUsername))
-                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+                .Throws(builder
+                    .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
             UserManager userManager = new(mockUserDal.Object);
 
             var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
         }
     }

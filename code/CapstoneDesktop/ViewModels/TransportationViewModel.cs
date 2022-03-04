@@ -6,7 +6,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    /// ViewModel for a single Waypoint
+    ///     ViewModel for a single Transportation
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ReactiveViewModelBase" />
     /// <seealso cref="CapstoneDesktop.ViewModels.IEventViewModel" />
@@ -16,7 +16,7 @@ namespace CapstoneDesktop.ViewModels
         private readonly IScreen _screen;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TransportationViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="TransportationViewModel" /> class.
         /// </summary>
         /// <param name="transportation">The transportation.</param>
         /// <param name="screen">The screen.</param>

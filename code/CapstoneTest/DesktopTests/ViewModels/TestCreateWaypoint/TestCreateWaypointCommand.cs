@@ -46,7 +46,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             mockWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "Paris, Italy", DateTime.Today.AddDays(1) + TimeSpan.Zero,
                         DateTime.Today + TimeSpan.Zero, "notes"))
-                .Returns(new Response<int> { ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
+                .Returns(new Response<int> {ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
             CreateWaypointPageViewModel createWaypointWindowViewModel =
                 new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
@@ -106,7 +106,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             var mockScreen = new Mock<IScreen>();
             mockWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "Paris, Italy", DateTime.Today.AddDays(-2), DateTime.Today, "notes"))
-                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
+                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
             CreateWaypointPageViewModel createWaypointWindowViewModel =
                 new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
@@ -141,7 +141,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             var mockScreen = new Mock<IScreen>();
             mockWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "Paris, Italy", DateTime.Today.AddDays(-2), DateTime.Today, "notes"))
-                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
+                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
             CreateWaypointPageViewModel createWaypointWindowViewModel =
                 new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
@@ -176,7 +176,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             var mockScreen = new Mock<IScreen>();
             mockWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "Paris, Italy", DateTime.Today.AddDays(-2), DateTime.Today, "notes"))
-                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
+                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
             CreateWaypointPageViewModel createWaypointWindowViewModel =
                 new(mockTrip.Object, mockWaypointManager.Object, mockScreen.Object);
 
@@ -372,7 +372,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         {
             var mockWaypointManager = new Mock<WaypointManager>();
             mockWaypointManager.Setup(um => um.CreateWaypoint(0, "Paris, Italy", DateTime.Today, DateTime.Today, null))
-                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
+                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
             var mockTrip = new Mock<Trip>();
             var mockScreen = new Mock<IScreen>();
             CreateWaypointPageViewModel createWaypointWindowViewModel =

@@ -16,7 +16,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             var mockDal = new Mock<TripDal>();
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.CreateTrip(1, string.Empty, null, DateTime.Now.AddDays(1), DateTime.Now);
-            Assert.AreEqual((uint)Ui.StatusCode.BadRequest, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, result.ErrorMessage);
         }
 
@@ -29,7 +29,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             mockDal.Setup(dal => dal.CreateTrip(1, string.Empty, null, startDate, endDate)).Returns(1);
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.CreateTrip(1, string.Empty, null, startDate, endDate);
-            Assert.AreEqual((uint)Ui.StatusCode.Success, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.Success, result.StatusCode);
             Assert.AreEqual(1, result.Data);
         }
 
@@ -41,10 +41,10 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             var startDate = DateTime.Now;
             var endDate = DateTime.Now;
             mockDal.Setup(dal => dal.CreateTrip(1, string.Empty, null, startDate, endDate))
-                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, "test").Build());
+                .Throws(builder.WithError((uint) Ui.StatusCode.InternalServerError, "test").Build());
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.CreateTrip(1, string.Empty, null, startDate, endDate);
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
 
@@ -58,7 +58,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
                 .Throws(new Exception("test"));
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.CreateTrip(1, string.Empty, null, startDate, endDate);
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
     }

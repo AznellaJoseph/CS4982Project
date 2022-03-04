@@ -35,7 +35,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
             };
 
             Assert.AreEqual(2, testViewModel.EventViewModels.Count);
-
         }
 
 

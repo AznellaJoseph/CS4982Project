@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     Login Model
+    ///     PageModel for Login Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class LoginModel : PageModel
@@ -55,7 +55,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post create account].
         /// </summary>
-        /// <returns>A redirect to the next page or the current page if there was an error </returns>
+        /// <returns>A redirect to create account page </returns>
         public IActionResult OnPostCreateAccount()
         {
             return RedirectToPage("CreateAccount");

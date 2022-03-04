@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CapstoneWeb.Pages
 {
+    /// <summary>
+    ///     PageModel for Create Trip Site
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class CreateTripModel : PageModel
     {
         /// <summary>

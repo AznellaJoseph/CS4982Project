@@ -137,7 +137,8 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var resultResponse = _transportationManager.CreateTransportation(_trip.TripId, Method, startDate, endTime, Notes);
+            var resultResponse =
+                _transportationManager.CreateTransportation(_trip.TripId, Method, startDate, endTime, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
                 return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
 
