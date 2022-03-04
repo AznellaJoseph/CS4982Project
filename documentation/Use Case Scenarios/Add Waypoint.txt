@@ -6,7 +6,7 @@ Context: The user is logged in to the system and is viewing the overview of a se
 
 Primary Flow:
 1. The user clicks the “Create Waypoint” button
-2. The user enters the start and end times and location the waypoint
+2. The user enters the information for the waypoint
 3. The user clicks the "Create Waypoint" button to submit the new waypoint
 
 
@@ -23,4 +23,11 @@ A3. The end time for the waypoint is set to the end date of the selected trip
 The user does not enter a required field
 A2. The user fails to enter a required field
 A3. The user is shown an error message specifying which field must be filled out before submitting
+
+The user enters invalid dates 
+A2. The user enters a start date or end date that is before trip start or after trip end
+A3. The user is shown an error message stating which date (start or end) is invalid and the corresponding trip start or end date that the entered value should fall between
+
+The user enters dates that clash with another event
+A3. The user is shown an error message that there is a clashing event with the dates entered
 ________________
