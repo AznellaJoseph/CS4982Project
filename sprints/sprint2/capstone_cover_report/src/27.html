@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestCreateTransportation\TestCreateTransportationCommand.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
+{
+    [TestClass]
+    public class TestCreateTransportationCommand
+    {
+        [TestMethod]
+        public void CreateTransportationCommand_NullMethod_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.EmptyTransportationMethod, createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_NullStartDate_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = &quot;Plane&quot;;
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidEventDate, createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_NullEndDate_SuccessfulCreation()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;
+            {
+                Object =
+                {
+                    TripId = 0,
+                    EndDate = DateTime.Today
+                }
+            };
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockTransportationManager.Setup(um =&gt;
+                    um.CreateTransportation(0, &quot;Plane&quot;, DateTime.Today.AddDays(-2), DateTime.Today, null))
+                .Returns(new Response&lt;int&gt; { StatusCode = (uint)Ui.StatusCode.Success });
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = &quot;Plane&quot;;
+            createTransportationViewModel.StartDate = DateTimeOffset.Now.AddDays(-2);
+            createTransportationViewModel.StartTime = TimeSpan.Zero;
+
+            createTransportationViewModel.CreateTransportationCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_EventStartBeforeTripStart_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = &quot;Plane&quot;;
+            createTransportationViewModel.StartDate = DateTimeOffset.Now.AddDays(-3);
+            createTransportationViewModel.StartTime = TimeSpan.Zero;
+            createTransportationViewModel.EndDate = DateTimeOffset.Now;
+            createTransportationViewModel.EndTime = TimeSpan.Zero;
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(
+                Ui.ErrorMessages.EventStartDateBeforeTripStartDate + mockTrip.Object.StartDate.ToShortDateString(),
+                createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_EventEndBeforeTripStart_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = &quot;Plane&quot;;
+            createTransportationViewModel.StartDate = DateTimeOffset.Now.AddDays(-1);
+            createTransportationViewModel.StartTime = TimeSpan.Zero;
+            createTransportationViewModel.EndDate = DateTime.Today.AddDays(-3);
+            createTransportationViewModel.EndTime = TimeSpan.Zero;
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(
+                Ui.ErrorMessages.EventEndDateBeforeTripStartDate + mockTrip.Object.StartDate.ToShortDateString(),
+                createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_EventStartAfterTripEnd_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;();
+            mockTrip.Object.StartDate = DateTime.Today.AddDays(-2);
+            mockTrip.Object.EndDate = DateTime.Now;
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = &quot;Plane&quot;;
+            createTransportationViewModel.StartDate = DateTimeOffset.Now.AddDays(1);
+            createTransportationViewModel.StartTime = TimeSpan.Zero;
+            createTransportationViewModel.EndDate = DateTime.Today;
+            createTransportationViewModel.EndTime = TimeSpan.Zero;
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(
+                Ui.ErrorMessages.EventStartDateAfterTripEndDate + mockTrip.Object.EndDate.ToShortDateString(),
+                createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_EventEndAfterTripEnd_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = &quot;Plane&quot;;
+            createTransportationViewModel.StartDate = DateTimeOffset.Now.AddDays(-1);
+            createTransportationViewModel.StartTime = TimeSpan.Zero;
+            createTransportationViewModel.EndDate = DateTime.Today.AddDays(3);
+            createTransportationViewModel.EndTime = TimeSpan.Zero;
+
+            createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.EventEndDateAfterTripEndDate + mockTrip.Object.EndDate.ToShortDateString(),
+                createTransportationViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTransportationCommand_SuccessfulCreation()
+        {
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            mockTransportationManager.Setup(um =&gt; um.CreateTransportation(0, &quot;Plane&quot;,
+                    DateTime.Today + DateTime.Today.TimeOfDay, DateTime.Today + DateTime.Today.TimeOfDay, null))
+                .Returns(new Response&lt;int&gt; { StatusCode = (uint)Ui.StatusCode.Success });
+            var mockTrip = new Mock&lt;Trip&gt;
+            {
+                Object =
+                {
+                    TripId = 0,
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Today.AddDays(3)
+                }
+            };
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationViewModel.Method = &quot;Plane&quot;;
+            createTransportationViewModel.StartDate = DateTime.Today;
+            createTransportationViewModel.StartTime = DateTime.Today.TimeOfDay;
+            createTransportationViewModel.EndDate = DateTime.Today;
+            createTransportationViewModel.EndTime = DateTime.Today.TimeOfDay;
+
+            createTransportationViewModel.CreateTransportationCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, createTransportationViewModel.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,10,1],[18,13,18,45,1],[19,13,19,79,1],[20,13,20,50,1],[21,13,22,91,1],[24,13,24,53,1],[26,13,26,93,1],[28,13,28,35,1],[30,13,30,117,1],[31,9,31,10,1],[35,9,35,10,1],[36,13,36,45,1],[37,13,37,79,1],[38,13,38,50,1],[39,13,40,91,1],[42,13,42,53,1],[44,13,44,60,1],[46,13,46,93,1],[48,13,48,35,1],[50,13,50,108,1],[51,9,51,10,1],[55,9,55,10,1],[56,13,63,15,1],[64,13,64,79,1],[65,13,65,50,1],[66,13,68,90,1],[69,13,70,91,1],[72,13,72,53,1],[74,13,74,60,1],[75,13,75,86,1],[76,13,76,69,1],[78,13,78,100,1],[80,13,80,35,1],[82,13,82,87,1],[83,9,83,10,1],[87,9,87,10,1],[88,13,95,15,1],[96,13,96,79,1],[97,13,97,50,1],[99,13,100,91,1],[102,13,102,53,1],[104,13,104,60,1],[105,13,105,86,1],[106,13,106,69,1],[107,13,107,72,1],[108,13,108,67,1],[110,13,110,93,1],[112,13,112,35,1],[114,13,116,61,1],[117,9,117,10,1],[121,9,121,10,1],[122,13,129,15,1],[130,13,130,79,1],[131,13,131,50,1],[133,13,134,91,1],[136,13,136,53,1],[138,13,138,60,1],[139,13,139,86,1],[140,13,140,69,1],[141,13,141,80,1],[142,13,142,67,1],[144,13,144,93,1],[146,13,146,35,1],[148,13,150,61,1],[151,9,151,10,1],[155,9,155,10,1],[156,13,156,45,1],[157,13,157,68,1],[158,13,158,52,1],[159,13,159,79,1],[160,13,160,50,1],[162,13,163,91,1],[165,13,165,53,1],[167,13,167,60,1],[168,13,168,85,1],[169,13,169,69,1],[170,13,170,68,1],[171,13,171,67,1],[173,13,173,93,1],[175,13,175,35,1],[177,13,179,61,1],[180,9,180,10,1],[184,9,184,10,1],[185,13,192,15,1],[193,13,193,79,1],[194,13,194,50,1],[196,13,197,91,1],[199,13,199,53,1],[201,13,201,60,1],[202,13,202,86,1],[203,13,203,69,1],[204,13,204,79,1],[205,13,205,67,1],[207,13,207,93,1],[209,13,209,35,1],[211,13,212,61,1],[213,9,213,10,1],[217,9,217,10,1],[218,13,218,79,1],[219,13,221,90,1],[222,13,230,15,1],[231,13,231,50,1],[232,13,233,91,1],[235,13,235,53,1],[237,13,237,60,1],[238,13,238,70,1],[239,13,239,80,1],[240,13,240,68,1],[241,13,241,78,1],[243,13,243,100,1],[245,13,245,35,1],[247,13,247,87,1],[248,9,248,10,1]]);
+    </script>
+  </body>
+</html>

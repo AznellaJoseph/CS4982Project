@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestCreateTrip\TestCreateTripCommand.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
+{
+    [TestClass]
+    public class TestCreateTripCommand
+    {
+        [TestMethod]
+        public void CreateTrip_EmptyTripName_ReturnsErrorMessage()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;&quot;;
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.EmptyTripName, createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTrip_InvalidDates_ReturnsErrorMessage()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            mockTripManager.Setup(um =&gt; um.CreateTrip(0, &quot;name&quot;, &quot;notes&quot;, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response&lt;int&gt;
+                    {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+            createTripWindowViewModel.StartDate = DateTime.Today.AddDays(1);
+            createTripWindowViewModel.EndDate = DateTime.Today;
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate,
+                createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTrip_NullStartDate_ReturnsErrorMessage()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var endDate = DateTime.Today.AddDays(1);
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.EndDate = endDate;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.NullTripDate, createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTrip_SuccessfulCreation()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var startDate = DateTime.Today;
+            var endDate = DateTime.Today.AddDays(1);
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            mockTripManager.Setup(um =&gt; um.CreateTrip(0, &quot;name&quot;, &quot;notes&quot;, startDate, endDate))
+                .Returns(new Response&lt;int&gt; {StatusCode = (uint) Ui.StatusCode.Success});
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.StartDate = startDate;
+            createTripWindowViewModel.EndDate = endDate;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+
+            createTripWindowViewModel.CreateTripCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,10,1],[18,13,18,45,1],[19,13,19,59,1],[20,13,20,50,1],[21,13,22,81,1],[23,13,23,53,1],[25,13,25,53,1],[27,13,27,79,1],[29,13,29,35,1],[31,13,31,101,1],[32,9,32,10,1],[36,9,36,10,1],[37,13,37,45,1],[38,13,38,59,1],[39,13,39,50,1],[40,13,41,81,1],[42,13,44,119,1],[45,13,45,53,1],[47,13,47,57,1],[48,13,48,55,1],[49,13,49,77,1],[50,13,50,64,1],[52,13,52,79,1],[54,13,54,35,1],[56,13,57,57,1],[58,9,58,10,1],[62,9,62,10,1],[63,13,63,45,1],[64,13,64,59,1],[65,13,65,50,1],[66,13,66,53,1],[67,13,68,81,1],[70,13,70,53,1],[72,13,72,57,1],[73,13,73,57,1],[74,13,74,55,1],[76,13,76,79,1],[78,13,78,35,1],[80,13,80,100,1],[81,9,81,10,1],[85,9,85,10,1],[86,13,86,45,1],[87,13,87,59,1],[88,13,88,50,1],[89,13,89,44,1],[90,13,90,53,1],[91,13,92,81,1],[93,13,94,89,1],[95,13,95,53,1],[97,13,97,57,1],[98,13,98,61,1],[99,13,99,57,1],[100,13,100,55,1],[102,13,102,86,1],[104,13,104,35,1],[106,13,106,83,1],[107,9,107,10,1]]);
+    </script>
+  </body>
+</html>

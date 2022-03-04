@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\CreateTransportationPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the CreateTransportation Page
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class CreateTransportationPageViewModel : ReactiveViewModelBase
+    {
+        private readonly TransportationManager _transportationManager;
+        private readonly EventManager _eventManager = new();
+        private readonly Trip _trip;
+
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateTransportationPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;trip&quot;&gt;the trip that the transportation is for.&lt;/param&gt;
+        /// &lt;param name=&quot;manager&quot;&gt;The transportation manager.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The host screen&lt;/param&gt;
+        public CreateTransportationPageViewModel(Trip trip, TransportationManager manager, IScreen screen) : base(
+            screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            _trip = trip;
+            _transportationManager = manager;
+            HostScreen = screen;
+            CreateTransportationCommand = ReactiveCommand.CreateFromObservable(createTransportation);
+            CancelCreateTransportationCommand =
+                ReactiveCommand.CreateFromObservable(() =&gt; HostScreen.Router.NavigateBack.Execute());
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateTransportationPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;trip&quot;&gt;The trip.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public CreateTransportationPageViewModel(Trip trip, IScreen screen) : this(trip, new TransportationManager(),
+            screen)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     The create transportation command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; CreateTransportationCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The cancel create transportation command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateTransportationCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start time.
+        /// &lt;/summary&gt;
+        public TimeSpan? StartTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end time.
+        /// &lt;/summary&gt;
+        public TimeSpan? EndTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        public string? Method { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string? Notes { get; set; }
+
+        private IObservable&lt;IRoutableViewModel&gt; createTransportation()
+        {
+            if (string.IsNullOrEmpty(Method))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyTransportationMethod;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (StartDate is null || StartTime is null)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var startDate = StartDate.Value.Date + StartTime.Value;
+
+            var endDate = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
+
+            if (startDate.CompareTo(_trip.StartDate) &lt; 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (startDate.CompareTo(_trip.EndDate) &gt; 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventStartDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (endDate.CompareTo(_trip.StartDate) &lt; 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventEndDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (endDate.CompareTo(_trip.EndDate) &gt; 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.EventEndDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (_eventManager.DetermineIfEventDatesClash(_trip.TripId, startDate, endDate).Data)
+            {
+                ErrorMessage = Ui.ErrorMessages.ClashingEventDates;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+
+            var resultResponse =
+                _transportationManager.CreateTransportation(_trip.TripId, Method, startDate, endDate, Notes);
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
+
+            ErrorMessage = resultResponse.ErrorMessage;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,61,1],[20,9,20,46,1],[28,110,30,44,1],[31,9,31,10,1],[32,13,32,26,1],[33,13,33,46,1],[34,13,34,33,1],[35,13,35,102,1],[36,13,37,60,1],[37,60,37,100,0],[37,100,37,102,1],[38,9,38,10,1],[45,79,46,20,1],[47,9,47,10,1],[48,9,48,10,1],[53,88,53,92,1],[58,80,58,84,1],[65,20,65,26,1],[66,20,66,64,1],[72,44,72,48,1],[72,49,72,53,1],[77,38,77,42,1],[77,43,77,47,1],[82,42,82,46,1],[82,47,82,51,1],[87,36,87,40,1],[87,41,87,45,1],[92,33,92,37,1],[92,38,92,42,1],[97,32,97,36,0],[97,37,97,41,0],[100,9,100,10,1],[101,13,101,46,1],[102,13,102,14,1],[103,17,103,75,1],[104,17,104,63,1],[107,13,107,56,1],[108,13,108,14,1],[109,17,109,66,1],[110,17,110,63,1],[113,13,113,68,1],[115,13,115,115,1],[117,13,117,58,1],[118,13,118,14,1],[119,17,119,121,1],[120,17,120,63,1],[123,13,123,56,1],[124,13,124,14,1],[125,17,125,116,1],[126,17,126,63,1],[129,13,129,56,1],[130,13,130,14,1],[131,17,131,119,1],[132,17,132,63,1],[135,13,135,54,1],[136,13,136,14,1],[137,17,137,114,1],[138,17,138,63,1],[141,13,141,97,0],[142,13,142,14,0],[143,17,143,68,0],[144,17,144,63,0],[148,13,149,110,0],[150,13,150,67,0],[151,17,151,109,0],[153,13,153,56,0],[154,13,154,59,0],[155,9,155,10,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestWaypointManager\TestRemoveWaypoint.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestWaypointManager
+{
+    [TestClass]
+    public class TestRemoveWaypoint
+    {
+        [TestMethod]
+        public void RemoveWaypoint_WaypointNotExists_ReturnsErrorMessage()
+        {
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;vacation&quot;, DateTime.Today, DateTime.Today, string.Empty))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.RemoveWaypoint(2)).Returns(false);
+
+            WaypointManager manager = new(mockWaypointDal.Object);
+
+            var resultResponse = manager.RemoveWaypoint(2);
+
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, resultResponse.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.WaypointNotFound, resultResponse.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RemoveWaypoint_ValidWaypointId_ReturnsTrue()
+        {
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;vacation&quot;, DateTime.Today, DateTime.Today, string.Empty))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.RemoveWaypoint(1)).Returns(true);
+
+            WaypointManager manager = new(mockWaypointDal.Object);
+
+            var resultResponse = manager.RemoveWaypoint(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
+            Assert.AreEqual(true, resultResponse.Data);
+        }
+
+        [TestMethod]
+        public void RemoveWaypoint_ServerMySqlException_Failure()
+        {
+            var mockDal = new Mock&lt;WaypointDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockDal.Setup(dal =&gt; dal.RemoveWaypoint(1))
+                .Throws(builder
+                    .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+            var waypointManager = new WaypointManager(mockDal.Object);
+            var result = waypointManager.RemoveWaypoint(1);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RemoveWaypoint_ServerException_Failure()
+        {
+            var mockDal = new Mock&lt;WaypointDal&gt;();
+            mockDal.Setup(dal =&gt; dal.RemoveWaypoint(1))
+                .Throws(new Exception());
+            var waypointManager = new WaypointManager(mockDal.Object);
+            var result = waypointManager.RemoveWaypoint(1);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,59,1],[17,13,18,29,1],[19,13,19,78,1],[21,13,21,67,1],[23,13,23,60,1],[25,13,25,89,1],[26,13,26,93,1],[27,9,27,10,1],[31,9,31,10,1],[32,13,32,59,1],[33,13,34,29,1],[35,13,35,77,1],[37,13,37,67,1],[39,13,39,60,1],[41,13,41,86,1],[42,13,42,56,1],[43,9,43,10,1],[47,9,47,10,1],[48,13,48,51,1],[49,13,49,55,1],[50,13,52,121,1],[53,13,53,71,1],[54,13,54,60,1],[55,13,55,90,1],[56,13,56,88,1],[57,9,57,10,1],[61,9,61,10,1],[62,13,62,51,1],[63,13,64,42,1],[65,13,65,71,1],[66,13,66,60,1],[67,13,67,90,1],[68,13,68,88,1],[69,9,69,10,1]]);
+    </script>
+  </body>
+</html>

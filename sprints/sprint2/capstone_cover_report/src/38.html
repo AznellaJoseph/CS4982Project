@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestUserManager\TestRegisterUser.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestUserManager
+{
+    [TestClass]
+    public class TestRegisterUser
+    {
+        [TestMethod]
+        public void Register_WithValidInput_Succeeds()
+        {
+            const string username = &quot;TestUsername&quot;;
+            const string password = &quot;TestPassword&quot;;
+            const string fname = &quot;FirstName&quot;;
+            const string lname = &quot;LastName&quot;;
+
+            User? fakeExistingUser = null;
+            User fakeCreatedUser = new() {UserId = 1};
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
+            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(fakeCreatedUser.UserId);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
+            Assert.AreEqual(1, resultResponse.Data);
+        }
+
+        [TestMethod]
+        public void Register_WithDuplicateUsername_Fails()
+        {
+            const string username = &quot;TestUsername&quot;;
+            const string password = &quot;TestPassword&quot;;
+            const string fname = &quot;FirstName&quot;;
+            const string lname = &quot;LastName&quot;;
+
+            User fakeExistingUser = new() {UserId = 1};
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
+            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname)).Returns(null);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Register_InternalServerErrorConfiguration_Fails()
+        {
+            const string username = &quot;TestUsername&quot;;
+            const string password = &quot;TestPassword&quot;;
+            const string fname = &quot;FirstName&quot;;
+            const string lname = &quot;LastName&quot;;
+
+            User? fakeExistingUser = null;
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
+            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname))
+                .Throws(builder
+                    .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Register_ThrowsException_Fails()
+        {
+            const string username = &quot;TestUsername&quot;;
+            const string password = &quot;TestPassword&quot;;
+            const string fname = &quot;FirstName&quot;;
+            const string lname = &quot;LastName&quot;;
+
+            User? fakeExistingUser = null;
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(username)).Returns(fakeExistingUser);
+            mockUserDal.Setup(db =&gt; db.CreateUser(username, password, fname, lname))
+                .Throws(new Exception(Ui.ErrorMessages.InternalServerError));
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.RegisterUser(username, password, fname, lname);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[21,13,21,43,1],[22,13,22,55,1],[23,13,23,51,1],[24,13,24,95,1],[25,13,25,118,1],[27,13,27,63,1],[29,13,29,93,1],[31,13,31,86,1],[32,13,32,53,1],[33,9,33,10,1],[37,9,37,10,1],[43,13,43,56,1],[44,13,44,51,1],[45,13,45,95,1],[46,13,46,100,1],[48,13,48,63,1],[50,13,50,93,1],[52,13,52,89,1],[53,9,53,10,1],[57,9,57,10,1],[63,13,63,43,1],[64,13,64,51,1],[65,13,65,55,1],[66,13,66,95,1],[67,13,69,121,1],[71,13,71,63,1],[73,13,73,93,1],[75,13,75,98,1],[76,9,76,10,1],[80,9,80,10,1],[86,13,86,43,1],[87,13,87,51,1],[88,13,88,95,1],[89,13,90,78,1],[92,13,92,63,1],[94,13,94,93,1],[96,13,96,98,1],[97,13,97,96,1],[98,9,98,10,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestCreateTransportation\TestConstructor.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
+{
+    [TestClass]
+    public class TestConstructor
+    {
+        [TestMethod]
+        public void Constructor_ThreeParameter_PropertyCreations()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTransportationPageViewModel createTransportationViewModel =
+                new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
+
+            Assert.AreEqual(string.Empty, createTransportationViewModel.ErrorMessage);
+            Assert.AreEqual(mockScreen.Object, createTransportationViewModel.HostScreen);
+            Assert.IsNotNull(createTransportationViewModel.UrlPathSegment);
+            Assert.IsNotNull(createTransportationViewModel.CreateTransportationCommand);
+            Assert.IsNotNull(createTransportationViewModel.CancelCreateTransportationCommand);
+            Assert.IsNull(createTransportationViewModel.StartTime);
+            Assert.IsNull(createTransportationViewModel.EndTime);
+            Assert.IsNull(createTransportationViewModel.StartDate);
+            Assert.IsNull(createTransportationViewModel.EndDate);
+            Assert.IsNull(createTransportationViewModel.Method);
+        }
+
+        [TestMethod]
+        public void Constructor_TwoParameter_PropertyCreations()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTransportationPageViewModel createTransportationViewModel = new(mockTrip.Object, mockScreen.Object);
+
+            Assert.AreEqual(string.Empty, createTransportationViewModel.ErrorMessage);
+            Assert.AreEqual(mockScreen.Object, createTransportationViewModel.HostScreen);
+            Assert.IsNotNull(createTransportationViewModel.UrlPathSegment);
+            Assert.IsNotNull(createTransportationViewModel.CreateTransportationCommand);
+            Assert.IsNotNull(createTransportationViewModel.CancelCreateTransportationCommand);
+            Assert.IsNull(createTransportationViewModel.StartTime);
+            Assert.IsNull(createTransportationViewModel.EndTime);
+            Assert.IsNull(createTransportationViewModel.StartDate);
+            Assert.IsNull(createTransportationViewModel.EndDate);
+            Assert.IsNull(createTransportationViewModel.Method);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,9,14,10,1],[15,13,15,45,1],[16,13,16,79,1],[17,13,17,50,1],[18,13,19,91,1],[21,13,21,87,1],[22,13,22,90,1],[23,13,23,76,1],[24,13,24,89,1],[25,13,25,95,1],[26,13,26,68,1],[27,13,27,66,1],[28,13,28,68,1],[29,13,29,66,1],[30,13,30,65,1],[31,9,31,10,1],[35,9,35,10,1],[36,13,36,45,1],[37,13,37,50,1],[38,13,38,119,1],[40,13,40,87,1],[41,13,41,90,1],[42,13,42,76,1],[43,13,43,89,1],[44,13,44,95,1],[45,13,45,68,1],[46,13,46,66,1],[47,13,47,68,1],[48,13,48,66,1],[49,13,49,65,1],[50,9,50,10,1]]);
+    </script>
+  </body>
+</html>
