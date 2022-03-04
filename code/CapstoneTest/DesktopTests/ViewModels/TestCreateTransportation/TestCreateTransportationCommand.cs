@@ -65,7 +65,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             var mockScreen = new Mock<IScreen>();
             mockTransportationManager.Setup(um =>
                     um.CreateTransportation(0, "Plane", DateTime.Today.AddDays(-2), DateTime.Today, null))
-                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
+                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
             CreateTransportationPageViewModel createTransportationViewModel =
                 new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
 
@@ -217,12 +217,13 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
         {
             var mockTransportationManager = new Mock<TransportationManager>();
             mockTransportationManager.Setup(um =>
-                    um.CreateTransportation(0, "Plane", DateTime.Today.AddDays(2), DateTime.Today, null))
-                .Returns(new Response<int> {ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
+                    um.CreateTransportation(0, "Plane", DateTime.Today.AddDays(2) + TimeSpan.Zero, DateTime.Today + TimeSpan.Zero, "notes"))
+                .Returns(new Response<int> { ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
             var mockTrip = new Mock<Trip>
             {
                 Object =
                 {
+                    TripId = 0,
                     StartDate = DateTime.Today.AddDays(-2),
                     EndDate = DateTime.Today.AddDays(3)
                 }
@@ -238,6 +239,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             createTransportationViewModel.StartTime = TimeSpan.Zero;
             createTransportationViewModel.EndDate = DateTime.Today;
             createTransportationViewModel.EndTime = TimeSpan.Zero;
+            createTransportationViewModel.Notes = "notes";
 
             createTransportationViewModel.CreateTransportationCommand.Execute().Subscribe();
 
@@ -251,9 +253,17 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
         public void CreateTransportationCommand_SuccessfulCreation()
         {
             var mockTransportationManager = new Mock<TransportationManager>();
-            mockTransportationManager.Setup(um => um.CreateTransportation(0, "Plane", DateTime.Today, DateTime.Today, null))
-                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
-            var mockTrip = new Mock<Trip>();
+            mockTransportationManager.Setup(um => um.CreateTransportation(0, "Plane", DateTime.Today + DateTime.Today.TimeOfDay, DateTime.Today + DateTime.Today.TimeOfDay, null))
+                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    TripId = 0,
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Today.AddDays(3)
+                }
+            };
             var mockScreen = new Mock<IScreen>();
             CreateTransportationPageViewModel createTransportationViewModel =
                 new(mockTrip.Object, mockTransportationManager.Object, mockScreen.Object);
