@@ -29,9 +29,14 @@ namespace CapstoneWeb.Pages
         ///     The fake trip manager.
         /// </summary>
         public TripManager FakeTripManager { get; set; }
+        
+        /// <summary>
+        ///     The fake waypoint manager.
+        /// </summary>
+        public EventManager FakeEventManager { get; set; }
 
         /// <summary>
-        ///     The fkae waypoint manager.
+        ///     The fake waypoint manager.
         /// </summary>
         public WaypointManager FakeWaypointManager { get; set; }
         
@@ -69,8 +74,8 @@ namespace CapstoneWeb.Pages
         /// <returns></returns>
         public IActionResult OnGetEvents(int tripId, string selectedDate)
         {
-            var manager = FakeWaypointManager ?? new WaypointManager();
-            return new JsonResult(manager.GetWaypointsOnDate(tripId, DateTime.Parse(selectedDate)));
+            var manager = FakeEventManager ?? new EventManager();
+            return new JsonResult(manager.GetEventsOnDate(tripId, DateTime.Parse(selectedDate)));
         }
 
         /// <summary>
