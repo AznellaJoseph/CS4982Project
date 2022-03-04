@@ -123,16 +123,46 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
-        public void GetAjax()
+        public void GetEvents()
         {
             var session = new Mock<ISession>();
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
             var selectedDate = DateTime.Now;
+            var mockEventManager = new Mock<EventManager>();
+            mockEventManager.Setup(wm => wm.GetEventsOnDate(1, selectedDate))
+                .Returns(new Response<IList<IEvent>> {Data = new List<IEvent>()});
+            page.FakeEventManager = mockEventManager.Object;
+            var result = page.OnGetEvents(1, selectedDate.ToShortDateString());
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+        }
+        
+        [TestMethod]
+        public void GetRemoveWaypoint()
+        {
+            var session = new Mock<ISession>();
+            var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
             var mockWaypointManager = new Mock<WaypointManager>();
-            mockWaypointManager.Setup(wm => wm.GetWaypointsOnDate(1, selectedDate))
-                .Returns(new Response<IList<Waypoint>> {Data = new List<Waypoint>()});
             page.FakeWaypointManager = mockWaypointManager.Object;
-            var result = page.OnGetAjax(1, selectedDate.ToShortDateString());
+            mockWaypointManager.Setup(wm => wm.RemoveWaypoint(1)).Returns(new Response<bool>
+            {
+                Data = true
+            });
+            var result = page.OnGetRemoveWaypoint(1, 1);
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+        }
+        
+        [TestMethod]
+        public void GetRemoveTransportation()
+        {
+            var session = new Mock<ISession>();
+            var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
+            var mockTransportationManager = new Mock<TransportationManager>();
+            page.FakeTransportationManager = mockTransportationManager.Object;
+            mockTransportationManager.Setup(wm => wm.RemoveTransportation(1)).Returns(new Response<bool>
+            {
+                Data = true
+            });
+            var result = page.OnGetRemoveTransportation(1, 1);
             Assert.IsInstanceOfType(result, typeof(JsonResult));
         }
 
