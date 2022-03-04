@@ -54,6 +54,11 @@ namespace CapstoneWeb.Pages
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
+            if (string.IsNullOrEmpty(Location))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
+                return Page();
+            }
             var waypointManager = WaypointManager ?? new WaypointManager();
             var response = waypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
             if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))

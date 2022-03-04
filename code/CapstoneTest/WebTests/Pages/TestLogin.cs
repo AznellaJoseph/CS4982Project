@@ -14,7 +14,7 @@ namespace CapstoneTest.WebTests.Pages
     public class TestLogin
     {
         [TestMethod]
-        public void PostSuccess()
+        public void Post_Success_RedirectsToIndex()
         {
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
@@ -33,7 +33,7 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
-        public void PostFailure()
+        public void Post_InternalServerError_ReturnsErrorMessage()
         {
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
@@ -49,7 +49,30 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
-        public void PostCreateAccountSuccess()
+        public void Post_InvalidUsername_ReturnsErrorMessage()
+        {
+            var session = new Mock<ISession>();
+            var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
+            page.Password = "admin";
+            var result = page.OnPostLogin();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.InvalidUsername, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Post_InvalidPassword_ReturnsErrorMessage()
+        {
+            var session = new Mock<ISession>();
+            var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
+            page.Username = "admin";
+            var result = page.OnPostLogin();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.InvalidPassword, page.ErrorMessage);
+        }
+
+
+        [TestMethod]
+        public void PostCreateAccount_Success_RedirectsToCreateAccount()
         {
             var session = new Mock<ISession>();
 

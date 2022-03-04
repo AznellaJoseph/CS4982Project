@@ -1,5 +1,6 @@
 using System;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -53,6 +54,11 @@ namespace CapstoneWeb.Pages
         /// <returns>Redirect to index or the current page if there is an error </returns>
         public IActionResult OnPost()
         {
+            if (string.IsNullOrEmpty(TripName))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyTripName;
+                return Page();
+            }
             var tripManager = TripManager ?? new TripManager();
             var response = tripManager.CreateTrip(Convert.ToInt32(HttpContext.Session.GetString("userId")), TripName,
                 Notes,

@@ -54,6 +54,12 @@ namespace CapstoneWeb.Pages
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
+            if (string.IsNullOrEmpty(Method))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyTransportationMethod;
+                return Page();
+            }
+
             var transportationManager = FakeTransportationManager ?? new TransportationManager();
             var response = transportationManager.CreateTransportation(tripId, Method, StartDate, EndDate, Notes);
             if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))

@@ -8,7 +8,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the CreateWaypoint Window
+    ///     ViewModel for the CreateTransportation Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateTransportationPageViewModel : ReactiveViewModelBase
