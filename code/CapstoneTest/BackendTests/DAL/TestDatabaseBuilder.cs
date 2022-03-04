@@ -16,6 +16,7 @@ namespace CapstoneTest.BackendTests.DAL
     public class TestDatabaseBuilder
     {
         private static MySqlConnection _connection;
+        private static int TIMEOUT_SECONDS = 30;
 
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
@@ -23,7 +24,7 @@ namespace CapstoneTest.BackendTests.DAL
             StartDatabaseServer();
             _connection = new MySqlConnection(Connection.ConnectionString);
 
-            var endTime = DateTime.Now.AddSeconds(_connection.ConnectionTimeout);
+            var endTime = DateTime.Now.AddSeconds(TIMEOUT_SECONDS);
             var timeOut = false;
 
             while (_connection.State != ConnectionState.Open)
