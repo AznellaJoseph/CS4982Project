@@ -95,28 +95,30 @@ namespace CapstoneDesktop.ViewModels
         private void updateWaypoints()
         {
             EventViewModels.Clear();
-            if (SelectedDate is not null)
-            {
-                var response = _eventManager.GetEventsOnDate(Trip.TripId, (DateTime) SelectedDate);
+            if (SelectedDate is null) return;
+            var response = _eventManager.GetEventsOnDate(Trip.TripId, (DateTime) SelectedDate);
 
-                foreach (var aEvent in response.Data ?? new List<IEvent>())
-                { 
-                    IEventViewModel viewModel;
-                    if (aEvent is Waypoint waypoint)
+            foreach (var aEvent in response.Data ?? new List<IEvent>())
+            { 
+                IEventViewModel viewModel;
+                switch (aEvent)
+                {
+                    case Waypoint waypoint:
                         viewModel = new WaypointViewModel(waypoint, HostScreen);
-                    else if (aEvent is Transportation transportation)
+                        break;
+                    case Transportation transportation:
                         viewModel = new TransportationViewModel(transportation, HostScreen);
-                    else
+                        break;
+                    default:
                         return;
-                    
-                    viewModel.RemoveEvent += (sender, e) =>
-                    {
-                        if (sender is not null)
-                            this.EventViewModels.Remove((IEventViewModel)sender);
-                    };
-                    EventViewModels.Add(viewModel);
                 }
-                   
+                    
+                viewModel.RemoveEvent += (sender, e) =>
+                {
+                    if (sender is not null)
+                        this.EventViewModels.Remove((IEventViewModel)sender);
+                };
+                EventViewModels.Add(viewModel);
             }
 
         }

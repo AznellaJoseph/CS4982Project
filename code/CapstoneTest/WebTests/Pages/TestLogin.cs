@@ -19,7 +19,7 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
             fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> { Data = new User { UserId = 0 } });
+                .Returns(new Response<User> {Data = new User {UserId = 0}});
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";
@@ -28,7 +28,7 @@ namespace CapstoneTest.WebTests.Pages
             var outBytes = Encoding.UTF8.GetBytes("0");
             session.Verify(s => s.Set("userId", outBytes));
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Index", redirect.PageName);
         }
 
@@ -38,7 +38,7 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var fakeUserManager = new Mock<UserManager>();
             fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
-                .Returns(new Response<User> { ErrorMessage = Ui.ErrorMessages.InternalServerError });
+                .Returns(new Response<User> {ErrorMessage = Ui.ErrorMessages.InternalServerError});
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
             page.FakeUserManager = fakeUserManager.Object;
             page.Username = "admin";

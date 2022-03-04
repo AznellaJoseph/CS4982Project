@@ -7,6 +7,7 @@ CREATE TABLE transportation
 	method VARCHAR(50) NOT NULL,
 	startDate DATETIME NOT NULL,
 	endDate DATETIME NOT NULL,
+	notes VARCHAR(500),
 	PRIMARY KEY (transportationId),
 	CONSTRAINT fk_transportation_tripId
 	FOREIGN KEY (tripId)

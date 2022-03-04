@@ -8,6 +8,11 @@
             <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
             <TextBlock Text="TRANSPORTATION METHOD:" />
             <TextBox Watermark="METHOD" VerticalAlignment="Bottom" Text="{Binding Method, Mode=TwoWay}" />
+
+            <TextBlock Text="TRANSPORTATION NOTES" />
+            <TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
+                     AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
+
             <Grid ColumnDefinitions="*,10,*" RowDefinitions="*,10,*">
                 <DatePicker Grid.Column="0" Grid.Row="0" SelectedDate="{Binding StartDate}" Header="START DATE" />
                 <TimePicker Grid.Column="2" Grid.Row="0" SelectedTime="{Binding StartTime}" Header="START TIME" />
