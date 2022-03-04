@@ -6,7 +6,7 @@ using MySql.Data.MySqlClient;
 namespace CapstoneTest.BackendTests.DAL.TestUserDAL
 {
     [TestClass]
-    public class TestCreateUser
+    public class TestGetUserByUsername
     {
         private MySqlConnection _connection;
 
@@ -23,27 +23,25 @@ namespace CapstoneTest.BackendTests.DAL.TestUserDAL
         }
 
         [TestMethod]
-        public void CallProcedure_WithDuplicateUsername_Fails()
+        public void CallProcedure_NoExistingUsername_ReturnsNull()
+        {
+            UserDal testDAL = new(_connection);
+
+            var result = testDAL.GetUserByUsername("TestUsername");
+
+            Assert.IsTrue(result is null);
+        }
+
+        [TestMethod]
+        public void CallProcedure_ExistingUsername_ReturnsUser()
         {
             InsertTestUser();
             UserDal testDAL = new(_connection);
 
-            Assert.ThrowsException<MySqlException>(() => testDAL.CreateUser("TestUsername", "SomePassword", "SomeName", "SomeName"));
-        }
+            var result = testDAL.GetUserByUsername("TestUsername");
 
-        [TestMethod]
-        public void CallProcedure_WithValidInput_Succeeds()
-        {
-            UserDal testDAL = new(_connection);
-
-            int? resultID = testDAL.CreateUser("TestUsername", "SomePassword", "SomeName", "SomeName");
-            User? resultUser = testDAL.GetUserByUsername("TestUsername");
-
-            Assert.IsTrue(resultID is not null);
-            Assert.IsTrue(resultID is int);
-
-            Assert.IsTrue(resultUser is not null);
-            Assert.IsTrue(resultUser is User);
+            Assert.IsTrue(result is not null);
+            Assert.IsTrue(result is User);
         }
 
         private void InsertTestUser()

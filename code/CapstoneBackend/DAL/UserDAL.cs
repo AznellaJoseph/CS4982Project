@@ -88,7 +88,7 @@ namespace CapstoneBackend.DAL
                 _connection.Close();
                 return Convert.ToInt32(userId);
             }
-            catch (MySqlException E)
+            catch
             {
                 _connection.Close();
                 throw;
