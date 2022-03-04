@@ -24,7 +24,7 @@ namespace CapstoneBackend.DAL
         ///     Creates a TripDal using a specific connection.
         /// </summary>
         /// <param name="connection">a MySQLConnection</param>
-        private TripDal(MySqlConnection connection)
+        public TripDal(MySqlConnection connection)
         {
             _connection = connection;
         }
@@ -122,9 +122,18 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@startDate", MySqlDbType.Date).Value = startDate;
             cmd.Parameters.Add("@endDate", MySqlDbType.Date).Value = endDate;
 
-            var tripId = cmd.ExecuteScalar();
-            _connection.Close();
-            return Convert.ToInt32(tripId);
+            try
+            {
+                var tripId = cmd.ExecuteScalar();
+                _connection.Close();
+                return Convert.ToInt32(tripId);
+            }
+            catch
+            {
+                _connection.Close();
+                throw;
+            }
+            
         }
     }
 }
