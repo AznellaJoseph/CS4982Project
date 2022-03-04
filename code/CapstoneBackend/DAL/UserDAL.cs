@@ -82,9 +82,17 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@fname", MySqlDbType.VarChar).Value = fname;
             cmd.Parameters.Add("@lname", MySqlDbType.VarChar).Value = lname;
 
-            var userId = cmd.ExecuteScalar();
-            _connection.Close();
-            return Convert.ToInt32(userId);
+            try
+            {
+                var userId = cmd.ExecuteScalar();
+                _connection.Close();
+                return Convert.ToInt32(userId);
+            }
+            catch (MySqlException E)
+            {
+                _connection.Close();
+                throw;
+            }
         }
     }
 }
