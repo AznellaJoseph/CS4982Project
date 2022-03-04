@@ -126,17 +126,18 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post remove].
         /// </summary>
-<<<<<<< HEAD
-        /// <returns> The json result of removing the waypoint specified by the waypointId </returns>
-        public IActionResult OnGetRemove(int tripId, int waypointId)
-=======
-        /// <returns></returns>
+        /// <returns> The json result of removing the waypoint specified by the id</returns>
         public IActionResult OnGetRemoveWaypoint(int tripId, int id)
->>>>>>> main
         {
             var manager = FakeWaypointManager ?? new WaypointManager();
             return new JsonResult(manager.RemoveWaypoint(id));
         }
+        /// <summary>
+        /// Called when [get remove transportation].
+        /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns> The json result of removing the transportation specified by the id </returns>
         public IActionResult OnGetRemoveTransportation(int tripId, int id)
         {
             var manager = FakeTransportationManager ?? new TransportationManager();

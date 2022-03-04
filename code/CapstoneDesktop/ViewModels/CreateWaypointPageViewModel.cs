@@ -15,6 +15,7 @@ namespace CapstoneDesktop.ViewModels
     {
         private readonly Trip _trip;
         private readonly WaypointManager _waypointManager;
+        private readonly EventManager _eventManager = new();
 
         private string _error = string.Empty;
 
@@ -134,6 +135,13 @@ namespace CapstoneDesktop.ViewModels
                 ErrorMessage = Ui.ErrorMessages.EventEndDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
                 return Observable.Empty<IRoutableViewModel>();
             }
+
+            if (_eventManager.DetermineIfEventDatesClash(_trip.TripId, startDate, endDate).Data)
+            {
+                ErrorMessage = Ui.ErrorMessages.ClashingEventDates;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
 
             var resultResponse = _waypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
                 endDate, Notes);

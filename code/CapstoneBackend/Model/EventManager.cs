@@ -39,5 +39,27 @@ namespace CapstoneBackend.Model
                 Data = events
             };
         }
+
+        /// <summary>
+        /// Determines if the entered dates clash with another event's dates.
+        /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="startDate">The start date.</param>
+        /// <param name="endDate">The end date.</param>
+        /// <returns></returns>
+        public virtual Response<bool> DetermineIfEventDatesClash(int tripId, DateTime startDate, DateTime endDate)
+        {
+            var eventDates = Enumerable.Range(0,
+                    (endDate - startDate).Days + 1)
+                .Select(day => startDate.AddDays(day)).ToList();
+
+            var clashes = !eventDates.Select(eventDate => GetEventsOnDate(tripId, eventDate).Data).Where(currentEvents => currentEvents != null).All(currentEvents => currentEvents != null && !currentEvents.Any(currentEvent => startDate >= currentEvent.StartDate && startDate <= currentEvent.EndDate || endDate >= currentEvent.StartDate && endDate <= currentEvent.EndDate));
+
+            return new Response<bool>
+            {
+                Data = clashes
+            };
+        }
+
     }
 }

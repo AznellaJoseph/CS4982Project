@@ -47,6 +47,8 @@
             public static readonly string EventStartDateAfterTripEndDate = "The event start date cannot be after ";
             public static readonly string EventEndDateAfterTripEndDate = "The event end date cannot be after ";
             public static readonly string EventEndDateBeforeTripStartDate = "The event end date cannot be before ";
+            public static readonly string ClashingEventDates =
+                "The entered dates clashes with a separate event. Please enter new dates.";
         }
     }
 }
