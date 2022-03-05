@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Utils;
 using MySql.Data.MySqlClient;
@@ -53,7 +54,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<Trip>
                 {
-                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }
@@ -61,7 +62,7 @@ namespace CapstoneBackend.Model
             if (trip is null)
                 return new Response<Trip>
                 {
-                    StatusCode = (uint) Ui.StatusCode.DataNotFound,
+                    StatusCode = (uint)Ui.StatusCode.DataNotFound,
                     ErrorMessage = Ui.ErrorMessages.TripNotFound
                 };
             return new Response<Trip>
@@ -97,7 +98,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<IList<Trip>>
                 {
-                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = e.Message
                 };
             }
@@ -118,7 +119,7 @@ namespace CapstoneBackend.Model
             if (startDate.CompareTo(endDate) > 0)
                 return new Response<int>
                 {
-                    StatusCode = (uint) Ui.StatusCode.BadRequest,
+                    StatusCode = (uint)Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
 
@@ -142,10 +143,44 @@ namespace CapstoneBackend.Model
             {
                 return new Response<int>
                 {
-                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = e.Message
                 };
             }
+        }
+
+        /// <summary>
+        /// Finds the clashing trip with the chosen start and end dates.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="startDate">The start date.</param>
+        /// <param name="endDate">The end date.</param>
+        /// <returns> A response of the clashing trip or a null trip if there is none.</returns>
+        public virtual Response<Trip> FindClashingTrip(int userId, DateTime startDate, DateTime endDate)
+        {
+            var tripDates = Enumerable.Range(0,
+                    (endDate - startDate).Days + 1)
+                .Select(day => startDate.AddDays(day)).ToList();
+
+            Trip? clashingTrip = null;
+
+            var userTrips = GetTripsByUser(userId);
+            if (userTrips.Data == null)
+            {
+                return new Response<Trip>
+                {
+                    Data = clashingTrip
+                };
+            }
+
+            clashingTrip = (from tripDate in tripDates from userTrip in userTrips.Data where tripDate >= userTrip.StartDate && tripDate <= userTrip.EndDate select userTrip).FirstOrDefault();
+
+            return new Response<Trip>
+            {
+                Data = clashingTrip
+            };
+
+
         }
     }
 }

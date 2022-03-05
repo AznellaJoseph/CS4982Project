@@ -49,7 +49,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             createTripWindowViewModel.StartDate = DateTime.Today.AddDays(1);
             createTripWindowViewModel.EndDate = DateTime.Today;
 
-            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+            createTripWindowViewModel.CreateTripCommand.ThrownExceptions.Subscribe();
 
             testScheduler.Start();
 

@@ -13,9 +13,9 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateWaypointPageViewModel : ReactiveViewModelBase
     {
+        private readonly EventManager _eventManager = new();
         private readonly Trip _trip;
         private readonly WaypointManager _waypointManager;
-        private readonly EventManager _eventManager = new();
 
         private string _error = string.Empty;
 
@@ -136,9 +136,11 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            if (_eventManager.DetermineIfEventDatesClash(_trip.TripId, startDate, endDate).Data)
+            var clashingEvent = _eventManager.FindClashingEvent(_trip.TripId, startDate, endDate).Data;
+            if (clashingEvent is not null)
             {
-                ErrorMessage = Ui.ErrorMessages.ClashingEventDates;
+                ErrorMessage =
+                    $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.";
                 return Observable.Empty<IRoutableViewModel>();
             }
 

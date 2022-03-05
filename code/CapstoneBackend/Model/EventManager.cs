@@ -41,23 +41,23 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        /// Determines if the entered dates clash with another event's dates.
+        /// Finds the clashing event with the chosen start and end dates.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns></returns>
-        public virtual Response<bool> DetermineIfEventDatesClash(int tripId, DateTime startDate, DateTime endDate)
+        /// <returns>A response of the clashing event or a null event if there is none.</returns>
+        public virtual Response<IEvent> FindClashingEvent(int tripId, DateTime startDate, DateTime endDate)
         {
             var eventDates = Enumerable.Range(0,
                     (endDate - startDate).Days + 1)
                 .Select(day => startDate.AddDays(day)).ToList();
 
-            var clashes = !eventDates.Select(eventDate => GetEventsOnDate(tripId, eventDate).Data).Where(currentEvents => currentEvents != null).All(currentEvents => currentEvents != null && !currentEvents.Any(currentEvent => startDate >= currentEvent.StartDate && startDate <= currentEvent.EndDate || endDate >= currentEvent.StartDate && endDate <= currentEvent.EndDate));
+            var clashingEvent = (from eventDate in eventDates select GetEventsOnDate(tripId, eventDate).Data into eventsOnDate where eventsOnDate is not null from eventOnDate in eventsOnDate where startDate >= eventOnDate.StartDate && startDate <= eventOnDate.EndDate || endDate >= eventOnDate.StartDate && endDate <= eventOnDate.EndDate select eventOnDate).FirstOrDefault();
 
-            return new Response<bool>
+            return new Response<IEvent>
             {
-                Data = clashes
+                Data = clashingEvent
             };
         }
 

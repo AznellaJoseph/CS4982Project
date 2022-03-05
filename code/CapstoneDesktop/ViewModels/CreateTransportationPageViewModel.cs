@@ -138,12 +138,12 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            if (_eventManager.DetermineIfEventDatesClash(_trip.TripId, startDate, endDate).Data)
+            var clashingEvent = _eventManager.FindClashingEvent(_trip.TripId, startDate, endDate).Data;
+            if (clashingEvent is not null)
             {
-                ErrorMessage = Ui.ErrorMessages.ClashingEventDates;
+                ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.";
                 return Observable.Empty<IRoutableViewModel>();
             }
-
 
             var resultResponse =
                 _transportationManager.CreateTransportation(_trip.TripId, Method, startDate, endDate, Notes);

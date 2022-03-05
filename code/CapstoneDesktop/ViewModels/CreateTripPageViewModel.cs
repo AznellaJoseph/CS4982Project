@@ -97,6 +97,14 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
+            var clashingTrip = _tripManager
+                .FindClashingTrip(_user.UserId, StartDate.Value.Date, EndDate.Value.Date).Data;
+            if (clashingTrip is not null)
+            {
+                ErrorMessage = $"{Ui.ErrorMessages.ClashingTripDates} {clashingTrip.StartDate.ToShortDateString()} to {clashingTrip.EndDate.ToShortDateString()}.";
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
             var resultResponse =
                 _tripManager.CreateTrip(_user.UserId, TripName, Notes, StartDate.Value.Date, EndDate.Value.Date);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
