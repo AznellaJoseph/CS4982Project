@@ -1,0 +1,14 @@
+Use Case Scenario: Overview Trip Item
+
+Context: The user is logged in and is overviewing a trip
+
+Primary Flow:
+1. The user selects a date with a lodging, transportation, or waypoint
+2. The user selects the eyeball icon next to a lodging, transportation, or waypoint listed
+3. The user is shown an overview of the trip item
+
+Alternative Flows:
+
+The user cancels the operation
+A3. The user clicks the cancel button
+A4. The user is directed back to an overview of the trip
