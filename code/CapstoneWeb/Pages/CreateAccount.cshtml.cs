@@ -58,36 +58,6 @@ namespace CapstoneWeb.Pages
         /// <returns> The page to go to after [post] </returns>
         public IActionResult OnPost()
         {
-            if (string.IsNullOrEmpty(Username))
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidUsername;
-                return Page();
-            }
-
-            if (string.IsNullOrEmpty(Password))
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidPassword;
-                return Page();
-            }
-
-            if (string.IsNullOrEmpty(FirstName))
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidFirstName;
-                return Page();
-            }
-
-            if (string.IsNullOrEmpty(LastName))
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidLastName;
-                return Page();
-            }
-
-            if (string.IsNullOrEmpty(ConfirmedPassword))
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidConfirmedPassword;
-                return Page();
-            }
-
             if (Password != ConfirmedPassword)
             {
                 ErrorMessage = Ui.ErrorMessages.PasswordsDoNotMatch;

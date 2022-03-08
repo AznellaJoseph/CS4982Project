@@ -40,17 +40,6 @@ namespace CapstoneWeb.Pages
         /// <returns> A redirect to the next page or the current page if there was an error </returns>
         public IActionResult OnPostLogin()
         {
-            if (string.IsNullOrEmpty(Username))
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidUsername;
-                return Page();
-            }
-
-            if (string.IsNullOrEmpty(Password))
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidPassword;
-                return Page();
-            }
             var userManager = FakeUserManager ?? new UserManager();
             var response = userManager.GetUserByCredentials(Username, Password);
             if (response.Data is not null)

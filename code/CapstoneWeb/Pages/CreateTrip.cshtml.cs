@@ -54,13 +54,18 @@ namespace CapstoneWeb.Pages
         /// <returns>Redirect to index or the current page if there is an error </returns>
         public IActionResult OnPost()
         {
-            if (string.IsNullOrEmpty(TripName))
+
+            var tripManager = TripManager ?? new TripManager();
+            var userId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
+
+
+            var clashingTrip = tripManager.FindClashingTrip(userId, StartDate, EndDate).Data;
+            if (clashingTrip is not null)
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyTripName;
+                ErrorMessage = $"{Ui.ErrorMessages.ClashingTripDates} {clashingTrip.StartDate.ToShortDateString()} to {clashingTrip.EndDate.ToShortDateString()}.";
                 return Page();
             }
-            var tripManager = TripManager ?? new TripManager();
-            var response = tripManager.CreateTrip(Convert.ToInt32(HttpContext.Session.GetString("userId")), TripName,
+            var response = tripManager.CreateTrip(userId, TripName,
                 Notes,
                 StartDate, EndDate);
             if (string.IsNullOrEmpty(response.ErrorMessage))

@@ -48,15 +48,18 @@ namespace CapstoneWeb.Pages
         /// </summary>
         public WaypointManager WaypointManager { get; set; }
 
+        private readonly EventManager _eventManager = new();
+
         /// <summary>
         ///     Called when [post].
         /// </summary>
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
-            if (string.IsNullOrEmpty(Location))
+            var clashingEvent = _eventManager.FindClashingEvent(tripId, StartDate, EndDate).Data;
+            if (clashingEvent is not null)
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
+                ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.";
                 return Page();
             }
             var waypointManager = WaypointManager ?? new WaypointManager();

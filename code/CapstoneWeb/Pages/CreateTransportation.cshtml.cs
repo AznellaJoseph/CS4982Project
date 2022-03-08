@@ -48,18 +48,20 @@ namespace CapstoneWeb.Pages
         /// </summary>
         public TransportationManager FakeTransportationManager { get; set; }
 
+        private readonly EventManager _eventManager = new();
+
         /// <summary>
         ///     Called when [post].
         /// </summary>
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
-            if (string.IsNullOrEmpty(Method))
+            var clashingEvent = _eventManager.FindClashingEvent(tripId, StartDate, EndDate).Data;
+            if (clashingEvent is not null)
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyTransportationMethod;
+                ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.";
                 return Page();
             }
-
             var transportationManager = FakeTransportationManager ?? new TransportationManager();
             var response = transportationManager.CreateTransportation(tripId, Method, StartDate, EndDate, Notes);
             if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
