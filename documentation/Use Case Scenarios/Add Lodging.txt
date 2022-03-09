@@ -1,0 +1,18 @@
+Use Case Scenario: Add Lodging
+
+Context: The user is logged in and is overviewing a trip
+
+Primary Flow:
+1. The user clicks the “Add Lodging” button
+2. The user enters the lodging information
+3. The user confirms the lodging 
+
+Alternative Flows:
+
+The user cancels the add operation
+A3. The user clicks the “Cancel” button
+A4. The user is taken back to an overview of the date chosen
+
+The user does not enter all of the required fields
+A2. The user fails to enter a required field
+A3. The user is shown an error message specifying which field needs to be filled out for submitting

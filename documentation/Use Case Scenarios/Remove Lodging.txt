@@ -1,0 +1,12 @@
+Use Case Scenario: Remove Lodging
+
+Context: The user is logged in and is overviewing a trip
+
+Primary Flow:
+1. The user clicks the “Remove Lodging” button from the list of lodging
+
+Alternative Flows:
+
+The user cancels the remove operation
+A1. The user clicks the “Cancel” button
+A2. The user is taken back to an overview of the date chosen
