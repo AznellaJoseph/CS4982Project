@@ -5,7 +5,7 @@
     <UserControl.Resources>
         <conv:DateFormatter x:Key="DateFormatter" />
     </UserControl.Resources>
-    <Grid RowDefinitions="Auto,20,Auto,20,*" ColumnDefinitions="2*,20,3*" Margin="20">
+    <Grid RowDefinitions="Auto,20,Auto,20,Auto,*,*" ColumnDefinitions="2*,20,3*" Margin="20">
         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <TextBlock Classes="h1" Text="{Binding Trip.Name}" TextAlignment="Center" />
         </Border>
@@ -22,10 +22,50 @@
                 </Button>
             </Grid>
         </Border>
-        <Border Classes="container" Grid.Row="4" Grid.Column="0">
-            <Grid RowDefinitions="Auto,10,*,10,Auto">
 
-                <TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="{Binding SelectedDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}"/>
+		<TextBlock Grid.Column="0" Classes="h1 light" Grid.Row="4" TextAlignment="Center" Text="{Binding SelectedDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}"/>
+
+
+		<Border Classes="container" Grid.Row="5" Grid.Column="0" Margin="0, 5, 0, 5">
+			<Grid RowDefinitions="Auto,*,*,10,Auto">
+
+				<TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="LODGING"/>
+
+				<ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+					<ItemsControl Items="{Binding LodgingViewModels}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<StackPanel Orientation="Vertical" Spacing="10" />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Grid ColumnDefinitions="*,5,Auto,5,*,10,3*,Auto,*">
+									<TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Lodging.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
+									<TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
+									<TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Lodging.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
+									<TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Lodging.Location}"/>
+									<Button Grid.Column="8" Command="{Binding RemoveCommand}">X</Button>
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+				<Grid ColumnDefinitions="*" Grid.Row="4">
+					<Button Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        Command="{Binding CreateLodgingCommand}">
+						<TextBlock Classes="dark" Text="CREATE LODGING" VerticalAlignment="Center" TextAlignment="Center"  />
+					</Button>
+                </Grid>
+			</Grid>
+		</Border>
+
+
+        <Border Classes="container" Grid.Row="6" Grid.Column="0">
+            <Grid RowDefinitions="Auto,*,*,10,Auto">
+
+                <TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="EVENTS"/>
+				
                 <ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
                     <ItemsControl Items="{Binding EventViewModels}">
                         <ItemsControl.ItemsPanel>
@@ -36,9 +76,9 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*,Auto,*">
-                                        <TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
+                                        <TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
                                         <TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
-                                        <TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Time}"/>
+                                        <TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
                                         <TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Event.DisplayName}"/>
                                         <Button Grid.Column="8" Command="{Binding RemoveCommand}">X</Button>
                                 </Grid>
@@ -58,7 +98,7 @@
 				</Grid>
             </Grid>
         </Border>
-        <Border Classes="container" Grid.Row="4" Grid.Column="2">
+        <Border Classes="container" Grid.Row="4" Grid.RowSpan="3" Grid.Column="2">
             <Calendar Name="TripCalendar" IsTodayHighlighted="False" SelectionMode="SingleDate" DisplayMode="Month"
                       DisplayDate="{Binding Trip.StartDate}" SelectedDate="{Binding SelectedDate}"
                       VerticalAlignment="Center" HorizontalAlignment="Center" />

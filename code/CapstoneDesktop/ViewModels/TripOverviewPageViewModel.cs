@@ -36,8 +36,11 @@ namespace CapstoneDesktop.ViewModels
                 HostScreen.Router.Navigate.Execute(new CreateWaypointPageViewModel(Trip, HostScreen)));
             CreateTransportationCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new CreateTransportationPageViewModel(Trip, HostScreen)));
+            CreateLodgingCommand = ReactiveCommand.CreateFromObservable(() =>
+                HostScreen.Router.Navigate.Execute(new CreateLodgingPageViewModel(Trip, HostScreen)));
             BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
             EventViewModels = new ObservableCollection<IEventViewModel>();
+            LodgingViewModels = new ObservableCollection<LodgingViewModel>();
         }
 
         /// <summary>
@@ -70,9 +73,19 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> CreateTransportationCommand { get; }
 
         /// <summary>
+        ///     The create lodging command.
+        /// </summary>
+        public ReactiveCommand<Unit, IRoutableViewModel> CreateLodgingCommand { get; }
+
+        /// <summary>
         ///     The waypoint viewmodels.
         /// </summary>
         public ObservableCollection<IEventViewModel> EventViewModels { get; }
+
+        /// <summary>
+        ///     The lodging viewmodels.
+        /// </summary>
+        public ObservableCollection<LodgingViewModel> LodgingViewModels { get; }
 
         /// <summary>
         ///     The trip.
@@ -88,11 +101,19 @@ namespace CapstoneDesktop.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref _selectedDate, value, nameof(SelectedDate));
-                updateWaypoints();
+                updateEvents();
+                updateLodging();
             }
         }
 
-        private void updateWaypoints()
+        private void updateLodging()
+        {
+            LodgingViewModels.Clear();
+            if (SelectedDate is null) return;
+
+        }
+
+        private void updateEvents()
         {
             EventViewModels.Clear();
             if (SelectedDate is null) return;

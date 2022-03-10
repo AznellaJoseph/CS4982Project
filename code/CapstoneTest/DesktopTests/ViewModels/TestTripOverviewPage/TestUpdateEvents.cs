@@ -9,10 +9,10 @@ using ReactiveUI;
 namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
 {
     [TestClass]
-    public class TestUpdateWaypoints
+    public class TestUpdateEvents
     {
         [TestMethod]
-        public void UpdateWaypoints_ValidData_Success()
+        public void UpdateEvents_ValidData_Success()
         {
             var startDate = DateTime.Now;
             var mockTrip = new Mock<Trip>();
@@ -39,7 +39,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
 
 
         [TestMethod]
-        public void UpdateWaypoints_NullData_EmptyWaypointList()
+        public void UpdateEvents_NullData_EmptyWaypointList()
         {
             var startDate = DateTime.Now;
             var mockTrip = new Mock<Trip>();
@@ -60,7 +60,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
         }
 
         [TestMethod]
-        public void UpdateWaypoints_NullSelectedDate_ReturnsEmptyList()
+        public void UpdateEvents_NullSelectedDate_ReturnsEmptyList()
         {
             var mockTrip = new Mock<Trip>();
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
