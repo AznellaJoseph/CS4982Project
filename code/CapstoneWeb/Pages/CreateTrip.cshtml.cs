@@ -48,6 +48,8 @@ namespace CapstoneWeb.Pages
         /// </summary>
         public TripManager TripManager { get; set; }
 
+        public ValidationManager ValidationManager { get; set; } = new();
+
         /// <summary>
         ///     Called when [post].
         /// </summary>
@@ -59,10 +61,10 @@ namespace CapstoneWeb.Pages
             var userId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
 
 
-            var clashingTrip = tripManager.FindClashingTrip(userId, StartDate, EndDate).Data;
-            if (clashingTrip is not null)
+            var clashingTripResponse = ValidationManager.FindClashingTrip(userId, StartDate, EndDate);
+            if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
             {
-                ErrorMessage = $"{Ui.ErrorMessages.ClashingTripDates} {clashingTrip.StartDate.ToShortDateString()} to {clashingTrip.EndDate.ToShortDateString()}.";
+                ErrorMessage = clashingTripResponse.ErrorMessage;
                 return Page();
             }
             var response = tripManager.CreateTrip(userId, TripName,

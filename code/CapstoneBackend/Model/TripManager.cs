@@ -148,39 +148,5 @@ namespace CapstoneBackend.Model
                 };
             }
         }
-
-        /// <summary>
-        /// Finds the clashing trip with the chosen start and end dates.
-        /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="startDate">The start date.</param>
-        /// <param name="endDate">The end date.</param>
-        /// <returns> A response of the clashing trip or a null trip if there is none.</returns>
-        public virtual Response<Trip> FindClashingTrip(int userId, DateTime startDate, DateTime endDate)
-        {
-            var tripDates = Enumerable.Range(0,
-                    (endDate - startDate).Days + 1)
-                .Select(day => startDate.AddDays(day)).ToList();
-
-            Trip? clashingTrip = null;
-
-            var userTrips = GetTripsByUser(userId);
-            if (userTrips.Data == null)
-            {
-                return new Response<Trip>
-                {
-                    Data = clashingTrip
-                };
-            }
-
-            clashingTrip = (from tripDate in tripDates from userTrip in userTrips.Data where tripDate >= userTrip.StartDate && tripDate <= userTrip.EndDate select userTrip).FirstOrDefault();
-
-            return new Response<Trip>
-            {
-                Data = clashingTrip
-            };
-
-
-        }
     }
 }

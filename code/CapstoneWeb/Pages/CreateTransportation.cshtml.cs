@@ -49,25 +49,34 @@ namespace CapstoneWeb.Pages
         public TransportationManager FakeTransportationManager { get; set; }
 
         /// <summary>
-        ///     The event manager.
+        ///     The validation manager.
         /// </summary>
-        public EventManager EventManager { get; set; } = new();
+        public ValidationManager ValidationManager { get; set; } = new();
+
         /// <summary>
         ///     Called when [post].
         /// </summary>
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
-            var clashingEvent = EventManager.FindClashingEvent(tripId, StartDate, EndDate).Data;
-            if (clashingEvent is not null)
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
             {
-                ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.";
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Page();
+            }
+
+            var clashingEventResponse = ValidationManager.FindClashingEvent(tripId, StartDate, EndDate);
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
                 return Page();
             }
             var transportationManager = FakeTransportationManager ?? new TransportationManager();
 
             var response = transportationManager.CreateTransportation(tripId, Method, StartDate, EndDate, Notes);
-            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
+            if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary
                 {

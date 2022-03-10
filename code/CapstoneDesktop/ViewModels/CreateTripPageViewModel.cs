@@ -18,6 +18,7 @@ namespace CapstoneDesktop.ViewModels
 
         private string _error = string.Empty;
 
+        public ValidationManager ValidationManager { get; set; } = new();
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateTripPageViewModel" /> class.
         /// </summary>
@@ -97,11 +98,11 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var clashingTrip = _tripManager
-                .FindClashingTrip(_user.UserId, StartDate.Value.Date, EndDate.Value.Date).Data;
-            if (clashingTrip is not null)
+            var clashingTripResponse = ValidationManager.FindClashingTrip(_user.UserId, StartDate.Value.Date, EndDate.Value.Date);
+
+            if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
             {
-                ErrorMessage = $"{Ui.ErrorMessages.ClashingTripDates} {clashingTrip.StartDate.ToShortDateString()} to {clashingTrip.EndDate.ToShortDateString()}.";
+                ErrorMessage = clashingTripResponse.ErrorMessage;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

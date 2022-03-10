@@ -60,28 +60,6 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
-        public void Post_ClashingTripExists_ReturnsErrorMessage()
-        {
-            var session = new Mock<ISession>();
-            var manager = new Mock<TripManager>();
-            var currentTime = DateTime.Now;
-            manager.Setup(em => em.FindClashingTrip(0, currentTime, currentTime.AddDays(1)))
-                .Returns(new Response<Trip> { Data = new Trip { StartDate = currentTime, EndDate = currentTime.AddDays(2) } });
-            var page = TestPageBuilder.BuildPage<CreateTripModel>(session.Object);
-            page.TripManager = manager.Object;
-
-            page.HttpContext.Session.SetString("userId", "0");
-            page.TripName = "Family Vacation";
-            page.StartDate = currentTime;
-            page.EndDate = currentTime.AddDays(1);
-
-            var result = page.OnPost();
-            Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual($"{Ui.ErrorMessages.ClashingTripDates} {currentTime.ToShortDateString()} to {currentTime.AddDays(2).ToShortDateString()}.", page.ErrorMessage);
-        }
-
-
-        [TestMethod]
         public void PostCancel_Success_RedirectsToIndex()
         {
             var session = new Mock<ISession>();

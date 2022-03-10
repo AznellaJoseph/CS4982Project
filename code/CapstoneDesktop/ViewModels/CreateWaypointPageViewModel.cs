@@ -13,11 +13,12 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateWaypointPageViewModel : ReactiveViewModelBase
     {
-        private readonly EventManager _eventManager = new();
         private readonly Trip _trip;
         private readonly WaypointManager _waypointManager;
 
         private string _error = string.Empty;
+
+        public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
@@ -112,38 +113,21 @@ namespace CapstoneDesktop.ViewModels
 
             var endDate = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
 
-            if (startDate.CompareTo(_trip.StartDate) < 0)
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(_trip.TripId, startDate, endDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
             {
-                ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
+                ErrorMessage = validDatesResponse.ErrorMessage;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            if (startDate.CompareTo(_trip.EndDate) > 0)
+            var clashingEventResponse = ValidationManager.FindClashingEvent(_trip.TripId, startDate, endDate);
+
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
             {
-                ErrorMessage = Ui.ErrorMessages.EventStartDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
+                ErrorMessage = clashingEventResponse.ErrorMessage;
                 return Observable.Empty<IRoutableViewModel>();
             }
-
-            if (endDate.CompareTo(_trip.StartDate) < 0)
-            {
-                ErrorMessage = Ui.ErrorMessages.EventEndDateBeforeTripStartDate + _trip.StartDate.ToShortDateString();
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
-            if (endDate.CompareTo(_trip.EndDate) > 0)
-            {
-                ErrorMessage = Ui.ErrorMessages.EventEndDateAfterTripEndDate + _trip.EndDate.ToShortDateString();
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
-            var clashingEvent = _eventManager.FindClashingEvent(_trip.TripId, startDate, endDate).Data;
-            if (clashingEvent is not null)
-            {
-                ErrorMessage =
-                    $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.";
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
 
             var resultResponse = _waypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
                 endDate, Notes);

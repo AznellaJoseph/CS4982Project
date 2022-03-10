@@ -24,7 +24,7 @@ namespace CapstoneBackend.DAL
         ///     Creates a TripDal using a specific connection.
         /// </summary>
         /// <param name="connection">a MySQLConnection</param>
-        private TripDal(MySqlConnection connection)
+        public TripDal(MySqlConnection connection)
         {
             _connection = connection;
         }
