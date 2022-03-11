@@ -77,17 +77,6 @@ namespace CapstoneWeb.Pages
         }
 
         /// <summary>
-        /// Called when [get lodging].
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <param name="selectedDate">The selected date.</param>
-        /// <returns> A json response of the lodging on the selected date </returns>
-        public IActionResult OnGetLodging(int tripId, string selectedDate)
-        {
-            return Page();
-        }
-
-        /// <summary>
         /// Called when [post create waypoint].
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
@@ -117,20 +106,6 @@ namespace CapstoneWeb.Pages
                 {"tripId", tripId}
             };
             return RedirectToPage("CreateTransportation", routeValue);
-        }
-
-        /// <summary>
-        /// Called when [post create lodging].
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <returns>Redirect to create lodging form</returns>
-        public IActionResult OnPostCreateLodging(int tripId)
-        {
-            var routeValue = new RouteValueDictionary
-            {
-                {"tripId", tripId}
-            };
-            return RedirectToPage("CreateLodging", routeValue);
         }
 
         /// <summary>

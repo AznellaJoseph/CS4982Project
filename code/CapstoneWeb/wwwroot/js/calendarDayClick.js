@@ -9,8 +9,6 @@ function _registerCalendarMonthArrowClick() {
 function _onCalendarDayClick() {
     const events = $("#events");
     events.empty();
-    const lodging = $("#lodging");
-    lodging.empty();
     const pad = function(num) { return (`00${num}`).slice(-2) };
     let date = new Date($(this).attr("data-calendar-date"));
     date = date.getUTCFullYear() +
@@ -31,18 +29,6 @@ function _onCalendarDayClick() {
             success: _onGetEventsSuccess
         }
     );
-    $.ajax({
-            method: "GET",
-            url: `/trip/${tripId}/?handler=Lodging`,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("XSRF-TOKEN",
-                    $('input:hidden[name="__RequestVerificationToken"]').val());
-            },
-            data: { selectedDate: date },
-            success: _onGetLodgingSuccess
-        }
-    );
-
 }
 
 function _onRemoveClick() {
@@ -81,33 +67,9 @@ function _createEvent(event) {
         `);
 }
 
-function _createLodging(lodging) {
-
-    $("#lodging").append(
-        `
-            <div class="list-item">
-                <div class="info-section">
-                    LODGING
-                </div>
-                <div class="name-section">
-                    NAME SECTION
-                </div>
-                <div class="icon-section removeButton">
-                    Remove
-                </div>
-            </div>
-        `);
-}
-
 function _onGetEventsSuccess(response) {
     $("#events").empty()
     response.data.forEach(_createEvent);
-    $(".removeButton").click(_onRemoveClick);
-}
-
-function _onGetLodgingSuccess(response) {
-    $("#lodging").empty()
-    response.data.forEach(_createLodging);
     $(".removeButton").click(_onRemoveClick);
 }
 
