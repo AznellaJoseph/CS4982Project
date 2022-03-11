@@ -46,7 +46,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     The waypoint manager.
         /// </summary>
-        public WaypointManager WaypointManager { get; set; }
+        public WaypointManager WaypointManager { get; set; } = new();
 
         /// <summary>
         ///     The validation manager.
@@ -74,8 +74,7 @@ namespace CapstoneWeb.Pages
                 ErrorMessage = clashingEventResponse.ErrorMessage;
                 return Page();
             }
-            var waypointManager = WaypointManager ?? new WaypointManager();
-            var response = waypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
+            var response = WaypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
             if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary

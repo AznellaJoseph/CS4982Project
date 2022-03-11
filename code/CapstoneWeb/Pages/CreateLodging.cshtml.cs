@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     PageModel for Create Transportation Site
+    ///     PageModel for Create Waypoint Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
-    public class CreateTransportationModel : PageModel
+    public class CreateLodgingModel : PageModel
     {
         /// <summary>
         ///     The error message.
@@ -20,10 +20,10 @@ namespace CapstoneWeb.Pages
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        ///     The method.
+        ///     The location.
         /// </summary>
         [BindProperty]
-        public string Method { get; set; }
+        public string Location { get; set; }
 
         /// <summary>
         ///     The start date.
@@ -38,15 +38,10 @@ namespace CapstoneWeb.Pages
         public DateTime EndDate { get; set; } = DateTime.Now;
 
         /// <summary>
-        ///     The end date.
+        ///     The notes.
         /// </summary>
         [BindProperty]
         public string Notes { get; set; }
-
-        /// <summary>
-        ///     The transportation manager used for testing.
-        /// </summary>
-        public TransportationManager TransportationManager { get; set; } = new();
 
         /// <summary>
         ///     The validation manager.
@@ -59,6 +54,7 @@ namespace CapstoneWeb.Pages
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
+
             var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
 
             if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
@@ -74,25 +70,14 @@ namespace CapstoneWeb.Pages
                 return Page();
             }
 
-            var response = TransportationManager.CreateTransportation(tripId, Method, StartDate, EndDate, Notes);
-            if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
-            {
-                var routeValue = new RouteValueDictionary
-                {
-                    {"tripId", tripId}
-                };
-                return RedirectToPage("Trip", routeValue);
-            }
-
-            ErrorMessage = response.ErrorMessage;
             return Page();
         }
 
         /// <summary>
         ///     Called when [post cancel].
         /// </summary>
-        /// <param name="tripId">The trip identifier to add transportation to.</param>
-        /// <returns>Redirects to the trip overview page for this trip ID</returns>
+        /// <param name="tripId">The trip identifier to add a waypoint to.</param>
+        /// <returns>Redirects to the trip overview page for the trip the waypoint was added to </returns>
         public IActionResult OnPostCancel(int tripId)
         {
             var routeValue = new RouteValueDictionary

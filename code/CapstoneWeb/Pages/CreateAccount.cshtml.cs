@@ -48,14 +48,14 @@ namespace CapstoneWeb.Pages
         public string LastName { get; set; }
 
         /// <summary>
-        ///     The fake user manager.
+        ///     The user manager.
         /// </summary>
-        public UserManager FakeUserManager { get; set; }
+        public UserManager UserManager { get; set; } = new();
 
         /// <summary>
         ///     Called when [post].
         /// </summary>
-        /// <returns> The page to go to after [post] </returns>
+        /// <returns>Redirect to index or current page if there was an error. </returns>
         public IActionResult OnPost()
         {
             if (Password != ConfirmedPassword)
@@ -64,8 +64,7 @@ namespace CapstoneWeb.Pages
                 return Page();
             }
 
-            var userManager = FakeUserManager ?? new UserManager();
-            var response = userManager.RegisterUser(Username, Password,
+            var response = UserManager.RegisterUser(Username, Password,
                 FirstName, LastName);
             if (response.StatusCode == (uint)Ui.StatusCode.Success)
             {

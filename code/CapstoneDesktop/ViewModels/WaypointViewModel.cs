@@ -35,7 +35,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The fake waypoint manager
         /// </summary>
-        public WaypointManager? FakeWaypointManager { get; set; }
+        public WaypointManager WaypointManager { get; set; } = new();
 
         /// <summary>
         ///     The remove command
@@ -54,8 +54,7 @@ namespace CapstoneDesktop.ViewModels
 
         private void removeWaypoint()
         {
-            var manager = FakeWaypointManager ?? new WaypointManager();
-            if (manager.RemoveWaypoint(Waypoint.WaypointId).Data) RemoveEvent?.Invoke(this, EventArgs.Empty);
+            if (WaypointManager.RemoveWaypoint(Waypoint.WaypointId).Data) RemoveEvent?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     The fake user manager used for testing.
         /// </summary>
-        public UserManager FakeUserManager { get; set; }
+        public UserManager UserManager { get; set; } = new();
 
         /// <summary>
         ///     Called when [post].
@@ -40,8 +40,7 @@ namespace CapstoneWeb.Pages
         /// <returns> A redirect to the next page or the current page if there was an error </returns>
         public IActionResult OnPostLogin()
         {
-            var userManager = FakeUserManager ?? new UserManager();
-            var response = userManager.GetUserByCredentials(Username, Password);
+            var response = UserManager.GetUserByCredentials(Username, Password);
             if (response.Data is not null)
             {
                 HttpContext.Session.SetString("userId", $"{response.Data.UserId}");

@@ -18,8 +18,6 @@ namespace CapstoneDesktop.ViewModels
 
         private string _error = string.Empty;
 
-        public ValidationManager ValidationManager { get; set; } = new();
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
         /// </summary>
@@ -45,6 +43,11 @@ namespace CapstoneDesktop.ViewModels
         public CreateWaypointPageViewModel(Trip trip, IScreen screen) : this(trip, new WaypointManager(), screen)
         {
         }
+
+        /// <summary>
+        ///     The validation manager.
+        /// </summary>
+        public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>
         ///     The create waypoint command.

@@ -18,7 +18,6 @@ namespace CapstoneDesktop.ViewModels
 
         private string _error = string.Empty;
 
-        public ValidationManager ValidationManager { get; set; } = new();
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateTripPageViewModel" /> class.
         /// </summary>
@@ -44,6 +43,11 @@ namespace CapstoneDesktop.ViewModels
         public CreateTripPageViewModel(User user, IScreen screen) : this(user, new TripManager(), screen)
         {
         }
+
+        /// <summary>
+        ///     The validation manager.
+        /// </summary>
+        public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>
         ///     The create trip command.
@@ -98,7 +102,8 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var clashingTripResponse = ValidationManager.FindClashingTrip(_user.UserId, StartDate.Value.Date, EndDate.Value.Date);
+            var clashingTripResponse =
+                ValidationManager.FindClashingTrip(_user.UserId, StartDate.Value.Date, EndDate.Value.Date);
 
             if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
             {
