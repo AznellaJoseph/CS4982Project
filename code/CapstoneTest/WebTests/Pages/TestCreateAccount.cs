@@ -21,7 +21,7 @@ namespace CapstoneTest.WebTests.Pages
             fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
                 .Returns(new Response<int> { Data = 0 });
             var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
-            page.FakeUserManager = fakeUserManager.Object;
+            page.UserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
             page.ConfirmedPassword = "admin";
@@ -43,7 +43,7 @@ namespace CapstoneTest.WebTests.Pages
             fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
                 .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.DataNotFound, ErrorMessage = Ui.ErrorMessages.InternalServerError });
             var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
-            page.FakeUserManager = fakeUserManager.Object;
+            page.UserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
             page.ConfirmedPassword = "admin";
@@ -62,7 +62,7 @@ namespace CapstoneTest.WebTests.Pages
             fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
                 .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.DataNotFound, ErrorMessage = Ui.ErrorMessages.InternalServerError });
             var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
-            page.FakeUserManager = fakeUserManager.Object;
+            page.UserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
             page.ConfirmedPassword = "test";
@@ -81,7 +81,7 @@ namespace CapstoneTest.WebTests.Pages
             fakeUserManager.Setup(um => um.RegisterUser("admin", "admin", "admin", "admin"))
                 .Returns(new Response<int> { Data = 0 });
             var page = TestPageBuilder.BuildPage<CreateAccountModel>(session.Object);
-            page.FakeUserManager = fakeUserManager.Object;
+            page.UserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
             page.ConfirmedPassword = "admin";

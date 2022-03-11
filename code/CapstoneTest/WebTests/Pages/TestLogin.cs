@@ -21,7 +21,7 @@ namespace CapstoneTest.WebTests.Pages
             fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
                 .Returns(new Response<User> {Data = new User {UserId = 0}});
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
-            page.FakeUserManager = fakeUserManager.Object;
+            page.UserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
             var result = page.OnPostLogin();
@@ -40,7 +40,7 @@ namespace CapstoneTest.WebTests.Pages
             fakeUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
                 .Returns(new Response<User> {ErrorMessage = Ui.ErrorMessages.InternalServerError});
             var page = TestPageBuilder.BuildPage<LoginModel>(session.Object);
-            page.FakeUserManager = fakeUserManager.Object;
+            page.UserManager = fakeUserManager.Object;
             page.Username = "admin";
             page.Password = "admin";
             var result = page.OnPostLogin();

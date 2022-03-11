@@ -28,7 +28,7 @@ namespace CapstoneTest.WebTests.Pages
                 .Returns(new Response<IEvent> { Data = null });
 
             var page = TestPageBuilder.BuildPage<CreateTransportationModel>(session.Object);
-            page.FakeTransportationManager = manager.Object;
+            page.TransportationManager = manager.Object;
             page.ValidationManager = fakeValidationManager.Object;
 
             page.Method = "Car";
@@ -57,7 +57,7 @@ namespace CapstoneTest.WebTests.Pages
                 .Returns(new Response<IEvent> { Data = null });
 
             var page = TestPageBuilder.BuildPage<CreateTransportationModel>(session.Object);
-            page.FakeTransportationManager = manager.Object;
+            page.TransportationManager = manager.Object;
             page.ValidationManager = fakeValidationManager.Object;
 
             page.Method = "Car";
