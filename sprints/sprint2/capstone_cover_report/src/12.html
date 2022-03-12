@@ -1,11 +1,21 @@
-﻿using System;
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestTripOverviewPage\TestConstructor.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ReactiveUI;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
+namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
 {
     [TestClass]
     public class TestConstructor
@@ -13,9 +23,9 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
         [TestMethod]
         public void Constructor_NoParameters_PropertyCreations()
         {
-            var mockTrip = new Mock<Trip>();
-            var mockEventManager = new Mock<EventManager>();
-            var mockScreen = new Mock<IScreen>();
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockEventManager = new Mock&lt;EventManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
             TripOverviewPageViewModel testViewModel =
                 new(mockTrip.Object, mockEventManager.Object, mockScreen.Object);
 
@@ -28,12 +38,12 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
         {
             Trip testTrip = new()
             {
-                Name = "Test Trip",
-                Notes = "Some Notes",
+                Name = &quot;Test Trip&quot;,
+                Notes = &quot;Some Notes&quot;,
                 StartDate = new DateTime(2022, 2, 2),
                 EndDate = new DateTime(3033, 3, 3)
             };
-            var mockScreen = new Mock<IScreen>();
+            var mockScreen = new Mock&lt;IScreen&gt;();
             TripOverviewPageViewModel testViewModel = new(testTrip, mockScreen.Object);
 
             Assert.IsNotNull(testViewModel.LogoutCommand);
@@ -47,3 +57,9 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
         }
     }
 }
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,45,1],[17,13,17,61,1],[18,13,18,50,1],[19,13,20,82,1],[22,13,22,59,1],[23,13,23,57,1],[24,9,24,10,1],[28,9,28,10,1],[29,13,35,15,1],[36,13,36,50,1],[37,13,37,88,1],[39,13,39,59,1],[40,13,40,67,1],[41,13,41,73,1],[42,13,42,57,1],[43,13,43,74,1],[44,13,44,59,1],[45,13,45,60,1],[46,13,46,55,1],[47,9,47,10,1]]);
+    </script>
+  </body>
+</html>

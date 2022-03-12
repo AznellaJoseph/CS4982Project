@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\CreateTransportation.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Create Transportation Site
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class CreateTransportationModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string ErrorMessage { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The method.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Method { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime StartDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime EndDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The transportation manager used for testing.
+        /// &lt;/summary&gt;
+        public TransportationManager FakeTransportationManager { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Called when [post].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The redirection to the next page or the current page if there was an error &lt;/returns&gt;
+        public IActionResult OnPost(int tripId)
+        {
+            if (string.IsNullOrEmpty(Method))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyTransportationMethod;
+                return Page();
+            }
+
+            var transportationManager = FakeTransportationManager ?? new TransportationManager();
+            var response = transportationManager.CreateTransportation(tripId, Method, StartDate, EndDate, Notes);
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
+            {
+                var routeValue = new RouteValueDictionary
+                {
+                    {&quot;tripId&quot;, tripId}
+                };
+                return RedirectToPage(&quot;Trip&quot;, routeValue);
+            }
+
+            ErrorMessage = response.ErrorMessage;
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post cancel].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier to add transportation to.&lt;/param&gt;
+        /// &lt;returns&gt;Redirects to the trip overview page for this trip ID&lt;/returns&gt;
+        public IActionResult OnPostCancel(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[20,38,20,42,1],[20,43,20,47,1],[26,32,26,36,1],[26,37,26,41,1],[32,37,32,41,1],[32,42,32,46,1],[32,51,32,63,1],[38,35,38,39,1],[38,40,38,44,1],[38,49,38,61,1],[44,31,44,35,1],[44,36,44,40,0],[49,66,49,70,1],[49,71,49,75,1],[56,9,56,10,1],[57,13,57,46,1],[58,13,58,14,1],[59,17,59,75,1],[60,17,60,31,1],[63,13,63,98,1],[64,13,64,114,1],[65,13,65,74,1],[66,13,66,14,1],[67,17,70,19,1],[71,17,71,59,1],[74,13,74,50,1],[75,13,75,27,1],[76,9,76,10,1],[84,9,84,10,1],[85,13,88,15,1],[89,13,89,55,1],[90,9,90,10,1]]);
+    </script>
+  </body>
+</html>

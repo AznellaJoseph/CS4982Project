@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\MySqlExceptionBuilder.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reflection;
+using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneTest.BackendTests.Model
+{
+    /// &lt;summary&gt;
+    ///     An Exception Builder for MySQL to be used in testing
+    /// &lt;/summary&gt;
+    public class MySqlExceptionBuilder
+    {
+        private uint? _code;
+        private string? _errorMessage;
+
+        /// &lt;summary&gt;
+        ///     Builds this instance.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public MySqlException Build()
+        {
+            if (_errorMessage is null &amp;&amp; _code is null)
+            {
+                var ctor1 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0];
+                return (MySqlException) ctor1.Invoke(Array.Empty&lt;object&gt;());
+            }
+
+            var ctor2 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[7];
+            return (MySqlException) ctor2.Invoke(new object[]
+                {_code ?? (uint) Ui.StatusCode.InternalServerError, &quot;&quot;, _errorMessage ?? &quot;&quot;});
+        }
+
+        /// &lt;summary&gt;
+        ///     Withes the error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;errorCode&quot;&gt;The error code.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public MySqlExceptionBuilder WithError(uint errorCode, string message)
+        {
+            _errorMessage = message;
+            _code = errorCode;
+            return this;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[21,9,21,10,1],[22,13,22,56,1],[23,13,23,14,0],[24,17,24,119,0],[25,17,25,77,0],[28,13,28,115,1],[29,13,30,95,1],[31,9,31,10,1],[40,9,40,10,1],[41,13,41,37,1],[42,13,42,31,1],[43,13,43,25,1],[44,9,44,10,1]]);
+    </script>
+  </body>
+</html>

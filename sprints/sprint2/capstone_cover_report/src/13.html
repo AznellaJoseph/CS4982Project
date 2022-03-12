@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestTripOverviewPage\TestUpdateWaypoints.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
+{
+    [TestClass]
+    public class TestUpdateWaypoints
+    {
+        [TestMethod]
+        public void UpdateWaypoints_ValidData_Success()
+        {
+            var startDate = DateTime.Now;
+            var mockTrip = new Mock&lt;Trip&gt;();
+            mockTrip.SetupGet(mt =&gt; mt.TripId).Returns(1);
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockEventManager = new Mock&lt;EventManager&gt;();
+            mockEventManager.Setup(wm =&gt; wm.GetEventsOnDate(1, startDate))
+                .Returns(new Response&lt;IList&lt;IEvent&gt;&gt;
+                {
+                    Data = new List&lt;IEvent&gt;
+                    {
+                        new Waypoint(), new Transportation()
+                    }
+                });
+
+
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockEventManager.Object, mockScreen.Object)
+            {
+                SelectedDate = startDate
+            };
+
+            Assert.AreEqual(2, testViewModel.EventViewModels.Count);
+        }
+
+
+        [TestMethod]
+        public void UpdateWaypoints_NullData_EmptyWaypointList()
+        {
+            var startDate = DateTime.Now;
+            var mockTrip = new Mock&lt;Trip&gt;();
+            mockTrip.SetupGet(mt =&gt; mt.TripId).Returns(1);
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockEventManager = new Mock&lt;EventManager&gt;();
+            mockEventManager.Setup(em =&gt; em.GetEventsOnDate(1, startDate))
+                .Returns(new Response&lt;IList&lt;IEvent&gt;&gt;
+                {
+                    Data = null
+                });
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockEventManager.Object, mockScreen.Object)
+            {
+                SelectedDate = startDate
+            };
+
+            Assert.AreEqual(0, testViewModel.EventViewModels.Count);
+        }
+
+        [TestMethod]
+        public void UpdateWaypoints_NullSelectedDate_ReturnsEmptyList()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;();
+            mockTrip.SetupGet(mt =&gt; mt.TripId).Returns(1);
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockEventManager = new Mock&lt;EventManager&gt;();
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockEventManager.Object, mockScreen.Object)
+            {
+                SelectedDate = null
+            };
+
+            Assert.AreEqual(0, testViewModel.EventViewModels.Count);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,42,1],[18,13,18,45,1],[19,13,19,59,1],[20,13,20,50,1],[21,13,21,61,1],[22,13,29,20,1],[32,13,35,15,1],[37,13,37,69,1],[38,9,38,10,1],[43,9,43,10,1],[44,13,44,42,1],[45,13,45,45,1],[46,13,46,59,1],[47,13,47,50,1],[48,13,48,61,1],[49,13,53,20,1],[54,13,57,15,1],[59,13,59,69,1],[60,9,60,10,1],[64,9,64,10,1],[65,13,65,45,1],[66,13,66,59,1],[67,13,67,50,1],[68,13,68,61,1],[69,13,72,15,1],[74,13,74,69,1],[75,9,75,10,1]]);
+    </script>
+  </body>
+</html>

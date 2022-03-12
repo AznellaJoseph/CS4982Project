@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Converters\DateFormatter.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Globalization;
+using Avalonia.Data.Converters;
+
+namespace CapstoneDesktop.Converters
+{
+    /// &lt;summary&gt;
+    ///     DateFormatter to be used when displaying dates
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Avalonia.Data.Converters.IValueConverter&quot; /&gt;
+    public class DateFormatter : IValueConverter
+    {
+        /// &lt;summary&gt;
+        ///     Converts a value.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;value&quot;&gt;The value to convert.&lt;/param&gt;
+        /// &lt;param name=&quot;targetType&quot;&gt;The type of the target.&lt;/param&gt;
+        /// &lt;param name=&quot;parameter&quot;&gt;A user-defined parameter.&lt;/param&gt;
+        /// &lt;param name=&quot;culture&quot;&gt;The culture to use.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     The converted value.
+        /// &lt;/returns&gt;
+        /// &lt;remarks&gt;
+        ///     This method should not throw exceptions. If the value is not convertible, return
+        ///     a &lt;see cref=&quot;T:Avalonia.Data.BindingNotification&quot; /&gt; in an error state. Any exceptions thrown will be
+        ///     treated as an application exception.
+        /// &lt;/remarks&gt;
+        public object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is null) return null;
+            var date = (DateTime) value;
+            if (!Enum.TryParse((string) parameter, out DataShown type)) return date.ToString(culture);
+
+            return type switch
+            {
+                DataShown.Both =&gt; date.ToString(&quot;MM/dd/yyyy hh:mm tt&quot;, culture),
+                DataShown.Date =&gt; date.ToString(&quot;MM/dd/yyyy&quot;, culture),
+                DataShown.Time =&gt; date.ToString(&quot;hh:mm tt&quot;, culture)
+            };
+        }
+
+        /// &lt;summary&gt;
+        ///     Converts a value.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;value&quot;&gt;The value to convert.&lt;/param&gt;
+        /// &lt;param name=&quot;targetType&quot;&gt;The type of the target.&lt;/param&gt;
+        /// &lt;param name=&quot;parameter&quot;&gt;A user-defined parameter.&lt;/param&gt;
+        /// &lt;param name=&quot;culture&quot;&gt;The culture to use.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     The converted value.
+        /// &lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.NotSupportedException&quot;&gt;&lt;/exception&gt;
+        /// &lt;remarks&gt;
+        ///     This method should not throw exceptions. If the value is not convertible, return
+        ///     a &lt;see cref=&quot;T:Avalonia.Data.BindingNotification&quot; /&gt; in an error state. Any exceptions thrown will be
+        ///     treated as an application exception.
+        /// &lt;/remarks&gt;
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+
+        private enum DataShown
+        {
+            Date,
+            Time,
+            Both
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[29,9,29,10,1],[30,13,30,31,1],[30,32,30,44,1],[31,13,31,41,1],[32,13,32,72,1],[32,73,32,103,1],[34,13,36,35,1],[36,35,36,80,1],[36,80,37,35,1],[37,35,37,71,1],[37,71,38,35,1],[38,35,38,69,1],[38,69,39,15,1],[40,9,40,10,1],[59,9,59,10,1],[60,13,60,47,1]]);
+    </script>
+  </body>
+</html>

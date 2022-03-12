@@ -1,99 +1,96 @@
-﻿
-body {
-    background: #000F14;
-    width: 100%;
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    justify-content: center;
+﻿body {
     align-items: center;
+    background: #000F14;
+    display: flex;
     font-family: 'Roboto', sans-serif;
+    height: 100vh;
+    justify-content: center;
+    margin: 0;
+    width: 100%;
 }
 
 .container {
     background: #002E3D;
-    width: auto;
-    height: auto;
-    max-width: 1500px;
-    max-height: 1000px;
-    padding: 50px;
     border-radius: 20px;
+    height: auto;
+    max-height: 1000px;
+    max-width: 1500px;
+    padding: 50px;
+    width: auto;
 }
 
 .logo {
-    width: 75%;
-    height: 40%;
-    background: gray;
     align-self: center;
+    background: gray;
+    height: 40%;
+    width: 75%;
 }
 
 h1 {
-    text-align: center;
     color: white;
-    text-transform: uppercase;
     font-size: 28px;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 .data-entry-window {
-    width: 45vw;
-    min-height: 30vh;
-    height: 70%;
+    align-items: stretch;
     display: flex;
     flex-direction: column;
+    height: 70%;
     justify-content: space-evenly;
-    align-items: stretch;
+    min-height: 30vh;
+    width: 45vw;
 }
 
-.data-entry-window form {
-    height: 90%;
-}
+.data-entry-window form { height: 90%; }
 
 
 form {
     display: flex;
     flex-direction: column;
-    min-height: 50%;
     justify-content: space-evenly;
+    min-height: 50%;
 }
 
 .login-form {
-    min-height: 60%;
     gap: 20px;
+    min-height: 60%;
 }
 
 .create-account-form {
-    min-height: 85%;
     gap: 20px;
+    min-height: 85%;
 }
 
 input[type=text], input[type=password], input[type=date], input[type=datetime-local], textarea {
-    width: 100%;
-    padding: 15px 20px;
-    box-sizing: border-box;
     background: #007EA7;
-    border-radius: 5px;
     border: none;
-    font-size: 14px;
+    border-radius: 5px;
     box-shadow: inset 1px 0px 10px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    padding: 15px 20px;
+    width: 100%;
 }
 
 input[type=button], button {
-    display: inline-block;
-    padding: 20px 20px;
-    border: none;
-    width: 50%;
     background: #007EA7;
+    border: none;
     border-radius: 5px;
-    text-transform: uppercase;
-    font-weight: bold;
+    display: inline-block;
     font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    padding: 20px 20px;
+    text-transform: uppercase;
+    width: 50%;
 }
 
 textarea {
-    width: 100%;
-    height: 33%;
     font-size: 1em;
+    height: 33%;
+    width: 100%;
 }
 
 ::placeholder {
@@ -104,40 +101,30 @@ textarea {
 label {
     color: white;
     display: block;
+    font-size: 14px;
+    font-weight: lighter;
     margin-bottom: 12px;
     text-transform: uppercase;
-    font-weight: lighter;
-    font-size: 14px;
 }
 
 .button-group, .button-group form, .input-row {
-    width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
     gap: 10px;
-}
-
-.input-row {
-    padding: 20px 0;
-}
-
-.input-group{
+    justify-content: space-between;
     width: 100%;
 }
 
-.error {
-    color: red;
-}
+.input-row { padding: 20px 0; }
 
-.warning {
-    color: white;
-}
+.input-group { width: 100%; }
 
-.hide {
-    display: none;
-}
+.error { color: red; }
+
+.warning { color: white; }
+
+.hide { display: none; }
 
 .panel {
     background: #002E3D;
@@ -145,32 +132,30 @@ label {
 }
 
 .list {
+    align-items: center;
     background: #002E3D;
-    max-height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 10px;
-    overflow-y: auto;
+    max-height: 100%;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .list-item {
-    width: 98%;
     background: #007EA7;
     border-radius: 10px;
-    height: auto;
+    box-sizing: border-box;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    height: auto;
     justify-content: space-between;
     padding: 15px;
-    box-sizing: border-box;
+    width: 98%;
 }
 
-.end {
-    margin-top: auto;
-}
+.end { margin-top: auto; }
 
 .row {
     display: flex;
@@ -181,90 +166,71 @@ label {
 
 .landing-page {
     background: #000F14;
-    height: 75vh;
-    width: 70vw;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 10px;
+    height: 75vh;
+    width: 70vw;
 }
 
 .landing-page form, .trip-overview form {
-    min-height: auto;
     margin: 5px;
+    min-height: auto;
 }
 
-#trip-list, #events {
-    flex: 1;
-}
+#trip-list, #events { flex: 1; }
 
 .landing-page .left, .landing-page .right {
-    height: 100%;
     gap: 12px;
+    height: 100%;
 }
 
-.landing-page .left, .trip-overview .row .left {
-    width: 40%;
-}
-.landing-page .right, .trip-overview .row .right {
-    width: 60%;
-}
+.landing-page .left, .trip-overview .row .left { width: 40%; }
+
+.landing-page .right, .trip-overview .row .right { width: 60%; }
 
 .landing-page .logo {
     height: 25%;
     width: 100%;
 }
 
-.landing-page button {
-    padding: 15px;
-}
+.landing-page button { padding: 15px; }
 
 .column {
     display: flex;
     flex-direction: column;
 }
 
-.full-width-button {
-    width: 100%;
-}
+.full-width-button { width: 100%; }
 
-.upcoming {
-    height: 100%;
-}
+.upcoming { height: 100%; }
 
-.info-section {
-    font-size: 12px;
-}
+.info-section { font-size: 12px; }
 
-.name-section {
-    font-weight: bold;
-}
+.name-section { font-weight: bold; }
 
 
 .trip-overview {
-    width: 65vw;
-    max-width: 1500px;
-    height: 70vh;
     background: #000F14;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    height: 70vh;
+    max-width: 1500px;
+    width: 65vw;
 }
 
-.trip-overview .row {
-    height: 75%;
-}
+.trip-overview .row { height: 75%; }
 
 #myCalendar {
-    width: 100%;
-    height: 100%;
     background: #002E3D;
     border: none;
+    height: 100%;
+    width: 100%;
 }
 
-#events {
-    height: 100%;
-}
+#events { height: 100%; }
 
 
 #myCalendar .vanilla-calendar-btn {
@@ -272,24 +238,18 @@ label {
     padding: 5px;
 }
 
-#myCalendar .vanilla-calendar-btn svg {
-    fill: black;
-}
+#myCalendar .vanilla-calendar-btn svg { fill: black; }
 
-#myCalendar .vanilla-calendar-week {
-    background: #007EA7;
-}
+#myCalendar .vanilla-calendar-week { background: #007EA7; }
 
-#myCalendar .vanilla-calendar-week span {
-    color: black;
-}
-    
+#myCalendar .vanilla-calendar-week span { color: black; }
+
 #myCalendar .vanilla-calendar-date {
-    padding-top: 3%;
-    padding-bottom: 3%;
     background: #809848;
     border: 3px solid #002E3D;
     border-radius: 9px;
+    padding-bottom: 3%;
+    padding-top: 3%;
 }
 
 #myCalendar .vanilla-calendar-date--disabled {
@@ -302,7 +262,4 @@ label {
     opacity: 1;
 }
 
-.trip-header {
-    padding: 1% 0;
-}
-
+.trip-header { padding: 1% 0; }

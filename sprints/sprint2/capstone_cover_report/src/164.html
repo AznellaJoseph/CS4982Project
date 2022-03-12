@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\LandingPage.axaml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
+using ReactiveUI;
+
+namespace CapstoneDesktop.Views
+{
+    /// &lt;summary&gt;
+    ///     User Control for the Landing Page Functionality
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Avalonia.ReactiveUI.ReactiveUserControl&amp;lt;CapstoneDesktop.ViewModels.LandingPageViewModel&amp;gt;&quot; /&gt;
+    public class LandingPage : ReactiveUserControl&lt;LandingPageViewModel&gt;
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;LandingPage&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public LandingPage()
+        {
+            InitializeComponent();
+        }
+
+        private void InitializeComponent()
+        {
+            this.WhenActivated(disposables =&gt; { });
+            AvaloniaXamlLoader.Load(this);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,29,0],[18,9,18,10,0],[19,13,19,35,0],[20,9,20,10,0],[23,9,23,10,0],[24,13,24,47,0],[24,47,24,48,0],[24,48,24,49,0],[24,49,24,50,0],[24,50,24,52,0],[25,13,25,43,0],[26,9,26,10,0]]);
+    </script>
+  </body>
+</html>

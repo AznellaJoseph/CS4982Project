@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\Transportation.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A model class for the Transportation object
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneBackend.Model.IEvent&quot; /&gt;
+    public class Transportation : IEvent
+    {
+        /// &lt;summary&gt;
+        ///     The transportation id.
+        /// &lt;/summary&gt;
+        public int TransportationId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The method.
+        /// &lt;/summary&gt;
+        public string Method { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The trip id.
+        /// &lt;/summary&gt;
+        public int TripId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTime? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The display name.
+        /// &lt;/summary&gt;
+        public string DisplayName =&gt; Method;
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string Notes { get; set; } = string.Empty;
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,39,14,43,1],[14,44,14,48,1],[19,32,19,36,1],[19,37,19,41,1],[19,46,19,58,1],[24,29,24,33,1],[24,34,24,38,1],[29,37,29,41,1],[29,42,29,46,1],[34,36,34,40,1],[34,41,34,45,1],[39,38,39,44,1],[44,31,44,35,1],[44,36,44,40,1],[44,45,44,57,1]]);
+    </script>
+  </body>
+</html>

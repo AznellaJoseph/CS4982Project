@@ -12,3 +12,20 @@ Alternative Flows:
 The user cancels the add operation
 A3. The user clicks the “Cancel” button
 A4. The user is taken back to the overview of the date chosen
+
+The user enters invalid dates 
+A2. The user enters start date or end date that is before trip start or after trip end
+A3. The user is shown an error message stating which date (start or end) is invalid and the corresponding trip start or end date
+
+The user enters dates that clash with another event
+A2. The user enters dates that clash with another event
+A3. The user is shown an error message that there is a clashing event with the dates entered
+
+The user fails to enter the required fields
+A2. The user fails to enter a method, start date, or start time
+A3. The user is shown an error message stating which required field is not entered
+
+The user fails to enter an end date and end time
+A2. The user does not enter an end date and end time
+A3. The end date for the transportation is set to the trip's end date by default
+A4. The new transportation is submitted

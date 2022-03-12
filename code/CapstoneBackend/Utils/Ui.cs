@@ -33,16 +33,22 @@
             public static readonly string UnknownError = "Unknown Error.";
             public static readonly string EmptyTripName = "You must enter a name for the trip.";
             public static readonly string NullTripDate = "You must enter a start and end date.";
-            public static readonly string NullWaypointStartDate =
+            public static readonly string InvalidEventDate =
                 "You must enter a start date. The end date will default to the trip end date if end date and time are not entered.";
             public static readonly string EmptyWaypointLocation = "You must enter a location for the waypoint.";
             public static readonly string EmptyTransportationMethod = "You must enter a method for the transportation.";
-            public static readonly string InvalidWaypointDate =
-                "Waypoint dates cannot be before the trip start date or after the trip end date.";
-            public static readonly string InvalidTransportationDate =
-                "Transportation dates cannot be before the trip start date or after the trip end date.";
-            public static readonly string InvalidFields = "You must enter all of the fields.";
+            public static readonly string InvalidUsername = "You must enter a username.";
+            public static readonly string InvalidPassword = "You must enter a password.";
+            public static readonly string InvalidFirstName = "You must enter a first name.";
+            public static readonly string InvalidLastName = "You must enter a last name.";
+            public static readonly string InvalidConfirmedPassword = "You must confirm your password.";
             public static readonly string TransportationNotFound = "A transportation with the given ID was not found.";
+            public static readonly string EventStartDateBeforeTripStartDate = "The event start date cannot be before ";
+            public static readonly string EventStartDateAfterTripEndDate = "The event start date cannot be after ";
+            public static readonly string EventEndDateAfterTripEndDate = "The event end date cannot be after ";
+            public static readonly string EventEndDateBeforeTripStartDate = "The event end date cannot be before ";
+            public static readonly string ClashingEventDates =
+                "The entered dates clashes with a separate event. Please enter new dates.";
         }
     }
 }

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\CreateWaypoint.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Create Waypoint Site
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class CreateWaypointModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string ErrorMessage { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Location { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime StartDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime EndDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The waypoint manager.
+        /// &lt;/summary&gt;
+        public WaypointManager WaypointManager { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Called when [post].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The redirection to the next page or the current page if there was an error &lt;/returns&gt;
+        public IActionResult OnPost(int tripId)
+        {
+            if (string.IsNullOrEmpty(Location))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
+                return Page();
+            }
+            var waypointManager = WaypointManager ?? new WaypointManager();
+            var response = waypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
+            {
+                var routeValue = new RouteValueDictionary
+                {
+                    {&quot;tripId&quot;, tripId}
+                };
+                return RedirectToPage(&quot;Trip&quot;, routeValue);
+            }
+
+            ErrorMessage = response.ErrorMessage;
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post cancel].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier to add a waypoint to.&lt;/param&gt;
+        /// &lt;returns&gt;Redirects to the trip overview page for the trip the waypoint was added to &lt;/returns&gt;
+        public IActionResult OnPostCancel(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[20,38,20,42,1],[20,43,20,47,1],[26,34,26,38,1],[26,39,26,43,1],[32,37,32,41,1],[32,42,32,46,1],[32,51,32,63,1],[38,35,38,39,1],[38,40,38,44,1],[38,49,38,61,1],[44,31,44,35,1],[44,36,44,40,1],[49,50,49,54,1],[49,55,49,59,1],[56,9,56,10,1],[57,13,57,48,1],[58,13,58,14,1],[59,17,59,71,1],[60,17,60,31,1],[62,13,62,76,1],[63,13,63,104,1],[64,13,64,74,1],[65,13,65,14,1],[66,17,69,19,1],[70,17,70,59,1],[73,13,73,50,1],[74,13,74,27,1],[75,9,75,10,1],[83,9,83,10,1],[84,13,87,15,1],[88,13,88,55,1],[89,9,89,10,1]]);
+    </script>
+  </body>
+</html>

@@ -15,13 +15,13 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         {
             var mockTransportationDal = new Mock<TransportationDal>();
             mockTransportationDal.Setup(db =>
-                    db.CreateTransportation(1, "Car", DateTime.Now.AddDays(4), DateTime.Now))
+                    db.CreateTransportation(1, "Car", DateTime.Now.AddDays(4), DateTime.Now, null))
                 .Returns((int) Ui.StatusCode.BadRequest);
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
-                transportationManager.CreateTransportation(1, "Car", DateTime.Now.AddDays(4), DateTime.Now);
+                transportationManager.CreateTransportation(1, "Car", DateTime.Now.AddDays(4), DateTime.Now, null);
 
             Assert.AreEqual((uint) Ui.StatusCode.BadRequest, resultResponse.StatusCode);
         }
@@ -31,13 +31,13 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         {
             var mockTransportationDal = new Mock<TransportationDal>();
             mockTransportationDal.Setup(db =>
-                    db.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2)))
+                    db.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2), "notes"))
                 .Returns((int) Ui.StatusCode.Success);
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
-                transportationManager.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2));
+                transportationManager.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2), "notes");
 
             Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
         }

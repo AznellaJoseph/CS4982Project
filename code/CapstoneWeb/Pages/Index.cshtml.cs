@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     Index Model
+    ///     PageModel for Index Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class IndexModel : PageModel
@@ -45,7 +45,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post create].
         /// </summary>
-        /// <returns> The action to take when going to create trip form </returns>
+        /// <returns> Redirect to create trip form </returns>
         public IActionResult OnPostCreate()
         {
             return RedirectToPage("CreateTrip");
@@ -54,7 +54,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post logout].
         /// </summary>
-        /// <returns> The action to take when logging out </returns>
+        /// <returns> Redirect to index </returns>
         public IActionResult OnPostLogout()
         {
             HttpContext.Session.Remove("userId");

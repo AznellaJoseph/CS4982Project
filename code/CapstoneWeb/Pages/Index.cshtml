@@ -34,19 +34,19 @@
         <div class="list" id="trip-list">
             @foreach (var trip in Model.Trips)
             {
-            <div class="list-item">
-                <div class="info-section">
-                    @trip.StartDate.ToShortDateString() >> @trip.EndDate.ToShortDateString()
-                </div>
+                <div class="list-item">
+                    <div class="info-section">
+                        @trip.StartDate.ToShortDateString() >> @trip.EndDate.ToShortDateString()
+                    </div>
 
-                <div class="name-section">
-                    @trip.Name
-                </div>
+                    <div class="name-section">
+                        @trip.Name
+                    </div>
 
-                <div class="icon-section">
-                    <a asp-page="/trip" asp-route-tripId="@trip.TripId">View</a>
+                    <div class="icon-section">
+                        <a asp-page="/trip" asp-route-tripId="@trip.TripId">View</a>
+                    </div>
                 </div>
-            </div>
             }
         </div>
 

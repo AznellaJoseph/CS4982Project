@@ -15,7 +15,7 @@ namespace CapstoneTest.WebTests.Pages
     public class TestCreateWaypoint
     {
         [TestMethod]
-        public void Post_Success()
+        public void Post_Success_RedirectsToTrip()
         {
             var session = new Mock<ISession>();
             var fakeWaypointManager = new Mock<WaypointManager>();
@@ -36,7 +36,7 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
-        public void Post_Failure()
+        public void Post_InvalidStartDate_ReturnsErrorMessage()
         {
             var session = new Mock<ISession>();
             var fakeWaypointManager = new Mock<WaypointManager>();
@@ -58,7 +58,24 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
-        public void PostCancel_Success()
+        public void Post_InvalidLocation_ReturnsErrorMessage()
+        {
+            var session = new Mock<ISession>();
+            var currentTime = DateTime.Now;
+
+            var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
+
+            page.Notes = "notes";
+            page.StartDate = currentTime.AddDays(1);
+            page.EndDate = currentTime;
+
+            var result = page.OnPost(0);
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.EmptyWaypointLocation, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void PostCancel_Success_RedirectToTrip()
         {
             var session = new Mock<ISession>();
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);

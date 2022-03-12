@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\CreateAccount.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Create Account Site
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class CreateAccountModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The username.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Username { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The password.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Password { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The confirmed password.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string ConfirmedPassword { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The first name.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string FirstName { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The last name.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string LastName { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The fake user manager.
+        /// &lt;/summary&gt;
+        public UserManager FakeUserManager { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Called when [post].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; The page to go to after [post] &lt;/returns&gt;
+        public IActionResult OnPost()
+        {
+            if (string.IsNullOrEmpty(Username))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidUsername;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidPassword;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(FirstName))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidFirstName;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(LastName))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidLastName;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(ConfirmedPassword))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidConfirmedPassword;
+                return Page();
+            }
+
+            if (Password != ConfirmedPassword)
+            {
+                ErrorMessage = Ui.ErrorMessages.PasswordsDoNotMatch;
+                return Page();
+            }
+
+            var userManager = FakeUserManager ?? new UserManager();
+            var response = userManager.RegisterUser(Username, Password,
+                FirstName, LastName);
+            if (response.StatusCode == (uint)Ui.StatusCode.Success)
+            {
+                HttpContext.Session.SetString(&quot;userId&quot;, $&quot;{response.Data}&quot;);
+                return RedirectToPage(&quot;Index&quot;);
+            }
+
+            ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
+
+            return Page();
+        }
+
+
+        /// &lt;summary&gt;Called when [post cancel].&lt;/summary&gt;
+        /// &lt;returns&gt;Redirect to login page&lt;/returns&gt;
+        public IActionResult OnPostCancel()
+        {
+            return RedirectToPage(&quot;login&quot;);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,38,18,42,1],[18,43,18,47,1],[24,34,24,38,1],[24,39,24,43,1],[30,34,30,38,1],[30,39,30,43,1],[36,43,36,47,1],[36,48,36,52,1],[42,35,42,39,1],[42,40,42,44,1],[48,34,48,38,1],[48,39,48,43,1],[53,46,53,50,1],[53,51,53,55,1],[60,9,60,10,1],[61,13,61,48,1],[62,13,62,14,1],[63,17,63,65,1],[64,17,64,31,1],[67,13,67,48,1],[68,13,68,14,1],[69,17,69,65,1],[70,17,70,31,1],[73,13,73,49,1],[74,13,74,14,1],[75,17,75,66,1],[76,17,76,31,1],[79,13,79,48,1],[80,13,80,14,1],[81,17,81,65,1],[82,17,82,31,1],[85,13,85,57,1],[86,13,86,14,1],[87,17,87,74,1],[88,17,88,31,1],[91,13,91,47,1],[92,13,92,14,1],[93,17,93,69,1],[94,17,94,31,1],[97,13,97,68,1],[98,13,99,38,1],[100,13,100,68,1],[101,13,101,14,1],[102,17,102,77,1],[103,17,103,48,1],[106,13,106,83,1],[108,13,108,27,1],[109,9,109,10,1],[115,9,115,10,1],[116,13,116,44,1],[117,9,117,10,1]]);
+    </script>
+  </body>
+</html>

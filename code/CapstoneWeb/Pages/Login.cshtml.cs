@@ -1,4 +1,5 @@
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     Login Model
+    ///     PageModel for Login Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class LoginModel : PageModel
@@ -39,8 +40,19 @@ namespace CapstoneWeb.Pages
         /// <returns> A redirect to the next page or the current page if there was an error </returns>
         public IActionResult OnPostLogin()
         {
+            if (string.IsNullOrEmpty(Username))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidUsername;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidPassword;
+                return Page();
+            }
             var userManager = FakeUserManager ?? new UserManager();
-            var response = userManager.GetUserByCredentials(Username ?? string.Empty, Password ?? string.Empty);
+            var response = userManager.GetUserByCredentials(Username, Password);
             if (response.Data is not null)
             {
                 HttpContext.Session.SetString("userId", $"{response.Data.UserId}");
@@ -55,7 +67,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post create account].
         /// </summary>
-        /// <returns>A redirect to the next page or the current page if there was an error </returns>
+        /// <returns>A redirect to create account page </returns>
         public IActionResult OnPostCreateAccount()
         {
             return RedirectToPage("CreateAccount");

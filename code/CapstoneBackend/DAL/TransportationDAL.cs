@@ -36,10 +36,12 @@ namespace CapstoneBackend.DAL
         /// <param name="method">The method of transportation.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
+        /// <param name="notes">The notes.</param>
         /// <returns>
         ///     The transportation id
         /// </returns>
-        public virtual int CreateTransportation(int tripId, string method, DateTime startDate, DateTime? endDate)
+        public virtual int CreateTransportation(int tripId, string method, DateTime startDate, DateTime endDate,
+            string? notes)
         {
             _connection.Open();
             const string procedure = "uspCreateTransportation";
@@ -50,6 +52,7 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@method", MySqlDbType.VarChar).Value = method;
             cmd.Parameters.Add("@startDate", MySqlDbType.DateTime).Value = startDate;
             cmd.Parameters.Add("@endDate", MySqlDbType.DateTime).Value = endDate;
+            cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = notes;
 
             var transportationId = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -79,6 +82,7 @@ namespace CapstoneBackend.DAL
             var startDateOrdinal = reader.GetOrdinal("startDate");
             var endDateOrdinal = reader.GetOrdinal("endDate");
             var methodOrdinal = reader.GetOrdinal("method");
+            var notesOrdinal = reader.GetOrdinal("notes");
 
             while (reader.Read())
                 transportationOnDate.Add(new Transportation
@@ -87,7 +91,8 @@ namespace CapstoneBackend.DAL
                     TransportationId = reader.GetInt32(transportationIdOrdinal),
                     Method = reader.GetString(methodOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
-                    EndDate = reader.GetDateTime(endDateOrdinal)
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
                 });
 
             _connection.Close();

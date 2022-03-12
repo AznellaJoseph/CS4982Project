@@ -3,7 +3,8 @@ using System;
 namespace CapstoneBackend.Model
 {
     /// <summary>
-    /// IEvent Interface to maintain the events (waypoints, transportation) in a trip
+    ///     IEvent Interface to maintain the events (waypoints, transportation) in a trip
+    /// </summary>
     public interface IEvent : IComparable<IEvent>
     {
         /// <summary>
@@ -20,9 +21,25 @@ namespace CapstoneBackend.Model
         ///     The end date.
         /// </summary>
         public DateTime? EndDate { get; set; }
-        
+
+        /// <summary>
+        ///     The display name.
+        /// </summary>
         public string DisplayName { get; }
 
+        /// <summary>
+        ///     The notes.
+        /// </summary>
+        public string Notes { get; set; }
+
+        /// <summary>
+        ///     Compares the current instance with another object of the same type and returns an integer that indicates whether
+        ///     the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+        /// </summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        /// <returns>
+        ///     A value that indicates the relative order of the objects being compared. The return value has these meanings:
+        /// </returns>
         int IComparable<IEvent>.CompareTo(IEvent? other)
         {
             return StartDate.CompareTo(other?.StartDate);

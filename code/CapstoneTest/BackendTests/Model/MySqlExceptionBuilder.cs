@@ -22,11 +22,12 @@ namespace CapstoneTest.BackendTests.Model
             if (_errorMessage is null && _code is null)
             {
                 var ctor1 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0];
-                return (MySqlException)ctor1.Invoke(Array.Empty<object>());
+                return (MySqlException) ctor1.Invoke(Array.Empty<object>());
             }
 
             var ctor2 = typeof(MySqlException).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[7];
-            return (MySqlException)ctor2.Invoke(new object[] { _code ?? (uint)Ui.StatusCode.InternalServerError, "", _errorMessage ?? "" });
+            return (MySqlException) ctor2.Invoke(new object[]
+                {_code ?? (uint) Ui.StatusCode.InternalServerError, "", _errorMessage ?? ""});
         }
 
         /// <summary>

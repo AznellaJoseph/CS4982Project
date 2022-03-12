@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ReactiveUI;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
+namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
 {
     [TestClass]
     public class TestUpdateWaypoints
@@ -24,7 +24,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
                 {
                     Data = new List<IEvent>
                     {
-                        new Waypoint() 
+                        new Waypoint(), new Transportation()
                     }
                 });
 
@@ -34,13 +34,12 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
                 SelectedDate = startDate
             };
 
-            Assert.AreEqual(1, testViewModel.EventViewModels.Count);
-
+            Assert.AreEqual(2, testViewModel.EventViewModels.Count);
         }
 
 
         [TestMethod]
-        public void TestSet_NullData_EmptyWaypointList()
+        public void UpdateWaypoints_NullData_EmptyWaypointList()
         {
             var startDate = DateTime.Now;
             var mockTrip = new Mock<Trip>();
@@ -55,6 +54,21 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewWindow
             TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockEventManager.Object, mockScreen.Object)
             {
                 SelectedDate = startDate
+            };
+
+            Assert.AreEqual(0, testViewModel.EventViewModels.Count);
+        }
+
+        [TestMethod]
+        public void UpdateWaypoints_NullSelectedDate_ReturnsEmptyList()
+        {
+            var mockTrip = new Mock<Trip>();
+            mockTrip.SetupGet(mt => mt.TripId).Returns(1);
+            var mockScreen = new Mock<IScreen>();
+            var mockEventManager = new Mock<EventManager>();
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockEventManager.Object, mockScreen.Object)
+            {
+                SelectedDate = null
             };
 
             Assert.AreEqual(0, testViewModel.EventViewModels.Count);

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\WaypointViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for a single Waypoint
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ReactiveViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.IEventViewModel&quot; /&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class WaypointViewModel : ReactiveViewModelBase, IEventViewModel
+    {
+        private readonly IScreen _screen;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;WaypointViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;waypoint&quot;&gt;The waypoint.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public WaypointViewModel(Waypoint waypoint, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        {
+            _screen = screen;
+            Waypoint = waypoint;
+            RemoveCommand = ReactiveCommand.Create(removeWaypoint);
+        }
+
+        /// &lt;summary&gt;
+        ///     The Waypoint
+        /// &lt;/summary&gt;
+        public Waypoint Waypoint { get; }
+
+        /// &lt;summary&gt;
+        ///     The fake waypoint manager
+        /// &lt;/summary&gt;
+        public WaypointManager? FakeWaypointManager { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The remove command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; RemoveCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The remove event
+        /// &lt;/summary&gt;
+        public event EventHandler&lt;EventArgs&gt;? RemoveEvent;
+
+        /// &lt;summary&gt;
+        ///     The Event.
+        /// &lt;/summary&gt;
+        public IEvent Event =&gt; Waypoint;
+
+        private void removeWaypoint()
+        {
+            var manager = FakeWaypointManager ?? new WaypointManager();
+            if (manager.RemoveWaypoint(Waypoint.WaypointId).Data) RemoveEvent?.Invoke(this, EventArgs.Empty);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[23,71,23,115,1],[24,9,24,10,1],[25,13,25,30,1],[26,13,26,33,1],[27,13,27,68,1],[28,9,28,10,1],[33,36,33,40,1],[38,55,38,59,1],[38,60,38,64,1],[43,60,43,64,1],[53,32,53,40,1],[56,9,56,10,1],[57,13,57,72,1],[58,13,58,66,1],[58,67,58,110,1],[59,9,59,10,1]]);
+    </script>
+  </body>
+</html>

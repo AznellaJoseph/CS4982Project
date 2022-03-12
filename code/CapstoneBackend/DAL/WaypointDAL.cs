@@ -131,7 +131,7 @@ namespace CapstoneBackend.DAL
                     Location = reader.GetString(locationOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
                     EndDate = reader.GetDateTime(endDateOrdinal),
-                    Notes = reader.IsDBNull(notesOrdinal) ? "" : reader.GetString(notesOrdinal)
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
                 });
 
             _connection.Close();

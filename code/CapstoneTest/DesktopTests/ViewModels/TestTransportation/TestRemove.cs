@@ -1,6 +1,5 @@
 using System;
 using CapstoneBackend.Model;
-using CapstoneBackend.Utils;
 using CapstoneDesktop.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,8 +25,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
                 {
                     Data = true
                 });
-            bool didRemovedEvent = false;
-            TransportationViewModel viewModel = new TransportationViewModel(transportation, mockScreen.Object)
+            var didRemovedEvent = false;
+            var viewModel = new TransportationViewModel(transportation, mockScreen.Object)
             {
                 FakeTransportationManager = mockTransportationManager.Object
             };
@@ -36,9 +35,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
             viewModel.RemoveCommand.Execute().Subscribe();
             testScheduler.Start();
             Assert.IsTrue(didRemovedEvent);
-            
         }
-        
+
         [TestMethod]
         public void Remove_Failure()
         {
@@ -53,8 +51,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
                 {
                     Data = false
                 });
-            bool didRemovedEvent = false;
-            TransportationViewModel viewModel = new TransportationViewModel(transportation, mockScreen.Object)
+            var didRemovedEvent = false;
+            var viewModel = new TransportationViewModel(transportation, mockScreen.Object)
             {
                 FakeTransportationManager = mockTransportationManager.Object
             };
@@ -63,7 +61,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
             viewModel.RemoveCommand.Execute().Subscribe();
             testScheduler.Start();
             Assert.IsFalse(didRemovedEvent);
-            
         }
     }
 }

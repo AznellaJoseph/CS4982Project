@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\UserManager.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A wrapper class for the UserDal. Manages the collection of Users and informs of server errors.
+    /// &lt;/summary&gt;
+    public class UserManager
+    {
+        private readonly UserDal _dal;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public UserManager() : this(new UserDal())
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
+        public UserManager(UserDal dal)
+        {
+            _dal = dal;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a user by the given credentials
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;the given username&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;the given password&lt;/param&gt;
+        /// &lt;returns&gt;A response of the user with the given credentials or a non-success status code and error message&lt;/returns&gt;
+        public virtual Response&lt;User&gt; GetUserByCredentials(string username, string password)
+        {
+            User? user;
+            try
+            {
+                user = _dal.GetUserByUsername(username);
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;User&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+
+            if (user is null)
+                return new Response&lt;User&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.DataNotFound,
+                    ErrorMessage = Ui.ErrorMessages.IncorrectUsername
+                };
+
+            if (!PasswordHasher.ValidatePassword(password, user.Password))
+                return new Response&lt;User&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.DataNotFound,
+                    ErrorMessage = Ui.ErrorMessages.IncorrectPassword
+                };
+
+            return new Response&lt;User&gt;
+            {
+                Data = user
+            };
+        }
+
+        /// &lt;summary&gt;Registers the user with the given credentials.&lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;The username input.&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;The password input.&lt;/param&gt;
+        /// &lt;param name=&quot;fname&quot;&gt;The fname input.&lt;/param&gt;
+        /// &lt;param name=&quot;lname&quot;&gt;The lname input.&lt;/param&gt;
+        /// &lt;returns&gt;A response of the new user&#39;s id or a non-success status code and error message.&lt;/returns&gt;
+        public virtual Response&lt;int&gt; RegisterUser(string username, string password, string fname, string lname)
+        {
+            var user = _dal.GetUserByUsername(username);
+            if (user is not null)
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.BadRequest,
+                    ErrorMessage = Ui.ErrorMessages.UsernameTaken
+                };
+
+            try
+            {
+                var userCreated = _dal.CreateUser(username, password, fname, lname);
+                return new Response&lt;int&gt;
+                {
+                    Data = userCreated
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,32,18,51,1],[19,9,19,10,1],[20,9,20,10,1],[26,9,26,40,1],[27,9,27,10,1],[28,13,28,24,1],[29,9,29,10,1],[38,9,38,10,1],[41,13,41,14,1],[42,17,42,57,1],[43,13,43,14,1],[44,13,44,37,1],[45,13,45,14,1],[46,17,50,19,1],[53,13,53,30,1],[54,17,58,19,1],[60,13,60,75,1],[61,17,65,19,1],[67,13,70,15,1],[71,9,71,10,1],[80,9,80,10,1],[81,13,81,57,1],[82,13,82,34,1],[83,17,87,19,1],[90,13,90,14,1],[91,17,91,85,1],[92,17,95,19,1],[97,13,97,37,1],[98,13,98,14,1],[99,17,103,19,1],[105,13,105,30,1],[106,13,106,14,1],[107,17,111,19,1],[113,9,113,10,1]]);
+    </script>
+  </body>
+</html>

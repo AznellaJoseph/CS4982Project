@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\WebTests\Pages\TestLogin.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Text;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneWeb.Pages;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.WebTests.Pages
+{
+    [TestClass]
+    public class TestLogin
+    {
+        [TestMethod]
+        public void Post_Success_RedirectsToIndex()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var fakeUserManager = new Mock&lt;UserManager&gt;();
+            fakeUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;))
+                .Returns(new Response&lt;User&gt; {Data = new User {UserId = 0}});
+            var page = TestPageBuilder.BuildPage&lt;LoginModel&gt;(session.Object);
+            page.FakeUserManager = fakeUserManager.Object;
+            page.Username = &quot;admin&quot;;
+            page.Password = &quot;admin&quot;;
+            var result = page.OnPostLogin();
+            var outBytes = Encoding.UTF8.GetBytes(&quot;0&quot;);
+            session.Verify(s =&gt; s.Set(&quot;userId&quot;, outBytes));
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;Index&quot;, redirect.PageName);
+        }
+
+        [TestMethod]
+        public void Post_InternalServerError_ReturnsErrorMessage()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var fakeUserManager = new Mock&lt;UserManager&gt;();
+            fakeUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;))
+                .Returns(new Response&lt;User&gt; {ErrorMessage = Ui.ErrorMessages.InternalServerError});
+            var page = TestPageBuilder.BuildPage&lt;LoginModel&gt;(session.Object);
+            page.FakeUserManager = fakeUserManager.Object;
+            page.Username = &quot;admin&quot;;
+            page.Password = &quot;admin&quot;;
+            var result = page.OnPostLogin();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Post_InvalidUsername_ReturnsErrorMessage()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var page = TestPageBuilder.BuildPage&lt;LoginModel&gt;(session.Object);
+            page.Password = &quot;admin&quot;;
+            var result = page.OnPostLogin();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.InvalidUsername, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Post_InvalidPassword_ReturnsErrorMessage()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var page = TestPageBuilder.BuildPage&lt;LoginModel&gt;(session.Object);
+            page.Username = &quot;admin&quot;;
+            var result = page.OnPostLogin();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.InvalidPassword, page.ErrorMessage);
+        }
+
+
+        [TestMethod]
+        public void PostCreateAccount_Success_RedirectsToCreateAccount()
+        {
+            var session = new Mock&lt;ISession&gt;();
+
+            var page = TestPageBuilder.BuildPage&lt;LoginModel&gt;(session.Object);
+
+            var result = page.OnPostCreateAccount();
+
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;CreateAccount&quot;, redirect.PageName);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,10,1],[19,13,19,48,1],[20,13,20,59,1],[21,13,22,77,1],[23,13,23,78,1],[24,13,24,59,1],[25,13,25,37,1],[26,13,26,37,1],[27,13,27,45,1],[28,13,28,56,1],[29,13,29,60,1],[30,13,30,75,1],[31,13,31,58,1],[32,13,32,57,1],[33,9,33,10,1],[37,9,37,10,1],[38,13,38,48,1],[39,13,39,59,1],[40,13,41,100,1],[42,13,42,78,1],[43,13,43,59,1],[44,13,44,37,1],[45,13,45,37,1],[46,13,46,45,1],[47,13,47,65,1],[48,13,48,86,1],[49,9,49,10,1],[53,9,53,10,1],[54,13,54,48,1],[55,13,55,78,1],[56,13,56,37,1],[57,13,57,45,1],[58,13,58,65,1],[59,13,59,82,1],[60,9,60,10,1],[64,9,64,10,1],[65,13,65,48,1],[66,13,66,78,1],[67,13,67,37,1],[68,13,68,45,1],[69,13,69,65,1],[70,13,70,82,1],[71,9,71,10,1],[76,9,76,10,1],[77,13,77,48,1],[79,13,79,78,1],[81,13,81,53,1],[83,13,83,75,1],[84,13,84,58,1],[85,13,85,65,1],[86,9,86,10,1]]);
+    </script>
+  </body>
+</html>

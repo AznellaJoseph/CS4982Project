@@ -13,7 +13,7 @@ namespace CapstoneTest.DesktopTests.Converters.TestDateFormatter
         {
             var testFormatter = new DateFormatter();
 
-            var result = testFormatter.Convert(null, typeof(DateTime), "both", CultureInfo.CurrentCulture);
+            var result = testFormatter.Convert(null, typeof(DateTime), "Both", CultureInfo.CurrentCulture);
 
             Assert.IsNull(result);
         }
@@ -23,7 +23,7 @@ namespace CapstoneTest.DesktopTests.Converters.TestDateFormatter
         {
             var testFormatter = new DateFormatter();
 
-            var result = testFormatter.Convert(DateTime.Today, typeof(DateTime), "test", CultureInfo.CurrentCulture);
+            var result = testFormatter.Convert(DateTime.Today, typeof(DateTime), "Test", CultureInfo.CurrentCulture);
 
             Assert.AreEqual(result, DateTime.Today.ToString(CultureInfo.CurrentCulture));
         }

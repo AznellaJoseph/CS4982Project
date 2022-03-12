@@ -33,6 +33,14 @@ namespace CapstoneBackend.Model
         /// </summary>
         public DateTime? EndDate { get; set; }
 
+        /// <summary>
+        ///     The display name.
+        /// </summary>
         public string DisplayName => Method;
+
+        /// <summary>
+        ///     The notes.
+        /// </summary>
+        public string Notes { get; set; } = string.Empty;
     }
 }

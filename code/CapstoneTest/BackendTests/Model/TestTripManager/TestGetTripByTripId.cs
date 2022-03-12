@@ -32,7 +32,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             var result = tripManager.GetTripByTripId(1);
             var trip = result.Data;
 
-            Assert.AreEqual((uint)Ui.StatusCode.Success, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.Success, result.StatusCode);
             Assert.AreEqual(1, trip?.TripId);
             Assert.AreEqual(1, trip?.UserId);
             Assert.AreEqual("test", trip?.Name);
@@ -51,7 +51,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.GetTripByTripId(1);
 
-            Assert.AreEqual((uint)Ui.StatusCode.DataNotFound, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.DataNotFound, result.StatusCode);
             Assert.IsNotNull(result.ErrorMessage);
             Assert.AreNotEqual(string.Empty, result.ErrorMessage);
         }
@@ -61,12 +61,13 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
         {
             var mockDal = new Mock<TripDal>();
             var builder = new MySqlExceptionBuilder();
-            mockDal.Setup(dal => dal.GetTripByTripId(1)).Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, "test").Build());
+            mockDal.Setup(dal => dal.GetTripByTripId(1))
+                .Throws(builder.WithError((uint) Ui.StatusCode.InternalServerError, "test").Build());
 
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.GetTripByTripId(1);
 
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
 
@@ -79,7 +80,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
             var tripManager = new TripManager(mockDal.Object);
             var result = tripManager.GetTripByTripId(1);
 
-            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
         }
     }
 }
