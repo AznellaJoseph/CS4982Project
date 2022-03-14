@@ -23,15 +23,22 @@ namespace CapstoneTest.WebTests.Pages
             fakeWaypointManager.Setup(um => um.CreateWaypoint(0, "1601 Maple St", currentTime, currentTime, "notes"))
                 .Returns(new Response<int> { Data = 0 });
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
+            var fakeValidationManager = new Mock<ValidationManager>();
+            fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime))
+                .Returns(new Response<bool> { Data = true });
+            fakeValidationManager.Setup(vm => vm.FindClashingEvent(0, currentTime, currentTime))
+                .Returns(new Response<IEvent> { Data = null });
+
             page.WaypointManager = fakeWaypointManager.Object;
-            
+            page.ValidationManager = fakeValidationManager.Object;
+
             page.Location = "1601 Maple St";
             page.Notes = "notes";
             page.StartDate = currentTime;
             page.EndDate = currentTime;
             var result = page.OnPost(0);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult) result;
+            var redirect = (RedirectToPageResult)result;
             Assert.AreEqual("Trip", redirect.PageName);
         }
 
@@ -43,10 +50,17 @@ namespace CapstoneTest.WebTests.Pages
             var currentTime = DateTime.Now;
             fakeWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "1601 Maple St", currentTime.AddDays(1), currentTime, "notes"))
-                .Returns(new Response<int> {StatusCode = (uint)Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
+                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
+            var fakeValidationManager = new Mock<ValidationManager>();
+            fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime.AddDays(1), currentTime))
+                .Returns(new Response<bool> { Data = true });
+            fakeValidationManager.Setup(vm => vm.FindClashingEvent(0, currentTime.AddDays(1), currentTime))
+                .Returns(new Response<IEvent> { Data = null });
+
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.WaypointManager = fakeWaypointManager.Object;
-            
+            page.ValidationManager = fakeValidationManager.Object;
+
             page.Location = "1601 Maple St";
             page.Notes = "notes";
             page.StartDate = currentTime.AddDays(1);
@@ -55,23 +69,6 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPost(0);
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, page.ErrorMessage);
-        }
-
-        [TestMethod]
-        public void Post_InvalidLocation_ReturnsErrorMessage()
-        {
-            var session = new Mock<ISession>();
-            var currentTime = DateTime.Now;
-
-            var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
-
-            page.Notes = "notes";
-            page.StartDate = currentTime.AddDays(1);
-            page.EndDate = currentTime;
-
-            var result = page.OnPost(0);
-            Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual(Ui.ErrorMessages.EmptyWaypointLocation, page.ErrorMessage);
         }
 
         [TestMethod]

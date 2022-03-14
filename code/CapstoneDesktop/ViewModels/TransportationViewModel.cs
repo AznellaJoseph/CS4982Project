@@ -36,7 +36,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The fake transportation manager
         /// </summary>
-        public TransportationManager? FakeTransportationManager { get; set; }
+        public TransportationManager TransportationManager { get; set; } = new();
 
         /// <summary>
         ///     The remove command
@@ -55,8 +55,7 @@ namespace CapstoneDesktop.ViewModels
 
         private void removeWaypoint()
         {
-            var manager = FakeTransportationManager ?? new TransportationManager();
-            if (manager.RemoveTransportation(Transportation.TransportationId).Data)
+            if (TransportationManager.RemoveTransportation(Transportation.TransportationId).Data)
                 RemoveEvent?.Invoke(this, EventArgs.Empty);
         }
     }

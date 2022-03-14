@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Utils;
 using MySql.Data.MySqlClient;
@@ -53,7 +54,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<Trip>
                 {
-                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }
@@ -61,7 +62,7 @@ namespace CapstoneBackend.Model
             if (trip is null)
                 return new Response<Trip>
                 {
-                    StatusCode = (uint) Ui.StatusCode.DataNotFound,
+                    StatusCode = (uint)Ui.StatusCode.DataNotFound,
                     ErrorMessage = Ui.ErrorMessages.TripNotFound
                 };
             return new Response<Trip>
@@ -97,7 +98,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<IList<Trip>>
                 {
-                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = e.Message
                 };
             }
@@ -118,7 +119,7 @@ namespace CapstoneBackend.Model
             if (startDate.CompareTo(endDate) > 0)
                 return new Response<int>
                 {
-                    StatusCode = (uint) Ui.StatusCode.BadRequest,
+                    StatusCode = (uint)Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
 
@@ -142,7 +143,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<int>
                 {
-                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
                     ErrorMessage = e.Message
                 };
             }

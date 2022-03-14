@@ -45,6 +45,11 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
+        ///     The validation manager.
+        /// </summary>
+        public ValidationManager ValidationManager { get; set; } = new();
+
+        /// <summary>
         ///     The create trip command.
         /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> CreateTripCommand { get; }
@@ -94,6 +99,15 @@ namespace CapstoneDesktop.ViewModels
             if (StartDate is null || EndDate is null)
             {
                 ErrorMessage = Ui.ErrorMessages.NullTripDate;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            var clashingTripResponse =
+                ValidationManager.FindClashingTrip(_user.UserId, StartDate.Value.Date, EndDate.Value.Date);
+
+            if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingTripResponse.ErrorMessage;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

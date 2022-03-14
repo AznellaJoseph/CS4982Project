@@ -27,18 +27,17 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     The fake trip manager used for testing.
         /// </summary>
-        public TripManager FakeTripManager { get; set; }
+        public TripManager TripManager { get; set; } = new();
 
         /// <summary>
         ///     Called when [get].
         /// </summary>
-        /// <returns> The page to go to when [get] </returns>
+        /// <returns>Current page with trips or login if the user is not logged in. </returns>
         public IActionResult OnGet()
         {
             if (!HttpContext.Session.Keys.Contains("userId")) return RedirectToPage("Login");
-            var tripManager = FakeTripManager ?? new TripManager();
             UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
-            Trips = tripManager.GetTripsByUser(UserId).Data;
+            Trips = TripManager.GetTripsByUser(UserId).Data;
             return Page();
         }
 

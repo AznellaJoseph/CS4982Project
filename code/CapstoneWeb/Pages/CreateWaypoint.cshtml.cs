@@ -46,7 +46,12 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     The waypoint manager.
         /// </summary>
-        public WaypointManager WaypointManager { get; set; }
+        public WaypointManager WaypointManager { get; set; } = new();
+
+        /// <summary>
+        ///     The validation manager.
+        /// </summary>
+        public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>
         ///     Called when [post].
@@ -54,14 +59,23 @@ namespace CapstoneWeb.Pages
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
-            if (string.IsNullOrEmpty(Location))
+
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
+                ErrorMessage = validDatesResponse.ErrorMessage;
                 return Page();
             }
-            var waypointManager = WaypointManager ?? new WaypointManager();
-            var response = waypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
-            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
+
+            var clashingEventResponse = ValidationManager.FindClashingEvent(tripId, StartDate, EndDate);
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Page();
+            }
+            var response = WaypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
+            if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary
                 {

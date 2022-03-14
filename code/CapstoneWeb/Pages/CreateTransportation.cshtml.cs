@@ -46,7 +46,12 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     The transportation manager used for testing.
         /// </summary>
-        public TransportationManager FakeTransportationManager { get; set; }
+        public TransportationManager TransportationManager { get; set; } = new();
+
+        /// <summary>
+        ///     The validation manager.
+        /// </summary>
+        public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>
         ///     Called when [post].
@@ -54,15 +59,23 @@ namespace CapstoneWeb.Pages
         /// <returns>The redirection to the next page or the current page if there was an error </returns>
         public IActionResult OnPost(int tripId)
         {
-            if (string.IsNullOrEmpty(Method))
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyTransportationMethod;
+                ErrorMessage = validDatesResponse.ErrorMessage;
                 return Page();
             }
 
-            var transportationManager = FakeTransportationManager ?? new TransportationManager();
-            var response = transportationManager.CreateTransportation(tripId, Method, StartDate, EndDate, Notes);
-            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
+            var clashingEventResponse = ValidationManager.FindClashingEvent(tripId, StartDate, EndDate);
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Page();
+            }
+
+            var response = TransportationManager.CreateTransportation(tripId, Method, StartDate, EndDate, Notes);
+            if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary
                 {

@@ -46,7 +46,9 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     The trip manager.
         /// </summary>
-        public TripManager TripManager { get; set; }
+        public TripManager TripManager { get; set; } = new();
+
+        public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>
         ///     Called when [post].
@@ -54,13 +56,17 @@ namespace CapstoneWeb.Pages
         /// <returns>Redirect to index or the current page if there is an error </returns>
         public IActionResult OnPost()
         {
-            if (string.IsNullOrEmpty(TripName))
+
+            var userId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
+
+
+            var clashingTripResponse = ValidationManager.FindClashingTrip(userId, StartDate, EndDate);
+            if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyTripName;
+                ErrorMessage = clashingTripResponse.ErrorMessage;
                 return Page();
             }
-            var tripManager = TripManager ?? new TripManager();
-            var response = tripManager.CreateTrip(Convert.ToInt32(HttpContext.Session.GetString("userId")), TripName,
+            var response = TripManager.CreateTrip(userId, TripName,
                 Notes,
                 StartDate, EndDate);
             if (string.IsNullOrEmpty(response.ErrorMessage))

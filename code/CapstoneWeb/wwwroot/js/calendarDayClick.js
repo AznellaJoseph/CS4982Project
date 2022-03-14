@@ -47,7 +47,7 @@ function _onRemoveClick() {
     });
 }
 
-function _createEvent(event, _index) {
+function _createEvent(event) {
     let id = event.method ? event.transportationId : event.waypointId
     let type = event.method ? "transportation" : "waypoint"
     
@@ -65,7 +65,7 @@ function _createEvent(event, _index) {
                 </div>
             </div>
         `);
-    }
+}
 
 function _onGetEventsSuccess(response) {
     $("#events").empty()
@@ -80,7 +80,7 @@ function _onRemoveEventSuccess(response, id) {
 }
 
 function _onMonthArrowClick() {
-    _registerCalendarDayClick()
+    _registerCalendarDayClick();
 }
 
 _registerCalendarDayClick();

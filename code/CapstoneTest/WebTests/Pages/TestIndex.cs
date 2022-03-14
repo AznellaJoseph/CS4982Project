@@ -36,7 +36,7 @@ namespace CapstoneTest.WebTests.Pages
             mockTripManager.Setup(tm => tm.GetTripsByUser(0))
                 .Returns(new Response<IList<Trip>> {Data = new List<Trip> {new()}});
             var page = TestPageBuilder.BuildPage<IndexModel>(session.Object);
-            page.FakeTripManager = mockTripManager.Object;
+            page.TripManager = mockTripManager.Object;
             var result = page.OnGet();
             Assert.AreEqual(1, page.Trips.Count);
             Assert.IsInstanceOfType(result, typeof(PageResult));

@@ -8,56 +8,38 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the CreateWaypoint Window
+    ///     ViewModel for CreateLodging Page
     /// </summary>
-    /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
-    public class CreateWaypointPageViewModel : ReactiveViewModelBase
+    /// <seealso cref="CapstoneDesktop.ViewModels.ReactiveViewModelBase" />
+    public class CreateLodgingPageViewModel : ReactiveViewModelBase
     {
         private readonly Trip _trip;
-        private readonly WaypointManager _waypointManager;
 
         private string _error = string.Empty;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="CreateLodgingPageViewModel" /> class.
         /// </summary>
-        /// <param name="trip">the trip that the waypoint will be created for.</param>
-        /// <param name="manager">The manager.</param>
-        /// <param name="screen">The host screen</param>
-        public CreateWaypointPageViewModel(Trip trip, WaypointManager manager, IScreen screen) : base(screen,
-            Guid.NewGuid().ToString()[..5])
+        /// <param name="trip">The trip.</param>
+        /// <param name="screen">The screen.</param>
+        public CreateLodgingPageViewModel(Trip trip, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
         {
             _trip = trip;
-            _waypointManager = manager;
             HostScreen = screen;
-            CreateWaypointCommand = ReactiveCommand.CreateFromObservable(createWaypoint);
-            CancelCreateWaypointCommand =
+            CreateLodgingCommand = ReactiveCommand.CreateFromObservable(createLodging);
+            CancelCreateLodgingCommand =
                 ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
+        ///     The create lodging command.
         /// </summary>
-        /// <param name="trip">The trip.</param>
-        /// <param name="screen">The screen.</param>
-        public CreateWaypointPageViewModel(Trip trip, IScreen screen) : this(trip, new WaypointManager(), screen)
-        {
-        }
+        public ReactiveCommand<Unit, IRoutableViewModel> CreateLodgingCommand { get; }
 
         /// <summary>
-        ///     The validation manager.
+        ///     The cancel create lodging command.
         /// </summary>
-        public ValidationManager ValidationManager { get; set; } = new();
-
-        /// <summary>
-        ///     The create waypoint command.
-        /// </summary>
-        public ReactiveCommand<Unit, IRoutableViewModel> CreateWaypointCommand { get; }
-
-        /// <summary>
-        ///     The cancel create waypoint command.
-        /// </summary>
-        public ReactiveCommand<Unit, Unit> CancelCreateWaypointCommand { get; }
+        public ReactiveCommand<Unit, Unit> CancelCreateLodgingCommand { get; }
 
         /// <summary>
         ///     The error message.
@@ -67,6 +49,11 @@ namespace CapstoneDesktop.ViewModels
             get => _error;
             set => this.RaiseAndSetIfChanged(ref _error, value);
         }
+
+        /// <summary>
+        ///     The validation manager.
+        /// </summary>
+        public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>
         ///     The start date.
@@ -98,7 +85,7 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public string? Notes { get; set; }
 
-        private IObservable<IRoutableViewModel> createWaypoint()
+        private IObservable<IRoutableViewModel> createLodging()
         {
             if (string.IsNullOrEmpty(Location))
             {
@@ -124,20 +111,6 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var clashingEventResponse = ValidationManager.FindClashingEvent(_trip.TripId, startDate, endDate);
-
-            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
-            {
-                ErrorMessage = clashingEventResponse.ErrorMessage;
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
-            var resultResponse = _waypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
-                endDate, Notes);
-            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
-                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
-
-            ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
         }
     }

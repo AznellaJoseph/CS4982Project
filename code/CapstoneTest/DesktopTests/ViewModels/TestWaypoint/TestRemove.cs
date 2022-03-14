@@ -28,7 +28,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestWaypoint
             var didRemovedEvent = false;
             var viewModel = new WaypointViewModel(waypoint, mockScreen.Object)
             {
-                FakeWaypointManager = mockWaypointManager.Object
+                WaypointManager = mockWaypointManager.Object
             };
             viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
             var testScheduler = new TestScheduler();
@@ -54,7 +54,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestWaypoint
             var didRemovedEvent = false;
             var viewModel = new WaypointViewModel(waypoint, mockScreen.Object)
             {
-                FakeWaypointManager = mockWaypointManager.Object
+                WaypointManager = mockWaypointManager.Object
             };
             viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
             var testScheduler = new TestScheduler();

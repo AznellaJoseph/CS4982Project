@@ -28,22 +28,22 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     The fake trip manager.
         /// </summary>
-        public TripManager FakeTripManager { get; set; }
-        
-        /// <summary>
-        ///     The fake waypoint manager.
-        /// </summary>
-        public EventManager FakeEventManager { get; set; }
+        public TripManager TripManager { get; set; } = new();
 
         /// <summary>
         ///     The fake waypoint manager.
         /// </summary>
-        public WaypointManager FakeWaypointManager { get; set; }
-        
+        public EventManager EventManager { get; set; } = new();
+
+        /// <summary>
+        ///     The fake waypoint manager.
+        /// </summary>
+        public WaypointManager WaypointManager { get; set; } = new();
+
         /// <summary>
         ///     The fake transportation manager.
         /// </summary>
-        public TransportationManager FakeTransportationManager { get; set; }
+        public TransportationManager TransportationManager { get; set; } = new();
 
         /// <summary>
         ///     Called when [get].
@@ -57,8 +57,7 @@ namespace CapstoneWeb.Pages
                 return RedirectToPage("Index");
 
             UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
-            var tripManager = FakeTripManager ?? new TripManager();
-            var response = tripManager.GetTripByTripId(tripId);
+            var response = TripManager.GetTripByTripId(tripId);
 
             if (!response.StatusCode.Equals((uint) Ui.StatusCode.Success) || response.Data?.UserId != UserId)
                 return RedirectToPage("Index");
@@ -74,14 +73,16 @@ namespace CapstoneWeb.Pages
         /// <returns> A json response of the events on the selected date.</returns>
         public IActionResult OnGetEvents(int tripId, string selectedDate)
         {
-            var manager = FakeEventManager ?? new EventManager();
-            return new JsonResult(manager.GetEventsOnDate(tripId, DateTime.Parse(selectedDate)));
+            return new JsonResult(EventManager.GetEventsOnDate(tripId, DateTime.Parse(selectedDate)));
         }
 
         /// <summary>
-        ///     Called when [post create].
+        /// Called when [post create waypoint].
         /// </summary>
-        /// <returns> Redirect to create waypoint form </returns>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        /// Redirect to create waypoint form
+        /// </returns>
         public IActionResult OnPostCreateWaypoint(int tripId)
         {
             var routeValue = new RouteValueDictionary
@@ -92,9 +93,12 @@ namespace CapstoneWeb.Pages
         }
 
         /// <summary>
-        ///     Called when [post create].
+        /// Called when [post create transportation].
         /// </summary>
-        /// <returns> Redirect to create Transportation form </returns>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        /// Redirect to create transportation form
+        /// </returns>
         public IActionResult OnPostCreateTransportation(int tripId)
         {
             var routeValue = new RouteValueDictionary
@@ -124,24 +128,26 @@ namespace CapstoneWeb.Pages
         }
 
         /// <summary>
-        ///     Called when [post remove].
+        /// Called when [post remove].
         /// </summary>
-        /// <returns> The json result of removing the waypoint specified by the id</returns>
-        public IActionResult OnGetRemoveWaypoint(int tripId, int id)
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        /// The json result of removing the waypoint specified by the id
+        /// </returns>
+        public IActionResult OnGetRemoveWaypoint(int id)
         {
-            var manager = FakeWaypointManager ?? new WaypointManager();
-            return new JsonResult(manager.RemoveWaypoint(id));
+            return new JsonResult(WaypointManager.RemoveWaypoint(id));
         }
         /// <summary>
         /// Called when [get remove transportation].
         /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
         /// <param name="id">The identifier.</param>
-        /// <returns> The json result of removing the transportation specified by the id </returns>
-        public IActionResult OnGetRemoveTransportation(int tripId, int id)
+        /// <returns>
+        /// The json result of removing the transportation specified by the id
+        /// </returns>
+        public IActionResult OnGetRemoveTransportation(int id)
         {
-            var manager = FakeTransportationManager ?? new TransportationManager();
-            return new JsonResult(manager.RemoveTransportation(id));
+            return new JsonResult(TransportationManager.RemoveTransportation(id));
         }
         
     }
