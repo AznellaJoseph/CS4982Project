@@ -26,30 +26,31 @@ namespace CapstoneWeb.Pages
         public Trip CurrentTrip { get; private set; }
 
         /// <summary>
-        ///     The fake trip manager.
+        ///     The trip manager.
         /// </summary>
         public TripManager TripManager { get; set; } = new();
 
         /// <summary>
-        ///     The fake waypoint manager.
+        ///     The event manager.
         /// </summary>
         public EventManager EventManager { get; set; } = new();
 
         /// <summary>
-        ///     The fake waypoint manager.
+        ///     The waypoint manager.
         /// </summary>
         public WaypointManager WaypointManager { get; set; } = new();
 
         /// <summary>
-        ///     The fake transportation manager.
+        ///     The transportation manager.
         /// </summary>
         public TransportationManager TransportationManager { get; set; } = new();
 
         /// <summary>
-        ///     Called when [get].
+        /// Called when [get].
         /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
         /// <returns>
-        ///     Redirect to index or current page if there is an error
+        /// Redirect to index if the user is not logged in or the current trip display
         /// </returns>
         public IActionResult OnGet(int tripId)
         {
@@ -59,7 +60,7 @@ namespace CapstoneWeb.Pages
             UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
             var response = TripManager.GetTripByTripId(tripId);
 
-            if (!response.StatusCode.Equals((uint) Ui.StatusCode.Success) || response.Data?.UserId != UserId)
+            if (!response.StatusCode.Equals((uint)Ui.StatusCode.Success) || response.Data?.UserId != UserId)
                 return RedirectToPage("Index");
             CurrentTrip = response.Data;
             return Page();
@@ -149,6 +150,42 @@ namespace CapstoneWeb.Pages
         {
             return new JsonResult(TransportationManager.RemoveTransportation(id));
         }
-        
+
+        /// <summary>
+        /// Called when [get view waypoint].
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        /// Redirect to waypoint page
+        /// </returns>
+        public IActionResult OnGetViewWaypoint(int tripId, int id)
+        {
+            var routeValues = new RouteValueDictionary
+            {
+                {"id", id},
+                {"tripId", tripId}
+            };
+            return RedirectToPage("Waypoint", routeValues);
+        }
+
+        /// <summary>
+        /// Called when [get view transportation].
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        /// Redirect to transportation page.
+        /// </returns>
+        public IActionResult OnGetViewTransportation(int id, int tripId)
+        {
+            var routeValues = new RouteValueDictionary
+            {
+                {"id", id},
+                {"tripId", tripId}
+            };
+            return RedirectToPage("Transportation", routeValues);
+        }
+
     }
 }

@@ -50,7 +50,8 @@ function _onRemoveClick() {
 function _createEvent(event, _index) {
     let id = event.id;
     let type = event.eventType;
-    
+    const tripId = parseInt($("#tripId").attr("value"));
+
     $("#events").append(
         `
             <div class="event list-item" data-id=${id}>
@@ -63,12 +64,13 @@ function _createEvent(event, _index) {
                 <div class="icon-section removeButton" data-id="${id}" data-event-type="${type}">
                     Remove
                 </div>
+                <a href="/trip/${tripId}/?handler=View${type}&id=${id}">View</a>
             </div>
         `);
     }
 
 function _onGetEventsSuccess(response) {
-    $("#events").empty()
+    $("#events").empty();
     response.data.forEach(_createEvent);
     $(".removeButton").click(_onRemoveClick);
 }
