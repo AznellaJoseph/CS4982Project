@@ -25,7 +25,7 @@ namespace CapstoneDesktop.ViewModels
         {
             _screen = screen;
             Transportation = transportation;
-            RemoveCommand = ReactiveCommand.Create(removeWaypoint);
+            RemoveCommand = ReactiveCommand.Create(removeTransportation);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace CapstoneDesktop.ViewModels
         public Transportation Transportation { get; }
 
         /// <summary>
-        ///     The fake transportation manager
+        ///     The transportation manager
         /// </summary>
         public TransportationManager TransportationManager { get; set; } = new();
 
@@ -53,7 +53,7 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public IEvent Event => Transportation;
 
-        private void removeWaypoint()
+        private void removeTransportation()
         {
             if (TransportationManager.RemoveTransportation(Transportation.TransportationId).Data)
                 RemoveEvent?.Invoke(this, EventArgs.Empty);

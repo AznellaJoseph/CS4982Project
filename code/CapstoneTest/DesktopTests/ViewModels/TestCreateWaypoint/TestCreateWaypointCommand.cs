@@ -27,7 +27,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 
             testScheduler.Start();
 
-            Assert.AreEqual(Ui.ErrorMessages.EmptyWaypointLocation, createWaypointWindowViewModel.ErrorMessage);
+            Assert.AreEqual(Ui.ErrorMessages.EmptyLocation, createWaypointWindowViewModel.ErrorMessage);
         }
 
         [TestMethod]

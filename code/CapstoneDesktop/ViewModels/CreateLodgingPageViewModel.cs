@@ -17,19 +17,25 @@ namespace CapstoneDesktop.ViewModels
 
         private string _error = string.Empty;
 
+        private readonly LodgingManager _lodgingManager;
+
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateLodgingPageViewModel" /> class.
+        /// Initializes a new instance of the <see cref="CreateLodgingPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">The trip.</param>
+        /// <param name="lodgingManager">The lodging manager.</param>
         /// <param name="screen">The screen.</param>
-        public CreateLodgingPageViewModel(Trip trip, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        public CreateLodgingPageViewModel(Trip trip, LodgingManager lodgingManager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
         {
             _trip = trip;
+            _lodgingManager = lodgingManager;
             HostScreen = screen;
             CreateLodgingCommand = ReactiveCommand.CreateFromObservable(createLodging);
             CancelCreateLodgingCommand =
                 ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
         }
+
+        public CreateLodgingPageViewModel(Trip trip, IScreen screen) : this(trip, new LodgingManager(), screen) { }
 
         /// <summary>
         ///     The create lodging command.
@@ -89,7 +95,7 @@ namespace CapstoneDesktop.ViewModels
         {
             if (string.IsNullOrEmpty(Location))
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
+                ErrorMessage = Ui.ErrorMessages.EmptyLocation;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
@@ -111,6 +117,11 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
+            var resultResponse = _lodgingManager.CreateLodging(_trip.TripId, Location, startDate, endDate, Notes);
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
+
+            ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
         }
     }
