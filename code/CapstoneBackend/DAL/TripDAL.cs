@@ -38,7 +38,9 @@ namespace CapstoneBackend.DAL
             const string query = "uspGetTripByTripId";
             using MySqlCommand cmd = new(query, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
+
             cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
+
             using var reader = cmd.ExecuteReaderAsync().Result;
             var userIdOrdinal = reader.GetOrdinal("userId");
             var nameOrdinal = reader.GetOrdinal("name");

@@ -185,5 +185,26 @@ namespace CapstoneBackend.Model
                 };
             }
         }
+
+        /// <summary>
+        /// Gets the transportation by identifier.
+        /// </summary>
+        /// <param name="waypointId">The transportation identifier.</param>
+        /// <returns>A response of the waypoint with the given id or a non-success code and error message</returns>
+        public virtual Response<Waypoint> GetWaypointById(int waypointId)
+        {
+            var waypoint = _dal.GetWaypointById(waypointId);
+
+            if (waypoint is null)
+            {
+                return new Response<Waypoint>
+                {
+                    ErrorMessage = Ui.ErrorMessages.WaypointNotFound,
+                    StatusCode = (uint)Ui.StatusCode.DataNotFound
+                };
+            }
+
+            return new Response<Waypoint> { Data = waypoint };
+        }
     }
 }

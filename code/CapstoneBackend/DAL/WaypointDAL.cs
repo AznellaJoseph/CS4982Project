@@ -92,7 +92,7 @@ namespace CapstoneBackend.DAL
                     Location = reader.GetString(locationOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
                     EndDate = reader.GetDateTime(endDateOrdinal),
-                    Notes = reader.IsDBNull(notesOrdinal) ? "" : reader.GetString(notesOrdinal)
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
                 });
 
             _connection.Close();
@@ -155,6 +155,44 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@waypointId", MySqlDbType.Int32).Value = waypointId;
 
             return cmd.ExecuteNonQuery() == 1;
+        }
+
+        /// <summary>
+        /// Gets the waypoint by identifier.
+        /// </summary>
+        /// <param name="waypointId">The waypoint identifier.</param>
+        /// <returns>The waypoint with the given id, null if no matching waypoint found.</returns>
+        public virtual Waypoint? GetWaypointById(int waypointId)
+        {
+            _connection.Open();
+            const string procedure = "uspGetWaypointById";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@waypointId", MySqlDbType.Int32).Value = waypointId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var tripIdOrdinal = reader.GetOrdinal("tripId");
+            var startDateOrdinal = reader.GetOrdinal("startDate");
+            var endDateOrdinal = reader.GetOrdinal("endDate");
+            var locationOrdinal = reader.GetOrdinal("location");
+            var notesOrdinal = reader.GetOrdinal("notes");
+
+            Waypoint? waypoint = null;
+
+            if (reader.Read())
+                waypoint = new Waypoint
+                {
+                    TripId = reader.GetInt32(tripIdOrdinal),
+                    WaypointId = waypointId,
+                    Location = reader.GetString(locationOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
+                };
+
+            _connection.Close();
+            return waypoint;
         }
     }
 }

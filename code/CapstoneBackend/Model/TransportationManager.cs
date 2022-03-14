@@ -91,5 +91,26 @@ namespace CapstoneBackend.Model
                 Data = removed
             };
         }
+
+        /// <summary>
+        /// Gets the transportation by identifier.
+        /// </summary>
+        /// <param name="transportationId">The transportation identifier.</param>
+        /// <returns>A response of the transportation with the given id or a non-success code and error message</returns>
+        public virtual Response<Transportation> GetTransportationById(int transportationId)
+        {
+            var transportation = _dal.GetTransportationById(transportationId);
+
+            if (transportation is null)
+            {
+                return new Response<Transportation>
+                {
+                    ErrorMessage = Ui.ErrorMessages.TransportationNotFound,
+                    StatusCode = (uint) Ui.StatusCode.DataNotFound
+                };
+            }
+
+            return new Response<Transportation> {Data = transportation};
+        }
     }
 }
