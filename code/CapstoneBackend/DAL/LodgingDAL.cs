@@ -7,30 +7,30 @@ using MySql.Data.MySqlClient;
 namespace CapstoneBackend.DAL
 {
     /// <summary>
-    ///     Data Access Layer (DAL) for accessing Waypoint information from the database
+    ///     Data Access Layer (DAL) for accessing Lodging information from the database
     /// </summary>
-    public class WaypointDal
+    public class LodgingDal
     {
         private readonly MySqlConnection _connection;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="WaypointDal" /> class.
+        ///     Initializes a new instance of the <see cref="LodgingDal" /> class.
         /// </summary>
-        public WaypointDal() : this(new MySqlConnection(Connection.ConnectionString))
+        public LodgingDal() : this(new MySqlConnection(Connection.ConnectionString))
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="WaypointDal" /> class.
+        ///     Initializes a new instance of the <see cref="LodgingDal" /> class.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        public WaypointDal(MySqlConnection connection)
+        public LodgingDal(MySqlConnection connection)
         {
             _connection = connection;
         }
 
         /// <summary>
-        ///     Creates a waypoint.
+        ///     Creates a Lodging.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="location">The location.</param>
@@ -38,13 +38,13 @@ namespace CapstoneBackend.DAL
         /// <param name="endDate">The end date.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        ///     The waypoint id
+        ///     The Lodging id
         /// </returns>
-        public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate,
+        public virtual int CreateLodging(int tripId, string location, DateTime startDate, DateTime endDate,
             string? notes)
         {
             _connection.Open();
-            const string procedure = "uspCreateWaypoint";
+            const string procedure = "uspCreateLodging";
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
@@ -54,80 +54,80 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@endDate", MySqlDbType.DateTime).Value = endDate;
             cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = notes;
 
-            var waypointId = Convert.ToInt32(cmd.ExecuteScalar());
+            var LodgingId = Convert.ToInt32(cmd.ExecuteScalar());
 
             _connection.Close();
-            return waypointId;
+            return LodgingId;
         }
 
         /// <summary>
-        ///     Gets the waypoints by trip identifier.
+        ///     Gets the Lodgings by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns> a list of the waypoints from the trip specified by the trip id </returns>
-        public virtual IList<Waypoint> GetWaypointsByTripId(int tripId)
+        /// <returns> a list of the Lodgings from the trip specified by the trip id </returns>
+        public virtual IList<Lodging> GetLodgingsByTripId(int tripId)
         {
             _connection.Open();
-            const string procedure = "uspGetWaypointsByTripId";
+            const string procedure = "uspGetLodgingsByTripId";
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
-            IList<Waypoint> waypointsInTrip = new List<Waypoint>();
+            IList<Lodging> lodgingsInTrip = new List<Lodging>();
 
             cmd.Parameters.Add("@tripId", MySqlDbType.UInt32).Value = tripId;
 
 
             using var reader = cmd.ExecuteReader();
 
-            var waypointIdOrdinal = reader.GetOrdinal("waypointId");
+            var lodgingIdOrdinal = reader.GetOrdinal("lodgingId");
             var startDateOrdinal = reader.GetOrdinal("startDate");
             var endDateOrdinal = reader.GetOrdinal("endDate");
             var locationOrdinal = reader.GetOrdinal("location");
             var notesOrdinal = reader.GetOrdinal("notes");
 
             while (reader.Read())
-                waypointsInTrip.Add(new Waypoint
+                lodgingsInTrip.Add(new Lodging
                 {
                     TripId = tripId,
-                    WaypointId = reader.GetInt32(waypointIdOrdinal),
+                    LodgingId = reader.GetInt32(lodgingIdOrdinal),
                     Location = reader.GetString(locationOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
                     EndDate = reader.GetDateTime(endDateOrdinal),
-                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
+                    Notes = reader.IsDBNull(notesOrdinal) ? "" : reader.GetString(notesOrdinal)
                 });
 
             _connection.Close();
-            return waypointsInTrip;
+            return lodgingsInTrip;
         }
 
         /// <summary>
-        ///     Gets the waypyoints on the specified date.
+        ///     Gets the lodgings on the specified date.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
-        /// <returns> A list of the waypoints of the trip on the specified date </returns>
-        public virtual IList<Waypoint> GetWaypointsOnDate(int tripId, DateTime selectedDate)
+        /// <returns> A list of the lodgings of the trip on the specified date </returns>
+        public virtual IList<Lodging> GetLodgingsOnDate(int tripId, DateTime selectedDate)
         {
             _connection.Open();
-            const string procedure = "uspGetWaypointsOnDate";
+            const string procedure = "uspGetLodgingsOnDate";
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
-            IList<Waypoint> waypointsOnDate = new List<Waypoint>();
+            IList<Lodging> lodgingsOnDate = new List<Lodging>();
 
             cmd.Parameters.Add("@selectedDate", MySqlDbType.DateTime).Value = selectedDate;
             cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
 
             using var reader = cmd.ExecuteReaderAsync().Result;
-            var waypointIdOrdinal = reader.GetOrdinal("waypointId");
+            var lodgingIdOrdinal = reader.GetOrdinal("lodgingId");
             var startDateOrdinal = reader.GetOrdinal("startDate");
             var endDateOrdinal = reader.GetOrdinal("endDate");
             var locationOrdinal = reader.GetOrdinal("location");
             var notesOrdinal = reader.GetOrdinal("notes");
 
             while (reader.Read())
-                waypointsOnDate.Add(new Waypoint
+                lodgingsOnDate.Add(new Lodging
                 {
                     TripId = tripId,
-                    WaypointId = reader.GetInt32(waypointIdOrdinal),
+                    LodgingId = reader.GetInt32(lodgingIdOrdinal),
                     Location = reader.GetString(locationOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
                     EndDate = reader.GetDateTime(endDateOrdinal),
@@ -135,64 +135,26 @@ namespace CapstoneBackend.DAL
                 });
 
             _connection.Close();
-            return waypointsOnDate;
+            return lodgingsOnDate;
         }
 
         /// <summary>
-        ///     Removes the waypoint.
+        ///     Removes the Lodging.
         /// </summary>
-        /// <param name="waypointId">The waypoint identifier.</param>
+        /// <param name="lodgingId">The Lodging identifier.</param>
         /// <returns>
-        ///     True if the waypoint was removed, false otherwise
+        ///     True if the Lodging was removed, false otherwise
         /// </returns>
-        public virtual bool RemoveWaypoint(int waypointId)
+        public virtual bool RemoveLodging(int lodgingId)
         {
             _connection.Open();
-            const string procedure = "uspRemoveWaypoint";
+            const string procedure = "uspRemoveLodging";
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add("@waypointId", MySqlDbType.UInt32).Value = waypointId;
+            cmd.Parameters.Add("@lodgingId", MySqlDbType.UInt32).Value = lodgingId;
 
             return cmd.ExecuteNonQuery() == 1;
-        }
-
-        /// <summary>
-        /// Gets the waypoint by identifier.
-        /// </summary>
-        /// <param name="waypointId">The waypoint identifier.</param>
-        /// <returns>The waypoint with the given id, null if no matching waypoint found.</returns>
-        public virtual Waypoint? GetWaypointById(int waypointId)
-        {
-            _connection.Open();
-            const string procedure = "uspGetWaypointById";
-            using MySqlCommand cmd = new(procedure, _connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.Add("@waypointId", MySqlDbType.Int32).Value = waypointId;
-
-            using var reader = cmd.ExecuteReaderAsync().Result;
-            var tripIdOrdinal = reader.GetOrdinal("tripId");
-            var startDateOrdinal = reader.GetOrdinal("startDate");
-            var endDateOrdinal = reader.GetOrdinal("endDate");
-            var locationOrdinal = reader.GetOrdinal("location");
-            var notesOrdinal = reader.GetOrdinal("notes");
-
-            Waypoint? waypoint = null;
-
-            if (reader.Read())
-                waypoint = new Waypoint
-                {
-                    TripId = reader.GetInt32(tripIdOrdinal),
-                    WaypointId = waypointId,
-                    Location = reader.GetString(locationOrdinal),
-                    StartDate = reader.GetDateTime(startDateOrdinal),
-                    EndDate = reader.GetDateTime(endDateOrdinal),
-                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
-                };
-
-            _connection.Close();
-            return waypoint;
         }
     }
 }
