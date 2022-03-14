@@ -49,8 +49,8 @@
             public static readonly string EventEndDateBeforeTripStartDate = "The event end date cannot be before ";
             public static readonly string ClashingEventDates =
                 "There is already an event from";
-
             public static readonly string ClashingTripDates = "There is already a trip from";
+            public static readonly string LodgingNotFound = "A lodging with the given ID was not found.";
         }
     }
 }
