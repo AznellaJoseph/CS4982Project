@@ -37,7 +37,7 @@ function _onRemoveClick() {
     const type = $(this).data("event-type");
     $.ajax({
         method: "GET",
-        url: `/trip/${tripId}/?handler=Remove${type.charAt(0).toUpperCase() + type.slice(1)}`,
+        url: `/trip/${tripId}/?handler=Remove${type}`,
         beforeSend: function(xhr) {
             xhr.setRequestHeader("XSRF-TOKEN",
                 $('input:hidden[name="__RequestVerificationToken"]').val());
@@ -48,8 +48,8 @@ function _onRemoveClick() {
 }
 
 function _createEvent(event, _index) {
-    let id = event.method ? event.transportationId : event.waypointId
-    let type = event.method ? "transportation" : "waypoint"
+    let id = event.id;
+    let type = event.eventType;
     
     $("#events").append(
         `

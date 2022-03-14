@@ -7,6 +7,10 @@ namespace CapstoneBackend.Model
     /// </summary>
     public interface IEvent : IComparable<IEvent>
     {
+        
+        public string EventType { get; }
+        public int Id { get; }
+        
         /// <summary>
         ///     The trip id.
         /// </summary>

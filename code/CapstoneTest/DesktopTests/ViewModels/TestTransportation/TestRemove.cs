@@ -28,7 +28,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
             var didRemovedEvent = false;
             var viewModel = new TransportationViewModel(transportation, mockScreen.Object)
             {
-                FakeTransportationManager = mockTransportationManager.Object
+                TransportationManager = mockTransportationManager.Object
             };
             viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
             var testScheduler = new TestScheduler();
@@ -54,7 +54,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
             var didRemovedEvent = false;
             var viewModel = new TransportationViewModel(transportation, mockScreen.Object)
             {
-                FakeTransportationManager = mockTransportationManager.Object
+                TransportationManager = mockTransportationManager.Object
             };
             viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
             var testScheduler = new TestScheduler();

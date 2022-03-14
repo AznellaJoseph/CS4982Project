@@ -39,7 +39,7 @@ namespace CapstoneTest.WebTests.Pages
             });
 
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-            page.FakeTripManager = fakeTripManager.Object;
+            page.TripManager = fakeTripManager.Object;
             var result = page.OnGet(1);
             var resultTrip = page.CurrentTrip;
 
@@ -77,7 +77,7 @@ namespace CapstoneTest.WebTests.Pages
             });
 
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-            page.FakeTripManager = fakeTripManager.Object;
+            page.TripManager = fakeTripManager.Object;
 
             var result = page.OnGet(1);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
@@ -100,7 +100,7 @@ namespace CapstoneTest.WebTests.Pages
                 StatusCode = (uint) Ui.StatusCode.DataNotFound
             });
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-            page.FakeTripManager = fakeTripManager.Object;
+            page.TripManager = fakeTripManager.Object;
 
             var result = page.OnGet(8);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
@@ -131,7 +131,7 @@ namespace CapstoneTest.WebTests.Pages
             var mockEventManager = new Mock<EventManager>();
             mockEventManager.Setup(wm => wm.GetEventsOnDate(1, selectedDate))
                 .Returns(new Response<IList<IEvent>> {Data = new List<IEvent>()});
-            page.FakeEventManager = mockEventManager.Object;
+            page.EventManager = mockEventManager.Object;
             var result = page.OnGetEvents(1, selectedDate.ToShortDateString());
             Assert.IsInstanceOfType(result, typeof(JsonResult));
         }
@@ -142,12 +142,12 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
             var mockWaypointManager = new Mock<WaypointManager>();
-            page.FakeWaypointManager = mockWaypointManager.Object;
+            page.WaypointManager = mockWaypointManager.Object;
             mockWaypointManager.Setup(wm => wm.RemoveWaypoint(1)).Returns(new Response<bool>
             {
                 Data = true
             });
-            var result = page.OnGetRemoveWaypoint(1, 1);
+            var result = page.OnGetRemoveWaypoint( 1);
             Assert.IsInstanceOfType(result, typeof(JsonResult));
         }
         
@@ -157,12 +157,12 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
             var mockTransportationManager = new Mock<TransportationManager>();
-            page.FakeTransportationManager = mockTransportationManager.Object;
+            page.TransportationManager = mockTransportationManager.Object;
             mockTransportationManager.Setup(wm => wm.RemoveTransportation(1)).Returns(new Response<bool>
             {
                 Data = true
             });
-            var result = page.OnGetRemoveTransportation(1, 1);
+            var result = page.OnGetRemoveTransportation( 1);
             Assert.IsInstanceOfType(result, typeof(JsonResult));
         }
 
