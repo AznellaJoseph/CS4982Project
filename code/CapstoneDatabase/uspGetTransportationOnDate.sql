@@ -8,9 +8,9 @@ CREATE PROCEDURE uspGetTransportationOnDate(
 )
 
 BEGIN
-	SELECT transportationId, transportation.startDate, transportation.endDate, method, transportation.notes
-	FROM transportation, trip
-	WHERE transportation.tripId = trip.tripId AND (CONVERT(selectedDate, DATE) BETWEEN CONVERT(transportation.startDate, DATE) AND CONVERT(transportation.endDate, DATE));
+	SELECT transportationId, startDate, endDate, method, notes
+	FROM transportation
+	WHERE transportation.tripId = tripId AND (CONVERT(selectedDate, DATE) BETWEEN CONVERT(startDate, DATE) AND CONVERT(endDate, DATE));
 
 END$
 
