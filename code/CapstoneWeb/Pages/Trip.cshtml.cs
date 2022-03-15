@@ -26,24 +26,29 @@ namespace CapstoneWeb.Pages
         public Trip CurrentTrip { get; private set; }
 
         /// <summary>
-        ///     The fake trip manager.
+        ///     The trip manager.
         /// </summary>
         public TripManager TripManager { get; set; } = new();
 
         /// <summary>
-        ///     The fake waypoint manager.
+        ///     The waypoint manager.
         /// </summary>
         public EventManager EventManager { get; set; } = new();
 
         /// <summary>
-        ///     The fake waypoint manager.
+        ///     The waypoint manager.
         /// </summary>
         public WaypointManager WaypointManager { get; set; } = new();
 
         /// <summary>
-        ///     The fake transportation manager.
+        ///     The transportation manager.
         /// </summary>
         public TransportationManager TransportationManager { get; set; } = new();
+
+        /// <summary>
+        ///     The lodging manager.
+        /// </summary>
+        public LodgingManager LodgingManager { get; set; } = new();
 
         /// <summary>
         ///     Called when [get].
@@ -66,6 +71,17 @@ namespace CapstoneWeb.Pages
         }
 
         /// <summary>
+        ///     Called when [get lodging].
+        /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="selectedDate">The selected date.</param>
+        /// <returns>A JSON response containing the lodging data for the specified date</returns>
+        public IActionResult OnGetLodging(int tripId, string selectedDate)
+        {
+            return new JsonResult(LodgingManager.GetLodgingsOnDate(tripId, DateTime.Parse(selectedDate)));
+        }
+
+        /// <summary>
         ///     Called when [get events].
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
@@ -74,6 +90,22 @@ namespace CapstoneWeb.Pages
         public IActionResult OnGetEvents(int tripId, string selectedDate)
         {
             return new JsonResult(EventManager.GetEventsOnDate(tripId, DateTime.Parse(selectedDate)));
+        }
+
+        /// <summary>
+        ///     Called when [post create lodging].
+        /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        ///     Redirect to create lodging form.
+        /// </returns>
+        public IActionResult OnPostCreateLodging(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {"tripId", tripId}
+            };
+            return RedirectToPage("CreateLodging", routeValue);
         }
 
         /// <summary>
@@ -148,6 +180,18 @@ namespace CapstoneWeb.Pages
         public IActionResult OnGetRemoveTransportation(int id)
         {
             return new JsonResult(TransportationManager.RemoveTransportation(id));
+        }
+
+        /// <summary>
+        ///     Called when [get remove lodging].
+        /// </summary>
+        /// <param name="id">The id for the lodging record to remove</param>
+        /// <returns>
+        ///     A JSON result of removing the lodging
+        /// </returns>
+        public IActionResult OnGetRemoveLodging(int id)
+        {
+            return new JsonResult(LodgingManager.RemoveLodging(id));
         }
         
     }
