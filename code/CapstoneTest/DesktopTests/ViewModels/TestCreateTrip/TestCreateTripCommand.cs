@@ -13,16 +13,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
     public class TestCreateTripCommand
     {
         [TestMethod]
-        public void CreateTrip_EmptyTripName_ReturnsErrorMessage()
+        public void CreateTripCommand_EmptyTripName_ReturnsErrorMessage()
         {
             var mockUser = new Mock<User>();
             var mockTripManager = new Mock<TripManager>();
             var mockScreen = new Mock<IScreen>();
             CreateTripPageViewModel createTripWindowViewModel =
-                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+                new(mockUser.Object, mockScreen.Object) {TripManager = mockTripManager.Object};
             var testScheduler = new TestScheduler();
-
-            createTripWindowViewModel.TripName = "";
 
             createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
 
@@ -32,22 +30,21 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
         }
 
         [TestMethod]
-        public void CreateTrip_InvalidDates_ReturnsErrorMessage()
+        public void CreateTripCommand_InvalidDates_ReturnsErrorMessage()
         {
             var mockUser = new Mock<User>();
             var mockTripManager = new Mock<TripManager>();
             mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", DateTime.Today.AddDays(1), DateTime.Today))
                 .Returns(new Response<int>
-                { StatusCode = (uint)Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
+                    {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
             var mockScreen = new Mock<IScreen>();
             var mockValidationManager = new Mock<ValidationManager>();
             mockValidationManager.Setup(vm => vm.FindClashingTrip(0, DateTime.Today.AddDays(1), DateTime.Today))
-                .Returns(new Response<Trip> { Data = null });
+                .Returns(new Response<Trip> {Data = null});
 
             CreateTripPageViewModel createTripWindowViewModel =
-                new(mockUser.Object, mockTripManager.Object, mockScreen.Object)
-                { ValidationManager = mockValidationManager.Object };
-
+                new(mockUser.Object, mockScreen.Object)
+                    {TripManager = mockTripManager.Object, ValidationManager = mockValidationManager.Object};
 
 
             var testScheduler = new TestScheduler();
@@ -66,14 +63,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
         }
 
         [TestMethod]
-        public void CreateTrip_NullStartDate_ReturnsErrorMessage()
+        public void CreateTripCommand_NullStartDate_ReturnsErrorMessage()
         {
             var mockUser = new Mock<User>();
             var mockTripManager = new Mock<TripManager>();
             var mockScreen = new Mock<IScreen>();
             var endDate = DateTime.Today.AddDays(1);
             CreateTripPageViewModel createTripWindowViewModel =
-                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+                new(mockUser.Object, mockScreen.Object) {TripManager = mockTripManager.Object};
 
             var testScheduler = new TestScheduler();
 
@@ -89,17 +86,61 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
         }
 
         [TestMethod]
-        public void CreateTrip_SuccessfulCreation()
+        public void CreateTripCommand_ClashingTripExists_ReturnsErrorMessage()
         {
             var mockUser = new Mock<User>();
             var mockTripManager = new Mock<TripManager>();
             var mockScreen = new Mock<IScreen>();
             var startDate = DateTime.Today;
             var endDate = DateTime.Today.AddDays(1);
-            CreateTripPageViewModel createTripWindowViewModel =
-                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.FindClashingTrip(0, startDate, endDate)).Returns(new Response<Trip>
+                {Data = new Trip {StartDate = startDate.AddDays(-1), EndDate = endDate}});
             mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", startDate, endDate))
-                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.Success });
+                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
+
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockScreen.Object)
+                {
+                    TripManager = mockTripManager.Object,
+                    ValidationManager = mockValidationManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = "name";
+            createTripWindowViewModel.StartDate = startDate;
+            createTripWindowViewModel.EndDate = endDate;
+            createTripWindowViewModel.Notes = "notes";
+
+            createTripWindowViewModel.CreateTripCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTripCommand_SuccessfulCreation()
+        {
+            var mockUser = new Mock<User>();
+            var mockTripManager = new Mock<TripManager>();
+            var mockScreen = new Mock<IScreen>();
+            var startDate = DateTime.Today;
+            var endDate = DateTime.Today.AddDays(1);
+            var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.FindClashingTrip(0, startDate, endDate)).Returns(new Response<Trip>
+                {Data = null});
+            mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", startDate, endDate))
+                .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
+
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockScreen.Object)
+                {
+                    TripManager = mockTripManager.Object,
+                    ValidationManager = mockValidationManager.Object
+                };
+
             var testScheduler = new TestScheduler();
 
             createTripWindowViewModel.TripName = "name";

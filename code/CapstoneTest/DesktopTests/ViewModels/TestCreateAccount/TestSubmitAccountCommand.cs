@@ -10,10 +10,10 @@ using ReactiveUI;
 namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
 {
     [TestClass]
-    public class TestSubmitAccount
+    public class TestSubmitAccountCommand
     {
         [TestMethod]
-        public void CreateAccount_ValidCredentials_ReturnsNoError()
+        public void SubmitAccountCommand_ValidCredentials_ReturnsNoError()
         {
             var mockUserManager = new Mock<UserManager>();
             mockUserManager.Setup(mu => mu.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int>
@@ -21,7 +21,10 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
                 Data = 1
             });
             var mockScreen = new Mock<IScreen>();
-            CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+
+            CreateAccountPageViewModel createAccountPageViewModel =
+                new(mockScreen.Object) {UserManager = mockUserManager.Object};
+
             var testScheduler = new TestScheduler();
 
             createAccountPageViewModel.FirstName = "admin";
@@ -31,16 +34,19 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
             createAccountPageViewModel.ConfirmedPassword = "admin";
 
             createAccountPageViewModel.SubmitAccountCommand.ThrownExceptions.Subscribe();
+
             testScheduler.Start();
+
             Assert.AreEqual(string.Empty, createAccountPageViewModel.ErrorMessage);
         }
 
         [TestMethod]
-        public void CreateAccount_DifferentPassword_ReturnsErrorMessage()
+        public void SubmitAccountCommand_DifferentPassword_ReturnsErrorMessage()
         {
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
-            CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+            CreateAccountPageViewModel createAccountPageViewModel =
+                new(mockScreen.Object) {UserManager = mockUserManager.Object};
             var testScheduler = new TestScheduler();
 
             createAccountPageViewModel.FirstName = "admin";
@@ -57,7 +63,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
         }
 
         [TestMethod]
-        public void CreateAccount_SomeServerError_ReturnsErrorMessage()
+        public void SubmitAccountCommand_BadServerRequest_ReturnsErrorMessage()
         {
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
@@ -66,7 +72,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
                 StatusCode = (uint) Ui.StatusCode.BadRequest,
                 ErrorMessage = "test"
             });
-            CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+            CreateAccountPageViewModel createAccountPageViewModel =
+                new(mockScreen.Object) {UserManager = mockUserManager.Object};
             TestScheduler testScheduler = new();
 
             createAccountPageViewModel.FirstName = "admin";
@@ -84,33 +91,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
         }
 
         [TestMethod]
-        public void CreateAccount_SomeServerError_ReturnsNoErrorMessage()
-        {
-            var mockUserManager = new Mock<UserManager>();
-            var mockScreen = new Mock<IScreen>();
-            mockUserManager.Setup(mu => mu.RegisterUser("admin", "admin", "admin", "admin")).Returns(new Response<int>
-            {
-                StatusCode = (uint) Ui.StatusCode.BadRequest
-            });
-            CreateAccountPageViewModel createAccountPageViewModel = new(mockUserManager.Object, mockScreen.Object);
-            TestScheduler testScheduler = new();
-
-            createAccountPageViewModel.FirstName = "admin";
-            createAccountPageViewModel.LastName = "admin";
-            createAccountPageViewModel.Username = "admin";
-            createAccountPageViewModel.Password = "admin";
-            createAccountPageViewModel.ConfirmedPassword = "admin";
-
-
-            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(Ui.ErrorMessages.UnknownError, createAccountPageViewModel.ErrorMessage);
-        }
-
-        [TestMethod]
-        public void CreateAccount_EmptyFirstName_ReturnsErrorMessage()
+        public void SubmitAccountCommand_InvalidFirstName_ReturnsErrorMessage()
         {
             var mockScreen = new Mock<IScreen>();
 
@@ -129,7 +110,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
         }
 
         [TestMethod]
-        public void CreateAccount_EmptyLastName_ReturnsErrorMessage()
+        public void SubmitAccountCommand_InvalidLastName_ReturnsErrorMessage()
         {
             var mockScreen = new Mock<IScreen>();
 
@@ -148,7 +129,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
         }
 
         [TestMethod]
-        public void CreateAccount_EmptyUsername_ReturnsErrorMessage()
+        public void SubmitAccountCommand_InvalidUsername_ReturnsErrorMessage()
         {
             var mockScreen = new Mock<IScreen>();
 
@@ -167,7 +148,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
         }
 
         [TestMethod]
-        public void CreateAccount_EmptyPassword_ReturnsErrorMessage()
+        public void SubmitAccountCommand_InvalidPassword_ReturnsErrorMessage()
         {
             var mockScreen = new Mock<IScreen>();
 
@@ -186,7 +167,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
         }
 
         [TestMethod]
-        public void CreateAccount_EmptyConfirmedPassword_ReturnsErrorMessage()
+        public void SubmitAccountCommand_InvalidConfirmedPassword_ReturnsErrorMessage()
         {
             var mockScreen = new Mock<IScreen>();
 

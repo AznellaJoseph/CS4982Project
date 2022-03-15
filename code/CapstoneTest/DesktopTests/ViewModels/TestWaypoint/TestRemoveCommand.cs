@@ -9,10 +9,10 @@ using ReactiveUI;
 namespace CapstoneTest.DesktopTests.ViewModels.TestWaypoint
 {
     [TestClass]
-    public class TestRemove
+    public class TestRemoveCommand
     {
         [TestMethod]
-        public void Remove_Success()
+        public void RemoveCommand_Success()
         {
             var mockWaypointManager = new Mock<WaypointManager>();
             var waypoint = new Waypoint
@@ -25,16 +25,21 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestWaypoint
                 {
                     Data = true
                 });
-            var didRemovedEvent = false;
+
+            var eventRemoved = false;
             var viewModel = new WaypointViewModel(waypoint, mockScreen.Object)
             {
                 WaypointManager = mockWaypointManager.Object
             };
-            viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
+            viewModel.RemoveEvent += (_, _) => eventRemoved = true;
+
             var testScheduler = new TestScheduler();
+
             viewModel.RemoveCommand.Execute().Subscribe();
+
             testScheduler.Start();
-            Assert.IsTrue(didRemovedEvent);
+
+            Assert.IsTrue(eventRemoved);
         }
 
         [TestMethod]
@@ -51,16 +56,20 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestWaypoint
                 {
                     Data = false
                 });
-            var didRemovedEvent = false;
+            var eventRemoved = false;
             var viewModel = new WaypointViewModel(waypoint, mockScreen.Object)
             {
                 WaypointManager = mockWaypointManager.Object
             };
-            viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
+            viewModel.RemoveEvent += (_, _) => eventRemoved = true;
+
             var testScheduler = new TestScheduler();
+
             viewModel.RemoveCommand.Execute().Subscribe();
+
             testScheduler.Start();
-            Assert.IsFalse(didRemovedEvent);
+
+            Assert.IsFalse(eventRemoved);
         }
     }
 }

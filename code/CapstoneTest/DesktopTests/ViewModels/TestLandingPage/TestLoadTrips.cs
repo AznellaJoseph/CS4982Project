@@ -11,7 +11,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLandingPage
     public class TestLoadTrips
     {
         [TestMethod]
-        public void LoadTrips_NotNullResponse_AddsOneTrip()
+        public void LoadTrips_UserHasOneTrip_ReturnsCorrectCount()
         {
             var mockUser = new Mock<User>
             {
@@ -26,13 +26,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLandingPage
             mockTripManager.Setup(tm => tm.GetTripsByUser(0))
                 .Returns(new Response<IList<Trip>> {Data = new List<Trip> {new()}});
 
-            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockScreen.Object)
+                {TripManager = mockTripManager.Object};
 
             Assert.AreEqual(1, landingPageViewModel.TripViewModels.Count);
         }
 
         [TestMethod]
-        public void LoadTrips_NullResponse_EmptyList()
+        public void LoadTrips_UserHasNoTrips_ReturnsCorrectCount()
         {
             var mockUser = new Mock<User>
             {
@@ -46,7 +47,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLandingPage
 
             mockTripManager.Setup(tm => tm.GetTripsByUser(0)).Returns(new Response<IList<Trip>> {Data = null});
 
-            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockScreen.Object)
+                {TripManager = mockTripManager.Object};
 
             Assert.AreEqual(0, landingPageViewModel.TripViewModels.Count);
         }
