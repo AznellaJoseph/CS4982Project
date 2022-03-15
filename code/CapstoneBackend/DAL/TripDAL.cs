@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 namespace CapstoneBackend.DAL
 {
     /// <summary>
-    ///     The DAL for accessing trip information
+    ///     Data Access Layer (DAL) for accessing Trip information from the database
     /// </summary>
     public class TripDal
     {
@@ -135,7 +135,6 @@ namespace CapstoneBackend.DAL
                 _connection.Close();
                 throw;
             }
-            
         }
     }
 }

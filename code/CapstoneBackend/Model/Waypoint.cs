@@ -7,9 +7,14 @@ namespace CapstoneBackend.Model
     /// </summary>
     public class Waypoint : IEvent
     {
-        
+        /// <summary>
+        ///     The event type.
+        /// </summary>
         public string EventType { get; } = nameof(Waypoint);
 
+        /// <summary>
+        ///     The id.
+        /// </summary>
         public int Id => WaypointId;
         
         /// <summary>

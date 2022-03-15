@@ -11,7 +11,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
     public class TestRegisterUser
     {
         [TestMethod]
-        public void Register_WithValidInput_Succeeds()
+        public void RegisterUser_Success()
         {
             const string username = "TestUsername";
             const string password = "TestPassword";
@@ -33,7 +33,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
         }
 
         [TestMethod]
-        public void Register_WithDuplicateUsername_Fails()
+        public void RegisterUser_WithDuplicateUsername_ReturnsErrorMessage()
         {
             const string username = "TestUsername";
             const string password = "TestPassword";
@@ -53,7 +53,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
         }
 
         [TestMethod]
-        public void Register_InternalServerErrorConfiguration_Fails()
+        public void RegisterUser_ServerMySqlException_ReturnsErrorMessage()
         {
             const string username = "TestUsername";
             const string password = "TestPassword";
@@ -76,7 +76,7 @@ namespace CapstoneTest.BackendTests.Model.TestUserManager
         }
 
         [TestMethod]
-        public void Register_ThrowsException_Fails()
+        public void RegisterUser_ServerException_ReturnsErrorMessage()
         {
             const string username = "TestUsername";
             const string password = "TestPassword";

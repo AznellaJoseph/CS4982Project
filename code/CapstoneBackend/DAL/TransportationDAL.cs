@@ -119,7 +119,7 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        /// Gets the transportation.
+        ///     Gets the transportation by its id.
         /// </summary>
         /// <param name="transportationId">The transportation identifier.</param>
         /// <returns>The transportation with the given id, null if no matching transportation found</returns>

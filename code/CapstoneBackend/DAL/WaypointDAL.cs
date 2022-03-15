@@ -158,7 +158,7 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        /// Gets the waypoint by identifier.
+        ///     Gets the waypoint by identifier.
         /// </summary>
         /// <param name="waypointId">The waypoint identifier.</param>
         /// <returns>The waypoint with the given id, null if no matching waypoint found.</returns>

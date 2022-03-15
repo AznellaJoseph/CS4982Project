@@ -8,32 +8,32 @@ namespace CapstoneBackend.Model
     public class Trip
     {
         /// <summary>
-        ///     The Id of the Trip
+        ///     The trip id
         /// </summary>
         public virtual int TripId { get; set; }
 
         /// <summary>
-        ///     The Id of User of The trip
+        ///     The user id
         /// </summary>
         public int UserId { get; set; }
 
         /// <summary>
-        ///     The name of the trip
+        ///     The name
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        ///     The notes of the trip;
+        ///     The notes
         /// </summary>
         public string Notes { get; set; } = string.Empty;
 
         /// <summary>
-        ///     The start date of the  trip
+        ///     The start date
         /// </summary>
         public DateTime StartDate { get; set; }
 
         /// <summary>
-        ///     The end date of the trip
+        ///     The end date
         /// </summary>
         public DateTime EndDate { get; set; }
     }

@@ -12,7 +12,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
     public class TestGetLodgingsInTrip
     {
         [TestMethod]
-        public void Call_EmptySet_ReturnsEmptyList()
+        public void GetLodgingsInTrip_EmptySet_ReturnsEmptyList()
         {
             IList<Lodging> fakeLodgings = new List<Lodging>();
 
@@ -28,7 +28,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
         }
 
         [TestMethod]
-        public void Call_YieldsSetWithOneValue_ReturnsExpectedList()
+        public void GetLodgingsInTrip_YieldsSetWithOneValue_ReturnsExpectedList()
         {
             IList<Lodging> fakeLodgings = new List<Lodging>
             {
@@ -56,7 +56,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
         }
 
         [TestMethod]
-        public void Call_YieldsSetWithMultipleValues_ReturnsExpectedList()
+        public void GetLodgingsInTrip_YieldsSetWithMultipleValues_ReturnsExpectedList()
         {
             IList<Lodging> fakeLodgings = new List<Lodging>
             {
@@ -95,26 +95,32 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
 
 
         [TestMethod]
-        public void Call_ServerMySqlException_Failure()
+        public void GetLodgingsInTrip_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<LodgingDal>();
             var builder = new MySqlExceptionBuilder();
             mockDal.Setup(dal => dal.GetLodgingsByTripId(1))
                 .Throws(builder.WithError((uint) Ui.StatusCode.InternalServerError, "test").Build());
-            var lodgingManager = new LodgingManager(mockDal.Object);
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
             var result = lodgingManager.GetLodgingsByTripId(1);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
 
         [TestMethod]
-        public void Call_ServerException_Failure()
+        public void GetLodgingsInTrip_ServerException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<LodgingDal>();
             mockDal.Setup(dal => dal.GetLodgingsByTripId(1))
                 .Throws(new Exception());
-            var lodgingManager = new LodgingManager(mockDal.Object);
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
             var result = lodgingManager.GetLodgingsByTripId(1);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }

@@ -54,10 +54,10 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@endDate", MySqlDbType.DateTime).Value = endDate;
             cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = notes;
 
-            var LodgingId = Convert.ToInt32(cmd.ExecuteScalar());
+            var lodgingId = Convert.ToInt32(cmd.ExecuteScalar());
 
             _connection.Close();
-            return LodgingId;
+            return lodgingId;
         }
 
         /// <summary>

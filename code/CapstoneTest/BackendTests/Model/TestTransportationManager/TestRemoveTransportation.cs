@@ -1,4 +1,5 @@
-﻿using CapstoneBackend.DAL;
+﻿using System;
+using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,7 +11,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
     public class TestRemoveTransportation
     {
         [TestMethod]
-        public void RemoveWaypoint_WaypointNotExists_ReturnsErrorMessage()
+        public void RemoveTransportation_TransportationDoesNotExist_ReturnsErrorMessage()
         {
             var mock = new Mock<TransportationDal>();
             mock.Setup(db => db.RemoveTransportation(2)).Returns(false);
@@ -23,7 +24,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         }
 
         [TestMethod]
-        public void RemoveWaypoint_ValidWaypointId_ReturnsTrue()
+        public void RemoveTransportation_ValidTransportationId_ReturnsTrue()
         {
             var mock = new Mock<TransportationDal>();
             mock.Setup(db => db.RemoveTransportation(1)).Returns(true);
@@ -34,5 +35,37 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
             Assert.AreEqual(true, resultResponse.Data);
         }
+
+        public void RemoveTransportation_ServerMySqlException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock<TransportationDal>();
+            var builder = new MySqlExceptionBuilder();
+            mockDal.Setup(dal => dal.RemoveTransportation(1))
+                .Throws(builder
+                    .WithError((uint)Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+
+            TransportationManager lodgingManager = new(mockDal.Object);
+
+            var result = lodgingManager.RemoveTransportation(1);
+
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RemoveTransportation_ServerException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock<TransportationDal>();
+            mockDal.Setup(dal => dal.RemoveTransportation(1))
+                .Throws(new Exception());
+
+            TransportationManager transportationManager = new(mockDal.Object);
+
+            var result = transportationManager.RemoveTransportation(1);
+
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
     }
 }

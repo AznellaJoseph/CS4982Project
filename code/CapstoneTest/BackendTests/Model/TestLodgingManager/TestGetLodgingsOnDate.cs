@@ -12,7 +12,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
     public class TestGetLodgingsOnDate
     {
         [TestMethod]
-        public void Call_EmptySet_ReturnsEmptyList()
+        public void GetLodgingsOnDate_EmptySet_ReturnsEmptyList()
         {
             var currentTime = DateTime.Now;
 
@@ -30,7 +30,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
         }
 
         [TestMethod]
-        public void Call_YieldsSetWithOneValue_ReturnsExpectedList()
+        public void GetLodgingsOnDate_YieldsSetWithOneValue_ReturnsExpectedList()
         {
             var currentTime = DateTime.Now;
             IList<Lodging> fakeLodgings = new List<Lodging>
@@ -68,7 +68,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
 
 
         [TestMethod]
-        public void Call_YieldsSetWithMultipleValues_ReturnsExpectedList()
+        public void GetLodgingsOnDate_YieldsSetWithMultipleValues_ReturnsExpectedList()
         {
             var currentTime = DateTime.Now;
             IList<Lodging> fakeLodgings = new List<Lodging>
@@ -108,7 +108,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
         }
 
         [TestMethod]
-        public void Call_ServerMySqlException_Failure()
+        public void GetLodgingsOnDate_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<LodgingDal>();
             var builder = new MySqlExceptionBuilder();
@@ -116,21 +116,27 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
             mockDal.Setup(dal => dal.GetLodgingsOnDate(1, currentTime))
                 .Throws(builder
                     .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
-            var lodgingManager = new LodgingManager(mockDal.Object);
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
             var result = lodgingManager.GetLodgingsOnDate(1, currentTime);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
 
         [TestMethod]
-        public void Call_ServerException_Failure()
+        public void GetLodgingsOnDate_ServerException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<LodgingDal>();
             var currentTime = DateTime.Now;
             mockDal.Setup(dal => dal.GetLodgingsOnDate(1, currentTime))
                 .Throws(new Exception());
-            var lodgingManager = new LodgingManager(mockDal.Object);
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
             var result = lodgingManager.GetLodgingsOnDate(1, currentTime);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }

@@ -6,27 +6,27 @@
     public class User
     {
         /// <summary>
-        ///     The id of the user.
+        ///     The user id.
         /// </summary>
         public int UserId { get; set; }
 
         /// <summary>
-        ///     The username of the user
+        ///     The username.
         /// </summary>
         public string Username { get; set; } = string.Empty;
 
         /// <summary>
-        ///     The password of the user.
+        ///     The password.
         /// </summary>
         public string Password { get; set; } = string.Empty;
 
         /// <summary>
-        ///     The first name of the user.
+        ///     The first name.
         /// </summary>
         public string FirstName { get; set; } = string.Empty;
 
         /// <summary>
-        ///     The last name of the user
+        ///     The last name.
         /// </summary>
         public string LastName { get; set; } = string.Empty;
     }

@@ -11,7 +11,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
     public class TestCreateWaypoint
     {
         [TestMethod]
-        public void Create_InvalidTimes_ReturnsErrorMessage()
+        public void CreateWaypoint_InvalidDates_ReturnsErrorMessage()
         {
             var mockWaypointDal = new Mock<WaypointDal>();
             mockWaypointDal.Setup(db =>
@@ -27,7 +27,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         }
 
         [TestMethod]
-        public void CreateWaypoint_ServerMySqlException_Failure()
+        public void CreateWaypoint_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<WaypointDal>();
             var builder = new MySqlExceptionBuilder();
@@ -42,7 +42,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         }
 
         [TestMethod]
-        public void CreateWaypoint_ServerException_Failure()
+        public void CreateWaypoint_ServerException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<WaypointDal>();
             var currentTime = DateTime.Now;
@@ -56,7 +56,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 
 
         [TestMethod]
-        public void Create_ValidParameters_ReturnsWaypointNumber()
+        public void CreateWaypoint_Success()
         {
             var mockWaypointDal = new Mock<WaypointDal>();
             mockWaypointDal.Setup(db =>
