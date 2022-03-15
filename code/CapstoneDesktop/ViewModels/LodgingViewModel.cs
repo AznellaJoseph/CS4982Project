@@ -12,7 +12,7 @@ namespace CapstoneDesktop.ViewModels
     public class LodgingViewModel : ReactiveViewModelBase, IRemovable
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LodgingViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="LodgingViewModel" /> class.
         /// </summary>
         /// <param name="lodging">The lodging.</param>
         /// <param name="screen">The screen.</param>
@@ -45,10 +45,7 @@ namespace CapstoneDesktop.ViewModels
 
         private void removeLodging()
         {
-            if (LodgingManager.RemoveLodging(Lodging.LodgingId).Data)
-            {
-                RemoveEvent?.Invoke(this, EventArgs.Empty);
-            }
+            if (LodgingManager.RemoveLodging(Lodging.LodgingId).Data) RemoveEvent?.Invoke(this, EventArgs.Empty);
         }
     }
 }

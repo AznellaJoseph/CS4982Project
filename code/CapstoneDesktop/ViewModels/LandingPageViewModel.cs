@@ -15,20 +15,17 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
     public class LandingPageViewModel : ReactiveViewModelBase
     {
-        private readonly TripManager _tripManager;
         private readonly User _user;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="LandingPageViewModel" /> class.
         /// </summary>
         /// <param name="user">The user.</param>
-        /// <param name="tripManager">The trip manager.</param>
         /// <param name="screen">The screen.</param>
-        public LandingPageViewModel(User user, TripManager tripManager, IScreen screen) : base(screen,
+        public LandingPageViewModel(User user, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
             _user = user;
-            _tripManager = tripManager;
             HostScreen = screen;
             TripViewModels = new ObservableCollection<TripViewModel>();
             CreateTripCommand = ReactiveCommand.CreateFromObservable(() =>
@@ -39,13 +36,9 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="LandingPageViewModel" /> class.
+        ///     The trip manager.
         /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="screen">The screen.</param>
-        public LandingPageViewModel(User user, IScreen screen) : this(user, new TripManager(), screen)
-        {
-        }
+        public TripManager TripManager { get; set; } = new();
 
         /// <summary>
         ///     The create trip command
@@ -64,7 +57,7 @@ namespace CapstoneDesktop.ViewModels
 
         private void loadTrips()
         {
-            var response = _tripManager.GetTripsByUser(_user.UserId);
+            var response = TripManager.GetTripsByUser(_user.UserId);
             foreach (var trip in response.Data ?? new List<Trip>())
                 TripViewModels.Add(new TripViewModel(trip, HostScreen));
         }

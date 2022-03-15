@@ -13,17 +13,14 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class LoginPageViewModel : ReactiveViewModelBase
     {
-        private readonly UserManager _userManager;
         private string _error = string.Empty;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="LoginPageViewModel" /> class.
         /// </summary>
-        /// <param name="manager">The manager.</param>
         /// <param name="screen">The screen.</param>
-        public LoginPageViewModel(UserManager manager, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        public LoginPageViewModel(IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
         {
-            _userManager = manager;
             HostScreen = screen;
             LoginCommand = ReactiveCommand.CreateFromObservable(login);
             OpenCreateAccountCommand = ReactiveCommand.CreateFromObservable(() =>
@@ -31,12 +28,9 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
+        ///     The user manager.
         /// </summary>
-        /// <param name="screen">The screen.</param>
-        public LoginPageViewModel(IScreen screen) : this(new UserManager(), screen)
-        {
-        }
+        public UserManager UserManager { get; set; } = new();
 
         /// <summary>
         ///     The login command.
@@ -81,7 +75,7 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var response = _userManager.GetUserByCredentials(Username, Password);
+            var response = UserManager.GetUserByCredentials(Username, Password);
             if (response.Data is not null)
                 return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, HostScreen));
 

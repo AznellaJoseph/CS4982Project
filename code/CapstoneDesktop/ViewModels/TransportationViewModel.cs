@@ -13,8 +13,6 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class TransportationViewModel : ReactiveViewModelBase, IEventViewModel
     {
-        private readonly IScreen _screen;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="TransportationViewModel" /> class.
         /// </summary>
@@ -23,7 +21,7 @@ namespace CapstoneDesktop.ViewModels
         public TransportationViewModel(Transportation transportation, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
-            _screen = screen;
+            HostScreen = screen;
             Transportation = transportation;
             RemoveCommand = ReactiveCommand.Create(removeTransportation);
         }

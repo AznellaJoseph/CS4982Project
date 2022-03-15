@@ -14,26 +14,18 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
     public class TripOverviewPageViewModel : ReactiveViewModelBase
     {
-        private readonly EventManager _eventManager;
-
-        private readonly LodgingManager _lodgingManager;
-
         private DateTime? _selectedDate;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">The trip.</param>
-        /// <param name="eventManager">The event manager.</param>
-        /// <param name="lodgingManager">The lodging manager.</param>
         /// <param name="screen">The screen.</param>
-        public TripOverviewPageViewModel(Trip trip, EventManager eventManager, LodgingManager lodgingManager,
+        public TripOverviewPageViewModel(Trip trip,
             IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
             Trip = trip;
-            _eventManager = eventManager;
-            _lodgingManager = lodgingManager;
             HostScreen = screen;
             LogoutCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
@@ -49,14 +41,14 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
+        ///     The event manager.
         /// </summary>
-        /// <param name="trip">The trip.</param>
-        /// <param name="screen">The screen.</param>
-        public TripOverviewPageViewModel(Trip trip, IScreen screen) : this(trip, new EventManager(),
-            new LodgingManager(), screen)
-        {
-        }
+        public EventManager EventManager { get; set; } = new();
+
+        /// <summary>
+        ///     The lodging manager.
+        /// </summary>
+        public LodgingManager LodgingManager { get; set; } = new();
 
         /// <summary>
         ///     The logout command.
@@ -116,7 +108,7 @@ namespace CapstoneDesktop.ViewModels
         {
             LodgingViewModels.Clear();
             if (SelectedDate is null) return;
-            var response = _lodgingManager.GetLodgingsOnDate(Trip.TripId, SelectedDate.Value);
+            var response = LodgingManager.GetLodgingsOnDate(Trip.TripId, SelectedDate.Value);
 
             foreach (var lodging in response.Data ?? new List<Lodging>())
             {
@@ -133,7 +125,7 @@ namespace CapstoneDesktop.ViewModels
         {
             EventViewModels.Clear();
             if (SelectedDate is null) return;
-            var response = _eventManager.GetEventsOnDate(Trip.TripId, SelectedDate.Value);
+            var response = EventManager.GetEventsOnDate(Trip.TripId, SelectedDate.Value);
 
             foreach (var aEvent in response.Data ?? new List<IEvent>())
             {
