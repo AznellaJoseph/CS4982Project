@@ -22,11 +22,13 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="screen">The screen.</param>
-        public LandingPageViewModel(User user, IScreen screen) : base(screen,
+        /// <param name="tripManager">The trip manager.</param>
+        public LandingPageViewModel(User user, IScreen screen, TripManager tripManager) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
             _user = user;
             HostScreen = screen;
+            TripManager = tripManager;
             TripViewModels = new ObservableCollection<TripViewModel>();
             CreateTripCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new CreateTripPageViewModel(_user, HostScreen)));
@@ -38,7 +40,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The trip manager.
         /// </summary>
-        public TripManager TripManager { get; set; } = new();
+        public TripManager TripManager { get; set; }
 
         /// <summary>
         ///     The create trip command

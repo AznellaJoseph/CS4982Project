@@ -116,7 +116,7 @@ namespace CapstoneDesktop.ViewModels
                     FirstName, LastName);
                 if (string.IsNullOrEmpty(response.ErrorMessage))
                     return HostScreen.Router.Navigate.Execute(
-                        new LandingPageViewModel(new User {UserId = response.Data}, HostScreen));
+                        new LandingPageViewModel(new User {UserId = response.Data}, HostScreen, new TripManager()));
 
                 ErrorMessage = response.ErrorMessage;
                 return Observable.Empty<IRoutableViewModel>();

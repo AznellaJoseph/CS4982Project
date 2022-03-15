@@ -26,8 +26,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLandingPage
             mockTripManager.Setup(tm => tm.GetTripsByUser(0))
                 .Returns(new Response<IList<Trip>> {Data = new List<Trip> {new()}});
 
-            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockScreen.Object)
-                {TripManager = mockTripManager.Object};
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockScreen.Object, mockTripManager.Object);
 
             Assert.AreEqual(1, landingPageViewModel.TripViewModels.Count);
         }
@@ -47,8 +46,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLandingPage
 
             mockTripManager.Setup(tm => tm.GetTripsByUser(0)).Returns(new Response<IList<Trip>> {Data = null});
 
-            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockScreen.Object)
-                {TripManager = mockTripManager.Object};
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockScreen.Object, mockTripManager.Object);
 
             Assert.AreEqual(0, landingPageViewModel.TripViewModels.Count);
         }

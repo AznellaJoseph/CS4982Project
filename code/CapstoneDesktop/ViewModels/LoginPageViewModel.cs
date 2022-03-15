@@ -77,7 +77,8 @@ namespace CapstoneDesktop.ViewModels
 
             var response = UserManager.GetUserByCredentials(Username, Password);
             if (response.Data is not null)
-                return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, HostScreen));
+                return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, HostScreen,
+                    new TripManager()));
 
             ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
             return Observable.Empty<IRoutableViewModel>();

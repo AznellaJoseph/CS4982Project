@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using CapstoneDesktop.ViewModels;
@@ -141,26 +142,38 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             {
                 Object =
                 {
-                    StartDate = DateTime.Today.AddDays(-2),
-                    EndDate = DateTime.Today
+                    StartDate = DateTime.Today,
+                    EndDate = DateTime.Today.AddDays(4)
                 }
             };
             var mockTransportationManager = new Mock<TransportationManager>();
             var mockScreen = new Mock<IScreen>();
-            var mockValidationManager = new Mock<ValidationManager>();
+            var mockEventManager = new Mock<EventManager>();
+
+            var mockValidationManager = new Mock<ValidationManager> {Object = {EventManager = mockEventManager.Object}};
+            mockEventManager.Setup(em => em.GetEventsOnDate(0, DateTime.Today.AddDays(1))).Returns(
+                new Response<IList<IEvent>>
+                {
+                    Data = new List<IEvent>
+                    {
+                        new Transportation {StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(2)}
+                    }
+                });
+            mockValidationManager
+                .Setup(vm => vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
+                .Returns(new Response<bool> {Data = true});
             mockValidationManager.Setup(vm => vm.FindClashingEvent(0,
                     DateTime.Today.AddDays(1) + TimeSpan.Zero, DateTime.Today.AddDays(3) + TimeSpan.Zero))
                 .Returns(new Response<IEvent>
                 {
-                    Data = new Transportation
-                        {StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(2)}
+                    ErrorMessage =
+                        $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}."
                 });
 
 
             CreateTransportationPageViewModel createTransportationViewModel =
                 new(mockTrip.Object, mockScreen.Object)
                 {
-                    TransportationManager = mockTransportationManager.Object,
                     ValidationManager = mockValidationManager.Object
                 };
 
@@ -177,7 +190,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             testScheduler.Start();
 
             Assert.AreEqual(
-                $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}",
+                $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}.",
                 createTransportationViewModel.ErrorMessage);
         }
 

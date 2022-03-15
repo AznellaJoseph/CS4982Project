@@ -31,15 +31,16 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         {
             var mockTransportationDal = new Mock<TransportationDal>();
             var builder = new MySqlExceptionBuilder();
+            var currentTime = DateTime.Now;
             mockTransportationDal.Setup(db =>
-                    db.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2), "notes"))
+                    db.CreateTransportation(1, "Car", currentTime, currentTime.AddDays(2), "notes"))
                 .Throws(builder
                     .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
-                transportationManager.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2), "notes");
+                transportationManager.CreateTransportation(1, "Car", currentTime, currentTime.AddDays(2), "notes");
 
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
@@ -49,14 +50,15 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         public void CreateTransportation_InternalServerError_ReturnsErrorMessage()
         {
             var mockTransportationDal = new Mock<TransportationDal>();
+            var currentTime = DateTime.Now;
             mockTransportationDal.Setup(db =>
-                    db.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2), "notes"))
+                    db.CreateTransportation(1, "Car", currentTime, currentTime.AddDays(2), "notes"))
                 .Throws(new Exception());
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
             var resultResponse =
-                transportationManager.CreateTransportation(1, "Car", DateTime.Now, DateTime.Now.AddDays(2), "notes");
+                transportationManager.CreateTransportation(1, "Car", currentTime, currentTime.AddDays(2), "notes");
 
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
