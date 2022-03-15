@@ -7,7 +7,7 @@ function _registerCalendarMonthArrowClick() {
 }
 
 function _onCalendarDayClick() {
-    const events = $("#events");
+    const events = $("#events-list");
     events.empty();
     const pad = function(num) { return (`00${num}`).slice(-2) };
     let date = new Date($(this).attr("data-calendar-date"));
@@ -51,7 +51,7 @@ function _createEvent(event, _index) {
     let id = event.id;
     let type = event.eventType;
     
-    $("#events").append(
+    $("#events-list").append(
         `
             <div class="event list-item" data-id=${id}>
                 <div class="info-section">
@@ -68,7 +68,7 @@ function _createEvent(event, _index) {
     }
 
 function _onGetEventsSuccess(response) {
-    $("#events").empty()
+    $("#events-list").empty()
     response.data.forEach(_createEvent);
     $(".removeButton").click(_onRemoveClick);
 }
