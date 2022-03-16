@@ -25,19 +25,33 @@
     </div>
 
     <div class="row">
-        <div class="panel left column">
-            <h1>Events</h1>
+        <div class="left column">
+            <div class="lodging-window panel">
+                <h1>Lodging</h1>
 
-            <div id="events" class="list">
+                <div id="lodging-list" class="list">
 
+                </div>
+
+                <form method="post" class="end">
+                    <button type="submit" class="full-width-button" asp-page-handler="CreateLodging">Create Lodging</button>
+                </form>
             </div>
 
-            <form method="post" class="end">
-                <div class="button-group">
-                    <button type="submit" asp-page-handler="CreateTransportation">Create Transportation</button>
-                    <button type="submit" asp-page-handler="CreateWaypoint">Create Waypoint</button>
+            <div class="events-window panel">
+                <h1>Events</h1>
+
+                <div id="events-list" class="list">
+
                 </div>
-            </form>
+
+                <form method="post" class="end">
+                    <div class="button-group">
+                        <button type="submit" asp-page-handler="CreateTransportation">Create Transportation</button>
+                        <button type="submit" asp-page-handler="CreateWaypoint">Create Waypoint</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <div class="panel right column">
