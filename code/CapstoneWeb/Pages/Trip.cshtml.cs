@@ -231,5 +231,23 @@ namespace CapstoneWeb.Pages
             return RedirectToPage("Transportation", routeValues);
         }
 
+        /// <summary>
+        /// Called when [get view lodging].
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        /// Redirect to lodging page.
+        /// </returns>
+        public IActionResult OnGetViewLodging(int id, int tripId)
+        {
+            var routeValues = new RouteValueDictionary
+            {
+                {"id", id},
+                {"tripId", tripId}
+            };
+            return RedirectToPage("Lodging", routeValues);
+        }
+
     }
 }

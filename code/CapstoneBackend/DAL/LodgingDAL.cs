@@ -156,5 +156,43 @@ namespace CapstoneBackend.DAL
 
             return cmd.ExecuteNonQuery() == 1;
         }
+
+        /// <summary>
+        ///     Gets the transportation by its id.
+        /// </summary>
+        /// <param name="lodgingId">The transportation identifier.</param>
+        /// <returns>The transportation with the given id, null if no matching transportation found</returns>
+        public virtual Lodging? GetLodgingById(int lodgingId)
+        {
+            _connection.Open();
+            const string procedure = "uspGetLodgingById";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@lodgingId", MySqlDbType.Int32).Value = lodgingId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var tripIdOrdinal = reader.GetOrdinal("tripId");
+            var startDateOrdinal = reader.GetOrdinal("startDate");
+            var endDateOrdinal = reader.GetOrdinal("endDate");
+            var locationOrdinal = reader.GetOrdinal("location");
+            var notesOrdinal = reader.GetOrdinal("notes");
+
+            Lodging? lodging = null;
+
+            if (reader.Read())
+                lodging = new Lodging
+                {
+                    TripId = reader.GetInt32(tripIdOrdinal),
+                    LodgingId = lodgingId,
+                    Location = reader.GetString(locationOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
+                };
+
+            _connection.Close();
+            return lodging;
+        }
     }
 }

@@ -91,6 +91,8 @@ function _createEvent(event, _index) {
 
 function _createLodging(lodging, _index) {
     let id = lodging.lodgingId;
+    let type = "Lodging";
+    const tripId = parseInt($("#tripId").attr("value"));
 
     $("#lodging-list").append(
         `
@@ -104,6 +106,7 @@ function _createLodging(lodging, _index) {
                 <div class="icon-section removeButton" data-id="${id}">
                     Remove
                 </div>
+                <a href="/trip/${tripId}/?handler=View${type}&id=${id}">View</a>
             </div>
         `);
 }

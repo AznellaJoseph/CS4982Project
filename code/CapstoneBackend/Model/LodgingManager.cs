@@ -185,5 +185,43 @@ namespace CapstoneBackend.Model
                 };
             }
         }
+
+        /// <summary>
+        ///     Gets the transportation by identifier.
+        /// </summary>
+        /// <param name="lodgingId">The transportation identifier.</param>
+        /// <returns>A response of the waypoint with the given id or a non-success code and error message</returns>
+        public virtual Response<Lodging> GetLodgingById(int lodgingId)
+        {
+            try
+            {
+                var lodging = _dal.GetLodgingById(lodgingId);
+
+                if (lodging is null)
+                    return new Response<Lodging>
+                    {
+                        ErrorMessage = Ui.ErrorMessages.LodgingNotFound,
+                        StatusCode = (uint)Ui.StatusCode.DataNotFound
+                    };
+
+                return new Response<Lodging> { Data = lodging };
+            }
+            catch (MySqlException e)
+            {
+                return new Response<Lodging>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<Lodging>
+                {
+                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
     }
 }
