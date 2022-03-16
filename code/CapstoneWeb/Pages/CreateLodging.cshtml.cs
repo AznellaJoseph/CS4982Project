@@ -52,10 +52,20 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post].
         /// </summary>
-        /// <returns>The redirection to the next page or the current page if there was an error </returns>
+        /// <returns>
+        ///     A redirection to the next page or,
+        ///     The current page if there was an error 
+        /// </returns>
         public IActionResult OnPost(int tripId)
         {
-            // TODO: Add validation here
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
+            {
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Page();
+            }
+
             var response = LodgingManager.CreateLodging(tripId, Location, StartDate, EndDate, Notes);
             if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
             {
