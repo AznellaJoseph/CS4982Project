@@ -49,7 +49,11 @@ function _onCalendarDayClick() {
 function _onRemoveClick() {
     const tripId = parseInt($("#tripId").attr("value"));
     const id = parseInt($(this).data("id"));
-    const type = $(this).data("event-type");
+    let type = $(this).data("event-type");
+
+    if (type == undefined) {
+        type = "Lodging";
+    }
 
     $.ajax({
         method: "GET",
