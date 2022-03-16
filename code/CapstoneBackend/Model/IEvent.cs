@@ -3,14 +3,20 @@ using System;
 namespace CapstoneBackend.Model
 {
     /// <summary>
-    ///     IEvent Interface to maintain the events (waypoints, transportation) in a trip
+    ///     IEvent Interface to encapsulate the events (waypoints, transportation) in a trip
     /// </summary>
     public interface IEvent : IComparable<IEvent>
     {
-        
+        /// <summary>
+        ///     The event type.
+        /// </summary>
         public string EventType { get; }
+
+        /// <summary>
+        ///     The id.
+        /// </summary>
         public int Id { get; }
-        
+
         /// <summary>
         ///     The trip id.
         /// </summary>

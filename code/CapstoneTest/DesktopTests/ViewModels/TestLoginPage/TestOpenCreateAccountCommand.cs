@@ -15,7 +15,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
         {
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
-            LoginPageViewModel mainWindowViewModel = new(mockUserManager.Object, mockScreen.Object);
+            LoginPageViewModel mainWindowViewModel = new(mockScreen.Object);
             var testScheduler = new TestScheduler();
 
             mainWindowViewModel.OpenCreateAccountCommand.ThrownExceptions.Subscribe();

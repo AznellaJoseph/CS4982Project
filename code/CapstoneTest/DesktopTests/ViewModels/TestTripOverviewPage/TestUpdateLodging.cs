@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
@@ -9,33 +9,33 @@ using ReactiveUI;
 namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
 {
     [TestClass]
-    public class TestUpdateEvents
+    public class TestUpdateLodging
     {
         [TestMethod]
-        public void UpdateEvents_ValidData_Success()
+        public void UpdateLodgings_ValidData_Success()
         {
             var startDate = DateTime.Now;
             var mockTrip = new Mock<Trip>();
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();
-            var mockEventManager = new Mock<EventManager>();
-            mockEventManager.Setup(wm => wm.GetEventsOnDate(1, startDate))
-                .Returns(new Response<IList<IEvent>>
+            var mockLodgingManager = new Mock<LodgingManager>();
+            mockLodgingManager.Setup(wm => wm.GetLodgingsOnDate(1, startDate))
+                .Returns(new Response<IList<Lodging>>
                 {
-                    Data = new List<IEvent>
+                    Data = new List<Lodging>
                     {
-                        new Waypoint(), new Transportation()
+                        new(), new()
                     }
                 });
 
 
             TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object)
             {
-                EventManager = mockEventManager.Object,
+                LodgingManager = mockLodgingManager.Object,
                 SelectedDate = startDate
             };
 
-            Assert.AreEqual(2, testViewModel.EventViewModels.Count);
+            Assert.AreEqual(2, testViewModel.LodgingViewModels.Count);
         }
 
 
@@ -46,19 +46,19 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
             var mockTrip = new Mock<Trip>();
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();
-            var mockEventManager = new Mock<EventManager>();
-            mockEventManager.Setup(em => em.GetEventsOnDate(1, startDate))
-                .Returns(new Response<IList<IEvent>>
+            var mockLodgingManager = new Mock<LodgingManager>();
+            mockLodgingManager.Setup(em => em.GetLodgingsOnDate(1, startDate))
+                .Returns(new Response<IList<Lodging>>
                 {
                     Data = null
                 });
             TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object)
             {
-                EventManager = mockEventManager.Object,
+                LodgingManager = mockLodgingManager.Object,
                 SelectedDate = startDate
             };
 
-            Assert.AreEqual(0, testViewModel.EventViewModels.Count);
+            Assert.AreEqual(0, testViewModel.LodgingViewModels.Count);
         }
 
         [TestMethod]
@@ -67,14 +67,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
             var mockTrip = new Mock<Trip>();
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();
-            var mockEventManager = new Mock<EventManager>();
+            var mockLodgingManager = new Mock<LodgingManager>();
             TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object)
             {
-                EventManager = mockEventManager.Object,
+                LodgingManager = mockLodgingManager.Object,
                 SelectedDate = null
             };
 
-            Assert.AreEqual(0, testViewModel.EventViewModels.Count);
+            Assert.AreEqual(0, testViewModel.LodgingViewModels.Count);
         }
     }
 }

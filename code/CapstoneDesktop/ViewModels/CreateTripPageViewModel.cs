@@ -13,7 +13,6 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateTripPageViewModel : ReactiveViewModelBase
     {
-        private readonly TripManager _tripManager;
         private readonly User _user;
 
         private string _error = string.Empty;
@@ -22,12 +21,10 @@ namespace CapstoneDesktop.ViewModels
         ///     Initializes a new instance of the <see cref="CreateTripPageViewModel" /> class.
         /// </summary>
         /// <param name="user">The current user</param>
-        /// <param name="manager">The manager.</param>
         /// <param name="screen">the host screen</param>
-        public CreateTripPageViewModel(User user, TripManager manager, IScreen screen) : base(screen,
+        public CreateTripPageViewModel(User user, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
-            _tripManager = manager;
             _user = user;
             HostScreen = screen;
             CreateTripCommand = ReactiveCommand.CreateFromObservable(createTrip);
@@ -36,13 +33,9 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateTripPageViewModel" /> class.
+        ///     The trip manager.
         /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="screen">The screen.</param>
-        public CreateTripPageViewModel(User user, IScreen screen) : this(user, new TripManager(), screen)
-        {
-        }
+        public TripManager TripManager { get; set; } = new();
 
         /// <summary>
         ///     The validation manager.
@@ -112,9 +105,10 @@ namespace CapstoneDesktop.ViewModels
             }
 
             var resultResponse =
-                _tripManager.CreateTrip(_user.UserId, TripName, Notes, StartDate.Value.Date, EndDate.Value.Date);
+                TripManager.CreateTrip(_user.UserId, TripName, Notes, StartDate.Value.Date, EndDate.Value.Date);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
-                return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(_user, HostScreen));
+                return HostScreen.Router.Navigate.Execute(
+                    new LandingPageViewModel(_user, HostScreen, TripManager));
 
             ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();

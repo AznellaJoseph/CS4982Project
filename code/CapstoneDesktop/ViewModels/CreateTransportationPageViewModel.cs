@@ -13,25 +13,20 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateTransportationPageViewModel : ReactiveViewModelBase
     {
-        private readonly TransportationManager _transportationManager;
         private readonly Trip _trip;
 
         private string _error = string.Empty;
-
-        public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateTransportationPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">the trip that the transportation is for.</param>
-        /// <param name="manager">The transportation manager.</param>
         /// <param name="screen">The host screen</param>
-        public CreateTransportationPageViewModel(Trip trip, TransportationManager manager, IScreen screen) : base(
+        public CreateTransportationPageViewModel(Trip trip, IScreen screen) : base(
             screen,
             Guid.NewGuid().ToString()[..5])
         {
             _trip = trip;
-            _transportationManager = manager;
             HostScreen = screen;
             CreateTransportationCommand = ReactiveCommand.CreateFromObservable(createTransportation);
             CancelCreateTransportationCommand =
@@ -39,14 +34,11 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateTransportationPageViewModel" /> class.
+        ///     The transportation manager.
         /// </summary>
-        /// <param name="trip">The trip.</param>
-        /// <param name="screen">The screen.</param>
-        public CreateTransportationPageViewModel(Trip trip, IScreen screen) : this(trip, new TransportationManager(),
-            screen)
-        {
-        }
+        public TransportationManager TransportationManager { get; set; } = new();
+
+        public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>
         ///     The create transportation command.
@@ -132,7 +124,7 @@ namespace CapstoneDesktop.ViewModels
             }
 
             var resultResponse =
-                _transportationManager.CreateTransportation(_trip.TripId, Method, startDate, endDate, Notes);
+                TransportationManager.CreateTransportation(_trip.TripId, Method, startDate, endDate, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
                 return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
 

@@ -9,10 +9,10 @@ using ReactiveUI;
 namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
 {
     [TestClass]
-    public class TestRemove
+    public class TestRemoveCommand
     {
         [TestMethod]
-        public void Remove_Success()
+        public void RemoveCommand_Success()
         {
             var mockTransportationManager = new Mock<TransportationManager>();
             var transportation = new Transportation
@@ -20,25 +20,31 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
                 TransportationId = 1
             };
             var mockScreen = new Mock<IScreen>();
-            mockTransportationManager.Setup(wm => wm.RemoveTransportation(1))
+            mockTransportationManager.Setup(tm => tm.RemoveTransportation(1))
                 .Returns(new Response<bool>
                 {
                     Data = true
                 });
-            var didRemovedEvent = false;
+
+            var eventRemoved = false;
+
             var viewModel = new TransportationViewModel(transportation, mockScreen.Object)
             {
                 TransportationManager = mockTransportationManager.Object
             };
-            viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
+            viewModel.RemoveEvent += (_, _) => eventRemoved = true;
+
             var testScheduler = new TestScheduler();
+
             viewModel.RemoveCommand.Execute().Subscribe();
+
             testScheduler.Start();
-            Assert.IsTrue(didRemovedEvent);
+
+            Assert.IsTrue(eventRemoved);
         }
 
         [TestMethod]
-        public void Remove_Failure()
+        public void RemoveCommand_Failure()
         {
             var mockTransportationManager = new Mock<TransportationManager>();
             var transportation = new Transportation
@@ -51,16 +57,20 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
                 {
                     Data = false
                 });
-            var didRemovedEvent = false;
+            var eventRemoved = false;
             var viewModel = new TransportationViewModel(transportation, mockScreen.Object)
             {
                 TransportationManager = mockTransportationManager.Object
             };
-            viewModel.RemoveEvent += (sender, e) => didRemovedEvent = true;
+            viewModel.RemoveEvent += (_, _) => eventRemoved = true;
+
             var testScheduler = new TestScheduler();
+
             viewModel.RemoveCommand.Execute().Subscribe();
+
             testScheduler.Start();
-            Assert.IsFalse(didRemovedEvent);
+
+            Assert.IsFalse(eventRemoved);
         }
     }
 }

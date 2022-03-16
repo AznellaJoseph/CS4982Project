@@ -13,8 +13,6 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class WaypointViewModel : ReactiveViewModelBase, IEventViewModel
     {
-        private readonly IScreen _screen;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="WaypointViewModel" /> class.
         /// </summary>
@@ -22,7 +20,7 @@ namespace CapstoneDesktop.ViewModels
         /// <param name="screen">The screen.</param>
         public WaypointViewModel(Waypoint waypoint, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
         {
-            _screen = screen;
+            HostScreen = screen;
             Waypoint = waypoint;
             RemoveCommand = ReactiveCommand.Create(removeWaypoint);
         }

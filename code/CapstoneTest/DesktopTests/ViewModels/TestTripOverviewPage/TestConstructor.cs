@@ -11,20 +11,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
     public class TestConstructor
     {
         [TestMethod]
-        public void Constructor_NoParameters_PropertyCreations()
-        {
-            var mockTrip = new Mock<Trip>();
-            var mockEventManager = new Mock<EventManager>();
-            var mockScreen = new Mock<IScreen>();
-            TripOverviewPageViewModel testViewModel =
-                new(mockTrip.Object, mockEventManager.Object, mockScreen.Object);
-
-            Assert.IsNotNull(testViewModel.LogoutCommand);
-            Assert.IsNotNull(testViewModel.BackCommand);
-        }
-
-        [TestMethod]
-        public void Constructor_OneParameter_PropertyCreations()
+        public void Constructor_PropertyCreations()
         {
             Trip testTrip = new()
             {
@@ -34,16 +21,17 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
                 EndDate = new DateTime(3033, 3, 3)
             };
             var mockScreen = new Mock<IScreen>();
-            TripOverviewPageViewModel testViewModel = new(testTrip, mockScreen.Object);
-
-            Assert.IsNotNull(testViewModel.LogoutCommand);
-            Assert.IsNotNull(testViewModel.CreateWaypointCommand);
-            Assert.IsNotNull(testViewModel.CreateTransportationCommand);
-            Assert.IsNotNull(testViewModel.BackCommand);
-            Assert.AreEqual(mockScreen.Object, testViewModel.HostScreen);
-            Assert.AreEqual(testTrip, testViewModel.Trip);
-            Assert.IsNotNull(testViewModel.UrlPathSegment);
-            Assert.IsNull(testViewModel.SelectedDate);
+            TripOverviewPageViewModel tripOverviewPageViewModel = new(testTrip, mockScreen.Object);
+            Assert.AreEqual(mockScreen.Object, tripOverviewPageViewModel.HostScreen);
+            Assert.AreEqual(testTrip, tripOverviewPageViewModel.Trip);
+            Assert.IsNotNull(tripOverviewPageViewModel.LogoutCommand);
+            Assert.IsNotNull(tripOverviewPageViewModel.CreateWaypointCommand);
+            Assert.IsNotNull(tripOverviewPageViewModel.CreateTransportationCommand);
+            Assert.IsNotNull(tripOverviewPageViewModel.BackCommand);
+            Assert.IsNotNull(tripOverviewPageViewModel.LodgingManager);
+            Assert.IsNotNull(tripOverviewPageViewModel.EventManager);
+            Assert.IsNotNull(tripOverviewPageViewModel.UrlPathSegment);
+            Assert.IsNull(tripOverviewPageViewModel.SelectedDate);
         }
     }
 }

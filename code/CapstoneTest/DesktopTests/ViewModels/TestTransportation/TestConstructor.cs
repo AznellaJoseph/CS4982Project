@@ -10,13 +10,18 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
     public class TestConstructor
     {
         [TestMethod]
-        public void TestConstructor_Success()
+        public void Constructor_PropertyCreations()
         {
             var mockTransportation = new Mock<Transportation>();
             var mockScreen = new Mock<IScreen>();
-            var result = new TransportationViewModel(mockTransportation.Object, mockScreen.Object);
-            Assert.AreEqual(mockTransportation.Object, result.Transportation);
-            Assert.AreEqual(mockTransportation.Object, result.Event);
+
+            var transportationViewModel = new TransportationViewModel(mockTransportation.Object, mockScreen.Object);
+
+            Assert.AreEqual(mockTransportation.Object, transportationViewModel.Transportation);
+            Assert.AreEqual(mockTransportation.Object, transportationViewModel.Event);
+            Assert.IsNotNull(transportationViewModel.HostScreen);
+            Assert.IsNotNull(transportationViewModel.TransportationManager);
+            Assert.IsNotNull(transportationViewModel.RemoveCommand);
         }
     }
 }

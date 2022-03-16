@@ -49,6 +49,14 @@ namespace CapstoneBackend.Model
                     ErrorMessage = e.Message
                 };
             }
+            catch (Exception)
+            {
+                return new Response<User>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
 
             if (user is null)
                 return new Response<User>
@@ -71,10 +79,10 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>Registers the user with the given credentials.</summary>
-        /// <param name="username">The username input.</param>
-        /// <param name="password">The password input.</param>
-        /// <param name="fname">The fname input.</param>
-        /// <param name="lname">The lname input.</param>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="fname">The first name.</param>
+        /// <param name="lname">The last name.</param>
         /// <returns>A response of the new user's id or a non-success status code and error message.</returns>
         public virtual Response<int> RegisterUser(string username, string password, string fname, string lname)
         {

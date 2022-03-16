@@ -8,10 +8,6 @@ namespace CapstoneBackend.Model
     /// <seealso cref="CapstoneBackend.Model.IEvent" />
     public class Transportation : IEvent
     {
-        public string EventType { get; } = nameof(Transportation);
-
-        public int Id => TransportationId;
-
         /// <summary>
         ///     The transportation id.
         /// </summary>
@@ -21,6 +17,16 @@ namespace CapstoneBackend.Model
         ///     The method.
         /// </summary>
         public string Method { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     The event type.
+        /// </summary>
+        public string EventType { get; } = nameof(Transportation);
+
+        /// <summary>
+        ///     The id.
+        /// </summary>
+        public int Id => TransportationId;
 
         /// <summary>
         ///     The trip id.

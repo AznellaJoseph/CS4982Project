@@ -10,13 +10,17 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestWaypoint
     public class TestConstructor
     {
         [TestMethod]
-        public void TestConstructor_Success()
+        public void TestConstructor_PropertyCreations()
         {
             var mockWaypoint = new Mock<Waypoint>();
             var mockScreen = new Mock<IScreen>();
-            var result = new WaypointViewModel(mockWaypoint.Object, mockScreen.Object);
-            Assert.AreEqual(mockWaypoint.Object, result.Waypoint);
-            Assert.AreEqual(mockWaypoint.Object, result.Event);
+
+            var waypointViewModel = new WaypointViewModel(mockWaypoint.Object, mockScreen.Object);
+            Assert.AreEqual(mockWaypoint.Object, waypointViewModel.Waypoint);
+            Assert.AreEqual(mockWaypoint.Object, waypointViewModel.Event);
+            Assert.IsNotNull(waypointViewModel.WaypointManager);
+            Assert.IsNotNull(waypointViewModel.RemoveCommand);
+            Assert.IsNotNull(waypointViewModel.HostScreen);
         }
     }
 }

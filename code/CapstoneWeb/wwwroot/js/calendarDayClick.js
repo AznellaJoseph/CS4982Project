@@ -66,6 +66,7 @@ function _onRemoveClick() {
 function _createEvent(event, _index) {
     let id = event.id;
     let type = event.eventType;
+    const tripId = parseInt($("#tripId").attr("value"));
     
     $("#events-list").append(
         `
@@ -79,6 +80,7 @@ function _createEvent(event, _index) {
                 <div class="icon-section removeButton" data-id="${id}" data-event-type="${type}">
                     Remove
                 </div>
+                <a href="/trip/${tripId}/?handler=View${type}&id=${id}">View</a>
             </div>
         `);
 }

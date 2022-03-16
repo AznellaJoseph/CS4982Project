@@ -14,7 +14,6 @@ namespace CapstoneDesktop.ViewModels
     public class CreateWaypointPageViewModel : ReactiveViewModelBase
     {
         private readonly Trip _trip;
-        private readonly WaypointManager _waypointManager;
 
         private string _error = string.Empty;
 
@@ -22,13 +21,11 @@ namespace CapstoneDesktop.ViewModels
         ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">the trip that the waypoint will be created for.</param>
-        /// <param name="manager">The manager.</param>
         /// <param name="screen">The host screen</param>
-        public CreateWaypointPageViewModel(Trip trip, WaypointManager manager, IScreen screen) : base(screen,
+        public CreateWaypointPageViewModel(Trip trip, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
             _trip = trip;
-            _waypointManager = manager;
             HostScreen = screen;
             CreateWaypointCommand = ReactiveCommand.CreateFromObservable(createWaypoint);
             CancelCreateWaypointCommand =
@@ -36,13 +33,9 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
+        ///     The waypoint manager.
         /// </summary>
-        /// <param name="trip">The trip.</param>
-        /// <param name="screen">The screen.</param>
-        public CreateWaypointPageViewModel(Trip trip, IScreen screen) : this(trip, new WaypointManager(), screen)
-        {
-        }
+        public WaypointManager WaypointManager { get; set; } = new();
 
         /// <summary>
         ///     The validation manager.
@@ -102,7 +95,7 @@ namespace CapstoneDesktop.ViewModels
         {
             if (string.IsNullOrEmpty(Location))
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
+                ErrorMessage = Ui.ErrorMessages.EmptyLocation;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
@@ -132,7 +125,7 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var resultResponse = _waypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
+            var resultResponse = WaypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
                 endDate, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
                 return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));

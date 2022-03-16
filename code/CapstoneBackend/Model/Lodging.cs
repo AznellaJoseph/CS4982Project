@@ -2,10 +2,13 @@ using System;
 
 namespace CapstoneBackend.Model
 {
+    /// <summary>
+    ///     A model class for the Lodging object
+    /// </summary>
     public class Lodging
     {
         /// <summary>
-        ///     The location id.
+        ///     The lodging id.
         /// </summary>
         public int LodgingId { get; set; }
 
