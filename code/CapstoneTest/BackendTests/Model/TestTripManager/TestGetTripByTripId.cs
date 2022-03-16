@@ -11,7 +11,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
     public class TestGetTripByTripId
     {
         [TestMethod]
-        public void GetTrip_Success()
+        public void GetTripByTripId_Success()
         {
             var mockDal = new Mock<TripDal>();
 
@@ -42,7 +42,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
         }
 
         [TestMethod]
-        public void GetTrip_NoTripFound_Failure()
+        public void GetTripByTripId_TripDoesNotExist_ReturnsErrorMessage()
         {
             var mockDal = new Mock<TripDal>();
             Trip? missingTrip = null;
@@ -57,7 +57,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
         }
 
         [TestMethod]
-        public void GetTrip_MySqlException_Failure()
+        public void GetTripByTripId_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<TripDal>();
             var builder = new MySqlExceptionBuilder();
@@ -72,7 +72,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
         }
 
         [TestMethod]
-        public void GetTrip_Exception_Failure()
+        public void GetTripByTripId_ServerException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<TripDal>();
             mockDal.Setup(dal => dal.GetTripByTripId(1)).Throws(new Exception("test"));

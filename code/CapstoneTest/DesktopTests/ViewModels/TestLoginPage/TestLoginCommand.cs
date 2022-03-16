@@ -13,7 +13,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
     public class TestLoginCommand
     {
         [TestMethod]
-        public void Login_ValidCredentials_ReturnsNoError()
+        public void LoginCommand_Success()
         {
             var user = new User
             {
@@ -27,7 +27,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
                 .Returns(new Response<User> {Data = user});
-            LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+            LoginPageViewModel loginPageViewModel = new(mockScreen.Object) {UserManager = mockUserManager.Object};
             var testScheduler = new TestScheduler();
 
             loginPageViewModel.Username = "admin";
@@ -39,13 +39,13 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
         }
 
         [TestMethod]
-        public void Login_IncorrectUsername_ReturnsErrorMessage()
+        public void LoginCommand_IncorrectUsername_ReturnsErrorMessage()
         {
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
                 .Returns(new Response<User> {ErrorMessage = Ui.ErrorMessages.IncorrectUsername});
-            LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+            LoginPageViewModel loginPageViewModel = new(mockScreen.Object) {UserManager = mockUserManager.Object};
             var testScheduler = new TestScheduler();
 
             loginPageViewModel.Username = "admin";
@@ -59,7 +59,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
         }
 
         [TestMethod]
-        public void Login_InvalidUsername_ReturnsErrorMessage()
+        public void LoginCommand_InvalidUsername_ReturnsErrorMessage()
         {
             var mockScreen = new Mock<IScreen>();
 
@@ -76,7 +76,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
         }
 
         [TestMethod]
-        public void Login_InvalidPassword_ReturnsErrorMessage()
+        public void LoginCommand_InvalidPassword_ReturnsErrorMessage()
         {
             var mockScreen = new Mock<IScreen>();
 
@@ -93,13 +93,14 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
         }
 
         [TestMethod]
-        public void Login_NullDataNoError_ReturnsUnknownError()
+        public void LoginCommand_NullDataUnknownError_ReturnsUnknownError()
         {
             var mockUserManager = new Mock<UserManager>();
             var mockScreen = new Mock<IScreen>();
             mockUserManager.Setup(um => um.GetUserByCredentials("admin", "admin"))
                 .Returns(new Response<User> {Data = null});
-            LoginPageViewModel loginPageViewModel = new(mockUserManager.Object, mockScreen.Object);
+
+            LoginPageViewModel loginPageViewModel = new(mockScreen.Object) {UserManager = mockUserManager.Object};
             var testScheduler = new TestScheduler();
 
             loginPageViewModel.Username = "admin";

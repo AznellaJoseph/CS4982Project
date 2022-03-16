@@ -11,7 +11,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
     public class TestCreateLodging
     {
         [TestMethod]
-        public void Create_InvalidTimes_ReturnsErrorMessage()
+        public void CreateLodging_InvalidDates_ReturnsErrorMessage()
         {
             var mockLodgingDal = new Mock<LodgingDal>();
             mockLodgingDal.Setup(db =>
@@ -27,7 +27,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
         }
 
         [TestMethod]
-        public void CreateLodging_ServerMySqlException_Failure()
+        public void CreateLodging_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<LodgingDal>();
             var builder = new MySqlExceptionBuilder();
@@ -35,28 +35,34 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
             mockDal.Setup(dal => dal.CreateLodging(1, "Some Hotel", currentTime, currentTime.AddDays(2), null))
                 .Throws(builder
                     .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
-            var lodgingManager = new LodgingManager(mockDal.Object);
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
             var result = lodgingManager.CreateLodging(1, "Some Hotel", currentTime, currentTime.AddDays(2), null);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
 
         [TestMethod]
-        public void CreateLodging_ServerException_Failure()
+        public void CreateLodging_ServerException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<LodgingDal>();
             var currentTime = DateTime.Now;
             mockDal.Setup(dal => dal.CreateLodging(1, "Some Hotel", currentTime, currentTime, null))
                 .Throws(new Exception());
-            var lodgingManager = new LodgingManager(mockDal.Object);
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
             var result = lodgingManager.CreateLodging(1, "Some Hotel", currentTime, currentTime, null);
+            
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
 
 
         [TestMethod]
-        public void Create_ValidParameters_ReturnsLodgingNumber()
+        public void CreateLodging_Success()
         {
             var mockLodgingDal = new Mock<LodgingDal>();
             mockLodgingDal.Setup(db =>

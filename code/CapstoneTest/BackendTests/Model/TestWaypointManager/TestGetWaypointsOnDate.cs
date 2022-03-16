@@ -12,7 +12,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
     public class TestGetWaypointsOnDate
     {
         [TestMethod]
-        public void Call_EmptySet_ReturnsEmptyList()
+        public void GetWaypointsOnDate_EmptySet_ReturnsEmptyList()
         {
             var currentTime = DateTime.Now;
 
@@ -30,7 +30,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         }
 
         [TestMethod]
-        public void Call_YieldsSetWithOneValue_ReturnsExpectedList()
+        public void GetWaypointsOnDate_YieldsSetWithOneValue_ReturnsExpectedList()
         {
             var currentTime = DateTime.Now;
             IList<Waypoint> fakeWaypoints = new List<Waypoint>
@@ -69,7 +69,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 
 
         [TestMethod]
-        public void Call_YieldsSetWithMultipleValues_ReturnsExpectedList()
+        public void GetWaypointsOnDate_YieldsSetWithMultipleValues_ReturnsExpectedList()
         {
             var currentTime = DateTime.Now;
             IList<Waypoint> fakeWaypoints = new List<Waypoint>
@@ -109,7 +109,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         }
 
         [TestMethod]
-        public void Call_ServerMySqlException_Failure()
+        public void GetWaypointsOnDate_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<WaypointDal>();
             var builder = new MySqlExceptionBuilder();
@@ -124,7 +124,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         }
 
         [TestMethod]
-        public void Call_ServerException_Failure()
+        public void GetWaypointsOnDate_ServerException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<WaypointDal>();
             var currentTime = DateTime.Now;

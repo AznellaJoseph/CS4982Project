@@ -12,7 +12,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
     public class TestGetWaypointsInTrip
     {
         [TestMethod]
-        public void Call_EmptySet_ReturnsEmptyList()
+        public void GetWaypointsInTrip_EmptySet_ReturnsEmptyList()
         {
             IList<Waypoint> fakeWaypoints = new List<Waypoint>();
 
@@ -28,7 +28,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         }
 
         [TestMethod]
-        public void Call_YieldsSetWithOneValue_ReturnsExpectedList()
+        public void GetWaypointsInTrip_YieldsSetWithOneValue_ReturnsExpectedList()
         {
             IList<Waypoint> fakeWaypoints = new List<Waypoint>
             {
@@ -56,7 +56,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         }
 
         [TestMethod]
-        public void Call_YieldsSetWithMultipleValues_ReturnsExpectedList()
+        public void GetWaypointsInTrip_YieldsSetWithMultipleValues_ReturnsExpectedList()
         {
             IList<Waypoint> fakeWaypoints = new List<Waypoint>
             {
@@ -95,20 +95,23 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 
 
         [TestMethod]
-        public void Call_ServerMySqlException_Failure()
+        public void GetWaypointsInTrip_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<WaypointDal>();
             var builder = new MySqlExceptionBuilder();
             mockDal.Setup(dal => dal.GetWaypointsByTripId(1))
                 .Throws(builder.WithError((uint) Ui.StatusCode.InternalServerError, "test").Build());
+
             var waypointManager = new WaypointManager(mockDal.Object);
+
             var result = waypointManager.GetWaypointsByTripId(1);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
 
         [TestMethod]
-        public void Call_ServerException_Failure()
+        public void GetWaypointsInTrip_ServerException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<WaypointDal>();
             var currentTime = DateTime.Now;

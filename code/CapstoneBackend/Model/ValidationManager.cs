@@ -35,7 +35,7 @@ namespace CapstoneBackend.Model
                 return new Response<bool>
                 {
                     ErrorMessage = Ui.ErrorMessages.TripNotFound,
-                    StatusCode = (uint)Ui.StatusCode.DataNotFound
+                    StatusCode = (uint) Ui.StatusCode.DataNotFound
                 };
 
             if (startDate.CompareTo(currentTrip.StartDate) < 0)
@@ -43,7 +43,7 @@ namespace CapstoneBackend.Model
                 {
                     ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate +
                                    currentTrip.StartDate.ToShortDateString(),
-                    StatusCode = (uint)Ui.StatusCode.BadRequest
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
                 };
 
             if (startDate.CompareTo(currentTrip.EndDate) > 0)
@@ -51,7 +51,7 @@ namespace CapstoneBackend.Model
                 {
                     ErrorMessage = Ui.ErrorMessages.EventStartDateAfterTripEndDate +
                                    currentTrip.EndDate.ToShortDateString(),
-                    StatusCode = (uint)Ui.StatusCode.BadRequest
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
                 };
 
             if (endDate.CompareTo(currentTrip.StartDate) < 0)
@@ -59,7 +59,7 @@ namespace CapstoneBackend.Model
                 {
                     ErrorMessage = Ui.ErrorMessages.EventEndDateBeforeTripStartDate +
                                    currentTrip.StartDate.ToShortDateString(),
-                    StatusCode = (uint)Ui.StatusCode.BadRequest
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
                 };
 
             if (endDate.CompareTo(currentTrip.EndDate) > 0)
@@ -67,7 +67,7 @@ namespace CapstoneBackend.Model
                 {
                     ErrorMessage = Ui.ErrorMessages.EventEndDateAfterTripEndDate +
                                    currentTrip.EndDate.ToShortDateString(),
-                    StatusCode = (uint)Ui.StatusCode.BadRequest
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
                 };
 
             return new Response<bool>
@@ -97,27 +97,22 @@ namespace CapstoneBackend.Model
                 };
 
             var clashingTrip = (from tripDate in tripDates
-                                from userTrip in userTrips.Data
-                                where tripDate >= userTrip.StartDate && tripDate <= userTrip.EndDate
-                                select userTrip).FirstOrDefault();
+                from userTrip in userTrips.Data
+                where tripDate >= userTrip.StartDate && tripDate <= userTrip.EndDate
+                select userTrip).FirstOrDefault();
 
             if (clashingTrip is null)
-            {
                 return new Response<Trip>
                 {
                     Data = clashingTrip
                 };
-            }
 
             return new Response<Trip>
             {
                 ErrorMessage =
                     $"{Ui.ErrorMessages.ClashingTripDates} {clashingTrip.StartDate.ToShortDateString()} to {clashingTrip.EndDate.ToShortDateString()}.",
-                StatusCode = (uint)Ui.StatusCode.BadRequest
+                StatusCode = (uint) Ui.StatusCode.BadRequest
             };
-
-
-
         }
 
         /// <summary>
@@ -134,27 +129,25 @@ namespace CapstoneBackend.Model
                 .Select(day => startDate.AddDays(day)).ToList();
 
             var clashingEvent = (from eventDate in eventDates
-                                 select EventManager.GetEventsOnDate(tripId, eventDate).Data
+                select EventManager.GetEventsOnDate(tripId, eventDate).Data
                 into eventsOnDate
-                                 where eventsOnDate is not null
-                                 from eventOnDate in eventsOnDate
-                                 where startDate >= eventOnDate.StartDate && startDate <= eventOnDate.EndDate ||
-                                       endDate >= eventOnDate.StartDate && endDate <= eventOnDate.EndDate
-                                 select eventOnDate).FirstOrDefault();
+                where eventsOnDate is not null
+                from eventOnDate in eventsOnDate
+                where startDate >= eventOnDate.StartDate && startDate <= eventOnDate.EndDate ||
+                      endDate >= eventOnDate.StartDate && endDate <= eventOnDate.EndDate
+                select eventOnDate).FirstOrDefault();
 
             if (clashingEvent is null)
-            {
                 return new Response<IEvent>
                 {
                     Data = clashingEvent
                 };
-            }
 
             return new Response<IEvent>
             {
                 ErrorMessage =
                     $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.",
-                StatusCode = (uint)Ui.StatusCode.BadRequest
+                StatusCode = (uint) Ui.StatusCode.BadRequest
             };
         }
     }

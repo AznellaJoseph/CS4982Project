@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
 
 namespace CapstoneBackend.Model
 {
@@ -48,10 +49,29 @@ namespace CapstoneBackend.Model
                     StatusCode = (uint) Ui.StatusCode.BadRequest,
                     ErrorMessage = Ui.ErrorMessages.InvalidStartDate
                 };
-            return new Response<int>
+            try
             {
-                Data = _dal.CreateTransportation(tripId, method, startTime, endTime, notes)
-            };
+                return new Response<int>
+                {
+                    Data = _dal.CreateTransportation(tripId, method, startTime, endTime, notes)
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response<int>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<int>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
         }
 
         /// <summary>
@@ -62,12 +82,31 @@ namespace CapstoneBackend.Model
         /// <returns> A response of the transportation on that date </returns>
         public virtual Response<IList<Transportation>> GetTransportationOnDate(int tripId, DateTime selectedDate)
         {
-            var transportationOnDate = _dal.GetTransportationOnDate(tripId, selectedDate);
-
-            return new Response<IList<Transportation>>
+            try
             {
-                Data = transportationOnDate
-            };
+                var transportationOnDate = _dal.GetTransportationOnDate(tripId, selectedDate);
+
+                return new Response<IList<Transportation>>
+                {
+                    Data = transportationOnDate
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response<IList<Transportation>>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<IList<Transportation>>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
         }
 
         /// <summary>
@@ -77,19 +116,76 @@ namespace CapstoneBackend.Model
         /// <returns> A response specifying the transportation was removed or a non-success status code and error message </returns>
         public virtual Response<bool> RemoveTransportation(int transportationId)
         {
-            var removed = _dal.RemoveTransportation(transportationId);
+            try
+            {
+                var removed = _dal.RemoveTransportation(transportationId);
 
-            if (!removed)
+                if (!removed)
+                    return new Response<bool>
+                    {
+                        ErrorMessage = Ui.ErrorMessages.TransportationNotFound,
+                        StatusCode = (uint) Ui.StatusCode.BadRequest
+                    };
+
                 return new Response<bool>
                 {
-                    ErrorMessage = Ui.ErrorMessages.TransportationNotFound,
-                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                    Data = removed
                 };
-
-            return new Response<bool>
+            }
+            catch (MySqlException e)
             {
-                Data = removed
-            };
+                return new Response<bool>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<bool>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// <summary>
+        ///     Gets the transportation by identifier.
+        /// </summary>
+        /// <param name="transportationId">The transportation identifier.</param>
+        /// <returns>A response of the transportation with the given id or a non-success code and error message</returns>
+        public virtual Response<Transportation> GetTransportationById(int transportationId)
+        {
+            try
+            {
+                var transportation = _dal.GetTransportationById(transportationId);
+
+                if (transportation is null)
+                    return new Response<Transportation>
+                    {
+                        ErrorMessage = Ui.ErrorMessages.TransportationNotFound,
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound
+                    };
+
+                return new Response<Transportation> {Data = transportation};
+            }
+            catch (MySqlException e)
+            {
+                return new Response<Transportation>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<Transportation>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
         }
     }
 }

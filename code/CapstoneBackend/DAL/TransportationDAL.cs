@@ -117,5 +117,43 @@ namespace CapstoneBackend.DAL
 
             return cmd.ExecuteNonQuery() == 1;
         }
+
+        /// <summary>
+        ///     Gets the transportation by its id.
+        /// </summary>
+        /// <param name="transportationId">The transportation identifier.</param>
+        /// <returns>The transportation with the given id, null if no matching transportation found</returns>
+        public virtual Transportation? GetTransportationById(int transportationId)
+        {
+            _connection.Open();
+            const string procedure = "uspGetTransportationById";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@transportationId", MySqlDbType.Int32).Value = transportationId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var tripIdOrdinal = reader.GetOrdinal("tripId");
+            var startDateOrdinal = reader.GetOrdinal("startDate");
+            var endDateOrdinal = reader.GetOrdinal("endDate");
+            var methodOrdinal = reader.GetOrdinal("method");
+            var notesOrdinal = reader.GetOrdinal("notes");
+
+            Transportation? transportation = null;
+
+            if (reader.Read())
+                transportation = new Transportation
+                {
+                    TripId = reader.GetInt32(tripIdOrdinal),
+                    TransportationId = transportationId,
+                    Method = reader.GetString(methodOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
+                };
+
+            _connection.Close();
+            return transportation;
+        }
     }
 }

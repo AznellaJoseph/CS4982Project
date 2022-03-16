@@ -38,7 +38,7 @@ namespace CapstoneBackend.Model
         /// <param name="startTime">The start time.</param>
         /// <param name="endTime">The end time.</param>
         /// <returns>
-        ///     A response of if the waypoint was created in the database or a non-success status code and error message
+        ///     A response of if the id of the new waypoint or a non-success status code and error message
         /// </returns>
         public virtual Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime,
             string? notes)
@@ -179,6 +179,44 @@ namespace CapstoneBackend.Model
             catch (Exception)
             {
                 return new Response<bool>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// <summary>
+        ///     Gets the transportation by identifier.
+        /// </summary>
+        /// <param name="waypointId">The transportation identifier.</param>
+        /// <returns>A response of the waypoint with the given id or a non-success code and error message</returns>
+        public virtual Response<Waypoint> GetWaypointById(int waypointId)
+        {
+            try
+            {
+                var waypoint = _dal.GetWaypointById(waypointId);
+
+                if (waypoint is null)
+                    return new Response<Waypoint>
+                    {
+                        ErrorMessage = Ui.ErrorMessages.WaypointNotFound,
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound
+                    };
+
+                return new Response<Waypoint> {Data = waypoint};
+            }
+            catch (MySqlException e)
+            {
+                return new Response<Waypoint>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<Waypoint>
                 {
                     StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError

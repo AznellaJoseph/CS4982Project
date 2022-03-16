@@ -14,18 +14,15 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
     public class CreateAccountPageViewModel : ReactiveViewModelBase
     {
-        private readonly UserManager _userManager;
         private string _error = string.Empty;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateAccountPageViewModel" /> class.
         /// </summary>
-        /// <param name="manager">The manager.</param>
         /// <param name="screen">The screen.</param>
-        public CreateAccountPageViewModel(UserManager manager, IScreen screen) : base(screen,
+        public CreateAccountPageViewModel(IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
-            _userManager = manager;
             HostScreen = screen;
             CancelCreateAccountCommand =
                 ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
@@ -33,12 +30,9 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CreateAccountPageViewModel" /> class.
+        ///     The user manager.
         /// </summary>
-        /// <param name="screen">The screen.</param>
-        public CreateAccountPageViewModel(IScreen screen) : this(new UserManager(), screen)
-        {
-        }
+        public UserManager UserManager { get; set; } = new();
 
         /// <summary>
         ///     The cancel create account command
@@ -118,13 +112,13 @@ namespace CapstoneDesktop.ViewModels
 
             if (Password == ConfirmedPassword)
             {
-                var response = _userManager.RegisterUser(Username, Password,
+                var response = UserManager.RegisterUser(Username, Password,
                     FirstName, LastName);
-                if (response.StatusCode == (uint) Ui.StatusCode.Success)
+                if (string.IsNullOrEmpty(response.ErrorMessage))
                     return HostScreen.Router.Navigate.Execute(
-                        new LandingPageViewModel(new User {UserId = response.Data}, HostScreen));
+                        new LandingPageViewModel(new User {UserId = response.Data}, HostScreen, new TripManager()));
 
-                ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
+                ErrorMessage = response.ErrorMessage;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

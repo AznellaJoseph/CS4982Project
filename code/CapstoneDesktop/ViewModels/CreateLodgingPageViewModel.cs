@@ -17,6 +17,7 @@ namespace CapstoneDesktop.ViewModels
 
         private string _error = string.Empty;
 
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateLodgingPageViewModel" /> class.
         /// </summary>
@@ -30,6 +31,11 @@ namespace CapstoneDesktop.ViewModels
             CancelCreateLodgingCommand =
                 ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
         }
+
+        /// <summary>
+        ///     The lodging manager.
+        /// </summary>
+        public LodgingManager LodgingManager { get; set; } = new();
 
         /// <summary>
         ///     The create lodging command.
@@ -89,7 +95,7 @@ namespace CapstoneDesktop.ViewModels
         {
             if (string.IsNullOrEmpty(Location))
             {
-                ErrorMessage = Ui.ErrorMessages.EmptyWaypointLocation;
+                ErrorMessage = Ui.ErrorMessages.EmptyLocation;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
@@ -111,6 +117,11 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
+            var resultResponse = LodgingManager.CreateLodging(_trip.TripId, Location, startDate, endDate, Notes);
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
+
+            ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
         }
     }

@@ -14,9 +14,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTrip
         {
             var mockTrip = new Mock<Trip>();
             var mockScreen = new Mock<IScreen>();
-            var result = new TripViewModel(mockTrip.Object, mockScreen.Object);
-            Assert.AreEqual(mockTrip.Object, result.Trip);
-            Assert.IsNotNull(result.TripClickCommand);
+
+            var tripViewModel = new TripViewModel(mockTrip.Object, mockScreen.Object);
+
+            Assert.AreEqual(mockTrip.Object, tripViewModel.Trip);
+            Assert.IsNotNull(tripViewModel.TripClickCommand);
         }
     }
 }

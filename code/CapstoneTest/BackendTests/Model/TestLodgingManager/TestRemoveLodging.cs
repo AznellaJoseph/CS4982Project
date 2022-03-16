@@ -11,7 +11,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
     public class TestRemoveLodging
     {
         [TestMethod]
-        public void RemoveLodging_LodgingNotExists_ReturnsErrorMessage()
+        public void RemoveLodging_LodgingDoesNotExist_ReturnsErrorMessage()
         {
             var mockLodgingDal = new Mock<LodgingDal>();
             mockLodgingDal.Setup(db => db.CreateLodging(1, "vacation", DateTime.Today, DateTime.Today, string.Empty))
@@ -43,27 +43,33 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
         }
 
         [TestMethod]
-        public void RemoveLodging_ServerMySqlException_Failure()
+        public void RemoveLodging_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<LodgingDal>();
             var builder = new MySqlExceptionBuilder();
             mockDal.Setup(dal => dal.RemoveLodging(1))
                 .Throws(builder
                     .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
-            var lodgingManager = new LodgingManager(mockDal.Object);
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
             var result = lodgingManager.RemoveLodging(1);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }
 
         [TestMethod]
-        public void RemoveLodging_ServerException_Failure()
+        public void RemoveLodging_ServerException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<LodgingDal>();
             mockDal.Setup(dal => dal.RemoveLodging(1))
                 .Throws(new Exception());
-            var lodgingManager = new LodgingManager(mockDal.Object);
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
             var result = lodgingManager.RemoveLodging(1);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }

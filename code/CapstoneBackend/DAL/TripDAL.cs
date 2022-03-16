@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 namespace CapstoneBackend.DAL
 {
     /// <summary>
-    ///     The DAL for accessing trip information
+    ///     Data Access Layer (DAL) for accessing Trip information from the database
     /// </summary>
     public class TripDal
     {
@@ -38,7 +38,9 @@ namespace CapstoneBackend.DAL
             const string query = "uspGetTripByTripId";
             using MySqlCommand cmd = new(query, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
+
             cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
+
             using var reader = cmd.ExecuteReaderAsync().Result;
             var userIdOrdinal = reader.GetOrdinal("userId");
             var nameOrdinal = reader.GetOrdinal("name");
@@ -133,7 +135,6 @@ namespace CapstoneBackend.DAL
                 _connection.Close();
                 throw;
             }
-            
         }
     }
 }

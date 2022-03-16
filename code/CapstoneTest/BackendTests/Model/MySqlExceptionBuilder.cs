@@ -16,7 +16,7 @@ namespace CapstoneTest.BackendTests.Model
         /// <summary>
         ///     Builds this instance.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The built MySqlException </returns>
         public MySqlException Build()
         {
             if (_errorMessage is null && _code is null)
@@ -31,11 +31,11 @@ namespace CapstoneTest.BackendTests.Model
         }
 
         /// <summary>
-        ///     Withes the error.
+        ///     Adds an error to the build exception.
         /// </summary>
         /// <param name="errorCode">The error code.</param>
         /// <param name="message">The message.</param>
-        /// <returns></returns>
+        /// <returns>The builder instance</returns>
         public MySqlExceptionBuilder WithError(uint errorCode, string message)
         {
             _errorMessage = message;

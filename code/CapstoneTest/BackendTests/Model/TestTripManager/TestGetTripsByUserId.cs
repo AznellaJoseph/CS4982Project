@@ -12,7 +12,7 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
     public class TestGetTripsByUserId
     {
         [TestMethod]
-        public void GetTrips_Success()
+        public void GetTripsByUserId_Success()
         {
             var mockDal = new Mock<TripDal>();
             var startDate = DateTime.Now;
@@ -43,25 +43,31 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
         }
 
         [TestMethod]
-        public void GetTrips_MySqlException_Failure()
+        public void GetTripsByUserId_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<TripDal>();
             var builder = new MySqlExceptionBuilder();
             mockDal.Setup(dal => dal.GetTripsByUserId(1))
                 .Throws(builder.WithError((uint) Ui.StatusCode.InternalServerError, "test").Build());
+
             var tripManager = new TripManager(mockDal.Object);
+
             var result = tripManager.GetTripsByUser(1);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
 
         [TestMethod]
-        public void GetTrips_Exception_Failure()
+        public void GetTripsByUserId_ServerException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<TripDal>();
             mockDal.Setup(dal => dal.GetTripsByUserId(1)).Throws(new Exception("test"));
+
             var tripManager = new TripManager(mockDal.Object);
+
             var result = tripManager.GetTripsByUser(1);
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual("test", result.ErrorMessage);
         }
