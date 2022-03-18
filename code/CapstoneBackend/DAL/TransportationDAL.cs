@@ -54,10 +54,17 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@endDate", MySqlDbType.DateTime).Value = endDate;
             cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = notes;
 
-            var transportationId = Convert.ToInt32(cmd.ExecuteScalar());
-
-            _connection.Close();
-            return transportationId;
+            try
+            {
+                var transportationId = Convert.ToInt32(cmd.ExecuteScalar());
+                _connection.Close();
+                return transportationId;
+            }
+            catch
+            {
+                _connection.Close();
+                throw;
+            }
         }
 
         /// <summary>
@@ -115,7 +122,18 @@ namespace CapstoneBackend.DAL
 
             cmd.Parameters.Add("@transportationId", MySqlDbType.Int32).Value = transportationId;
 
-            return cmd.ExecuteNonQuery() == 1;
+            try
+            {
+                var result = cmd.ExecuteNonQuery();
+                _connection.Close();
+                return result == 1;
+            }
+            catch
+            {
+                _connection.Close();
+                throw;
+            }
+            
         }
 
         /// <summary>
