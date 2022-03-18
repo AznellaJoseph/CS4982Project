@@ -21,7 +21,7 @@ namespace CapstoneTest.BackendTests.DAL.TestTransportationDAL
         }
 
         [TestMethod]
-        public void CallProcedure_WithInvalidWaypointId_ReturnsFalse()
+        public void CallProcedure_WithInvalidTransportationId_ReturnsFalse()
         {
             TransportationDal testDAL = new(_connection);
 
@@ -31,7 +31,7 @@ namespace CapstoneTest.BackendTests.DAL.TestTransportationDAL
         }
 
         [TestMethod]
-        public void CallProcedure_WithValidWaypointId_ReturnsTrue()
+        public void CallProcedure_WithValidTransportationId_ReturnsTrue()
         {
             TransportationDal testDAL = new(_connection);
             testTransportationId = testDAL.CreateTransportation(testTripId, "TestMethod", DateTime.Now, DateTime.Now, "Some Notes");

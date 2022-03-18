@@ -23,7 +23,7 @@ namespace CapstoneTest.BackendTests.DAL.TestTransportationDAL
         }
 
         [TestMethod]
-        public void CallProcedure_WithNoWaypointsOnDate_ReturnsEmpty()
+        public void CallProcedure_WithNoTransportationOnDate_ReturnsEmpty()
         {
             TransportationDal testDAL = new(_connection);
 
@@ -33,7 +33,7 @@ namespace CapstoneTest.BackendTests.DAL.TestTransportationDAL
         }
 
         [TestMethod]
-        public void CallProcedure_WithWaypointDate_ReturnsList()
+        public void CallProcedure_WithTransportationOnDate_ReturnsList()
         {
             TransportationDal testDAL = new(_connection);
 

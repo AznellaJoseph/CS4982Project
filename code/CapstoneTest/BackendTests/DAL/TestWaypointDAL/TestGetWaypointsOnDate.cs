@@ -33,7 +33,7 @@ namespace CapstoneTest.BackendTests.DAL.TestWaypointDAL
         }
 
         [TestMethod]
-        public void CallProcedure_WithWaypointDate_ReturnsList()
+        public void CallProcedure_WithWaypointOnDate_ReturnsList()
         {
             WaypointDal testDAL = new(_connection);
 

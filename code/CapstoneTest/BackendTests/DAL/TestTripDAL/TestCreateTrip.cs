@@ -19,7 +19,7 @@ namespace CapstoneTest.BackendTests.DAL.TestTripDAL
         }
 
         [TestMethod]
-        public void CallProcedure_WithIvalidUserId_Fails()
+        public void CallProcedure_WithInvalidUserId_Fails()
         {
             TripDal testDAL = new(_connection);
 
