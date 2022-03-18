@@ -76,7 +76,7 @@ function _createEvent(event, _index) {
         `
             <div class="event list-item" data-id=${id}>
                 <div class="info-section">
-                    ${event.startDate.slice(0, 10)} - ${event.endDate.slice(0, 10)}
+                    ${event.startDate} - ${event.endDate}
                 </div>
                 <div class="name-section">
                     ${event.displayName}
@@ -91,14 +91,13 @@ function _createEvent(event, _index) {
 
 function _createLodging(lodging, _index) {
     let id = lodging.lodgingId;
-    let type = "Lodging";
     const tripId = parseInt($("#tripId").attr("value"));
 
     $("#lodging-list").append(
         `
             <div class="event list-item" data-id=${id}>
                 <div class="info-section">
-                    ${lodging.startDate.slice(0, 10)} - ${lodging.endDate.slice(0, 10)}
+                    ${lodging.startDate} - ${lodging.endDate}
                 </div>
                 <div class="name-section">
                     ${lodging.location}
@@ -106,7 +105,7 @@ function _createLodging(lodging, _index) {
                 <div class="icon-section removeButton" data-id="${id}">
                     Remove
                 </div>
-                <a href="/trip/${tripId}/?handler=View${type}&id=${id}">View</a>
+                <a href="/trip/${tripId}/?handler=ViewLodging&id=${id}">View</a>
             </div>
         `);
 }

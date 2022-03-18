@@ -1,21 +1,25 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
 
 namespace CapstoneWeb.Pages
 {
     public class LodgingModel : PageModel
     {
+        /// <summary>
+        ///     The current lodging.
+        /// </summary>
         public Lodging CurrentLodging { get; private set; }
 
+        /// <summary>
+        ///     The lodging manager.
+        /// </summary>
         public LodgingManager LodgingManager { get; set; } = new();
 
         /// <summary>
-        /// Called when [get].
+        ///     Called when [get].
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="tripId">The trip identifier.</param>
@@ -33,6 +37,30 @@ namespace CapstoneWeb.Pages
 
             CurrentLodging = lodgingResponse.Data;
             return Page();
+        }
+
+        /// <summary>
+        ///     Called when [post logout].
+        /// </summary>
+        /// <returns>Redirect to index</returns>
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Remove("userId");
+            return RedirectToPage("Index");
+        }
+
+        /// <summary>
+        ///     Called when [post back].
+        /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>Redirect to trip</returns>
+        public IActionResult OnPostBack(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {"tripId", tripId}
+            };
+            return RedirectToPage("Trip", routeValue);
         }
     }
 }
