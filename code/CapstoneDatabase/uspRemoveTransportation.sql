@@ -6,7 +6,7 @@ CREATE PROCEDURE uspRemoveTransportation(
 	transportationId INT
 )
 BEGIN
-	DELETE FROM transportation WHERE transportationId = transportationId;
+	DELETE FROM transportation WHERE transportation.transportationId = transportationId;
 END$
 
 DELIMITER ;

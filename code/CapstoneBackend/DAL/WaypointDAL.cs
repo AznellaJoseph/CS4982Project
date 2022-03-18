@@ -54,10 +54,17 @@ namespace CapstoneBackend.DAL
             cmd.Parameters.Add("@endDate", MySqlDbType.DateTime).Value = endDate;
             cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = notes;
 
-            var waypointId = Convert.ToInt32(cmd.ExecuteScalar());
-
-            _connection.Close();
-            return waypointId;
+            try
+            {
+                var waypointId = Convert.ToInt32(cmd.ExecuteScalar());
+                _connection.Close();
+                return waypointId;
+            }
+            catch
+            {
+                _connection.Close();
+                throw;
+            }
         }
 
         /// <summary>
@@ -73,7 +80,7 @@ namespace CapstoneBackend.DAL
             cmd.CommandType = CommandType.StoredProcedure;
             IList<Waypoint> waypointsInTrip = new List<Waypoint>();
 
-            cmd.Parameters.Add("@tripId", MySqlDbType.UInt32).Value = tripId;
+            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
 
 
             using var reader = cmd.ExecuteReader();
@@ -152,9 +159,19 @@ namespace CapstoneBackend.DAL
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add("@waypointId", MySqlDbType.UInt32).Value = waypointId;
+            cmd.Parameters.Add("@waypointId", MySqlDbType.Int32).Value = waypointId;
 
-            return cmd.ExecuteNonQuery() == 1;
+            try
+            {
+                int result = cmd.ExecuteNonQuery();
+                _connection.Close();
+                return result == 1;
+            }
+            catch
+            {
+                _connection.Close();
+                throw;
+            }
         }
 
         /// <summary>

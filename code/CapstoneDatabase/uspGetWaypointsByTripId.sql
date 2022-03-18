@@ -3,10 +3,10 @@ DROP PROCEDURE IF EXISTS uspGetWaypointsByTripId;
 DELIMITER $
 
 CREATE PROCEDURE uspGetWaypointsByTripId(
-	tripId INT UNSIGNED
+	tripId INT
 )
 BEGIN
-        SELECT waypointId, location, startDate, endDate
+        SELECT waypointId, location, startDate, endDate, notes
         FROM waypoint
         WHERE waypoint.tripId = tripId;
 END$
