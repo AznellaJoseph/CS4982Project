@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Program.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using Avalonia;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
+using CapstoneDesktop.Views;
+using ReactiveUI;
+using Splat;
+
+namespace CapstoneDesktop
+{
+    internal class Program
+    {
+        [STAThread]
+        public static void Main(string[] args)
+        {
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
+        }
+
+        // Avalonia configuration, don&#39;t remove; also used by visual designer.
+        /// &lt;summary&gt;
+        ///     Builds the avalonia application.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; The app builder creating the application &lt;/returns&gt;
+        public static AppBuilder BuildAvaloniaApp()
+        {
+            Locator.CurrentMutable.Register(() =&gt; new TripOverviewPage(), typeof(IViewFor&lt;TripOverviewPageViewModel&gt;));
+            Locator.CurrentMutable.Register(() =&gt; new LoginPage(), typeof(IViewFor&lt;LoginPageViewModel&gt;));
+            Locator.CurrentMutable.Register(() =&gt; new CreateTripPage(), typeof(IViewFor&lt;CreateTripPageViewModel&gt;));
+            Locator.CurrentMutable.Register(() =&gt; new CreateWaypointPage(), typeof(IViewFor&lt;CreateWaypointPageViewModel&gt;));
+            Locator.CurrentMutable.Register(() =&gt; new CreateAccountPage(), typeof(IViewFor&lt;CreateAccountPageViewModel&gt;));
+            Locator.CurrentMutable.Register(() =&gt; new LandingPage(), typeof(IViewFor&lt;LandingPageViewModel&gt;));
+            return AppBuilder.Configure&lt;App&gt;()
+                .UsePlatformDetect()
+                .LogToTrace()
+                .UseReactiveUI();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,0],[16,13,17,56,0],[18,9,18,10,0],[26,9,26,10,0],[27,13,27,51,0],[27,51,27,73,0],[27,73,27,120,0],[28,13,28,51,0],[28,51,28,66,0],[28,66,28,106,0],[29,13,29,51,0],[29,51,29,71,0],[29,71,29,116,0],[30,13,30,51,0],[30,51,30,75,0],[30,75,30,124,0],[31,13,31,51,0],[31,51,31,74,0],[31,74,31,122,0],[32,13,32,51,0],[32,51,32,68,0],[32,68,32,110,0],[33,13,36,34,0],[37,9,37,10,0]]);
+    </script>
+  </body>
+</html>

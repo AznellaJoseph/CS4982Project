@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CapstoneDesktop.Views.LoginPage">
+    <Border Classes="container" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="30">
+        <StackPanel Spacing="10" Width="500">
+            <Canvas Background="Gray">
+                <TextBlock>WAYPOINTZ LOGO</TextBlock>
+            </Canvas>
+
+            <TextBlock Classes="h1" Text="LOGIN" TextAlignment="Center" />
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
+
+            <TextBlock Text="USERNAME:" />
+            <TextBox Watermark="USERNAME" VerticalAlignment="Bottom" Text="{Binding Username, Mode=TwoWay}" />
+
+            <TextBlock Text="PASSWORD:" />
+            <TextBox PasswordChar="*" Watermark="PASSWORD" VerticalAlignment="Bottom"
+                     Text="{Binding Password, Mode=TwoWay}" />
+
+            <Grid ColumnDefinitions="*,10,*">
+                <Button Grid.Column="0" HorizontalAlignment="Stretch" Command="{Binding LoginCommand}" IsDefault="True">
+                    <Button.Content>
+                        <TextBlock TextAlignment="Center" Text="LOGIN" />
+                    </Button.Content>
+                </Button>
+                <Button Grid.Column="2" HorizontalAlignment="Stretch" Command="{Binding OpenCreateAccountCommand}">
+                    <Button.Content>
+                        <TextBlock TextAlignment="Center" Text="CREATE ACCOUNT" />
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

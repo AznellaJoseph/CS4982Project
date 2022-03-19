@@ -2,61 +2,48 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\CreateAccount.cshtml.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/User.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using CapstoneBackend.Model;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace CapstoneWeb.Pages
+namespace CapstoneBackend.Model
 {
     /// &lt;summary&gt;
-    ///     Create Account Model
+    ///     User Model Class
     /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
-    public class CreateAccountModel : PageModel
+    public class User
     {
-        public string ErrorMessage { get; set; }
-
-        [BindProperty] public string Username { get; set; }
-
-        [BindProperty] public string Password { get; set; }
-
-        [BindProperty] public string FirstName { get; set; }
-
-        [BindProperty] public string LastName { get; set; }
-
-        public UserManager FakeUserManager { get; set; }
+        /// &lt;summary&gt;
+        ///     The id of the user.
+        /// &lt;/summary&gt;
+        public int UserId { get; set; }
 
         /// &lt;summary&gt;
-        /// Called when [post].
+        ///     The username of the user
         /// &lt;/summary&gt;
-        /// &lt;returns&gt; The page to go to after [post] &lt;/returns&gt;
-        public IActionResult OnPost()
-        {
-            var userManager = FakeUserManager ?? new UserManager();
-            var response = userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
-                FirstName ?? string.Empty, LastName ?? string.Empty);
-            if (response.StatusCode == 200)
-            {
-                HttpContext.Session.SetString(&quot;userId&quot;, $&quot;{response.Data}&quot;);
-                return RedirectToPage(&quot;Index&quot;);
-            }
+        public string Username { get; set; } = string.Empty;
 
-            ErrorMessage = response.ErrorMessage ?? &quot;Unknown Error.&quot;;
+        /// &lt;summary&gt;
+        ///     The password of the user.
+        /// &lt;/summary&gt;
+        public string Password { get; set; } = string.Empty;
 
-            return Page();
-        }
+        /// &lt;summary&gt;
+        ///     The first name of the user.
+        /// &lt;/summary&gt;
+        public string FirstName { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The last name of the user
+        /// &lt;/summary&gt;
+        public string LastName { get; set; } = string.Empty;
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,38,14,42,1],[14,43,14,47,1],[16,49,16,53,1],[16,54,16,58,1],[18,49,18,53,1],[18,54,18,58,1],[20,50,20,54,1],[20,55,20,59,1],[22,49,22,53,1],[22,54,22,58,1],[24,46,24,50,1],[24,51,24,55,1],[31,9,31,10,1],[32,13,32,68,1],[33,13,34,70,1],[35,13,35,44,1],[36,13,36,14,1],[37,17,37,77,1],[38,17,38,48,1],[41,13,41,70,1],[43,13,43,27,1],[44,9,44,10,1]]);
+      highlightRanges([[11,29,11,33,1],[11,34,11,38,1],[16,34,16,38,1],[16,39,16,43,1],[16,48,16,60,1],[21,34,21,38,1],[21,39,21,43,1],[21,48,21,60,1],[26,35,26,39,1],[26,40,26,44,1],[26,49,26,61,1],[31,34,31,38,1],[31,39,31,43,1],[31,48,31,60,1]]);
     </script>
   </body>
 </html>

@@ -2,71 +2,100 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestMainWindow/TestLoginCommand.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/WebTests/Pages/TestTripOverview.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
+using System;
 using CapstoneBackend.Model;
-using CapstoneDesktop.ViewModels;
-using Microsoft.Reactive.Testing;
+using CapstoneWeb.Pages;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
+namespace CapstoneTest.WebTests.Pages
 {
-
     [TestClass]
-    public class TestLoginCommand
+    public class TestTripOverview
     {
         [TestMethod]
-        public void TestLoginSuccessful()
+        public void GetSuccess()
         {
-            var user = new User
+            var session = new Mock&lt;ISession&gt;();
+            var fakeTripManager = new Mock&lt;TripManager&gt;();
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now;
+            fakeTripManager.Setup(mngr =&gt; mngr.GetTripByTripId(1)).Returns(new Response&lt;Trip&gt;
             {
-                FirstName = &quot;admin&quot;,
-                LastName = &quot;admin&quot;,
-                Username = &quot;admin&quot;,
-                Password = &quot;admin&quot;,
-                Id = 0
-            };
-            var mockUserManager = new Mock&lt;UserManager&gt;();
-            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;User&gt;{Data = user});
-            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
-            var testScheduler = new TestScheduler();
+                StatusCode = 200U,
+                Data = new Trip
+                {
+                    Name = &quot;test&quot;,
+                    Notes = &quot;notes&quot;,
+                    StartDate = startDate,
+                    EndDate = endDate
+                }
+            });
 
-            mainWindowViewModel.Username = &quot;admin&quot;;
-            mainWindowViewModel.Password = &quot;admin&quot;;
+            var page = TestPageBuilder.BuildPage&lt;TripOverviewModel&gt;(session.Object);
+            page.FakeTripManager = fakeTripManager.Object;
+            page.HttpContext.Request.QueryString = new QueryString(&quot;?id=1&quot;);
 
-            mainWindowViewModel.LoginCommand.Execute().Subscribe();
-            testScheduler.Start();
-            Assert.AreEqual(string.Empty, mainWindowViewModel.ErrorMessage);
+            var result = page.OnGet();
+            var resultTrip = page.CurrentTrip;
+
+            Assert.AreEqual(&quot;test&quot;, resultTrip.Name);
+            Assert.AreEqual(&quot;notes&quot;, resultTrip.Notes);
+            Assert.AreEqual(startDate, resultTrip.StartDate);
+            Assert.AreEqual(endDate, resultTrip.EndDate);
         }
 
         [TestMethod]
-        public void TestLoginUnsuccessful()
+        public void GetFailure_InvalidTripId_RedirectToIndex()
         {
-            var mockUserManager = new Mock&lt;UserManager&gt;();
-            mockUserManager.Setup(um =&gt; um.GetUserByCredentials(&quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;User&gt;{ErrorMessage = &quot;Username is incorrect.&quot;});
-            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
-            var testScheduler = new TestScheduler();
+            var session = new Mock&lt;ISession&gt;();
+            var fakeTripManager = new Mock&lt;TripManager&gt;();
 
-            mainWindowViewModel.Username = &quot;admin&quot;;
-            mainWindowViewModel.Password = &quot;admin&quot;;
+            var page = TestPageBuilder.BuildPage&lt;TripOverviewModel&gt;(session.Object);
+            page.FakeTripManager = fakeTripManager.Object;
+            page.HttpContext.Request.QueryString = new QueryString(&quot;?id=NotANumber&quot;);
 
-            mainWindowViewModel.LoginCommand.Execute().Subscribe();
+            var result = page.OnGet();
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
 
-            testScheduler.Start();
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;Index&quot;, redirect.PageName);
+        }
 
-            Assert.AreEqual(&quot;Username is incorrect.&quot;, mainWindowViewModel.ErrorMessage);
+        [TestMethod]
+        public void GetFailure_NonExistingTrip_RedirectToIndex()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var fakeTripManager = new Mock&lt;TripManager&gt;();
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now;
+            fakeTripManager.Setup(mngr =&gt; mngr.GetTripByTripId(8)).Returns(new Response&lt;Trip&gt;
+            {
+                StatusCode = 404U
+            });
+            var page = TestPageBuilder.BuildPage&lt;TripOverviewModel&gt;(session.Object);
+            page.FakeTripManager = fakeTripManager.Object;
+            page.HttpContext.Request.QueryString = new QueryString(&quot;?id=8&quot;);
+
+            var result = page.OnGet();
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;Index&quot;, redirect.PageName);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[16,9,16,10,1],[17,13,24,15,1],[25,13,25,59,1],[26,13,26,125,1],[27,13,27,83,1],[28,13,28,53,1],[30,13,30,52,1],[31,13,31,52,1],[33,13,33,68,1],[34,13,34,35,1],[35,13,35,77,1],[36,9,36,10,1],[40,9,40,10,1],[41,13,41,59,1],[42,13,42,153,1],[43,13,43,83,1],[44,13,44,53,1],[46,13,46,52,1],[47,13,47,52,1],[49,13,49,68,1],[51,13,51,35,1],[53,13,53,89,1],[54,9,54,10,1]]);
+      highlightRanges([[16,9,16,10,1],[17,13,17,48,1],[18,13,18,59,1],[19,13,19,42,1],[20,13,20,40,1],[21,13,31,16,1],[33,13,33,85,1],[34,13,34,59,1],[35,13,35,77,1],[37,13,37,39,1],[38,13,38,47,1],[40,13,40,54,1],[41,13,41,56,1],[42,13,42,62,1],[43,13,43,58,1],[44,9,44,10,1],[48,9,48,10,1],[49,13,49,48,1],[50,13,50,59,1],[52,13,52,85,1],[53,13,53,59,1],[54,13,54,86,1],[56,13,56,39,1],[57,13,57,75,1],[59,13,59,58,1],[60,13,60,57,1],[61,9,61,10,1],[65,9,65,10,1],[66,13,66,48,1],[67,13,67,59,1],[68,13,68,42,1],[69,13,69,40,1],[70,13,73,16,1],[74,13,74,85,1],[75,13,75,59,1],[76,13,76,77,1],[78,13,78,39,1],[79,13,79,75,1],[81,13,81,58,1],[82,13,82,57,1],[83,9,83,10,1]]);
     </script>
   </body>
 </html>

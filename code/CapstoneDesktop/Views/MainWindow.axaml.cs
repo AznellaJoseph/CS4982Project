@@ -1,17 +1,20 @@
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
 
 namespace CapstoneDesktop.Views
 {
-    public class MainWindow : Window
+    /// <summary>
+    ///     Window for displaying all windows
+    /// </summary>
+    public class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MainWindow" /> class.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent()

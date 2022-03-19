@@ -2,43 +2,59 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Program.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestWaypointManager/TestCreateWaypoint.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
-using Avalonia;
-using Avalonia.ReactiveUI;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace CapstoneDesktop
+namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 {
-    internal class Program
+    [TestClass]
+    public class TestCreateWaypoint
     {
-        // Initialization code. Don&#39;t use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren&#39;t initialized
-        // yet and stuff might break.
-        [STAThread]
-        public static void Main(string[] args)
+        [TestMethod]
+        public void Create_InvalidTimes_ReturnsErrorMessage()
         {
-            BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt;
+                    db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now.AddDays(4), DateTime.Now, null))
+                .Returns(400);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now.AddDays(4), DateTime.Now, null);
+
+            Assert.AreEqual(400u, resultResponse.StatusCode);
         }
 
-        // Avalonia configuration, don&#39;t remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
+        [TestMethod]
+        public void Create_ValidParameters_ReturnsWaypointNumber()
         {
-            return AppBuilder.Configure&lt;App&gt;()
-                .UsePlatformDetect()
-                .LogToTrace()
-                .UseReactiveUI();
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt;
+                    db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now.AddDays(2), null))
+                .Returns(200);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now.AddDays(2), null);
+
+            Assert.AreEqual(200u, resultResponse.StatusCode);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,9,14,10,0],[15,13,16,56,0],[17,9,17,10,0],[21,9,21,10,0],[22,13,25,34,0],[26,9,26,10,0]]);
+      highlightRanges([[14,9,14,10,1],[15,13,15,59,1],[16,13,18,31,1],[20,13,20,75,1],[22,13,23,113,1],[25,13,25,62,1],[26,9,26,10,1],[30,9,30,10,1],[31,13,31,59,1],[32,13,34,31,1],[36,13,36,75,1],[38,13,39,113,1],[41,13,41,62,1],[42,9,42,10,1]]);
     </script>
   </body>
 </html>

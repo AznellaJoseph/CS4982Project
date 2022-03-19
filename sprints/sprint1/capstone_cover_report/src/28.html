@@ -2,72 +2,93 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/Views/MainWindow.axaml</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/BackendTests/Model/TestUserManager/TestGetUserByCredentials.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-&lt;Window xmlns=&quot;https://github.com/avaloniaui&quot;
-        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
-        xmlns:vm=&quot;using:CapstoneDesktop.ViewModels&quot;
-        xmlns:d=&quot;http://schemas.microsoft.com/expression/blend/2008&quot;
-        xmlns:mc=&quot;http://schemas.openxmlformats.org/markup-compatibility/2006&quot;
-        mc:Ignorable=&quot;d&quot;
-        x:Class=&quot;CapstoneDesktop.Views.MainWindow&quot;
-        Icon=&quot;/Assets/avalonia-logo.ico&quot;
-        Title=&quot;Capstone Desktop&quot; WindowState=&quot;Maximized&quot;&gt;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-    &lt;Design.DataContext&gt;
-        &lt;vm:MainWindowViewModel /&gt;
-    &lt;/Design.DataContext&gt;
+namespace CapstoneTest.BackendTests.Model.TestUserManager
+{
+    [TestClass]
+    public class TestGetUserByCredentials
+    {
+        private const string TestUsername = &quot;TestUsername&quot;;
+        private const string TestPassword = &quot;TestPassword&quot;;
 
-    &lt;StackPanel&gt;
+        [TestMethod]
+        public void Call_WithValidCredentials_Succeeds()
+        {
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash(TestPassword)};
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
 
-        &lt;StackPanel IsVisible=&quot;{Binding LoginControlsVisible, Mode=TwoWay}&quot; VerticalAlignment=&quot;Bottom&quot;
-                    Margin=&quot;15,0, 15, 0&quot;&gt;
-            &lt;TextBlock Text=&quot;Login&quot; FontSize=&quot;24&quot; HorizontalAlignment=&quot;Center&quot; VerticalAlignment=&quot;Top&quot; Margin=&quot;15&quot; /&gt;
+            UserManager userManager = new(mockUserDal.Object);
 
-            &lt;TextBlock Text=&quot;{Binding ErrorMessage}&quot; Foreground=&quot;Red&quot; /&gt;
-            &lt;TextBox Watermark=&quot;Username&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot; Text=&quot;{Binding Username, Mode=TwoWay}&quot; /&gt;
-            &lt;TextBox PasswordChar=&quot;*&quot; Watermark=&quot;Password&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot;
-                     Text=&quot;{Binding Password, Mode=TwoWay}&quot; /&gt;
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-            &lt;StackPanel Orientation=&quot;Horizontal&quot; Margin=&quot;15&quot; Spacing=&quot;20&quot;&gt;
-                &lt;Button Content=&quot;Login&quot; Margin=&quot;15&quot; Command=&quot;{Binding LoginCommand}&quot; /&gt;
-                &lt;Button Content=&quot;Create Account&quot; HorizontalAlignment=&quot;Right&quot; Margin=&quot;15&quot;
-                        Command=&quot;{Binding OpenCreateAccountCommand}&quot; /&gt;
-            &lt;/StackPanel&gt;
-        &lt;/StackPanel&gt;
+            Assert.AreEqual(200U, resultResponse.StatusCode);
+            Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
+            Assert.AreEqual(resultResponse?.Data?.FirstName, fakeExistingUser.FirstName);
+            Assert.AreEqual(resultResponse?.Data?.LastName, fakeExistingUser.LastName);
+            Assert.AreEqual(resultResponse?.Data?.Username, fakeExistingUser.Username);
+            Assert.AreEqual(resultResponse?.Data?.Password, fakeExistingUser.Password);
+            Assert.AreEqual(resultResponse?.Data?.UserId, fakeExistingUser.UserId);
+        }
 
-        &lt;StackPanel IsVisible=&quot;{Binding !LoginControlsVisible, Mode=TwoWay}&quot; VerticalAlignment=&quot;Bottom&quot;
-                    Margin=&quot;15,0, 15, 0&quot;&gt;
-            &lt;TextBlock Text=&quot;Create Account&quot; FontSize=&quot;24&quot; HorizontalAlignment=&quot;Center&quot; VerticalAlignment=&quot;Top&quot;
-                       Margin=&quot;15&quot; /&gt;
+        [TestMethod]
+        public void Call_WithUnknownUsername_Fails()
+        {
+            User? missingUser = null;
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(missingUser);
 
-            &lt;TextBlock Text=&quot;{Binding ErrorMessage}&quot; Foreground=&quot;Red&quot; /&gt;
-            &lt;TextBox Watermark=&quot;Username&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot; Text=&quot;{Binding Username, Mode=TwoWay}&quot; /&gt;
-            &lt;TextBox Watermark=&quot;First Name&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot;
-                     Text=&quot;{Binding FirstName, Mode=TwoWay}&quot; /&gt;
-            &lt;TextBox Watermark=&quot;Last Name&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot;
-                     Text=&quot;{Binding LastName, Mode=TwoWay}&quot; /&gt;
-            &lt;TextBox PasswordChar=&quot;*&quot; Watermark=&quot;Password&quot; VerticalAlignment=&quot;Bottom&quot; Margin=&quot;15&quot;
-                     Text=&quot;{Binding Password, Mode=TwoWay}&quot; /&gt;
+            UserManager userManager = new(mockUserDal.Object);
 
-            &lt;StackPanel Orientation=&quot;Horizontal&quot; Margin=&quot;15&quot; Spacing=&quot;20&quot;&gt;
-                &lt;Button Content=&quot;Create&quot; Margin=&quot;15&quot; Command=&quot;{Binding SubmitAccountCommand}&quot; /&gt;
-                &lt;Button Content=&quot;Cancel&quot; HorizontalAlignment=&quot;Right&quot; Margin=&quot;15&quot;
-                        Command=&quot;{Binding CancelCreateAccountCommand}&quot; /&gt;
-            &lt;/StackPanel&gt;
-        &lt;/StackPanel&gt;
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
 
-    &lt;/StackPanel&gt;
+            Assert.AreEqual(404U, resultResponse.StatusCode);
+        }
 
+        [TestMethod]
+        public void Call_WithWrongPassword_Fails()
+        {
+            User fakeExistingUser = new() {Password = PasswordHasher.Hash(&quot;CorrectPassword&quot;)};
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername)).Returns(fakeExistingUser);
 
-&lt;/Window&gt;
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+
+            Assert.AreEqual(404U, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Call_ThrowsMySqlException_Fails()
+        {
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockUserDal.Setup(db =&gt; db.GetUserByUsername(TestUsername))
+                .Throws(builder.WithError(500, &quot;Internal server error&quot;).Build());
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserByCredentials(TestUsername, TestPassword);
+
+            Assert.AreEqual(500U, resultResponse.StatusCode);
+            Assert.AreEqual(&quot;Internal server error&quot;, resultResponse.ErrorMessage);
+        }
+    }
+}
     </pre>
     <script type="text/javascript">
-      highlightRanges([[1,2,1,8,0],[8,9,8,13,0],[9,9,9,14,0],[15,6,15,16,0],[17,10,17,20,0],[17,21,17,30,0],[18,21,18,27,0],[19,14,19,23,0],[19,24,19,28,0],[19,51,19,70,0],[19,104,19,110,0],[21,14,21,23,0],[21,24,21,28,0],[21,54,21,64,0],[22,14,22,21,0],[22,22,22,31,0],[22,70,22,76,0],[22,82,22,86,0],[23,14,23,21,0],[23,22,23,34,0],[23,39,23,48,0],[23,87,23,93,0],[24,22,24,26,0],[26,14,26,24,0],[26,25,26,36,0],[26,62,26,69,0],[27,18,27,24,0],[27,25,27,32,0],[27,53,27,60,0],[28,18,28,24,0],[28,25,28,32,0],[28,78,28,84,0],[29,25,29,32,0],[33,10,33,20,0],[33,21,33,30,0],[34,21,34,27,0],[35,14,35,23,0],[35,24,35,28,0],[35,60,35,79,0],[36,24,36,30,0],[38,14,38,23,0],[38,24,38,28,0],[38,54,38,64,0],[39,14,39,21,0],[39,22,39,31,0],[39,70,39,76,0],[39,82,39,86,0],[40,14,40,21,0],[40,22,40,31,0],[40,72,40,78,0],[41,22,41,26,0],[42,14,42,21,0],[42,22,42,31,0],[42,71,42,77,0],[43,22,43,26,0],[44,14,44,21,0],[44,22,44,34,0],[44,39,44,48,0],[44,87,44,93,0],[45,22,45,26,0],[47,14,47,24,0],[47,25,47,36,0],[47,62,47,69,0],[48,18,48,24,0],[48,25,48,32,0],[48,54,48,61,0],[49,18,49,24,0],[49,25,49,32,0],[49,70,49,76,0],[50,25,50,32,0]]);
+      highlightRanges([[17,9,17,10,1],[18,13,18,90,1],[19,13,19,51,1],[20,13,20,99,1],[22,13,22,63,1],[24,13,24,95,1],[26,13,26,62,1],[27,13,27,72,1],[28,13,28,90,1],[29,13,29,88,1],[30,13,30,88,1],[31,13,31,88,1],[32,13,32,84,1],[33,9,33,10,1],[37,9,37,10,1],[38,13,38,38,1],[39,13,39,51,1],[40,13,40,94,1],[42,13,42,63,1],[44,13,44,95,1],[46,13,46,62,1],[47,9,47,10,1],[51,9,51,10,1],[52,13,52,95,1],[53,13,53,51,1],[54,13,54,99,1],[56,13,56,63,1],[58,13,58,95,1],[60,13,60,62,1],[61,9,61,10,1],[65,9,65,10,1],[66,13,66,51,1],[67,13,67,55,1],[68,13,69,82,1],[70,13,70,63,1],[72,13,72,95,1],[74,13,74,62,1],[75,13,75,83,1],[76,9,76,10,1]]);
     </script>
   </body>
 </html>

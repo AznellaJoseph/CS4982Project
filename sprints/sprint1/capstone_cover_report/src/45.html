@@ -2,56 +2,46 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewLocator.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Program.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System;
-using Avalonia.Controls;
-using Avalonia.Controls.Templates;
-using CapstoneDesktop.ViewModels;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
-namespace CapstoneDesktop
+namespace CapstoneWeb
 {
     /// &lt;summary&gt;
-    ///     View Locator Class
+    /// Program Class
     /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;Avalonia.Controls.Templates.IDataTemplate&quot; /&gt;
-    public class ViewLocator : IDataTemplate
+    public class Program
     {
         /// &lt;summary&gt;
-        ///     Builds the specified data.
+        /// Defines the entry point of the application.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;data&quot;&gt;The data.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;/returns&gt;
-        public IControl Build(object data)
+        /// &lt;param name=&quot;args&quot;&gt;The arguments.&lt;/param&gt;
+        public static void Main(string[] args)
         {
-            var name = data.GetType().FullName!.Replace(&quot;ViewModel&quot;, &quot;View&quot;);
-            var type = Type.GetType(name);
-
-            if (type != null)
-                return (Control) Activator.CreateInstance(type)!;
-            return new TextBlock {Text = &quot;Not Found: &quot; + name};
+            CreateHostBuilder(args).Build().Run();
         }
 
         /// &lt;summary&gt;
-        ///     Checks to see if this data template matches the specified data.
+        /// Creates the host builder.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;data&quot;&gt;The data.&lt;/param&gt;
-        /// &lt;returns&gt;
-        ///     True if the data template can build a control for the data, otherwise false.
-        /// &lt;/returns&gt;
-        public bool Match(object data)
+        /// &lt;param name=&quot;args&quot;&gt;The arguments.&lt;/param&gt;
+        /// &lt;returns&gt; The host builder &lt;/returns&gt;
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return data is ViewModelBase;
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =&gt; { webBuilder.UseStartup&lt;Startup&gt;(); });
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[20,9,20,10,0],[21,13,21,78,0],[22,13,22,43,0],[24,13,24,30,0],[25,17,25,66,0],[26,13,26,64,0],[27,9,27,10,0],[37,9,37,10,0],[38,13,38,42,0],[39,9,39,10,0]]);
+      highlightRanges([[16,9,16,10,0],[17,13,17,51,0],[18,9,18,10,0],[26,9,26,10,0],[27,13,28,57,0],[28,57,28,58,0],[28,58,28,59,0],[28,59,28,92,0],[28,92,28,93,0],[28,93,28,94,0],[28,94,28,96,0],[29,9,29,10,0]]);
     </script>
   </body>
 </html>

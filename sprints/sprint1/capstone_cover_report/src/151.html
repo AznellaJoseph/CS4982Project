@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/MainWindowViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the MainWindow
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;ReactiveUI.IScreen&quot; /&gt;
+    public class MainWindowViewModel : ViewModelBase, IScreen
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;MainWindowViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public MainWindowViewModel()
+        {
+            Router.Navigate.Execute(new LoginPageViewModel(this));
+        }
+
+        /// &lt;summary&gt;
+        ///     The router
+        /// &lt;/summary&gt;
+        public RoutingState Router { get; } = new();
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,37,1],[16,9,16,10,1],[17,13,17,67,1],[18,9,18,10,1],[23,38,23,42,1],[23,47,23,52,1]]);
+    </script>
+  </body>
+</html>

@@ -1,57 +1,15 @@
 <Window xmlns="https://github.com/avaloniaui"
+        xmlns:rxui="clr-namespace:Avalonia.ReactiveUI;assembly=Avalonia.ReactiveUI"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:CapstoneDesktop.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         x:Class="CapstoneDesktop.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Capstone Desktop" WindowState="Maximized">
-
-    <Design.DataContext>
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
-
-    <StackPanel>
-
-        <StackPanel IsVisible="{Binding LoginControlsVisible, Mode=TwoWay}" VerticalAlignment="Bottom"
-                    Margin="15,0, 15, 0">
-            <TextBlock Text="Login" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="15" />
-
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
-            <TextBox Watermark="Username" VerticalAlignment="Bottom" Margin="15" Text="{Binding Username, Mode=TwoWay}" />
-            <TextBox PasswordChar="*" Watermark="Password" VerticalAlignment="Bottom" Margin="15"
-                     Text="{Binding Password, Mode=TwoWay}" />
-
-            <StackPanel Orientation="Horizontal" Margin="15" Spacing="20">
-                <Button Content="Login" Margin="15" Command="{Binding LoginCommand}" />
-                <Button Content="Create Account" HorizontalAlignment="Right" Margin="15"
-                        Command="{Binding OpenCreateAccountCommand}" />
-            </StackPanel>
-        </StackPanel>
-
-        <StackPanel IsVisible="{Binding !LoginControlsVisible, Mode=TwoWay}" VerticalAlignment="Bottom"
-                    Margin="15,0, 15, 0">
-            <TextBlock Text="Create Account" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top"
-                       Margin="15" />
-
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
-            <TextBox Watermark="Username" VerticalAlignment="Bottom" Margin="15" Text="{Binding Username, Mode=TwoWay}" />
-            <TextBox Watermark="First Name" VerticalAlignment="Bottom" Margin="15"
-                     Text="{Binding FirstName, Mode=TwoWay}" />
-            <TextBox Watermark="Last Name" VerticalAlignment="Bottom" Margin="15"
-                     Text="{Binding LastName, Mode=TwoWay}" />
-            <TextBox PasswordChar="*" Watermark="Password" VerticalAlignment="Bottom" Margin="15"
-                     Text="{Binding Password, Mode=TwoWay}" />
-
-            <StackPanel Orientation="Horizontal" Margin="15" Spacing="20">
-                <Button Content="Create" Margin="15" Command="{Binding SubmitAccountCommand}" />
-                <Button Content="Cancel" HorizontalAlignment="Right" Margin="15"
-                        Command="{Binding CancelCreateAccountCommand}" />
-            </StackPanel>
-        </StackPanel>
-
-    </StackPanel>
-
-
+        Title="Waypointz" WindowState="Maximized">
+    <rxui:RoutedViewHost Router="{Binding Router}">
+        <rxui:RoutedViewHost.DefaultContent>
+            <TextBlock>LOGO</TextBlock>
+        </rxui:RoutedViewHost.DefaultContent>
+    </rxui:RoutedViewHost>
 </Window>

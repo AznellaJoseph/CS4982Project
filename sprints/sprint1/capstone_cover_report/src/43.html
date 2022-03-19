@@ -2,86 +2,105 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\App.axaml</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/DAL/UserDAL.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-&lt;Application xmlns=&quot;https://github.com/avaloniaui&quot;
-             xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
-             xmlns:local=&quot;using:CapstoneDesktop&quot;
-             x:Class=&quot;CapstoneDesktop.App&quot;&gt;
-    &lt;Application.DataTemplates&gt;
-        &lt;local:ViewLocator /&gt;
-    &lt;/Application.DataTemplates&gt;
-    
-    &lt;Application.Resources&gt;
-        &lt;Color x:Key=&quot;ThemeLightTextColor&quot;&gt;#EBF2FA&lt;/Color&gt;
-        &lt;Color x:Key=&quot;ThemeDarkTextColor&quot;&gt;#100B00&lt;/Color&gt;
-        &lt;Color x:Key=&quot;ThemeBackgroundColor&quot;&gt;#000F14&lt;/Color&gt;
-        &lt;Color x:Key=&quot;ThemeForegroundColor&quot;&gt;#002E3D&lt;/Color&gt;
-        &lt;Color x:Key=&quot;ThemeControlColor&quot;&gt;#007EA7&lt;/Color&gt;
-        &lt;Color x:Key=&quot;ThemeAccentColor&quot;&gt;#809848&lt;/Color&gt;
-        
-        &lt;SolidColorBrush x:Key=&quot;ThemeLightTextBrush&quot; Color=&quot;{StaticResource ThemeLightTextColor}&quot;/&gt;
-        &lt;SolidColorBrush x:Key=&quot;ThemeDarkTextBrush&quot; Color=&quot;{StaticResource ThemeDarkTextColor}&quot;/&gt;
-        &lt;SolidColorBrush x:Key=&quot;ThemeBackgroundBrush&quot; Color=&quot;{StaticResource ThemeBackgroundColor}&quot;/&gt;
-        &lt;SolidColorBrush x:Key=&quot;ThemeForegroundBrush&quot; Color=&quot;{StaticResource ThemeForegroundColor}&quot;/&gt;
-        &lt;SolidColorBrush x:Key=&quot;ThemeControlBrush&quot; Color=&quot;{StaticResource ThemeControlColor}&quot;/&gt;
-        &lt;SolidColorBrush x:Key=&quot;ThemeAccentBrush&quot; Color=&quot;{StaticResource ThemeAccentColor}&quot;/&gt;
-    &lt;/Application.Resources&gt;
-    &lt;Application.Styles&gt;
-        &lt;FluentTheme Mode=&quot;Dark&quot;/&gt;
-        &lt;Style Selector=&quot;Window&quot;&gt;
-            &lt;Setter Property=&quot;Background&quot; Value=&quot;{StaticResource ThemeBackgroundBrush}&quot;/&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;TextBox&quot;&gt;
-            &lt;Setter Property=&quot;CornerRadius&quot; Value=&quot;5&quot;/&gt;
-            &lt;Setter Property=&quot;Padding&quot; Value=&quot;10&quot;/&gt;
-            &lt;Setter Property=&quot;Background&quot; Value=&quot;{StaticResource ThemeControlBrush}&quot;/&gt;
-            &lt;Setter Property=&quot;BorderThickness&quot; Value=&quot;0&quot;/&gt;
-            &lt;Setter Property=&quot;Foreground&quot; Value=&quot;{StaticResource ThemeDarkTextBrush}&quot;/&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;TextBox /template/ Border&quot;&gt;
-            &lt;Setter Property=&quot;CornerRadius&quot; Value=&quot;5&quot;/&gt;
-            &lt;Setter Property=&quot;Background&quot; Value=&quot;{StaticResource ThemeControlBrush}&quot;/&gt;
-            &lt;Setter Property=&quot;BoxShadow&quot; Value=&quot;inset 0 0 5 0 #002E3D&quot;/&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;TextBox:focus /template/ Border&quot;&gt;
-            &lt;Setter Property=&quot;BoxShadow&quot; Value=&quot;inset 0 0 10 0 #002E3D&quot;/&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;TextBox:pointerover /template/ Border&quot;&gt;
-            &lt;Setter Property=&quot;BoxShadow&quot; Value=&quot;inset 0 0 10 0 #002E3D&quot;/&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;Border.container&quot;&gt;
-            &lt;Setter Property=&quot;Background&quot; Value=&quot;{StaticResource ThemeForegroundBrush}&quot;/&gt;
-            &lt;Setter Property=&quot;Padding&quot; Value=&quot;10&quot;/&gt;
-            &lt;Setter Property=&quot;CornerRadius&quot; Value=&quot;5&quot;/&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;Button&quot;&gt;
-            &lt;Setter Property=&quot;Background&quot; Value=&quot;{StaticResource ThemeControlBrush}&quot;/&gt;
-            &lt;Setter Property=&quot;Padding&quot; Value=&quot;10&quot;/&gt;
-            &lt;Setter Property=&quot;CornerRadius&quot; Value=&quot;5&quot;/&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;Button:pointerover /template/ ContentPresenter&quot;&gt;
-            &lt;Setter Property=&quot;Background&quot; Value=&quot;{StaticResource ThemeAccentBrush}&quot; /&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;TextBlock.light&quot;&gt;
-            &lt;Setter Property=&quot;Foreground&quot; Value=&quot;{StaticResource ThemeLightTextBrush}&quot;/&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;TextBlock.dark&quot;&gt;
-            &lt;Setter Property=&quot;Foreground&quot; Value=&quot;{StaticResource ThemeDarkTextBrush}&quot;/&gt;
-        &lt;/Style&gt;
-        &lt;Style Selector=&quot;TextBlock.h1&quot;&gt;
-            &lt;Setter Property=&quot;FontSize&quot; Value=&quot;24&quot;/&gt;
-            &lt;Setter Property=&quot;FontWeight&quot; Value=&quot;Bold&quot;/&gt;
-        &lt;/Style&gt;
-    &lt;/Application.Styles&gt;
-&lt;/Application&gt;
+using System;
+using System.Data;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneBackend.DAL
+{
+    /// &lt;summary&gt;
+    ///     Data Access Layer (DAL) for User
+    /// &lt;/summary&gt;
+    public class UserDal
+    {
+        private readonly MySqlConnection _connection;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserDal&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public UserDal() : this(new MySqlConnection(Connection.ConnectionString))
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;UserDal&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;connection&quot;&gt;The connection.&lt;/param&gt;
+        public UserDal(MySqlConnection connection)
+        {
+            _connection = connection;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the user with the specified username
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;The username.&lt;/param&gt;
+        /// &lt;returns&gt; The user with the given username&lt;/returns&gt;
+        public virtual User? GetUserByUsername(string username)
+        {
+            _connection.Open();
+            const string query = &quot;uspGetUserByUsername&quot;;
+            using MySqlCommand cmd = new(query, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(&quot;@username&quot;, MySqlDbType.VarChar).Value = username;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var idOrdinal = reader.GetOrdinal(&quot;userId&quot;);
+            var fnameOrdinal = reader.GetOrdinal(&quot;fname&quot;);
+            var lnameOrdinal = reader.GetOrdinal(&quot;lname&quot;);
+            var passwordOrdinal = reader.GetOrdinal(&quot;password&quot;);
+
+            User? user = null;
+
+            if (reader.Read())
+                user = new User
+                {
+                    UserId = reader.GetInt32(idOrdinal),
+                    Username = username,
+                    FirstName = reader.GetString(fnameOrdinal),
+                    LastName = reader.GetString(lnameOrdinal),
+                    Password = reader.GetString(passwordOrdinal)
+                };
+
+            _connection.Close();
+            return user;
+        }
+
+        /// &lt;summary&gt;Inserts a User into the DB.&lt;/summary&gt;
+        /// &lt;param name=&quot;username&quot;&gt;The username.&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;The password.&lt;/param&gt;
+        /// &lt;param name=&quot;fname&quot;&gt;The first name.&lt;/param&gt;
+        /// &lt;param name=&quot;lname&quot;&gt;The last name.&lt;/param&gt;
+        /// &lt;returns&gt;ID of new user if successful. null, otherwise.&lt;/returns&gt;
+        public virtual int CreateUser(string username, string password, string fname, string lname)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspCreateUser&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@username&quot;, MySqlDbType.VarChar).Value = username;
+            cmd.Parameters.Add(&quot;@password&quot;, MySqlDbType.VarChar).Value = PasswordHasher.Hash(password);
+            cmd.Parameters.Add(&quot;@fname&quot;, MySqlDbType.VarChar).Value = fname;
+            cmd.Parameters.Add(&quot;@lname&quot;, MySqlDbType.VarChar).Value = lname;
+
+            var userId = cmd.ExecuteScalar();
+            _connection.Close();
+            return Convert.ToInt32(userId);
+        }
+    }
+}
     </pre>
     <script type="text/javascript">
-      highlightRanges([[1,2,1,13,0],[6,10,6,27,0],[10,44,10,51,0],[11,43,11,50,0],[12,45,12,52,0],[13,45,13,52,0],[14,42,14,49,0],[15,41,15,48,0],[17,10,17,25,0],[17,54,17,59,0],[18,10,18,25,0],[18,53,18,58,0],[19,10,19,25,0],[19,55,19,60,0],[20,10,20,25,0],[20,55,20,60,0],[21,10,21,25,0],[21,52,21,57,0],[22,10,22,25,0],[22,51,22,56,0],[25,10,25,21,0],[25,22,25,26,0],[26,10,26,15,0],[27,14,27,20,0],[27,21,27,29,0],[27,43,27,48,0],[29,10,29,15,0],[30,14,30,20,0],[30,21,30,29,0],[31,14,31,20,0],[31,21,31,29,0],[32,14,32,20,0],[32,21,32,29,0],[32,43,32,48,0],[33,14,33,20,0],[33,21,33,29,0],[34,14,34,20,0],[34,21,34,29,0],[34,43,34,48,0],[36,10,36,15,0],[37,14,37,20,0],[37,21,37,29,0],[38,14,38,20,0],[38,21,38,29,0],[38,43,38,48,0],[39,14,39,20,0],[39,21,39,29,0],[41,10,41,15,0],[42,14,42,20,0],[42,21,42,29,0],[44,10,44,15,0],[45,14,45,20,0],[45,21,45,29,0],[47,10,47,15,0],[48,14,48,20,0],[48,21,48,29,0],[48,43,48,48,0],[49,14,49,20,0],[49,21,49,29,0],[50,14,50,20,0],[50,21,50,29,0],[52,10,52,15,0],[53,14,53,20,0],[53,21,53,29,0],[53,43,53,48,0],[54,14,54,20,0],[54,21,54,29,0],[55,14,55,20,0],[55,21,55,29,0],[57,10,57,15,0],[58,14,58,20,0],[58,21,58,29,0],[58,43,58,48,0],[60,10,60,15,0],[61,14,61,20,0],[61,21,61,29,0],[61,43,61,48,0],[63,10,63,15,0],[64,14,64,20,0],[64,21,64,29,0],[64,43,64,48,0],[66,10,66,15,0],[67,14,67,20,0],[67,21,67,29,0],[68,14,68,20,0],[68,21,68,29,0]]);
+      highlightRanges([[19,28,19,82,1],[20,9,20,10,1],[21,9,21,10,1],[27,9,27,51,1],[28,9,28,10,1],[29,13,29,38,1],[30,9,30,10,1],[38,9,38,10,0],[39,13,39,32,0],[41,13,41,62,0],[42,13,42,59,0],[43,13,43,83,0],[45,13,45,64,0],[46,13,46,57,0],[47,13,47,59,0],[48,13,48,59,0],[49,13,49,65,0],[51,13,51,31,0],[53,13,53,31,0],[54,17,61,19,0],[63,13,63,33,0],[64,13,64,25,0],[65,9,65,10,0],[74,9,74,10,0],[75,13,75,32,0],[77,13,77,66,0],[78,13,78,59,0],[80,13,80,83,0],[81,13,81,104,0],[82,13,82,77,0],[83,13,83,77,0],[85,13,85,46,0],[86,13,86,33,0],[87,13,87,44,0],[88,9,88,10,0]]);
     </script>
   </body>
 </html>

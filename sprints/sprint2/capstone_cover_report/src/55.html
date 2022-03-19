@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\TransportationManager.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Utils;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A wrapper class for the TransportationDal. Manages the collection of Transportation and informs of server errors.
+    /// &lt;/summary&gt;
+    public class TransportationManager
+    {
+        private readonly TransportationDal _dal;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TransportationManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public TransportationManager() : this(new TransportationDal())
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TransportationManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
+        public TransportationManager(TransportationDal dal)
+        {
+            _dal = dal;
+        }
+
+        /// &lt;summary&gt;
+        ///     Creates the transportation.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;method&quot;&gt;The method.&lt;/param&gt;
+        /// &lt;param name=&quot;startTime&quot;&gt;The start time.&lt;/param&gt;
+        /// &lt;param name=&quot;endTime&quot;&gt;The end time.&lt;/param&gt;
+        /// &lt;param name=&quot;notes&quot;&gt;The notes.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     A response of if the transportation was created in the database or a non-success status code and error message
+        /// &lt;/returns&gt;
+        public virtual Response&lt;int&gt; CreateTransportation(int tripId, string method, DateTime startTime,
+            DateTime endTime, string? notes)
+        {
+            if (startTime.CompareTo(endTime) &gt; 0)
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.BadRequest,
+                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
+                };
+            return new Response&lt;int&gt;
+            {
+                Data = _dal.CreateTransportation(tripId, method, startTime, endTime, notes)
+            };
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the transportation on date.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;selectedDate&quot;&gt;The selected date.&lt;/param&gt;
+        /// &lt;returns&gt; A response of the transportation on that date &lt;/returns&gt;
+        public virtual Response&lt;IList&lt;Transportation&gt;&gt; GetTransportationOnDate(int tripId, DateTime selectedDate)
+        {
+            var transportationOnDate = _dal.GetTransportationOnDate(tripId, selectedDate);
+
+            return new Response&lt;IList&lt;Transportation&gt;&gt;
+            {
+                Data = transportationOnDate
+            };
+        }
+
+        /// &lt;summary&gt;
+        ///     Removes the transportation.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;transportationId&quot;&gt;The identifier.&lt;/param&gt;
+        /// &lt;returns&gt; A response specifying the transportation was removed or a non-success status code and error message &lt;/returns&gt;
+        public virtual Response&lt;bool&gt; RemoveTransportation(int transportationId)
+        {
+            var removed = _dal.RemoveTransportation(transportationId);
+
+            if (!removed)
+                return new Response&lt;bool&gt;
+                {
+                    ErrorMessage = Ui.ErrorMessages.TransportationNotFound,
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                };
+
+            return new Response&lt;bool&gt;
+            {
+                Data = removed
+            };
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,42,18,71,1],[19,9,19,10,1],[20,9,20,10,1],[26,9,26,60,1],[27,9,27,10,1],[28,13,28,24,1],[29,9,29,10,1],[44,9,44,10,1],[45,13,45,50,1],[46,17,50,19,1],[51,13,54,15,1],[55,9,55,10,1],[64,9,64,10,1],[65,13,65,91,1],[67,13,70,15,1],[71,9,71,10,1],[79,9,79,10,1],[80,13,80,71,1],[82,13,82,26,1],[83,17,87,19,1],[89,13,92,15,1],[93,9,93,10,1]]);
+    </script>
+  </body>
+</html>

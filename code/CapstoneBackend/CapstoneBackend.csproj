@@ -7,12 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MySql.Data" Version="8.0.28"/>
-        <PackageReference Include="System.Data.SqlClient" Version="4.8.3"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Utils\"/>
+        <PackageReference Include="MySql.Data" Version="8.0.28" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     </ItemGroup>
 
 </Project>

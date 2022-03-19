@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CapstoneDesktop.Views.CreateWaypointPage">
+    <Border Classes="container" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="30">
+        <StackPanel Width="700" Spacing="10">
+            <TextBlock Classes="h1" Text="CREATE WAYPOINT" HorizontalAlignment="Center"
+                       VerticalAlignment="Top" />
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
+            <TextBlock Text="WAYPOINT LOCATION:" />
+            <TextBox Watermark="LOCATION NAME" VerticalAlignment="Bottom" Text="{Binding Location, Mode=TwoWay}" />
+            <TextBlock Text="WAYPOINT NOTES" />
+            <TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
+                     AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
+
+            <Grid ColumnDefinitions="*,10,*" RowDefinitions="*,10,*">
+                <DatePicker Grid.Column="0" Grid.Row="0" SelectedDate="{Binding StartDate}" Header="START DATE" />
+                <TimePicker Grid.Column="2" Grid.Row="0" SelectedTime="{Binding StartTime}" Header="START TIME" />
+                <DatePicker Grid.Column="0" Grid.Row="2" SelectedDate="{Binding EndDate}" Header="END DATE" />
+                <TimePicker Grid.Column="2" Grid.Row="2" SelectedTime="{Binding EndTime}" Header="END TIME" />
+            </Grid>
+            <Grid ColumnDefinitions="*,10,*">
+                <Button Grid.Column="0" Command="{Binding CreateWaypointCommand}" HorizontalAlignment="Stretch">
+                    <TextBlock TextAlignment="Center" Text="CREATE WAYPOINT" />
+                </Button>
+                <Button Grid.Column="2" Command="{Binding CancelCreateWaypointCommand}" HorizontalAlignment="Stretch">
+                    <TextBlock TextAlignment="Center" Text="CANCEL" />
+                </Button>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

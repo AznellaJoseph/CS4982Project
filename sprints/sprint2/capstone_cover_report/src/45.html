@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestEventManager\TestDetermineIfEventDatesClash.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestEventManager
+{
+    [TestClass]
+    public class TestDetermineIfEventDatesClash
+    {
+
+        [TestMethod]
+        public void DetermineIfEventDatesClash_ReturnsTrue()
+        {
+            var mockEventManager = new Mock&lt;EventManager&gt;();
+            mockEventManager.Setup(em =&gt; em.DetermineIfEventDatesClash(1, DateTime.Today, DateTime.Today))
+                .Returns(new Response&lt;bool&gt; { Data = true });
+
+
+            Assert.IsTrue(mockEventManager.Object.DetermineIfEventDatesClash(1, DateTime.Today, DateTime.Today).Data);
+        }
+
+        [TestMethod]
+        public void DetermineIfEventsDatesClash_ReturnsFalse()
+        {
+            var mockEventManager = new Mock&lt;EventManager&gt;();
+            mockEventManager.Setup(em =&gt; em.DetermineIfEventDatesClash(1, DateTime.Today, DateTime.Today))
+                .Returns(new Response&lt;bool&gt; { Data = false });
+
+
+            Assert.IsFalse(mockEventManager.Object.DetermineIfEventDatesClash(1, DateTime.Today, DateTime.Today).Data);
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,10,1],[19,13,19,61,1],[20,13,21,62,1],[24,13,24,119,1],[25,9,25,10,1],[29,9,29,10,1],[30,13,30,61,1],[31,13,32,63,1],[35,13,35,120,1],[36,9,36,10,1]]);
+    </script>
+  </body>
+</html>

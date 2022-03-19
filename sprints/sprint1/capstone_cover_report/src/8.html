@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestMainWindow/TestOpenCreateAccountCommand.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestWaypoint/TestConstructor.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -11,36 +11,27 @@
 using CapstoneBackend.Model;
 using CapstoneDesktop.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Reactive.Testing;
 using Moq;
-using System;
+using ReactiveUI;
 
-namespace CapstoneTest.DesktopTests.ViewModels.TestMainWindow
+namespace CapstoneTest.DesktopTests.ViewModels.TestWaypoint
 {
-
     [TestClass]
-    public class TestOpenCreateAccountCommand
+    public class TestConstructor
     {
         [TestMethod]
-        public void TestCommandExecution()
+        public void TestConstructor_Success()
         {
-            var mockUserManager = new Mock&lt;UserManager&gt;();
-            MainWindowViewModel mainWindowViewModel = new(mockUserManager.Object);
-            var testScheduler = new TestScheduler();
-
-            Assert.AreEqual(true, mainWindowViewModel.LoginControlsVisible);
-
-            mainWindowViewModel.OpenCreateAccountCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(false, mainWindowViewModel.LoginControlsVisible);
+            var mockWaypoint = new Mock&lt;Waypoint&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var result = new WaypointViewModel(mockWaypoint.Object, mockScreen.Object);
+            Assert.AreEqual(mockWaypoint.Object, result.Waypoint);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[16,9,16,10,1],[17,13,17,59,1],[18,13,18,83,1],[19,13,19,53,1],[21,13,21,77,1],[23,13,23,80,1],[25,13,25,35,1],[27,13,27,78,1],[28,9,28,10,1]]);
+      highlightRanges([[14,9,14,10,1],[15,13,15,53,1],[16,13,16,50,1],[17,13,17,88,1],[18,13,18,67,1],[19,9,19,10,1]]);
     </script>
   </body>
 </html>

@@ -2,49 +2,123 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneWeb/Pages/Index.cshtml.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/DesktopTests/ViewModels/TestCreateTrip/TestCreateTripCommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
 
-namespace CapstoneWeb.Pages
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
 {
-    /// &lt;summary&gt;
-    ///     Index Model
-    /// &lt;/summary&gt;
-    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
-    public class IndexModel : PageModel
+    [TestClass]
+    public class TestCreateTripCommand
     {
-        public int UserId { get; private set; }
-
-        /// &lt;summary&gt;
-        ///     Called when [get].
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;&lt;/returns&gt;
-        public IActionResult OnGet()
+        [TestMethod]
+        public void CreateTrip_EmptyTripName_ReturnsErrorMessage()
         {
-            if (!HttpContext.Session.Keys.Contains(&quot;userId&quot;)) return RedirectToPage(&quot;login&quot;);
-            UserId = Convert.ToInt32(HttpContext.Session.GetString(&quot;userId&quot;));
-            return Page();
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;&quot;;
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;You must enter a name for the trip.&quot;, createTripWindowViewModel.ErrorMessage);
         }
 
-        public IActionResult OnPostLogout()
+        [TestMethod]
+        public void CreateTrip_InvalidDates_ReturnsErrorMessage()
         {
-            HttpContext.Session.Remove(&quot;userId&quot;);
-            return RedirectToPage(&quot;index&quot;);
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            mockTripManager.Setup(um =&gt; um.CreateTrip(0, &quot;name&quot;, &quot;notes&quot;, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response&lt;int&gt;
+                { StatusCode = 400, ErrorMessage = &quot;Start date of a trip cannot be after the end date.&quot; });
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+            createTripWindowViewModel.StartDate = DateTime.Today.AddDays(1);
+            createTripWindowViewModel.EndDate = DateTime.Today;
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;Start date of a trip cannot be after the end date.&quot;,
+                createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTrip_NullStartDate_ReturnsErrorMessage()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var endDate = DateTime.Today.AddDays(1);
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.EndDate = endDate;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;You must enter a start and end date for the trip.&quot;, createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTrip_SuccessfulCreation()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var startDate = DateTime.Today;
+            var endDate = DateTime.Today.AddDays(1);
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockTripManager.Object, mockScreen.Object);
+            mockTripManager.Setup(um =&gt; um.CreateTrip(0, &quot;name&quot;, &quot;notes&quot;, startDate, endDate))
+                .Returns(new Response&lt;int&gt; { StatusCode = 200 });
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.StartDate = startDate;
+            createTripWindowViewModel.EndDate = endDate;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+
+            createTripWindowViewModel.CreateTripCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[15,29,15,33,1],[15,34,15,46,1],[22,9,22,10,1],[23,13,23,62,1],[23,63,23,94,1],[24,13,24,79,1],[25,13,25,27,1],[26,9,26,10,1],[29,9,29,10,1],[30,13,30,50,1],[31,13,31,44,1],[32,9,32,10,1]]);
+      highlightRanges([[16,9,16,10,1],[17,13,17,45,1],[18,13,18,59,1],[19,13,19,50,1],[20,13,21,81,1],[22,13,22,53,1],[24,13,24,53,1],[26,13,26,79,1],[28,13,28,35,1],[30,13,30,108,1],[31,9,31,10,1],[35,9,35,10,1],[36,13,36,45,1],[37,13,37,59,1],[38,13,38,50,1],[39,13,40,81,1],[41,13,43,108,1],[44,13,44,53,1],[46,13,46,57,1],[47,13,47,55,1],[48,13,48,77,1],[49,13,49,64,1],[51,13,51,79,1],[53,13,53,35,1],[55,13,56,57,1],[57,9,57,10,1],[61,9,61,10,1],[62,13,62,45,1],[63,13,63,59,1],[64,13,64,50,1],[65,13,65,53,1],[66,13,67,81,1],[69,13,69,53,1],[71,13,71,57,1],[72,13,72,57,1],[73,13,73,55,1],[75,13,75,79,1],[77,13,77,35,1],[79,13,79,122,1],[80,9,80,10,1],[84,9,84,10,1],[85,13,85,45,1],[86,13,86,59,1],[87,13,87,50,1],[88,13,88,44,1],[89,13,89,53,1],[90,13,91,81,1],[92,13,93,66,1],[94,13,94,53,1],[96,13,96,57,1],[97,13,97,61,1],[98,13,98,57,1],[99,13,99,55,1],[101,13,101,86,1],[103,13,103,35,1],[105,13,105,83,1],[106,9,106,10,1]]);
     </script>
   </body>
 </html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\Trip.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Single Trip Overview
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class TripModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The user id.
+        /// &lt;/summary&gt;
+        public int UserId { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     The current trip.
+        /// &lt;/summary&gt;
+        public Trip CurrentTrip { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     The fake trip manager.
+        /// &lt;/summary&gt;
+        public TripManager FakeTripManager { get; set; }
+        
+        /// &lt;summary&gt;
+        ///     The fake waypoint manager.
+        /// &lt;/summary&gt;
+        public EventManager FakeEventManager { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The fake waypoint manager.
+        /// &lt;/summary&gt;
+        public WaypointManager FakeWaypointManager { get; set; }
+        
+        /// &lt;summary&gt;
+        ///     The fake transportation manager.
+        /// &lt;/summary&gt;
+        public TransportationManager FakeTransportationManager { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Called when [get].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to index or current page if there is an error
+        /// &lt;/returns&gt;
+        public IActionResult OnGet(int tripId)
+        {
+            if (!HttpContext.Session.Keys.Contains(&quot;userId&quot;))
+                return RedirectToPage(&quot;Index&quot;);
+
+            UserId = Convert.ToInt32(HttpContext.Session.GetString(&quot;userId&quot;));
+            var tripManager = FakeTripManager ?? new TripManager();
+            var response = tripManager.GetTripByTripId(tripId);
+
+            if (!response.StatusCode.Equals((uint) Ui.StatusCode.Success) || response.Data?.UserId != UserId)
+                return RedirectToPage(&quot;Index&quot;);
+            CurrentTrip = response.Data;
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [get events].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;selectedDate&quot;&gt;The selected date.&lt;/param&gt;
+        /// &lt;returns&gt; A json response of the events on the selected date.&lt;/returns&gt;
+        public IActionResult OnGetEvents(int tripId, string selectedDate)
+        {
+            var manager = FakeEventManager ?? new EventManager();
+            return new JsonResult(manager.GetEventsOnDate(tripId, DateTime.Parse(selectedDate)));
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post create].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; Redirect to create waypoint form &lt;/returns&gt;
+        public IActionResult OnPostCreateWaypoint(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;CreateWaypoint&quot;, routeValue);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post create].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; Redirect to create Transportation form &lt;/returns&gt;
+        public IActionResult OnPostCreateTransportation(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;CreateTransportation&quot;, routeValue);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post back].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; Redirect to index &lt;/returns&gt;
+        public IActionResult OnPostBack()
+        {
+            return RedirectToPage(&quot;Index&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post logout].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; Redirect to index &lt;/returns&gt;
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Remove(&quot;userId&quot;);
+            return RedirectToPage(&quot;Index&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post remove].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; The json result of removing the waypoint specified by the id&lt;/returns&gt;
+        public IActionResult OnGetRemoveWaypoint(int tripId, int id)
+        {
+            var manager = FakeWaypointManager ?? new WaypointManager();
+            return new JsonResult(manager.RemoveWaypoint(id));
+        }
+        /// &lt;summary&gt;
+        /// Called when [get remove transportation].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier.&lt;/param&gt;
+        /// &lt;returns&gt; The json result of removing the transportation specified by the id &lt;/returns&gt;
+        public IActionResult OnGetRemoveTransportation(int tripId, int id)
+        {
+            var manager = FakeTransportationManager ?? new TransportationManager();
+            return new JsonResult(manager.RemoveTransportation(id));
+        }
+        
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[21,29,21,33,1],[21,34,21,46,1],[26,35,26,39,1],[26,40,26,52,1],[31,46,31,50,1],[31,51,31,55,1],[36,48,36,52,1],[36,53,36,57,1],[41,54,41,58,1],[41,59,41,63,1],[46,66,46,70,1],[46,71,46,75,1],[55,9,55,10,1],[56,13,56,62,1],[57,17,57,48,1],[59,13,59,79,1],[60,13,60,68,1],[61,13,61,64,1],[63,13,63,110,1],[64,17,64,48,1],[65,13,65,41,1],[66,13,66,27,1],[67,9,67,10,1],[76,9,76,10,1],[77,13,77,66,1],[78,13,78,98,1],[79,9,79,10,1],[86,9,86,10,1],[87,13,90,15,1],[91,13,91,65,1],[92,9,92,10,1],[99,9,99,10,1],[100,13,103,15,1],[104,13,104,71,1],[105,9,105,10,1],[112,9,112,10,1],[113,13,113,44,1],[114,9,114,10,1],[121,9,121,10,1],[122,13,122,50,1],[123,13,123,44,1],[124,9,124,10,1],[131,9,131,10,1],[132,13,132,72,1],[133,13,133,63,1],[134,9,134,10,1],[142,9,142,10,1],[143,13,143,84,1],[144,13,144,69,1],[145,9,145,10,1]]);
+    </script>
+  </body>
+</html>

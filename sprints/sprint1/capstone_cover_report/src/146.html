@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneDesktop/ViewModels/CreateAccountPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for Create Account Page
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;ReactiveUI.IRoutableViewModel&quot; /&gt;
+    public class CreateAccountPageViewModel : ViewModelBase, IRoutableViewModel
+    {
+        private readonly UserManager _userManager;
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateAccountPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;manager&quot;&gt;The manager.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public CreateAccountPageViewModel(UserManager manager, IScreen screen)
+        {
+            _userManager = manager;
+            HostScreen = screen;
+            CancelCreateAccountCommand =
+                ReactiveCommand.CreateFromObservable(() =&gt; this.HostScreen.Router.NavigateBack.Execute());
+            SubmitAccountCommand = ReactiveCommand.CreateFromObservable(submitAccount);
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateAccountPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public CreateAccountPageViewModel(IScreen screen) : this(new UserManager(), screen)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     The cancel create account command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateAccountCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The submit account command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; SubmitAccountCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The username
+        /// &lt;/summary&gt;
+        public string? Username { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The password
+        /// &lt;/summary&gt;
+        public string? Password { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The confirmed password
+        /// &lt;/summary&gt;
+        public string? ConfirmedPassword { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The first name
+        /// &lt;/summary&gt;
+        public string? FirstName { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The last name
+        /// &lt;/summary&gt;
+        public string? LastName { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The error message
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        ///     The host screen.
+        /// &lt;/summary&gt;
+        public IScreen HostScreen { get; }
+
+        /// &lt;summary&gt;
+        ///     The url path segment.
+        /// &lt;/summary&gt;
+        public string? UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
+
+        private IObservable&lt;IRoutableViewModel&gt; submitAccount()
+        {
+            if (Password == ConfirmedPassword)
+            {
+                var response = _userManager.RegisterUser(Username ?? string.Empty, Password ?? string.Empty,
+                    FirstName ?? string.Empty, LastName ?? string.Empty);
+                if (response.StatusCode == 200U)
+                {
+                    return HostScreen.Router.Navigate.Execute(
+                        new LandingPageViewModel(new User { UserId = response.Data }, HostScreen));
+                }
+
+                ErrorMessage = response.ErrorMessage ?? &quot;Unknown Error.&quot;;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            ErrorMessage = &quot;The given passwords must match.&quot;;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,46,1],[24,9,24,79,1],[25,9,25,10,1],[26,13,26,36,1],[27,13,27,33,1],[28,13,29,60,1],[29,60,29,105,0],[29,105,29,107,1],[30,13,30,88,1],[31,9,31,10,1],[37,61,37,92,1],[38,9,38,10,1],[39,9,39,10,1],[44,73,44,77,1],[49,81,49,85,1],[54,35,54,39,1],[54,40,54,44,1],[59,35,59,39,1],[59,40,59,44,1],[64,44,64,48,1],[64,49,64,53,1],[69,36,69,40,1],[69,41,69,45,1],[74,35,74,39,1],[74,40,74,44,1],[81,20,81,26,1],[82,20,82,64,1],[88,37,88,41,1],[93,41,93,45,1],[93,50,93,91,1],[96,9,96,10,1],[97,13,97,47,1],[98,13,98,14,1],[99,17,100,74,1],[101,17,101,49,1],[102,17,102,18,0],[103,21,104,100,0],[107,17,107,74,1],[108,17,108,63,1],[111,13,111,62,1],[112,13,112,59,1],[113,9,113,10,1]]);
+    </script>
+  </body>
+</html>

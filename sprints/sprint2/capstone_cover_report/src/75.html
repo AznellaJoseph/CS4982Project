@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\Login.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Login Site
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class LoginModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The username.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Username { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The password.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Password { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The fake user manager used for testing.
+        /// &lt;/summary&gt;
+        public UserManager FakeUserManager { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Called when [post].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; A redirect to the next page or the current page if there was an error &lt;/returns&gt;
+        public IActionResult OnPostLogin()
+        {
+            if (string.IsNullOrEmpty(Username))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidUsername;
+                return Page();
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidPassword;
+                return Page();
+            }
+            var userManager = FakeUserManager ?? new UserManager();
+            var response = userManager.GetUserByCredentials(Username, Password);
+            if (response.Data is not null)
+            {
+                HttpContext.Session.SetString(&quot;userId&quot;, $&quot;{response.Data.UserId}&quot;);
+                return RedirectToPage(&quot;Index&quot;);
+            }
+
+            ErrorMessage = response.ErrorMessage;
+
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post create account].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;A redirect to create account page &lt;/returns&gt;
+        public IActionResult OnPostCreateAccount()
+        {
+            return RedirectToPage(&quot;CreateAccount&quot;);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,34,19,38,1],[19,39,19,43,1],[25,34,25,38,1],[25,39,25,43,1],[30,38,30,42,1],[30,43,30,47,1],[35,46,35,50,1],[35,51,35,55,1],[42,9,42,10,1],[43,13,43,48,1],[44,13,44,14,1],[45,17,45,65,1],[46,17,46,31,1],[49,13,49,48,1],[50,13,50,14,1],[51,17,51,65,1],[52,17,52,31,1],[54,13,54,68,1],[55,13,55,81,1],[56,13,56,43,1],[57,13,57,14,1],[58,17,58,84,1],[59,17,59,48,1],[62,13,62,50,1],[64,13,64,27,1],[65,9,65,10,1],[72,9,72,10,1],[73,13,73,52,1],[74,9,74,10,1]]);
+    </script>
+  </body>
+</html>

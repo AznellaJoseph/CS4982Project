@@ -1,31 +1,37 @@
-﻿@page
+﻿@page "/login"
 @model CapstoneWeb.Pages.LoginModel
 @{
+    Layout = "Shared/_Layout";
     ViewData["Title"] = "Login";
+    var isErrorVisible = string.IsNullOrEmpty(Model.ErrorMessage) ? "hide" : "";
 }
 
+<div class="container data-entry-window">
 
-<div>
+    <canvas class="logo">INSERT LOGO HERE</canvas>
 
     <h1>Login</h1>
 
-    <p>
+    <p class="error @isErrorVisible">
         @Model.ErrorMessage
     </p>
 
-    <form method="post">
-        <label for="username">Username*</label>
-        <input id="username" asp-for="Username" required/>
-
-        <label for="password">Password*</label>
-        <input id="password" asp-for="Password" required type="password"/>
-
-        <input type="submit" value="Login"/>
+    <form method="post" class="login-form">
+        <div>
+            <label for="username">Username*</label>
+            <input id="username" asp-for="Username" required placeholder="USERNAME"/>
+        </div>
 
         <div>
-            <p>* These fields are required</p>
+            <label for="password">Password*</label>
+            <input id="password" asp-for="Password" required type="password" placeholder="PASSWORD"/>
+        </div>
+
+        <p class="warning">* These fields are required</p>
+
+        <div class="button-group">
+            <button type="submit" asp-page-handler="login">Login</button>
+            <button type="submit" asp-page-handler="createAccount" formnovalidate>Create Account</button>
         </div>
     </form>
-
-    <a asp-page="CreateAccount">Create Account</a>
 </div>

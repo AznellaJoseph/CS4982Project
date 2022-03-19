@@ -2,52 +2,55 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\CreateWaypoint.cshtml.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneBackend/Model/Waypoint.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CapstoneBackend.Model;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CapstoneWeb.Pages
+namespace CapstoneBackend.Model
 {
-    public class CreateWaypointModel : PageModel
+    /// &lt;summary&gt;
+    ///     Waypoint Model
+    /// &lt;/summary&gt;
+    public class Waypoint
     {
-        [BindProperty] public string ErrorMessage { get; set; }
-        [BindProperty] public string Location { get; set; }
-        [BindProperty] public DateTime StartDate { get; set; } = DateTime.Now;
-        [BindProperty] public DateTime EndDate { get; set; } = DateTime.Now;
-        [BindProperty] public string Notes { get; set; }
+        /// &lt;summary&gt;
+        ///     The trip id.
+        /// &lt;/summary&gt;
+        public int TripId { get; set; }
 
-        public WaypointManager WaypointManager { get; set; }
+        /// &lt;summary&gt;
+        ///     The waypoint id.
+        /// &lt;/summary&gt;
+        public int WaypointId { get; set; }
 
-        public IActionResult OnPost()
-        {
-            var waypointManager = WaypointManager ?? new WaypointManager();
-            var response = waypointManager.CreateWaypoint(Convert.ToInt32(HttpContext.Session.GetString(&quot;tripId&quot;)), Location, StartDate, EndDate, Notes);
-            if (string.IsNullOrEmpty(response.ErrorMessage))
-            {
-                HttpContext.Session.SetString(&quot;waypointId&quot;, $&quot;{response.Data}&quot;);
-                return RedirectToPage(&quot;index&quot;);
-            }
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        public string Location { get; set; } = string.Empty;
 
-            ErrorMessage = response.ErrorMessage;
-            return Page();
-        }
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTime? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string Notes { get; set; } = string.Empty;
     }
 }
-
     </pre>
     <script type="text/javascript">
-      highlightRanges([[14,53,14,57,1],[14,58,14,62,1],[15,49,15,53,1],[15,54,15,58,1],[16,52,16,56,1],[16,57,16,61,1],[16,66,16,78,1],[17,50,17,54,1],[17,55,17,59,1],[17,64,17,76,1],[18,46,18,50,1],[18,51,18,55,1],[20,50,20,54,1],[20,55,20,59,1],[23,9,23,10,1],[24,13,24,76,1],[25,13,25,154,1],[26,13,26,61,1],[27,13,27,14,1],[28,17,28,81,1],[29,17,29,48,1],[32,13,32,50,1],[33,13,33,27,1],[34,9,34,10,1]]);
+      highlightRanges([[13,29,13,33,1],[13,34,13,38,1],[18,33,18,37,1],[18,38,18,42,1],[23,34,23,38,1],[23,39,23,43,1],[23,48,23,60,1],[28,37,28,41,1],[28,42,28,46,1],[33,36,33,40,1],[33,41,33,45,1],[38,31,38,35,1],[38,36,38,40,1],[38,45,38,57,1]]);
     </script>
   </body>
 </html>

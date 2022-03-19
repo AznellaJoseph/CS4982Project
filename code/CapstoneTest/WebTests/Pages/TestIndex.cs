@@ -1,13 +1,10 @@
 using System.Collections.Generic;
 using System.Text;
+using CapstoneBackend.Model;
 using CapstoneWeb.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -21,29 +18,11 @@ namespace CapstoneTest.WebTests.Pages
         {
             var session = new Mock<ISession>();
             session.SetupGet(s => s.Keys).Returns(new List<string>());
-            var httpContext = new DefaultHttpContext
-            {
-                Session = session.Object
-            };
-            var modelState = new ModelStateDictionary();
-            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
-            var modelMetadataProvider = new EmptyModelMetadataProvider();
-            var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var pageContext = new PageContext(actionContext)
-            {
-                ViewData = viewData
-            };
-            var page = new IndexModel
-            {
-                PageContext = pageContext,
-                TempData = tempData,
-                Url = new UrlHelper(actionContext)
-            };
+            var page = TestPageBuilder.BuildPage<IndexModel>(session.Object);
             var result = page.OnGet();
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
             var redirect = (RedirectToPageResult) result;
-            Assert.AreEqual("login", redirect.PageName);
+            Assert.AreEqual("Login", redirect.PageName);
         }
 
         [TestMethod]
@@ -51,10 +30,15 @@ namespace CapstoneTest.WebTests.Pages
         {
             var outBytes = Encoding.UTF8.GetBytes("0");
             var session = new Mock<ISession>();
+            var mockTripManager = new Mock<TripManager>();
             session.SetupGet(s => s.Keys).Returns(new List<string> {"userId"});
             session.Setup(s => s.TryGetValue("userId", out outBytes)).Returns(true);
+            mockTripManager.Setup(tm => tm.GetTripsByUser(0))
+                .Returns(new Response<IList<Trip>> {Data = new List<Trip> {new()}});
             var page = TestPageBuilder.BuildPage<IndexModel>(session.Object);
+            page.TripManager = mockTripManager.Object;
             var result = page.OnGet();
+            Assert.AreEqual(1, page.Trips.Count);
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual(0, page.UserId);
         }
@@ -69,7 +53,18 @@ namespace CapstoneTest.WebTests.Pages
             session.Verify(s => s.Remove("userId"));
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
             var redirect = (RedirectToPageResult) result;
-            Assert.AreEqual("index", redirect.PageName);
+            Assert.AreEqual("Index", redirect.PageName);
+        }
+
+        [TestMethod]
+        public void PostCreate()
+        {
+            var session = new Mock<ISession>();
+            var page = TestPageBuilder.BuildPage<IndexModel>(session.Object);
+            var result = page.OnPostCreate();
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual("CreateTrip", redirect.PageName);
         }
     }
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestTransportationManager\TestCreateTransportation.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestTransportationManager
+{
+    [TestClass]
+    public class TestCreateTransportation
+    {
+        [TestMethod]
+        public void Create_InvalidTimes_ReturnsErrorMessage()
+        {
+            var mockTransportationDal = new Mock&lt;TransportationDal&gt;();
+            mockTransportationDal.Setup(db =&gt;
+                    db.CreateTransportation(1, &quot;Car&quot;, DateTime.Now.AddDays(4), DateTime.Now, null))
+                .Returns((int) Ui.StatusCode.BadRequest);
+
+            TransportationManager transportationManager = new(mockTransportationDal.Object);
+
+            var resultResponse =
+                transportationManager.CreateTransportation(1, &quot;Car&quot;, DateTime.Now.AddDays(4), DateTime.Now, null);
+
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Create_ValidParameters_ReturnsWaypointNumber()
+        {
+            var mockTransportationDal = new Mock&lt;TransportationDal&gt;();
+            mockTransportationDal.Setup(db =&gt;
+                    db.CreateTransportation(1, &quot;Car&quot;, DateTime.Now, DateTime.Now.AddDays(2), &quot;notes&quot;))
+                .Returns((int) Ui.StatusCode.Success);
+
+            TransportationManager transportationManager = new(mockTransportationDal.Object);
+
+            var resultResponse =
+                transportationManager.CreateTransportation(1, &quot;Car&quot;, DateTime.Now, DateTime.Now.AddDays(2), &quot;notes&quot;);
+
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,71,1],[17,13,19,58,1],[21,13,21,93,1],[23,13,24,115,1],[26,13,26,89,1],[27,9,27,10,1],[31,9,31,10,1],[32,13,32,71,1],[33,13,35,55,1],[37,13,37,93,1],[39,13,40,118,1],[42,13,42,86,1],[43,9,43,10,1]]);
+    </script>
+  </body>
+</html>

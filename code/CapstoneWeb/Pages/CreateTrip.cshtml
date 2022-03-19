@@ -1,0 +1,43 @@
+﻿@page "/trip/create"
+@model CapstoneWeb.Pages.CreateTripModel
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Create Trip";
+    var isErrorVisible = string.IsNullOrEmpty(Model.ErrorMessage) ? "hide" : string.Empty;
+}
+
+<div class="container data-entry-window column">
+    <h1>Create Trip </h1>
+
+    <p class="error @isErrorVisible">@Model.ErrorMessage</p>
+
+    <form method="post">
+        <label for="name">Name* </label>
+        <input id="name" asp-for="TripName" required/>
+
+        <label for="notes">Notes</label>
+        <textarea id="notes" asp-for="Notes"></textarea>
+
+        <div class="row input-row">
+            <div class="input-group">
+                <label for="startDate">Start Date*</label>
+                <input id="startDate" asp-for="StartDate" type="date" required />
+            </div>
+
+            <div class="input-group">
+                <label for="endDate">End Date*</label>
+                <input id="endDate" asp-for="EndDate" type="date" required />
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="submit">Create Trip</button>
+            <button type="submit" asp-page-handler="cancel" formnovalidate>Cancel</button>
+        </div>
+
+        <div class="warning">
+            <p>* Indicates a required field</p>
+        </div>
+    </form>
+
+</div>

@@ -1,71 +1,280 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+﻿body {
+    align-items: center;
+    background: #000F14;
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+    height: 100vh;
+    justify-content: center;
+    margin: 0;
+    width: 100%;
 }
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+.container {
+    background: #002E3D;
+    border-radius: 20px;
+    height: auto;
+    max-height: 1000px;
+    max-width: 1500px;
+    padding: 50px;
+    width: auto;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.logo {
+    align-self: center;
+    background: gray;
+    height: 40%;
+    width: 75%;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+h1 {
+    color: white;
+    font-size: 28px;
+    text-align: center;
+    text-transform: uppercase;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+.data-entry-window {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    height: 70%;
+    justify-content: space-evenly;
+    min-height: 30vh;
+    width: 45vw;
 }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+.data-entry-window form { height: 90%; }
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    min-height: 50%;
 }
 
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+.login-form {
+    gap: 20px;
+    min-height: 60%;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
+.create-account-form {
+    gap: 20px;
+    min-height: 85%;
 }
 
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+input[type=text], input[type=password], input[type=date], input[type=datetime-local], textarea {
+    background: #007EA7;
+    border: none;
+    border-radius: 5px;
+    box-shadow: inset 1px 0px 10px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    padding: 15px 20px;
+    width: 100%;
 }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+
+input[type=button], button {
+    background: #007EA7;
+    border: none;
+    border-radius: 5px;
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    padding: 20px 20px;
+    text-transform: uppercase;
+    width: 50%;
 }
+
+textarea {
+    font-size: 1em;
+    height: 33%;
+    width: 100%;
+}
+
+::placeholder {
+    color: rgba(16, 11, 0, 0.5);
+    text-transform: uppercase;
+}
+
+label {
+    color: white;
+    display: block;
+    font-size: 14px;
+    font-weight: lighter;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.button-group, .button-group form, .input-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.input-row { padding: 20px 0; }
+
+.input-group { width: 100%; }
+
+.error { color: red; }
+
+.warning { color: white; }
+
+.hide { display: none; }
+
+.panel {
+    background: #002E3D;
+    border-radius: 10px;
+}
+
+.list {
+    align-items: center;
+    background: #002E3D;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.list-item {
+    background: #007EA7;
+    border-radius: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: auto;
+    justify-content: space-between;
+    padding: 15px;
+    width: 98%;
+}
+
+.end { margin-top: auto; }
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.landing-page {
+    background: #000F14;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+    height: 75vh;
+    width: 70vw;
+}
+
+.landing-page form, .trip-overview form {
+    margin: 5px;
+    min-height: auto;
+}
+
+#trip-list, #events-list, #lodging-list {
+    flex: 1;
+}
+
+.landing-page .left, .landing-page .right {
+    gap: 12px;
+    height: 100%;
+}
+
+.landing-page .left, .trip-overview .row .left {
+    width: 40%;
+    height: 100%;
+}
+
+.trip-overview .row .left {
+    justify-content: space-between;
+}
+
+.landing-page .right, .trip-overview .row .right {
+    width: 60%;
+}
+
+.landing-page .logo {
+    height: 25%;
+    width: 100%;
+}
+
+.landing-page button { padding: 15px; }
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width-button { width: 100%; }
+
+.upcoming { height: 100%; }
+
+.info-section { font-size: 12px; }
+
+.name-section { font-weight: bold; }
+
+
+.trip-overview {
+    background: #000F14;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 70vh;
+    max-width: 1500px;
+    width: 65vw;
+}
+
+.trip-overview .row { height: 75%; }
+
+#myCalendar {
+    background: #002E3D;
+    border: none;
+    height: 100%;
+    width: 100%;
+}
+
+.events-window, .lodging-window {
+    height: 49%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+#myCalendar .vanilla-calendar-btn {
+    background: #007EA7;
+    padding: 5px;
+}
+
+#myCalendar .vanilla-calendar-btn svg { fill: black; }
+
+#myCalendar .vanilla-calendar-week { background: #007EA7; }
+
+#myCalendar .vanilla-calendar-week span { color: black; }
+
+#myCalendar .vanilla-calendar-date {
+    background: #809848;
+    border: 3px solid #002E3D;
+    border-radius: 9px;
+    padding-bottom: 3%;
+    padding-top: 3%;
+}
+
+#myCalendar .vanilla-calendar-date--disabled {
+    background: #007EA7;
+    opacity: 1;
+}
+
+#myCalendar .vanilla-calendar-date--selected {
+    background: #809848;
+    opacity: 1;
+}
+
+.trip-header { padding: 1% 0; }

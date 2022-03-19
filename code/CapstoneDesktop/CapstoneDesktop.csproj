@@ -5,18 +5,42 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
-        <None Remove=".gitignore"/>
+        <AvaloniaResource Include="Assets\**" />
+        <None Remove=".gitignore" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.10"/>
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.10"/>
+        <PackageReference Include="Avalonia" Version="0.10.10" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.10" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.10"/>
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.10"/>
-        <PackageReference Include="MySql.Data" Version="8.0.28"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.10" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.10" />
+        <PackageReference Include="MySql.Data" Version="8.0.28" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj"/>
+        <ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Views\CreateTransportationPage.axaml.cs">
+        <DependentUpon>CreateTransportationPage.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\LandingPage.axaml.cs">
+        <DependentUpon>LandingPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\LoginPage.axaml.cs">
+        <DependentUpon>LoginPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\CreateAccountPage.axaml.cs">
+        <DependentUpon>CreateAccountPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\TripOverviewPage.axaml.cs">
+        <DependentUpon>TripOverviewPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Views\Styles\DarkMode.axaml" />
     </ItemGroup>
 </Project>

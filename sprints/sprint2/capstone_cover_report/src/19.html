@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestLoginPage\TestOpenCreateAccountCommand.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestLoginPage
+{
+    [TestClass]
+    public class TestOpenCreateAccountCommand
+    {
+        public void OpenCreateAccount_CorrectOutput()
+        {
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            LoginPageViewModel mainWindowViewModel = new(mockUserManager.Object, mockScreen.Object);
+            var testScheduler = new TestScheduler();
+
+            mainWindowViewModel.OpenCreateAccountCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            mockScreen.VerifyGet(ms =&gt; ms.Router);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,0],[16,13,16,59,0],[17,13,17,50,0],[18,13,18,101,0],[19,13,19,53,0],[21,13,21,87,0],[23,13,23,35,0],[25,13,25,51,0],[26,9,26,10,0]]);
+    </script>
+  </body>
+</html>

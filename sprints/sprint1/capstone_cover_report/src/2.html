@@ -2,90 +2,76 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/WebTests/Pages/TestIndex.cs</title>
+    <title>/home/alexthemathnerd/Code/Capstone/code/CapstoneTest/WebTests/Pages/TestCreateTrip.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-using System.Collections.Generic;
+using System;
 using System.Text;
+using CapstoneBackend.Model;
 using CapstoneWeb.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace CapstoneTest.WebTests.Pages
 {
     [TestClass]
-    public class TestIndex
+    public class TestCreateTrip
     {
         [TestMethod]
-        public void GetIndex_WithNoUserId()
+        public void Post_Success()
         {
             var session = new Mock&lt;ISession&gt;();
-            session.SetupGet(s =&gt; s.Keys).Returns(new List&lt;string&gt;());
-            var httpContext = new DefaultHttpContext
-            {
-                Session = session.Object
-            };
-            var modelState = new ModelStateDictionary();
-            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
-            var modelMetadataProvider = new EmptyModelMetadataProvider();
-            var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
-            var tempData = new TempDataDictionary(httpContext, Mock.Of&lt;ITempDataProvider&gt;());
-            var pageContext = new PageContext(actionContext)
-            {
-                ViewData = viewData
-            };
-            var page = new IndexModel
-            {
-                PageContext = pageContext,
-                TempData = tempData,
-                Url = new UrlHelper(actionContext)
-            };
-            var result = page.OnGet();
-            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult) result;
-            Assert.AreEqual(&quot;login&quot;, redirect.PageName);
-        }
+            var fakeTripManager = new Mock&lt;TripManager&gt;();
+            fakeTripManager
+                .Setup(um =&gt; um.CreateTrip(0, &quot;vacation&quot;, &quot;notes&quot;, DateTime.Today, DateTime.Today.AddDays(1)))
+                .Returns(new Response&lt;int&gt; {Data = 0});
+            var page = TestPageBuilder.BuildPage&lt;CreateTripModel&gt;(session.Object);
+            page.TripManager = fakeTripManager.Object;
 
-        [TestMethod]
-        public void GetIndex_WithUserId()
-        {
+            page.HttpContext.Session.SetString(&quot;userId&quot;, &quot;0&quot;);
+            page.Name = &quot;vacation&quot;;
+            page.Notes = &quot;notes&quot;;
+            page.EndDate = DateTime.Today.AddDays(1);
+
+            var result = page.OnPost();
             var outBytes = Encoding.UTF8.GetBytes(&quot;0&quot;);
-            var session = new Mock&lt;ISession&gt;();
-            session.SetupGet(s =&gt; s.Keys).Returns(new List&lt;string&gt; {&quot;userId&quot;});
-            session.Setup(s =&gt; s.TryGetValue(&quot;userId&quot;, out outBytes)).Returns(true);
-            var page = TestPageBuilder.BuildPage&lt;IndexModel&gt;(session.Object);
-            var result = page.OnGet();
-            Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual(0, page.UserId);
-        }
-
-        [TestMethod]
-        public void PostLogout()
-        {
-            var session = new Mock&lt;ISession&gt;();
-            session.SetupGet(s =&gt; s.Keys).Returns(new List&lt;string&gt; {&quot;userId&quot;});
-            var page = TestPageBuilder.BuildPage&lt;IndexModel&gt;(session.Object);
-            var result = page.OnPostLogout();
-            session.Verify(s =&gt; s.Remove(&quot;userId&quot;));
+            session.Verify(s =&gt; s.Set(&quot;tripId&quot;, outBytes));
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
             var redirect = (RedirectToPageResult) result;
             Assert.AreEqual(&quot;index&quot;, redirect.PageName);
+        }
+
+        [TestMethod]
+        public void Post_Failure()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var fakeTripManager = new Mock&lt;TripManager&gt;();
+            fakeTripManager.Setup(um =&gt;
+                    um.CreateTrip(0, &quot;vacation&quot;, &quot;notes&quot;, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response&lt;int&gt; {ErrorMessage = &quot;Start date must not be before end date.&quot;});
+            var page = TestPageBuilder.BuildPage&lt;CreateTripModel&gt;(session.Object);
+            page.TripManager = fakeTripManager.Object;
+
+            page.HttpContext.Session.SetString(&quot;userId&quot;, &quot;0&quot;);
+            page.Name = &quot;vacation&quot;;
+            page.Notes = &quot;notes&quot;;
+            page.StartDate = DateTime.Today.AddDays(1);
+
+            var result = page.OnPost();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(&quot;Start date must not be before end date.&quot;, page.ErrorMessage);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[21,9,21,10,1],[22,13,22,48,1],[23,13,23,71,1],[24,13,27,15,1],[28,13,28,57,1],[29,13,29,121,1],[30,13,30,74,1],[31,13,31,86,1],[32,13,32,94,1],[33,13,36,15,1],[37,13,42,15,1],[43,13,43,39,1],[44,13,44,75,1],[45,13,45,58,1],[46,13,46,57,1],[47,9,47,10,1],[51,9,51,10,1],[52,13,52,56,1],[53,13,53,48,1],[54,13,54,80,1],[55,13,55,85,1],[56,13,56,78,1],[57,13,57,39,1],[58,13,58,65,1],[59,13,59,45,1],[60,9,60,10,1],[64,9,64,10,1],[65,13,65,48,1],[66,13,66,80,1],[67,13,67,78,1],[68,13,68,46,1],[69,13,69,53,1],[70,13,70,75,1],[71,13,71,58,1],[72,13,72,57,1],[73,9,73,10,1]]);
+      highlightRanges([[18,9,18,10,1],[19,13,19,48,1],[20,13,20,59,1],[21,13,23,56,1],[24,13,24,83,1],[25,13,25,55,1],[27,13,27,63,1],[28,13,28,36,1],[29,13,29,34,1],[30,13,30,54,1],[32,13,32,40,1],[33,13,33,56,1],[34,13,34,60,1],[35,13,35,75,1],[36,13,36,58,1],[37,13,37,57,1],[38,9,38,10,1],[42,9,42,10,1],[43,13,43,48,1],[44,13,44,59,1],[45,13,47,104,1],[48,13,48,83,1],[49,13,49,55,1],[51,13,51,63,1],[52,13,52,36,1],[53,13,53,34,1],[54,13,54,56,1],[56,13,56,40,1],[57,13,57,65,1],[58,13,58,91,1],[59,9,59,10,1]]);
     </script>
   </body>
 </html>

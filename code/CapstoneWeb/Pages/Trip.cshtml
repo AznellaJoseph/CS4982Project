@@ -1,0 +1,69 @@
+﻿@page "/trip/{tripId:int}"
+@model CapstoneWeb.Pages.TripModel
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Trip Overview";
+}
+
+@Html.AntiForgeryToken()
+@Html.Hidden("startDate", Model.CurrentTrip.StartDate.ToShortDateString())
+@Html.Hidden("endDate", Model.CurrentTrip.EndDate.ToShortDateString())
+@Html.Hidden("tripId", Model.CurrentTrip.TripId)
+
+<div class="container trip-overview">
+
+    <div class="panel">
+        <h1>@Model.CurrentTrip.Name</h1>
+    </div>
+
+    <div class="panel button-group">
+        <form method="post">
+            <button type="submit" asp-page-handler="profile" disabled>Profile</button>
+            <button type="submit" asp-page-handler="back">Back To Trips</button>
+            <button type="submit" asp-page-handler="logout">Logout</button>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="left column">
+            <div class="lodging-window panel">
+                <h1>Lodging</h1>
+
+                <div id="lodging-list" class="list">
+
+                </div>
+
+                <form method="post" class="end">
+                    <button type="submit" class="full-width-button" asp-page-handler="CreateLodging">Create Lodging</button>
+                </form>
+            </div>
+
+            <div class="events-window panel">
+                <h1>Events</h1>
+
+                <div id="events-list" class="list">
+
+                </div>
+
+                <form method="post" class="end">
+                    <div class="button-group">
+                        <button type="submit" asp-page-handler="CreateTransportation">Create Transportation</button>
+                        <button type="submit" asp-page-handler="CreateWaypoint">Create Waypoint</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel right column">
+            <div id="myCalendar" class="vanilla-calendar">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/vanilla-calendar.js"></script>
+    <script src="~/js/calendarGenerator.js"></script>
+    <script src="~/js/calendarDayClick.js"></script>
+}
