@@ -6,7 +6,7 @@ CREATE PROCEDURE uspRemoveLodging(
 	lodgingId INT
 )
 BEGIN
-	DELETE FROM lodging WHERE lodgingId = lodgingId;
+	DELETE FROM lodging WHERE lodging.lodgingId = lodgingId;
 END$
 
 DELIMITER ;

@@ -73,7 +73,7 @@ namespace CapstoneBackend.DAL
             cmd.CommandType = CommandType.StoredProcedure;
             IList<Lodging> lodgingsInTrip = new List<Lodging>();
 
-            cmd.Parameters.Add("@tripId", MySqlDbType.UInt32).Value = tripId;
+            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
 
 
             using var reader = cmd.ExecuteReader();
@@ -92,7 +92,7 @@ namespace CapstoneBackend.DAL
                     Location = reader.GetString(locationOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
                     EndDate = reader.GetDateTime(endDateOrdinal),
-                    Notes = reader.IsDBNull(notesOrdinal) ? "" : reader.GetString(notesOrdinal)
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
                 });
 
             _connection.Close();
@@ -152,16 +152,18 @@ namespace CapstoneBackend.DAL
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add("@lodgingId", MySqlDbType.UInt32).Value = lodgingId;
+            cmd.Parameters.Add("@lodgingId", MySqlDbType.Int32).Value = lodgingId;
 
-            return cmd.ExecuteNonQuery() == 1;
+            var removed = cmd.ExecuteNonQuery() == 1;
+            _connection.Close();
+            return removed;
         }
 
         /// <summary>
         ///     Gets the transportation by its id.
         /// </summary>
         /// <param name="lodgingId">The transportation identifier.</param>
-        /// <returns>The transportation with the given id, null if no matching transportation found</returns>
+        /// <returns>The lodging with the given id, null if no matching transportation found</returns>
         public virtual Lodging? GetLodgingById(int lodgingId)
         {
             _connection.Open();
