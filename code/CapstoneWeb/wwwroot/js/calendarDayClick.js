@@ -10,9 +10,6 @@ function _onCalendarDayClick() {
     const events = $("#events-list");
     events.empty();
 
-    const lodging = $("#lodging-list");
-    lodging.empty();
-
     const pad = function(num) { return (`00${num}`).slice(-2) };
     let date = new Date($(this).attr("data-calendar-date"));
     date = date.getUTCFullYear() +
@@ -33,27 +30,12 @@ function _onCalendarDayClick() {
             success: _onGetEventsSuccess
         }
     );
-    $.ajax({
-        method: "GET",
-        url: `/trip/${tripId}/?handler=Lodging`,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("XSRF-TOKEN",
-                $('input:hidden[name="__RequestVerificationToken"]').val());
-        },
-        data: { selectedDate: date },
-        success: _onGetLodgingSuccess
-        }
-    );
 }
 
 function _onRemoveClick() {
     const tripId = parseInt($("#tripId").attr("value"));
     const id = parseInt($(this).data("id"));
     let type = $(this).data("event-type");
-
-    if (type == undefined) {
-        type = "Lodging";
-    }
 
     $.ajax({
         method: "GET",
@@ -87,34 +69,6 @@ function _createEvent(event, _index) {
                 <a href="/trip/${tripId}/?handler=View${type}&id=${id}">View</a>
             </div>
         `);
-}
-
-function _createLodging(lodging, _index) {
-    let id = lodging.lodgingId;
-    const tripId = parseInt($("#tripId").attr("value"));
-
-    $("#lodging-list").append(
-        `
-            <div class="event list-item" data-id=${id}>
-                <div class="info-section">
-                    ${lodging.startDate} - ${lodging.endDate}
-                </div>
-                <div class="name-section">
-                    ${lodging.location}
-                </div>
-                <div class="icon-section removeButton" data-id="${id}">
-                    Remove
-                </div>
-                <a href="/trip/${tripId}/?handler=ViewLodging&id=${id}">View</a>
-            </div>
-        `);
-}
-
-function _onGetLodgingSuccess(response) {
-    console.log(response);
-    $("#lodging-list").empty();
-    response.data.forEach(_createLodging);
-    $(".removeButton").click(_onRemoveClick);
 }
 
 function _onGetEventsSuccess(response) {

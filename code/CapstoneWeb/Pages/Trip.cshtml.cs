@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
@@ -24,6 +25,8 @@ namespace CapstoneWeb.Pages
         ///     The current trip.
         /// </summary>
         public Trip CurrentTrip { get; private set; }
+
+        public IList<Lodging> Lodgings { get; private set; }
 
         /// <summary>
         ///     The trip manager.
@@ -67,19 +70,10 @@ namespace CapstoneWeb.Pages
 
             if (!response.StatusCode.Equals((uint)Ui.StatusCode.Success) || response.Data?.UserId != UserId)
                 return RedirectToPage("Index");
-            CurrentTrip = response.Data;
-            return Page();
-        }
 
-        /// <summary>
-        ///     Called when [get lodging].
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <param name="selectedDate">The selected date.</param>
-        /// <returns>A JSON response containing the lodging data for the specified date</returns>
-        public IActionResult OnGetLodging(int tripId, string selectedDate)
-        {
-            return new JsonResult(LodgingManager.GetLodgingsOnDate(tripId, DateTime.Parse(selectedDate)));
+            CurrentTrip = response.Data;
+            Lodgings = LodgingManager.GetLodgingsByTripId(CurrentTrip.TripId).Data;
+            return Page();
         }
 
         /// <summary>
@@ -190,9 +184,15 @@ namespace CapstoneWeb.Pages
         /// <returns>
         ///     A JSON result of removing the lodging
         /// </returns>
-        public IActionResult OnGetRemoveLodging(int id)
+        public void OnPostRemoveLodging(int id)
         {
-            return new JsonResult(LodgingManager.RemoveLodging(id));
+            var lodgingResponse = LodgingManager.GetLodgingById(id);
+            var removeResponse = LodgingManager.RemoveLodging(id);
+            if (lodgingResponse.Data is not null && string.IsNullOrEmpty(removeResponse.ErrorMessage))
+            {
+                CurrentTrip = TripManager.GetTripByTripId(lodgingResponse.Data.TripId).Data;
+                Lodgings = LodgingManager.GetLodgingsByTripId(CurrentTrip.TripId).Data;
+            }
         }
 
         /// <summary>
@@ -229,24 +229,6 @@ namespace CapstoneWeb.Pages
                 {"tripId", tripId}
             };
             return RedirectToPage("Transportation", routeValues);
-        }
-
-        /// <summary>
-        /// Called when [get view lodging].
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <returns>
-        /// Redirect to lodging page.
-        /// </returns>
-        public IActionResult OnGetViewLodging(int id, int tripId)
-        {
-            var routeValues = new RouteValueDictionary
-            {
-                {"id", id},
-                {"tripId", tripId}
-            };
-            return RedirectToPage("Lodging", routeValues);
         }
 
     }

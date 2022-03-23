@@ -38,6 +38,7 @@ namespace CapstoneDesktop.ViewModels
             BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
             EventViewModels = new ObservableCollection<IEventViewModel>();
             LodgingViewModels = new ObservableCollection<LodgingViewModel>();
+            updateLodging();
         }
 
         /// <summary>
@@ -100,20 +101,18 @@ namespace CapstoneDesktop.ViewModels
             {
                 this.RaiseAndSetIfChanged(ref _selectedDate, value, nameof(SelectedDate));
                 updateEvents();
-                updateLodging();
             }
         }
 
         private void updateLodging()
         {
             LodgingViewModels.Clear();
-            if (SelectedDate is null) return;
-            var response = LodgingManager.GetLodgingsOnDate(Trip.TripId, SelectedDate.Value);
+            var response = LodgingManager.GetLodgingsByTripId(Trip.TripId);
 
             foreach (var lodging in response.Data ?? new List<Lodging>())
             {
                 var lodgingViewModel = new LodgingViewModel(lodging, HostScreen);
-                lodgingViewModel.RemoveEvent += (sender, args) =>
+                lodgingViewModel.RemoveEvent += (sender, _) =>
                 {
                     if (sender is not null) LodgingViewModels.Remove(lodgingViewModel);
                 };
