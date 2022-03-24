@@ -17,16 +17,18 @@ namespace CapstoneDesktop.ViewModels
         private DateTime? _selectedDate;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
+        /// Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">The trip.</param>
         /// <param name="screen">The screen.</param>
+        /// <param name="lodgingManager">The lodging manager.</param>
         public TripOverviewPageViewModel(Trip trip,
-            IScreen screen) : base(screen,
+            IScreen screen, LodgingManager lodgingManager) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
             Trip = trip;
             HostScreen = screen;
+            LodgingManager = lodgingManager;
             LogoutCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
             CreateWaypointCommand = ReactiveCommand.CreateFromObservable(() =>
@@ -49,7 +51,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The lodging manager.
         /// </summary>
-        public LodgingManager LodgingManager { get; set; } = new();
+        public LodgingManager LodgingManager { get; set; }
 
         /// <summary>
         ///     The logout command.
@@ -106,7 +108,6 @@ namespace CapstoneDesktop.ViewModels
 
         private void updateLodging()
         {
-            LodgingViewModels.Clear();
             var response = LodgingManager.GetLodgingsByTripId(Trip.TripId);
 
             foreach (var lodging in response.Data ?? new List<Lodging>())

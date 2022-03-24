@@ -119,7 +119,7 @@ namespace CapstoneDesktop.ViewModels
 
             var resultResponse = LodgingManager.CreateLodging(_trip.TripId, Location, startDate, endDate, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
-                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen));
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen, new LodgingManager()));
 
             ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();

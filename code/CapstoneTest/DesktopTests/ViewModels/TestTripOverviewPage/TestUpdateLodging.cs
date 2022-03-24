@@ -29,18 +29,15 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
                 });
 
 
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object)
-            {
-                LodgingManager = mockLodgingManager.Object,
-                SelectedDate = startDate
-            };
+            TripOverviewPageViewModel testViewModel =
+                new(mockTrip.Object, mockScreen.Object, mockLodgingManager.Object);
 
             Assert.AreEqual(2, testViewModel.LodgingViewModels.Count);
         }
 
 
         [TestMethod]
-        public void UpdateEvents_NullData_EmptyWaypointList()
+        public void UpdateLodgings_NullData_EmptyLodgingList()
         {
             var startDate = DateTime.Now;
             var mockTrip = new Mock<Trip>();
@@ -52,29 +49,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
                 {
                     Data = null
                 });
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object)
-            {
-                LodgingManager = mockLodgingManager.Object,
-                SelectedDate = startDate
-            };
+            TripOverviewPageViewModel testViewModel =
+                new(mockTrip.Object, mockScreen.Object, mockLodgingManager.Object);
 
             Assert.AreEqual(0, testViewModel.LodgingViewModels.Count);
         }
 
-        [TestMethod]
-        public void UpdateEvents_NullSelectedDate_ReturnsEmptyList()
-        {
-            var mockTrip = new Mock<Trip>();
-            mockTrip.SetupGet(mt => mt.TripId).Returns(1);
-            var mockScreen = new Mock<IScreen>();
-            var mockLodgingManager = new Mock<LodgingManager>();
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object)
-            {
-                LodgingManager = mockLodgingManager.Object,
-                SelectedDate = null
-            };
-
-            Assert.AreEqual(0, testViewModel.LodgingViewModels.Count);
-        }
     }
 }
