@@ -41,9 +41,10 @@
                             </div>
 
                             <div class="icon-section">
-                                <form method="post">
-                                    <button type="submit" asp-page-handler="removelodging">Remove</button>
+                                <form method="get">
+                                    <button type="submit" asp-page-handler="RemoveLodging">Remove</button>
                                     <input type="hidden" name="id" value="@lodging.LodgingId" />
+                                    <input type="hidden" name="tripId" value="@lodging.TripId"/>
                                 </form>
                             </div>
                             <a asp-page="/lodging" asp-route-id="@lodging.LodgingId" asp-route-tripId="@lodging.TripId">View</a>

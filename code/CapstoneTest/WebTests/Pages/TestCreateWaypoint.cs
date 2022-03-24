@@ -72,6 +72,51 @@ namespace CapstoneTest.WebTests.Pages
         }
 
         [TestMethod]
+        public void Post_InvalidEventDates_ReturnsErrorMessage()
+        {
+            var session = new Mock<ISession>();
+            var currentTime = DateTime.Now;
+
+            var fakeValidationManager = new Mock<ValidationManager>();
+            fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime.AddDays(2)))
+                .Returns(new Response<bool> { ErrorMessage = $"{Ui.ErrorMessages.EventStartDateBeforeTripStartDate} {DateTime.Now.AddDays(1)}" });
+
+            var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
+            page.ValidationManager = fakeValidationManager.Object;
+            page.Location = "1601 Maple St";
+            page.StartDate = currentTime;
+            page.EndDate = currentTime.AddDays(2);
+
+            var result = page.OnPost(0);
+
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual($"{Ui.ErrorMessages.EventStartDateBeforeTripStartDate} {DateTime.Now.AddDays(1)}", page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Post_ClashingEvent_ReturnsErrorMessage()
+        {
+            var session = new Mock<ISession>();
+            var currentTime = DateTime.Now;
+
+            var fakeValidationManager = new Mock<ValidationManager>();
+            fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime.AddDays(2)))
+                .Returns(new Response<bool> { Data = true});
+            fakeValidationManager.Setup(vm => vm.FindClashingEvent(0, currentTime, currentTime.AddDays(2))).Returns(new Response<IEvent>{ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}"});
+
+            var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
+            page.ValidationManager = fakeValidationManager.Object;
+            page.Location = "Hilton";
+            page.StartDate = currentTime;
+            page.EndDate = currentTime.AddDays(2);
+
+            var result = page.OnPost(0);
+
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual($"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Now} {DateTime.Now.AddDays(1)}", page.ErrorMessage);
+        }
+
+        [TestMethod]
         public void PostCancel_Success_RedirectToTrip()
         {
             var session = new Mock<ISession>();

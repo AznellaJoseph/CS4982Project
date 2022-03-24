@@ -26,6 +26,9 @@ namespace CapstoneWeb.Pages
         /// </summary>
         public Trip CurrentTrip { get; private set; }
 
+        /// <summary>
+        ///     The lodgings.
+        /// </summary>
         public IList<Lodging> Lodgings { get; private set; }
 
         /// <summary>
@@ -178,21 +181,16 @@ namespace CapstoneWeb.Pages
         }
 
         /// <summary>
-        ///     Called when [get remove lodging].
+        /// Called when [get remove lodging].
         /// </summary>
         /// <param name="id">The id for the lodging record to remove</param>
-        /// <returns>
-        ///     A JSON result of removing the lodging
-        /// </returns>
-        public void OnPostRemoveLodging(int id)
+        /// <param name="tripId">The trip identifier.</param>
+        public IActionResult OnGetRemoveLodging(int id, int tripId)
         {
-            var lodgingResponse = LodgingManager.GetLodgingById(id);
-            var removeResponse = LodgingManager.RemoveLodging(id);
-            if (lodgingResponse.Data is not null && string.IsNullOrEmpty(removeResponse.ErrorMessage))
-            {
-                CurrentTrip = TripManager.GetTripByTripId(lodgingResponse.Data.TripId).Data;
-                Lodgings = LodgingManager.GetLodgingsByTripId(CurrentTrip.TripId).Data;
-            }
+            LodgingManager.RemoveLodging(id);
+
+            var routeValue = new RouteValueDictionary { { "tripId", tripId } };
+            return RedirectToPage("Trip", routeValue);
         }
 
         /// <summary>
