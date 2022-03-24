@@ -19,7 +19,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();
             var mockLodgingManager = new Mock<LodgingManager>();
-            mockLodgingManager.Setup(wm => wm.GetLodgingsOnDate(1, startDate))
+            mockLodgingManager.Setup(wm => wm.GetLodgingsByTripId(1))
                 .Returns(new Response<IList<Lodging>>
                 {
                     Data = new List<Lodging>
@@ -47,7 +47,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();
             var mockLodgingManager = new Mock<LodgingManager>();
-            mockLodgingManager.Setup(em => em.GetLodgingsOnDate(1, startDate))
+            mockLodgingManager.Setup(em => em.GetLodgingsByTripId(1))
                 .Returns(new Response<IList<Lodging>>
                 {
                     Data = null

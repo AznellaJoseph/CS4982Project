@@ -100,45 +100,6 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        ///     Gets the lodgings on the specified date.
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <param name="selectedDate">The selected date.</param>
-        /// <returns> A list of the lodgings of the trip on the specified date </returns>
-        public virtual IList<Lodging> GetLodgingsOnDate(int tripId, DateTime selectedDate)
-        {
-            _connection.Open();
-            const string procedure = "uspGetLodgingsOnDate";
-            using MySqlCommand cmd = new(procedure, _connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            IList<Lodging> lodgingsOnDate = new List<Lodging>();
-
-            cmd.Parameters.Add("@selectedDate", MySqlDbType.DateTime).Value = selectedDate;
-            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
-
-            using var reader = cmd.ExecuteReaderAsync().Result;
-            var lodgingIdOrdinal = reader.GetOrdinal("lodgingId");
-            var startDateOrdinal = reader.GetOrdinal("startDate");
-            var endDateOrdinal = reader.GetOrdinal("endDate");
-            var locationOrdinal = reader.GetOrdinal("location");
-            var notesOrdinal = reader.GetOrdinal("notes");
-
-            while (reader.Read())
-                lodgingsOnDate.Add(new Lodging
-                {
-                    TripId = tripId,
-                    LodgingId = reader.GetInt32(lodgingIdOrdinal),
-                    Location = reader.GetString(locationOrdinal),
-                    StartDate = reader.GetDateTime(startDateOrdinal),
-                    EndDate = reader.GetDateTime(endDateOrdinal),
-                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
-                });
-
-            _connection.Close();
-            return lodgingsOnDate;
-        }
-
-        /// <summary>
         ///     Removes the Lodging.
         /// </summary>
         /// <param name="lodgingId">The Lodging identifier.</param>

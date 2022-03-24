@@ -77,41 +77,6 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Gets the Lodgings on date.
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <param name="selectedDate">The selected date.</param>
-        /// <returns> A response of the Lodgings on that date or a non-success status code and error message. </returns>
-        public virtual Response<IList<Lodging>> GetLodgingsOnDate(int tripId, DateTime selectedDate)
-        {
-            try
-            {
-                var lodgingsOnDate = _dal.GetLodgingsOnDate(tripId, selectedDate);
-
-                return new Response<IList<Lodging>>
-                {
-                    Data = lodgingsOnDate
-                };
-            }
-            catch (MySqlException e)
-            {
-                return new Response<IList<Lodging>>
-                {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
-            catch (Exception)
-            {
-                return new Response<IList<Lodging>>
-                {
-                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
-                    ErrorMessage = Ui.ErrorMessages.InternalServerError
-                };
-            }
-        }
-
-        /// <summary>
         ///     Gets the Lodgings by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>

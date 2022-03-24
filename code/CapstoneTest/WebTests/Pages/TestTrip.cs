@@ -143,7 +143,7 @@ namespace CapstoneTest.WebTests.Pages
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
             var selectedDate = DateTime.Now;
             var mockLodgingManager = new Mock<LodgingManager>();
-            mockLodgingManager.Setup(wm => wm.GetLodgingsOnDate(1, selectedDate))
+            mockLodgingManager.Setup(wm => wm.GetLodgingsByTripId(1))
                 .Returns(new Response<IList<Lodging>> { Data = new List<Lodging>() });
             page.LodgingManager = mockLodgingManager.Object;
             var result = page.OnGetEvents(1, selectedDate.ToShortDateString());
@@ -161,8 +161,7 @@ namespace CapstoneTest.WebTests.Pages
             {
                 Data = true
             });
-            var result = page.OnGetRemoveLodging(1);
-            Assert.IsInstanceOfType(result, typeof(JsonResult));
+             page.OnPostRemoveLodging(1);
         }
 
         [TestMethod]
