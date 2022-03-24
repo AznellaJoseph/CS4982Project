@@ -166,10 +166,10 @@ namespace CapstoneBackend.Model
                     return new Response<Lodging>
                     {
                         ErrorMessage = Ui.ErrorMessages.LodgingNotFound,
-                        StatusCode = (uint)Ui.StatusCode.DataNotFound
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound
                     };
 
-                return new Response<Lodging> { Data = lodging };
+                return new Response<Lodging> {Data = lodging};
             }
             catch (MySqlException e)
             {
@@ -183,7 +183,7 @@ namespace CapstoneBackend.Model
             {
                 return new Response<Lodging>
                 {
-                    StatusCode = (uint)Ui.StatusCode.InternalServerError,
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError
                 };
             }

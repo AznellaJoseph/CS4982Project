@@ -65,6 +65,8 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
             Assert.AreEqual("notes", resultResponse.Data?[0].Notes);
+            Assert.AreEqual(nameof(Waypoint), resultResponse.Data?[0].EventType);
+            Assert.AreEqual(1, resultResponse.Data?[0].Id);
         }
 
 
