@@ -135,9 +135,9 @@ namespace CapstoneTest.WebTests.Pages
             var mockEventManager = new Mock<EventManager>();
             mockEventManager.Setup(wm => wm.GetEventsOnDate(1, selectedDate))
                 .Returns(new Response<IList<IEvent>> {Data = new List<IEvent>()});
-            
+
             page.EventManager = mockEventManager.Object;
-            
+
             var result = page.OnGetEvents(1, selectedDate.ToShortDateString());
             Assert.IsInstanceOfType(result, typeof(JsonResult));
         }
@@ -153,10 +153,10 @@ namespace CapstoneTest.WebTests.Pages
             {
                 Data = true
             });
-             var result = page.OnGetRemoveLodging(1, 1);
-             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-             var redirect = (RedirectToPageResult) result;
-             Assert.AreEqual("Trip", redirect.PageName);
+            var result = page.OnPostRemoveLodging(1, 1);
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual("Trip", redirect.PageName);
         }
 
         [TestMethod]
@@ -170,10 +170,10 @@ namespace CapstoneTest.WebTests.Pages
             {
                 Data = true
             });
-            var result = page.OnGetRemoveWaypoint( 1);
+            var result = page.OnGetRemoveWaypoint(1);
             Assert.IsInstanceOfType(result, typeof(JsonResult));
         }
-        
+
         [TestMethod]
         public void GetRemoveTransportation_ReturnsJSONResult()
         {
@@ -185,7 +185,7 @@ namespace CapstoneTest.WebTests.Pages
             {
                 Data = true
             });
-            var result = page.OnGetRemoveTransportation( 1);
+            var result = page.OnGetRemoveTransportation(1);
             Assert.IsInstanceOfType(result, typeof(JsonResult));
         }
 
@@ -195,9 +195,9 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
 
-            var result = page.OnGetViewWaypoint(1,1);
+            var result = page.OnGetViewWaypoint(1, 1);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Waypoint", redirect.PageName);
         }
 
@@ -206,10 +206,10 @@ namespace CapstoneTest.WebTests.Pages
         {
             var session = new Mock<ISession>();
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-;
-            var result = page.OnGetViewTransportation(1,1);
+            ;
+            var result = page.OnGetViewTransportation(1, 1);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Transportation", redirect.PageName);
         }
 
@@ -217,14 +217,14 @@ namespace CapstoneTest.WebTests.Pages
         public void PostCreateLodging_RedirectsToCreateLodging()
         {
             var session = new Mock<ISession>();
-            session.SetupGet(s => s.Keys).Returns(new List<string> { "userId" });
+            session.SetupGet(s => s.Keys).Returns(new List<string> {"userId"});
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-            
+
             var result = page.OnPostCreateLodging(1);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            
-            var redirect = (RedirectToPageResult)result;
-            
+
+            var redirect = (RedirectToPageResult) result;
+
             Assert.IsTrue(redirect.RouteValues.ContainsKey("tripId"));
             Assert.AreEqual(1, redirect.RouteValues["tripId"]);
             Assert.AreEqual("CreateLodging", redirect.PageName);
@@ -236,12 +236,12 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             session.SetupGet(s => s.Keys).Returns(new List<string> {"userId"});
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-           
+
             var result = page.OnPostCreateWaypoint(1);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            
+
             var redirect = (RedirectToPageResult) result;
-            
+
             Assert.IsTrue(redirect.RouteValues.ContainsKey("tripId"));
             Assert.AreEqual(1, redirect.RouteValues["tripId"]);
             Assert.AreEqual("CreateWaypoint", redirect.PageName);
@@ -253,12 +253,12 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             session.SetupGet(s => s.Keys).Returns(new List<string> {"userId"});
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-            
+
             var result = page.OnPostCreateTransportation(1);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            
+
             var redirect = (RedirectToPageResult) result;
-            
+
             Assert.IsTrue(redirect.RouteValues.ContainsKey("tripId"));
             Assert.AreEqual(1, redirect.RouteValues["tripId"]);
             Assert.AreEqual("CreateTransportation", redirect.PageName);
@@ -270,10 +270,10 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             session.SetupGet(s => s.Keys).Returns(new List<string> {"userId"});
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-            
+
             var result = page.OnPostBack();
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            
+
             var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Index", redirect.PageName);
         }
@@ -284,11 +284,11 @@ namespace CapstoneTest.WebTests.Pages
             var session = new Mock<ISession>();
             session.SetupGet(s => s.Keys).Returns(new List<string> {"userId"});
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-           
+
             var result = page.OnPostLogout();
             session.Verify(s => s.Remove("userId"));
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            
+
             var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Index", redirect.PageName);
         }
