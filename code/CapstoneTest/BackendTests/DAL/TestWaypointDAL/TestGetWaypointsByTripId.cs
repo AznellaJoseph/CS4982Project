@@ -1,33 +1,32 @@
-﻿using CapstoneBackend.DAL;
-using CapstoneBackend.Model;
+﻿using System;
+using CapstoneBackend.DAL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 
 namespace CapstoneTest.BackendTests.DAL.TestWaypointDAL
 {
     [TestClass]
     public class TestGetWaypointsByTripId
     {
-        private MySqlConnection _connection;
-        private int testTripId;
-        private int testWaypointId;
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testTripId;
+        private int _testWaypointId;
 
         [TestInitialize]
         public void Setup()
         {
-            _connection = new MySqlConnection(Connection.ConnectionString);
-            testTripId = new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now.AddDays(7));
-            testWaypointId = new WaypointDal(_connection).CreateWaypoint(testTripId, "TestLocation", DateTime.Now.AddDays(2), DateTime.Now.AddDays(7), "SomeNotes");
+            _testTripId =
+                new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now.AddDays(7));
+            _testWaypointId = new WaypointDal(_connection).CreateWaypoint(_testTripId, "TestLocation",
+                DateTime.Now.AddDays(2), DateTime.Now.AddDays(7), "SomeNotes");
         }
 
         [TestMethod]
         public void CallProcedure_InvalidTripId_ReturnsEmpty()
         {
-            WaypointDal testDAL = new(_connection);
+            WaypointDal testDal = new(_connection);
 
-            IList<Waypoint> result = testDAL.GetWaypointsByTripId(-1);
+            var result = testDal.GetWaypointsByTripId(-1);
 
             Assert.AreEqual(0, result.Count);
         }
@@ -35,9 +34,9 @@ namespace CapstoneTest.BackendTests.DAL.TestWaypointDAL
         [TestMethod]
         public void CallProcedure_ValidTripWithWaypoint_ReturnsList()
         {
-            WaypointDal testDAL = new(_connection);
+            WaypointDal testDal = new(_connection);
 
-            IList<Waypoint> result = testDAL.GetWaypointsByTripId(testTripId);
+            var result = testDal.GetWaypointsByTripId(_testTripId);
 
             Assert.AreEqual(1, result.Count);
         }
@@ -46,16 +45,16 @@ namespace CapstoneTest.BackendTests.DAL.TestWaypointDAL
         public void TearDown()
         {
             _connection.Open();
-            string removeTrip = $"delete from trip where tripId = {testTripId};";
-            string removeWaypoint = $"delete from waypoint where waypointId = {testWaypointId};";
+            var removeTrip = $"delete from trip where tripId = {_testTripId};";
+            var removeWaypoint = $"delete from waypoint where waypointId = {_testWaypointId};";
 
-            using MySqlCommand tripCmd = new MySqlCommand(removeTrip, _connection);
+            using var tripCmd = new MySqlCommand(removeTrip, _connection);
             tripCmd.ExecuteNonQuery();
 
-            using MySqlCommand waypointCmd = new MySqlCommand(removeWaypoint, _connection);
+            using var waypointCmd = new MySqlCommand(removeWaypoint, _connection);
             waypointCmd.ExecuteNonQuery();
 
-            this._connection.Close();
+            _connection.Close();
         }
     }
 }
