@@ -15,7 +15,6 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
     public class EventPageViewModel : ReactiveViewModelBase
     {
-        public TripManager TripManager { get; set; } = new();
         public IEvent Event { get; }
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace CapstoneDesktop.ViewModels
             Guid.NewGuid().ToString()[..5])
         {
             Event = selectedEvent;
-            BackCommand = ReactiveCommand.CreateFromObservable(HostScreen.Router.NavigateBack.Execute);
+            BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
             LogoutCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
         }
