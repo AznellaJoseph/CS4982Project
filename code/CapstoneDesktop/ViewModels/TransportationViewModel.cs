@@ -24,6 +24,8 @@ namespace CapstoneDesktop.ViewModels
             HostScreen = screen;
             Transportation = transportation;
             RemoveCommand = ReactiveCommand.Create(removeTransportation);
+            ViewCommand = ReactiveCommand.CreateFromObservable(() =>
+                HostScreen.Router.Navigate.Execute(new EventPageViewModel(transportation, screen)));
         }
 
         /// <summary>
@@ -45,6 +47,8 @@ namespace CapstoneDesktop.ViewModels
         ///     The remove event
         /// </summary>
         public event EventHandler<EventArgs>? RemoveEvent;
+
+        public ReactiveCommand<Unit, IRoutableViewModel> ViewCommand { get; }
 
         /// <summary>
         ///     The Event.
