@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\CreateAccountPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for Create Account Page
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;ReactiveUI.IRoutableViewModel&quot; /&gt;
+    public class CreateAccountPageViewModel : ReactiveViewModelBase
+    {
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateAccountPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public CreateAccountPageViewModel(IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            HostScreen = screen;
+            CancelCreateAccountCommand =
+                ReactiveCommand.CreateFromObservable(() =&gt; HostScreen.Router.NavigateBack.Execute());
+            SubmitAccountCommand = ReactiveCommand.CreateFromObservable(submitAccount);
+        }
+
+        /// &lt;summary&gt;
+        ///     The user manager.
+        /// &lt;/summary&gt;
+        public UserManager UserManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The cancel create account command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateAccountCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The submit account command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; SubmitAccountCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The username
+        /// &lt;/summary&gt;
+        public string? Username { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The password
+        /// &lt;/summary&gt;
+        public string? Password { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The confirmed password
+        /// &lt;/summary&gt;
+        public string? ConfirmedPassword { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The first name
+        /// &lt;/summary&gt;
+        public string? FirstName { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The last name
+        /// &lt;/summary&gt;
+        public string? LastName { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The error message
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        private IObservable&lt;IRoutableViewModel&gt; submitAccount()
+        {
+            if (string.IsNullOrEmpty(Username))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidUsername;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidPassword;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (string.IsNullOrEmpty(FirstName))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidFirstName;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (string.IsNullOrEmpty(LastName))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidLastName;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (string.IsNullOrEmpty(ConfirmedPassword))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidConfirmedPassword;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (Password == ConfirmedPassword)
+            {
+                var response = UserManager.RegisterUser(Username, Password,
+                    FirstName, LastName);
+                if (string.IsNullOrEmpty(response.ErrorMessage))
+                    return HostScreen.Router.Navigate.Execute(
+                        new LandingPageViewModel(new User {UserId = response.Data}, HostScreen, new TripManager()));
+
+                ErrorMessage = response.ErrorMessage;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            ErrorMessage = Ui.ErrorMessages.PasswordsDoNotMatch;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,46,1],[23,61,24,44,1],[25,9,25,10,1],[26,13,26,33,1],[27,13,28,60,1],[28,60,28,100,0],[28,100,28,102,1],[29,13,29,88,1],[30,9,30,10,1],[35,42,35,46,1],[35,47,35,51,1],[35,56,35,61,1],[40,73,40,77,1],[45,81,45,85,1],[50,35,50,39,1],[50,40,50,44,1],[55,35,55,39,1],[55,40,55,44,1],[60,44,60,48,1],[60,49,60,53,1],[65,36,65,40,1],[65,41,65,45,1],[70,35,70,39,1],[70,40,70,44,1],[77,20,77,26,1],[78,20,78,64,1],[82,9,82,10,1],[83,13,83,48,1],[84,13,84,14,1],[85,17,85,65,1],[86,17,86,63,1],[89,13,89,48,1],[90,13,90,14,1],[91,17,91,65,1],[92,17,92,63,1],[95,13,95,49,1],[96,13,96,14,1],[97,17,97,66,1],[98,17,98,63,1],[101,13,101,48,1],[102,13,102,14,1],[103,17,103,65,1],[104,17,104,63,1],[107,13,107,57,1],[108,13,108,14,1],[109,17,109,74,1],[110,17,110,63,1],[113,13,113,47,1],[114,13,114,14,1],[115,17,116,42,1],[117,17,117,65,1],[118,21,119,117,0],[121,17,121,54,1],[122,17,122,63,1],[125,13,125,65,1],[126,13,126,59,1],[127,9,127,10,1]]);
+    </script>
+  </body>
+</html>

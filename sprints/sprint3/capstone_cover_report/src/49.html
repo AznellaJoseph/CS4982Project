@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestValidationManager\TestFindClashingEvent.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestValidationManager
+{
+    [TestClass]
+    public class TestFindClashingEvent
+    {
+        [TestMethod]
+        public void FindClashingEvent_NoClashingEvent()
+        {
+            var mockEventManager = new Mock&lt;EventManager&gt;();
+            mockEventManager.Setup(em =&gt; em.GetEventsOnDate(1, DateTime.Today.AddDays(-5))).Returns(new Response&lt;IList&lt;IEvent&gt;&gt;
+            { Data = new List&lt;IEvent&gt;() });
+
+            var validationManager = new ValidationManager { EventManager = mockEventManager.Object };
+
+            var clashingTripResponse =
+                validationManager.FindClashingEvent(1, DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-5));
+
+            Assert.IsNull(clashingTripResponse.Data);
+        }
+
+        [TestMethod]
+        public void FindClashingEvent_ClashingEventExists_ReturnsErrorMessage()
+        {
+            var mockEventManager = new Mock&lt;EventManager&gt;();
+            mockEventManager.Setup(em =&gt; em.GetEventsOnDate(1, DateTime.Today)).Returns(new Response&lt;IList&lt;IEvent&gt;&gt;
+            {
+                Data = new List&lt;IEvent&gt;
+                    {new Transportation {StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(4)}}
+            });
+
+            var validationManager = new ValidationManager { EventManager = mockEventManager.Object };
+
+            var clashingTripResponse =
+                validationManager.FindClashingEvent(1, DateTime.Today, DateTime.Today.AddHours(3));
+
+            Assert.IsNull(clashingTripResponse.Data);
+
+            Assert.AreEqual((uint)Ui.StatusCode.BadRequest, clashingTripResponse.StatusCode);
+            Assert.AreEqual($&quot;{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today} to {DateTime.Today.AddDays(4)}.&quot;,
+                clashingTripResponse.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,61,1],[17,13,18,44,1],[20,13,20,102,1],[22,13,23,112,1],[25,13,25,54,1],[26,9,26,10,1],[30,9,30,10,1],[31,13,31,61,1],[32,13,36,16,1],[38,13,38,102,1],[40,13,41,100,1],[43,13,43,54,1],[45,13,45,94,1],[46,13,47,52,1],[48,9,48,10,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\DAL\TestTripDAL\TestGetTripByTripId.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneTest.BackendTests.DAL.TestTripDAL
+{
+    [TestClass]
+    public class TestGetTripByTripId
+    {
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testTripId;
+
+        [TestMethod]
+        public void CallProcedure_WithInvalidTripId_ReturnsNull()
+        {
+            TripDal testDal = new(_connection);
+
+            var result = testDal.GetTripByTripId(-1);
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public void CallProcedure_WithValidTripId_Succeeds()
+        {
+            TripDal testDal = new(_connection);
+            _testTripId = testDal.CreateTrip(1, &quot;TestTrip&quot;, &quot;Some Notes&quot;, DateTime.Now, DateTime.Now);
+
+            var result = testDal.GetTripByTripId(1);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result is Trip);
+        }
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            _connection.Open();
+            var query = $&quot;delete from trip where tripId = {_testTripId};&quot;;
+
+            using var cmd = new MySqlCommand(query, _connection);
+            cmd.ExecuteNonQuery();
+            _connection.Close();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[12,9,12,89,1],[17,9,17,10,1],[18,13,18,48,1],[20,13,20,54,1],[22,13,22,35,1],[23,9,23,10,1],[27,9,27,10,1],[28,13,28,48,1],[29,13,29,103,1],[31,13,31,53,1],[33,13,33,38,1],[34,13,34,43,1],[35,9,35,10,1],[39,9,39,10,1],[40,13,40,32,1],[41,13,41,75,1],[43,13,43,66,1],[44,13,44,35,1],[45,13,45,33,1],[46,9,46,10,1]]);
+    </script>
+  </body>
+</html>

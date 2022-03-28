@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\WebTests\Pages\TestCreateTrip.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Text;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneWeb.Pages;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.WebTests.Pages
+{
+    [TestClass]
+    public class TestCreateTrip
+    {
+        [TestMethod]
+        public void Post_Success_RedirectsToIndex()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var fakeTripManager = new Mock&lt;TripManager&gt;();
+            fakeTripManager
+                .Setup(um =&gt; um.CreateTrip(0, &quot;vacation&quot;, &quot;notes&quot;, DateTime.Today, DateTime.Today.AddDays(1)))
+                .Returns(new Response&lt;int&gt; { Data = 0 });
+            var page = TestPageBuilder.BuildPage&lt;CreateTripModel&gt;(session.Object);
+            page.TripManager = fakeTripManager.Object;
+
+            page.HttpContext.Session.SetString(&quot;userId&quot;, &quot;0&quot;);
+            page.TripName = &quot;vacation&quot;;
+            page.Notes = &quot;notes&quot;;
+            page.EndDate = DateTime.Today.AddDays(1);
+
+            var result = page.OnPost();
+            var outBytes = Encoding.UTF8.GetBytes(&quot;0&quot;);
+            session.Verify(s =&gt; s.Set(&quot;tripId&quot;, outBytes));
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult)result;
+            Assert.AreEqual(&quot;index&quot;, redirect.PageName);
+        }
+
+        [TestMethod]
+        public void Post_InvalidStartDate_ReturnsErrorMessage()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var fakeTripManager = new Mock&lt;TripManager&gt;();
+            fakeTripManager.Setup(um =&gt;
+                    um.CreateTrip(0, &quot;vacation&quot;, &quot;notes&quot;, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response&lt;int&gt; { ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
+            var page = TestPageBuilder.BuildPage&lt;CreateTripModel&gt;(session.Object);
+            page.TripManager = fakeTripManager.Object;
+
+            page.HttpContext.Session.SetString(&quot;userId&quot;, &quot;0&quot;);
+            page.TripName = &quot;vacation&quot;;
+            page.Notes = &quot;notes&quot;;
+            page.StartDate = DateTime.Today.AddDays(1);
+
+            var result = page.OnPost();
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Post_ClashingTripExists_ReturnsErrorMessage()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var mockValidationManager = new Mock&lt;ValidationManager&gt;();
+            var fakeTripManager = new Mock&lt;TripManager&gt;();
+            mockValidationManager.Setup(um =&gt;
+                    um.FindClashingTrip(0, DateTime.Today, DateTime.Today.AddDays(2)))
+                .Returns(new Response&lt;Trip&gt; { ErrorMessage = $&quot;{Ui.ErrorMessages.ClashingTripDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}&quot; });
+
+            var page = TestPageBuilder.BuildPage&lt;CreateTripModel&gt;(session.Object);
+
+            page.ValidationManager = mockValidationManager.Object;
+
+            page.HttpContext.Session.SetString(&quot;userId&quot;, &quot;0&quot;);
+            page.TripName = &quot;vacation&quot;;
+            page.Notes = &quot;notes&quot;;
+            page.StartDate = DateTime.Today;
+            page.EndDate = DateTime.Today.AddDays(2);
+
+            var result = page.OnPost();
+
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual($&quot;{Ui.ErrorMessages.ClashingTripDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}&quot;, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void PostCancel_Success_RedirectsToIndex()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            var page = TestPageBuilder.BuildPage&lt;CreateTripModel&gt;(session.Object);
+
+            var result = page.OnPostCancel();
+
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult)result;
+            Assert.AreEqual(&quot;index&quot;, redirect.PageName);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,9,19,10,1],[20,13,20,48,1],[21,13,21,59,1],[22,13,24,58,1],[25,13,25,83,1],[26,13,26,55,1],[28,13,28,63,1],[29,13,29,40,1],[30,13,30,34,1],[31,13,31,54,1],[33,13,33,40,1],[34,13,34,56,1],[35,13,35,60,1],[36,13,36,75,1],[37,13,37,57,1],[38,13,38,57,1],[39,9,39,10,1],[43,9,43,10,1],[44,13,44,48,1],[45,13,45,59,1],[46,13,48,98,1],[49,13,49,83,1],[50,13,50,55,1],[52,13,52,63,1],[53,13,53,40,1],[54,13,54,34,1],[55,13,55,56,1],[57,13,57,40,1],[58,13,58,65,1],[59,13,59,83,1],[60,9,60,10,1],[64,9,64,10,1],[65,13,65,48,1],[66,13,66,71,1],[67,13,67,59,1],[68,13,70,164,1],[72,13,72,83,1],[74,13,74,67,1],[76,13,76,63,1],[77,13,77,40,1],[78,13,78,34,1],[79,13,79,45,1],[80,13,80,54,1],[82,13,82,40,1],[84,13,84,65,1],[85,13,85,148,1],[86,9,86,10,1],[90,9,90,10,1],[91,13,91,48,1],[92,13,92,83,1],[94,13,94,46,1],[96,13,96,75,1],[97,13,97,57,1],[98,13,98,57,1],[99,9,99,10,1]]);
+    </script>
+  </body>
+</html>

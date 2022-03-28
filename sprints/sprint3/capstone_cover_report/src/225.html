@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\LoginPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the MainWindow (Login)
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class LoginPageViewModel : ReactiveViewModelBase
+    {
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;LoginPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public LoginPageViewModel(IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
+        {
+            HostScreen = screen;
+            LoginCommand = ReactiveCommand.CreateFromObservable(login);
+            OpenCreateAccountCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new CreateAccountPageViewModel(HostScreen)));
+        }
+
+        /// &lt;summary&gt;
+        ///     The user manager.
+        /// &lt;/summary&gt;
+        public UserManager UserManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The login command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; LoginCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The open create account command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; OpenCreateAccountCommand { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The username.
+        /// &lt;/summary&gt;
+        public string? Username { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The password.
+        /// &lt;/summary&gt;
+        public string? Password { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        private IObservable&lt;IRoutableViewModel&gt; login()
+        {
+            if (string.IsNullOrEmpty(Username))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidUsername;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidPassword;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var response = UserManager.GetUserByCredentials(Username, Password);
+            if (response.Data is not null)
+                return HostScreen.Router.Navigate.Execute(new LandingPageViewModel(response.Data, HostScreen,
+                    new TripManager()));
+
+            ErrorMessage = response.ErrorMessage ?? Ui.ErrorMessages.UnknownError;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,46,1],[22,53,22,97,1],[23,9,23,10,1],[24,13,24,33,1],[25,13,25,72,1],[26,13,27,17,1],[27,17,27,95,0],[27,95,27,97,1],[28,9,28,10,1],[33,42,33,46,1],[33,47,33,51,1],[33,56,33,61,1],[38,73,38,77,1],[43,85,43,89,1],[43,90,43,94,1],[48,35,48,39,1],[48,40,48,44,1],[53,35,53,39,1],[53,40,53,44,1],[60,20,60,26,1],[61,20,61,64,1],[65,9,65,10,1],[66,13,66,48,1],[67,13,67,14,1],[68,17,68,65,1],[69,17,69,63,1],[72,13,72,48,1],[73,13,73,14,1],[74,17,74,65,1],[75,17,75,63,1],[78,13,78,81,1],[79,13,79,43,1],[80,17,81,41,0],[83,13,83,83,1],[84,13,84,59,1],[85,9,85,10,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestTransportationManager\TestGetTransportationById.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestTransportationManager
+{
+    [TestClass]
+    public class TestGetTransportationById
+    {
+        [TestMethod]
+        public void GetTransportationById_NoTransportationFound_ReturnsErrorMessage()
+        {
+            Transportation? transportation = null;
+            var mockDal = new Mock&lt;TransportationDal&gt;();
+            mockDal.Setup(dal =&gt; dal.GetTransportationById(1)).Returns(transportation);
+
+            TransportationManager transportationManager = new(mockDal.Object);
+
+            var resultResponse = transportationManager.GetTransportationById(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.DataNotFound, resultResponse.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.TransportationNotFound, resultResponse.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetTransportationById_ServerMySqlException_ReturnsErrorMessage()
+        {
+            var builder = new MySqlExceptionBuilder();
+            var mockDal = new Mock&lt;TransportationDal&gt;();
+            mockDal.Setup(dal =&gt; dal.GetTransportationById(1)).Throws(builder
+                .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+
+            TransportationManager transportationManager = new(mockDal.Object);
+
+            var resultResponse = transportationManager.GetTransportationById(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetTransportationById_ServerException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;TransportationDal&gt;();
+            mockDal.Setup(dal =&gt; dal.GetTransportationById(1)).Throws(new Exception());
+
+            TransportationManager transportationManager = new(mockDal.Object);
+
+            var resultResponse = transportationManager.GetTransportationById(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetTransportationById_Success()
+        {
+            Transportation transportation = new();
+            var mockDal = new Mock&lt;TransportationDal&gt;();
+            mockDal.Setup(dal =&gt; dal.GetTransportationById(1)).Returns(transportation);
+
+            TransportationManager transportationManager = new(mockDal.Object);
+
+            var resultResponse = transportationManager.GetTransportationById(1);
+
+            Assert.IsNotNull(resultResponse.Data);
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,51,1],[17,13,17,57,1],[18,13,18,88,1],[20,13,20,79,1],[22,13,22,81,1],[24,13,24,91,1],[25,13,25,99,1],[26,9,26,10,1],[30,9,30,10,1],[31,13,31,55,1],[32,13,32,57,1],[33,13,34,117,1],[36,13,36,79,1],[38,13,38,81,1],[40,13,40,98,1],[41,13,41,96,1],[42,9,42,10,1],[46,9,46,10,1],[47,13,47,57,1],[48,13,48,88,1],[50,13,50,79,1],[52,13,52,81,1],[54,13,54,98,1],[55,13,55,96,1],[56,9,56,10,1],[60,9,60,10,1],[61,13,61,51,1],[62,13,62,57,1],[63,13,63,88,1],[65,13,65,79,1],[67,13,67,81,1],[69,13,69,51,1],[70,13,70,86,1],[71,9,71,10,1]]);
+    </script>
+  </body>
+</html>

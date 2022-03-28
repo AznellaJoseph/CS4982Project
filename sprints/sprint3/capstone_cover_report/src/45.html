@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestWaypointManager\TestGetWaypointsInTrip.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestWaypointManager
+{
+    [TestClass]
+    public class TestGetWaypointsInTrip
+    {
+        [TestMethod]
+        public void GetWaypointsInTrip_EmptySet_ReturnsEmptyList()
+        {
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;();
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsByTripId(1)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsByTripId(1);
+
+            Assert.AreEqual(0, resultResponse.Data?.Count);
+        }
+
+        [TestMethod]
+        public void GetWaypointsInTrip_YieldsSetWithOneValue_ReturnsExpectedList()
+        {
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
+            {
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 1,
+                    Location = &quot;1601 Maple St&quot;,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                }
+            };
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsByTripId(1)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsByTripId(1);
+
+            Assert.AreEqual(1, resultResponse.Data?.Count);
+        }
+
+        [TestMethod]
+        public void GetWaypointsInTrip_YieldsSetWithMultipleValues_ReturnsExpectedList()
+        {
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
+            {
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 1,
+                    Location = &quot;1601 Maple St&quot;,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                },
+                new()
+                {
+                    TripId = 1,
+                    WaypointId = 2,
+                    Location = &quot;1602 Maple St&quot;,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                }
+            };
+
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, DateTime.Now, DateTime.Now, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1602 Maple St&quot;, DateTime.Now, DateTime.Now, null))
+                .Returns(1);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsByTripId(1)).Returns(fakeWaypoints);
+
+            WaypointManager waypointManager = new(mockWaypointDal.Object);
+
+            var resultResponse =
+                waypointManager.GetWaypointsByTripId(1);
+
+            Assert.AreEqual(2, resultResponse.Data?.Count);
+        }
+
+
+        [TestMethod]
+        public void GetWaypointsInTrip_ServerMySqlException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;WaypointDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockDal.Setup(dal =&gt; dal.GetWaypointsByTripId(1))
+                .Throws(builder.WithError((uint) Ui.StatusCode.InternalServerError, &quot;test&quot;).Build());
+
+            var waypointManager = new WaypointManager(mockDal.Object);
+
+            var result = waypointManager.GetWaypointsByTripId(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(&quot;test&quot;, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetWaypointsInTrip_ServerException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;WaypointDal&gt;();
+            var currentTime = DateTime.Now;
+            mockDal.Setup(dal =&gt; dal.GetWaypointsByTripId(1))
+                .Throws(new Exception());
+            var waypointManager = new WaypointManager(mockDal.Object);
+            var result = waypointManager.GetWaypointsByTripId(1);
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,66,1],[19,13,19,59,1],[20,13,20,92,1],[22,13,22,75,1],[24,13,25,57,1],[27,13,27,60,1],[28,9,28,10,1],[32,9,32,10,1],[33,13,43,15,1],[45,13,45,59,1],[46,13,47,29,1],[48,13,48,92,1],[50,13,50,75,1],[52,13,53,57,1],[55,13,55,60,1],[56,9,56,10,1],[60,9,60,10,1],[61,13,79,15,1],[81,13,81,59,1],[82,13,83,29,1],[84,13,85,29,1],[86,13,86,92,1],[88,13,88,75,1],[90,13,91,57,1],[93,13,93,60,1],[94,9,94,10,1],[99,9,99,10,1],[100,13,100,51,1],[101,13,101,55,1],[102,13,103,102,1],[105,13,105,71,1],[107,13,107,66,1],[109,13,109,90,1],[110,13,110,58,1],[111,9,111,10,1],[115,9,115,10,1],[116,13,116,51,1],[117,13,117,44,1],[118,13,119,42,1],[120,13,120,71,1],[121,13,121,66,1],[122,13,122,90,1],[123,13,123,88,1],[124,9,124,10,1]]);
+    </script>
+  </body>
+</html>

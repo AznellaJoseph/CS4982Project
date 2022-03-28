@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestCreateAccount\TestSubmitAccountCommand.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateAccount
+{
+    [TestClass]
+    public class TestSubmitAccountCommand
+    {
+        [TestMethod]
+        public void SubmitAccountCommand_ValidCredentials_ReturnsNoError()
+        {
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            mockUserManager.Setup(mu =&gt; mu.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt;
+            {
+                Data = 1
+            });
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateAccountPageViewModel createAccountPageViewModel =
+                new(mockScreen.Object) {UserManager = mockUserManager.Object};
+
+            var testScheduler = new TestScheduler();
+
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;admin&quot;;
+
+            createAccountPageViewModel.SubmitAccountCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void SubmitAccountCommand_DifferentPassword_ReturnsErrorMessage()
+        {
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateAccountPageViewModel createAccountPageViewModel =
+                new(mockScreen.Object) {UserManager = mockUserManager.Object};
+            var testScheduler = new TestScheduler();
+
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;notadmin&quot;;
+
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.PasswordsDoNotMatch, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void SubmitAccountCommand_BadServerRequest_ReturnsErrorMessage()
+        {
+            var mockUserManager = new Mock&lt;UserManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockUserManager.Setup(mu =&gt; mu.RegisterUser(&quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;, &quot;admin&quot;)).Returns(new Response&lt;int&gt;
+            {
+                StatusCode = (uint) Ui.StatusCode.BadRequest,
+                ErrorMessage = &quot;test&quot;
+            });
+            CreateAccountPageViewModel createAccountPageViewModel =
+                new(mockScreen.Object) {UserManager = mockUserManager.Object};
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;admin&quot;;
+
+
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(&quot;test&quot;, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void SubmitAccountCommand_InvalidFirstName_ReturnsErrorMessage()
+        {
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;admin&quot;;
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidFirstName, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void SubmitAccountCommand_InvalidLastName_ReturnsErrorMessage()
+        {
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;admin&quot;;
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidLastName, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void SubmitAccountCommand_InvalidUsername_ReturnsErrorMessage()
+        {
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;admin&quot;;
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidUsername, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void SubmitAccountCommand_InvalidPassword_ReturnsErrorMessage()
+        {
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.ConfirmedPassword = &quot;admin&quot;;
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidPassword, createAccountPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void SubmitAccountCommand_InvalidConfirmedPassword_ReturnsErrorMessage()
+        {
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateAccountPageViewModel createAccountPageViewModel = new(mockScreen.Object);
+            TestScheduler testScheduler = new();
+
+            createAccountPageViewModel.FirstName = &quot;admin&quot;;
+            createAccountPageViewModel.LastName = &quot;admin&quot;;
+            createAccountPageViewModel.Username = &quot;admin&quot;;
+            createAccountPageViewModel.Password = &quot;admin&quot;;
+            createAccountPageViewModel.SubmitAccountCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidConfirmedPassword, createAccountPageViewModel.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,10,1],[18,13,18,59,1],[19,13,22,16,1],[23,13,23,50,1],[25,13,26,79,1],[28,13,28,53,1],[30,13,30,60,1],[31,13,31,59,1],[32,13,32,59,1],[33,13,33,59,1],[34,13,34,68,1],[36,13,36,90,1],[38,13,38,35,1],[40,13,40,84,1],[41,9,41,10,1],[45,9,45,10,1],[46,13,46,59,1],[47,13,47,50,1],[48,13,49,79,1],[50,13,50,53,1],[52,13,52,60,1],[53,13,53,59,1],[54,13,54,59,1],[55,13,55,59,1],[56,13,56,71,1],[58,13,58,83,1],[60,13,60,35,1],[62,13,62,108,1],[63,9,63,10,1],[67,9,67,10,1],[68,13,68,59,1],[69,13,69,50,1],[70,13,74,16,1],[75,13,76,79,1],[77,13,77,49,1],[79,13,79,60,1],[80,13,80,59,1],[81,13,81,59,1],[82,13,82,59,1],[83,13,83,68,1],[86,13,86,83,1],[88,13,88,35,1],[90,13,90,78,1],[91,9,91,10,1],[95,9,95,10,1],[96,13,96,50,1],[98,13,98,92,1],[99,13,99,49,1],[101,13,101,59,1],[102,13,102,59,1],[103,13,103,59,1],[104,13,104,68,1],[105,13,105,83,1],[107,13,107,35,1],[109,13,109,105,1],[110,9,110,10,1],[114,9,114,10,1],[115,13,115,50,1],[117,13,117,92,1],[118,13,118,49,1],[120,13,120,60,1],[121,13,121,59,1],[122,13,122,59,1],[123,13,123,68,1],[124,13,124,83,1],[126,13,126,35,1],[128,13,128,104,1],[129,9,129,10,1],[133,9,133,10,1],[134,13,134,50,1],[136,13,136,92,1],[137,13,137,49,1],[139,13,139,60,1],[140,13,140,59,1],[141,13,141,59,1],[142,13,142,68,1],[143,13,143,83,1],[145,13,145,35,1],[147,13,147,104,1],[148,9,148,10,1],[152,9,152,10,1],[153,13,153,50,1],[155,13,155,92,1],[156,13,156,49,1],[158,13,158,60,1],[159,13,159,59,1],[160,13,160,59,1],[161,13,161,68,1],[162,13,162,83,1],[164,13,164,35,1],[166,13,166,104,1],[167,9,167,10,1],[171,9,171,10,1],[172,13,172,50,1],[174,13,174,92,1],[175,13,175,49,1],[177,13,177,60,1],[178,13,178,59,1],[179,13,179,59,1],[180,13,180,59,1],[181,13,181,83,1],[183,13,183,35,1],[185,13,185,113,1],[186,9,186,10,1]]);
+    </script>
+  </body>
+</html>

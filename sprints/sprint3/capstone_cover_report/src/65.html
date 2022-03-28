@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\DAL\TestDatabaseBuilder.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
+using CapstoneBackend.DAL;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneTest.BackendTests.DAL
+{
+    [TestClass]
+    public class TestDatabaseBuilder
+    {
+        private static MySqlConnection _connection = new(Connection.ConnectionString);
+        private static readonly int TIMEOUT_SECONDS = 30;
+
+        [AssemblyInitialize]
+        public static void AssemblyInitialize(TestContext context)
+        {
+            StartDatabaseServer();
+            _connection = new MySqlConnection(Connection.ConnectionString);
+
+            var endTime = DateTime.Now.AddSeconds(TIMEOUT_SECONDS);
+            var timeOut = false;
+
+            while (_connection.State != ConnectionState.Open)
+            {
+                try
+                {
+                    _connection.Open();
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                if (DateTime.Now.CompareTo(endTime) &lt; 0) continue;
+                timeOut = true;
+                break;
+            }
+
+            if (timeOut)
+                throw new TimeoutException(&quot;Timed out waiting for the Database connection to open.&quot;);
+            _connection.Close();
+        }
+
+        [AssemblyCleanup]
+        public static void AssemblyCleanup()
+        {
+            StopDatabaseServer();
+        }
+
+        private static void StartDatabaseServer()
+        {
+            var dbProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = &quot;capstone.sh&quot;,
+                    Arguments = &quot;server run&quot;,
+                    UseShellExecute = true,
+                    RedirectStandardOutput = false,
+                    WorkingDirectory = GetRootPath()
+                }
+            };
+
+            dbProcess.Start();
+            dbProcess.WaitForExit();
+            dbProcess.Close();
+        }
+
+        private static void StopDatabaseServer()
+        {
+            var dbProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = &quot;capstone.sh&quot;,
+                    Arguments = &quot;server stop&quot;,
+                    UseShellExecute = true,
+                    RedirectStandardOutput = false,
+                    WorkingDirectory = GetRootPath()
+                }
+            };
+
+            dbProcess.Start();
+            dbProcess.WaitForExit();
+            dbProcess.Close();
+        }
+
+        private static string GetRootPath()
+        {
+            var testDirectory = Directory
+                .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName)
+                .FullName;
+            var fullDirectory = Directory.GetParent(testDirectory).FullName;
+            return fullDirectory;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,9,14,87,1],[15,9,15,58,1],[19,9,19,10,1],[20,13,20,35,1],[21,13,21,76,1],[23,13,23,68,1],[24,13,24,33,1],[26,13,26,62,1],[27,13,27,14,1],[29,17,29,18,1],[30,21,30,40,1],[31,17,31,18,1],[32,17,32,22,1],[33,17,33,18,1],[35,17,35,18,1],[37,17,37,57,1],[37,58,37,67,1],[38,17,38,32,0],[39,17,39,23,0],[42,13,42,25,1],[43,17,43,102,0],[44,13,44,33,1],[45,9,45,10,1],[49,9,49,10,1],[50,13,50,34,1],[51,9,51,10,1],[54,9,54,10,1],[55,13,65,15,1],[67,13,67,31,1],[68,13,68,37,1],[69,13,69,31,1],[70,9,70,10,1],[73,9,73,10,1],[74,13,84,15,1],[86,13,86,31,1],[87,13,87,37,1],[88,13,88,31,1],[89,9,89,10,1],[92,9,92,10,1],[93,13,95,27,1],[96,13,96,77,1],[97,13,97,34,1],[98,9,98,10,1]]);
+    </script>
+  </body>
+</html>

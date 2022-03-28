@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestTripManager\TestGetTripByTripId.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestTripManager
+{
+    [TestClass]
+    public class TestGetTripByTripId
+    {
+        [TestMethod]
+        public void GetTripByTripId_Success()
+        {
+            var mockDal = new Mock&lt;TripDal&gt;();
+
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now;
+
+            mockDal.Setup(dal =&gt; dal.GetTripByTripId(1)).Returns(new Trip
+            {
+                TripId = 1,
+                UserId = 1,
+                Name = &quot;test&quot;,
+                StartDate = startDate,
+                EndDate = endDate,
+                Notes = &quot;notes&quot;
+            });
+
+            var tripManager = new TripManager(mockDal.Object);
+            var result = tripManager.GetTripByTripId(1);
+            var trip = result.Data;
+
+            Assert.AreEqual((uint) Ui.StatusCode.Success, result.StatusCode);
+            Assert.AreEqual(1, trip?.TripId);
+            Assert.AreEqual(1, trip?.UserId);
+            Assert.AreEqual(&quot;test&quot;, trip?.Name);
+            Assert.AreEqual(startDate, trip?.StartDate);
+            Assert.AreEqual(endDate, trip?.EndDate);
+            Assert.AreEqual(&quot;notes&quot;, trip?.Notes);
+        }
+
+        [TestMethod]
+        public void GetTripByTripId_TripDoesNotExist_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;TripDal&gt;();
+            Trip? missingTrip = null;
+            mockDal.Setup(dal =&gt; dal.GetTripByTripId(1)).Returns(missingTrip);
+
+            var tripManager = new TripManager(mockDal.Object);
+            var result = tripManager.GetTripByTripId(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.DataNotFound, result.StatusCode);
+            Assert.IsNotNull(result.ErrorMessage);
+            Assert.AreNotEqual(string.Empty, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetTripByTripId_ServerMySqlException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;TripDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockDal.Setup(dal =&gt; dal.GetTripByTripId(1))
+                .Throws(builder.WithError((uint) Ui.StatusCode.InternalServerError, &quot;test&quot;).Build());
+
+            var tripManager = new TripManager(mockDal.Object);
+            var result = tripManager.GetTripByTripId(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(&quot;test&quot;, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetTripByTripId_ServerException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;TripDal&gt;();
+            mockDal.Setup(dal =&gt; dal.GetTripByTripId(1)).Throws(new Exception(&quot;test&quot;));
+
+            var tripManager = new TripManager(mockDal.Object);
+            var result = tripManager.GetTripByTripId(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,47,1],[18,13,18,42,1],[19,13,19,40,1],[21,13,29,16,1],[31,13,31,63,1],[32,13,32,57,1],[33,13,33,36,1],[35,13,35,78,1],[36,13,36,46,1],[37,13,37,46,1],[38,13,38,49,1],[39,13,39,57,1],[40,13,40,53,1],[41,13,41,51,1],[42,9,42,10,1],[46,9,46,10,1],[47,13,47,47,1],[48,13,48,38,1],[49,13,49,79,1],[51,13,51,63,1],[52,13,52,57,1],[54,13,54,83,1],[55,13,55,51,1],[56,13,56,67,1],[57,9,57,10,1],[61,9,61,10,1],[62,13,62,47,1],[63,13,63,55,1],[64,13,65,102,1],[67,13,67,63,1],[68,13,68,57,1],[70,13,70,90,1],[71,13,71,58,1],[72,9,72,10,1],[76,9,76,10,1],[77,13,77,47,1],[78,13,78,88,1],[80,13,80,63,1],[81,13,81,57,1],[83,13,83,90,1],[84,9,84,10,1]]);
+    </script>
+  </body>
+</html>
