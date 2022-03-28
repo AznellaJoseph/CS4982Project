@@ -8,13 +8,7 @@ namespace CapstoneTest.BackendTests.DAL.TestUserDAL
     [TestClass]
     public class TestCreateUser
     {
-        private MySqlConnection _connection;
-
-        [TestInitialize]
-        public void Setup()
-        {
-            _connection = new MySqlConnection(Connection.ConnectionString);
-        }
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
 
         [TestCleanup]
         public void TearDown()
@@ -26,45 +20,46 @@ namespace CapstoneTest.BackendTests.DAL.TestUserDAL
         public void CallProcedure_WithDuplicateUsername_Fails()
         {
             InsertTestUser();
-            UserDal testDAL = new(_connection);
+            UserDal testDal = new(_connection);
 
-            Assert.ThrowsException<MySqlException>(() => testDAL.CreateUser("TestUsername", "SomePassword", "SomeName", "SomeName"));
+            Assert.ThrowsException<MySqlException>(() =>
+                testDal.CreateUser("TestUsername", "SomePassword", "SomeName", "SomeName"));
         }
 
         [TestMethod]
         public void CallProcedure_WithValidInput_Succeeds()
         {
-            UserDal testDAL = new(_connection);
+            UserDal testDal = new(_connection);
 
-            int? resultID = testDAL.CreateUser("TestUsername", "SomePassword", "SomeName", "SomeName");
-            User? resultUser = testDAL.GetUserByUsername("TestUsername");
+            int? resultId = testDal.CreateUser("TestUsername", "SomePassword", "SomeName", "SomeName");
+            var resultUser = testDal.GetUserByUsername("TestUsername");
 
-            Assert.IsTrue(resultID is not null);
-            Assert.IsTrue(resultID is int);
+            Assert.IsTrue(resultId is not null);
+            Assert.IsInstanceOfType(resultId, typeof(int));
 
             Assert.IsTrue(resultUser is not null);
-            Assert.IsTrue(resultUser is User);
+            Assert.IsInstanceOfType(resultUser, typeof(User));
         }
 
         private void InsertTestUser()
         {
-            this._connection.Open();
-            string query = "INSERT user (username, password, fname, lname) " +
-                           "VALUES ('TestUsername', 'TestPassword', 'TestFirstName', 'TestLastName');";
+            _connection.Open();
+            const string query = "INSERT user (username, password, fname, lname) " +
+                                 "VALUES ('TestUsername', 'TestPassword', 'TestFirstName', 'TestLastName');";
 
-            using MySqlCommand cmd = new MySqlCommand(query, _connection);
+            using var cmd = new MySqlCommand(query, _connection);
             cmd.ExecuteNonQuery();
-            this._connection.Close();
+            _connection.Close();
         }
 
         private void DeleteTestUser()
         {
             _connection.Open();
-            string query = "delete from user where username = 'TestUsername';";
+            const string query = "delete from user where username = 'TestUsername';";
 
-            using MySqlCommand cmd = new MySqlCommand(query, _connection);
+            using var cmd = new MySqlCommand(query, _connection);
             cmd.ExecuteNonQuery();
-            this._connection.Close();
+            _connection.Close();
         }
     }
 }

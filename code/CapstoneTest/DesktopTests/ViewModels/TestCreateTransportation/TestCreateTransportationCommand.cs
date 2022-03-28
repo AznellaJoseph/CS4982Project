@@ -146,7 +146,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
                     EndDate = DateTime.Today.AddDays(4)
                 }
             };
-            var mockTransportationManager = new Mock<TransportationManager>();
             var mockScreen = new Mock<IScreen>();
             var mockEventManager = new Mock<EventManager>();
 
@@ -195,11 +194,63 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
         }
 
         [TestMethod]
+        public void CreateTransportationCommand_InvalidStartDate_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock<Trip>
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today,
+                    EndDate = DateTime.Today.AddDays(2)
+                }
+            };
+            var mockTransportationManager = new Mock<TransportationManager>();
+            var mockScreen = new Mock<IScreen>();
+            mockTransportationManager.Setup(um =>
+                    um.CreateTransportation(0, "taxi", DateTime.Today.AddDays(1) + TimeSpan.Zero,
+                        DateTime.Today + TimeSpan.Zero, "notes"))
+                .Returns(new Response<int> {ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
+            var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm =>
+                    vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(1) + TimeSpan.Zero,
+                        DateTime.Today + TimeSpan.Zero))
+                .Returns(new Response<bool>
+                {
+                    Data = true
+                });
+            mockValidationManager.Setup(vm => vm.FindClashingEvent(0, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response<IEvent> {Data = null});
+
+            CreateTransportationPageViewModel createTransportationWindowViewModel =
+                new(mockTrip.Object, mockScreen.Object)
+                {
+                    ValidationManager = mockValidationManager.Object,
+                    TransportationManager = mockTransportationManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            createTransportationWindowViewModel.Method = "taxi";
+            createTransportationWindowViewModel.Notes = "notes";
+            createTransportationWindowViewModel.StartDate = DateTime.Today.AddDays(1);
+            createTransportationWindowViewModel.StartTime = TimeSpan.Zero;
+            createTransportationWindowViewModel.EndDate = DateTime.Today;
+            createTransportationWindowViewModel.EndTime = TimeSpan.Zero;
+
+            createTransportationWindowViewModel.CreateTransportationCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate,
+                createTransportationWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
         public void CreateTransportationCommand_Success()
         {
             var mockTransportationManager = new Mock<TransportationManager>();
             mockTransportationManager.Setup(um => um.CreateTransportation(0, "Plane",
-                    DateTime.Today + DateTime.Today.TimeOfDay, DateTime.Today + DateTime.Today.TimeOfDay, null))
+                    DateTime.Today + DateTime.Today.TimeOfDay, DateTime.Today + DateTime.Today.TimeOfDay, "notes"))
                 .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
             var mockTrip = new Mock<Trip>
             {
@@ -221,6 +272,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             createTransportationViewModel.StartTime = DateTime.Today.TimeOfDay;
             createTransportationViewModel.EndDate = DateTime.Today;
             createTransportationViewModel.EndTime = DateTime.Today.TimeOfDay;
+            createTransportationViewModel.Notes = "notes";
 
             createTransportationViewModel.CreateTransportationCommand.ThrownExceptions.Subscribe();
 

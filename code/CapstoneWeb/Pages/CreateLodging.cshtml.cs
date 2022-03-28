@@ -16,7 +16,7 @@ namespace CapstoneWeb.Pages
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        ///     The method.
+        ///     The location.
         /// </summary>
         [BindProperty]
         public string Location { get; set; }
@@ -40,7 +40,7 @@ namespace CapstoneWeb.Pages
         public string Notes { get; set; }
 
         /// <summary>
-        ///     The transportation manager used for testing.
+        ///     The transportation manager.
         /// </summary>
         public LodgingManager LodgingManager { get; set; } = new();
 

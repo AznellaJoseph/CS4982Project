@@ -19,7 +19,7 @@ namespace CapstoneDesktop.ViewModels
         {
             Trip = trip;
             TripClickCommand = ReactiveCommand.CreateFromObservable(() =>
-                screen.Router.Navigate.Execute(new TripOverviewPageViewModel(Trip, screen)));
+                screen.Router.Navigate.Execute(new TripOverviewPageViewModel(Trip, screen, new LodgingManager())));
         }
 
         /// <summary>

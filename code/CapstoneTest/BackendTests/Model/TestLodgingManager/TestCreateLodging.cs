@@ -55,7 +55,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
             LodgingManager lodgingManager = new(mockDal.Object);
 
             var result = lodgingManager.CreateLodging(1, "Some Hotel", currentTime, currentTime, null);
-            
+
             Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
             Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
         }

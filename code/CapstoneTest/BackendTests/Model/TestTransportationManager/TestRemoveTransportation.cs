@@ -36,6 +36,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             Assert.AreEqual(true, resultResponse.Data);
         }
 
+        [TestMethod]
         public void RemoveTransportation_ServerMySqlException_ReturnsErrorMessage()
         {
             var mockDal = new Mock<TransportationDal>();

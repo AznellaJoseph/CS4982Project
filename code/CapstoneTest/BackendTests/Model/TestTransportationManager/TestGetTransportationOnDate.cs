@@ -61,6 +61,8 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
             Assert.AreEqual("notes", resultResponse.Data?[0].Notes);
+            Assert.AreEqual(1, resultResponse.Data?[0].Id);
+            Assert.AreEqual(nameof(Transportation), resultResponse.Data?[0].EventType);
         }
 
         [TestMethod]

@@ -20,7 +20,7 @@ namespace CapstoneWeb.Pages
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        ///     The name.
+        ///     The trip name.
         /// </summary>
         [BindProperty]
         public string TripName { get; set; }
@@ -48,6 +48,9 @@ namespace CapstoneWeb.Pages
         /// </summary>
         public TripManager TripManager { get; set; } = new();
 
+        /// <summary>
+        ///     The validation manager.
+        /// </summary>
         public ValidationManager ValidationManager { get; set; } = new();
 
         /// <summary>

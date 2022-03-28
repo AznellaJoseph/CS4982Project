@@ -1,31 +1,30 @@
-﻿using CapstoneBackend.DAL;
+﻿using System;
+using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
-using System;
 
 namespace CapstoneTest.BackendTests.DAL.TestWaypointDAL
 {
     [TestClass]
     public class TestGetWaypointById
     {
-        private MySqlConnection _connection;
-        private int testTripId;
-        private int testWaypointId;
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testTripId;
+        private int _testWaypointId;
 
         [TestInitialize]
         public void Setup()
         {
-            _connection = new MySqlConnection(Connection.ConnectionString);
-            testTripId = new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now);
+            _testTripId = new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now);
         }
 
         [TestMethod]
         public void CallProcedure_WithInvalidWaypointId_ReturnsNull()
         {
-            WaypointDal testDAL = new(_connection);
+            WaypointDal testDal = new(_connection);
 
-            Waypoint? result = testDAL.GetWaypointById(-1);
+            var result = testDal.GetWaypointById(-1);
 
             Assert.IsNull(result);
         }
@@ -33,29 +32,29 @@ namespace CapstoneTest.BackendTests.DAL.TestWaypointDAL
         [TestMethod]
         public void CallProcedure_WithValidWaypointId_ReturnsWaypoint()
         {
-            WaypointDal testDAL = new(_connection);
-            testWaypointId = testDAL.CreateWaypoint(1, "TestLocation", DateTime.Now, DateTime.Now, "Some Notes");
+            WaypointDal testDal = new(_connection);
+            _testWaypointId = testDal.CreateWaypoint(1, "TestLocation", DateTime.Now, DateTime.Now, "Some Notes");
 
-            Waypoint? result = testDAL.GetWaypointById(1);
+            var result = testDal.GetWaypointById(1);
 
             Assert.IsNotNull(result);
-            Assert.IsTrue(result is Waypoint);
+            Assert.IsInstanceOfType(result, typeof(Waypoint));
         }
 
         [TestCleanup]
         public void TearDown()
         {
             _connection.Open();
-            string removeTrip = $"delete from trip where tripId = {testTripId};";
-            string removeWaypoint = $"delete from waypoint where waypointId = {testWaypointId};";
+            var removeTrip = $"delete from trip where tripId = {_testTripId};";
+            var removeWaypoint = $"delete from waypoint where waypointId = {_testWaypointId};";
 
-            using MySqlCommand tripCmd = new MySqlCommand(removeTrip, _connection);
+            using var tripCmd = new MySqlCommand(removeTrip, _connection);
             tripCmd.ExecuteNonQuery();
 
-            using MySqlCommand waypointCmd = new MySqlCommand(removeWaypoint, _connection);
+            using var waypointCmd = new MySqlCommand(removeWaypoint, _connection);
             waypointCmd.ExecuteNonQuery();
 
-            this._connection.Close();
+            _connection.Close();
         }
     }
 }

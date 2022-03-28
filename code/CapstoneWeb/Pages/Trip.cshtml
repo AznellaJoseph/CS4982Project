@@ -30,7 +30,26 @@
                 <h1>Lodging</h1>
 
                 <div id="lodging-list" class="list">
+                    @foreach (var lodging in Model.Lodgings)
+                    {
+                        <div class="list-item" id="@lodging.LodgingId">
+                            <div class="info-section">
+                                @lodging.StartDate - @lodging.EndDate
+                            </div>
+                            <div class="name-section">
+                                @lodging.Location
+                            </div>
 
+                            <div class="icon-section">
+                                <form method="post">
+                                    <button type="submit" asp-page-handler="RemoveLodging">Remove</button>
+                                    <input type="hidden" name="id" value="@lodging.LodgingId"/>
+                                    <input type="hidden" name="tripId" value="@lodging.TripId"/>
+                                </form>
+                            </div>
+                            <a asp-page="/lodging" asp-route-id="@lodging.LodgingId" asp-route-tripId="@lodging.TripId">View</a>
+                        </div>
+                    }
                 </div>
 
                 <form method="post" class="end">

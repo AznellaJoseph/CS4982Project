@@ -17,16 +17,18 @@ namespace CapstoneDesktop.ViewModels
         private DateTime? _selectedDate;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
+        /// Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">The trip.</param>
         /// <param name="screen">The screen.</param>
+        /// <param name="lodgingManager">The lodging manager.</param>
         public TripOverviewPageViewModel(Trip trip,
-            IScreen screen) : base(screen,
+            IScreen screen, LodgingManager lodgingManager) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
             Trip = trip;
             HostScreen = screen;
+            LodgingManager = lodgingManager;
             LogoutCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
             CreateWaypointCommand = ReactiveCommand.CreateFromObservable(() =>
@@ -38,6 +40,7 @@ namespace CapstoneDesktop.ViewModels
             BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
             EventViewModels = new ObservableCollection<IEventViewModel>();
             LodgingViewModels = new ObservableCollection<LodgingViewModel>();
+            updateLodging();
         }
 
         /// <summary>
@@ -48,7 +51,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The lodging manager.
         /// </summary>
-        public LodgingManager LodgingManager { get; set; } = new();
+        public LodgingManager LodgingManager { get; set; }
 
         /// <summary>
         ///     The logout command.
@@ -100,20 +103,17 @@ namespace CapstoneDesktop.ViewModels
             {
                 this.RaiseAndSetIfChanged(ref _selectedDate, value, nameof(SelectedDate));
                 updateEvents();
-                updateLodging();
             }
         }
 
         private void updateLodging()
         {
-            LodgingViewModels.Clear();
-            if (SelectedDate is null) return;
-            var response = LodgingManager.GetLodgingsOnDate(Trip.TripId, SelectedDate.Value);
+            var response = LodgingManager.GetLodgingsByTripId(Trip.TripId);
 
             foreach (var lodging in response.Data ?? new List<Lodging>())
             {
                 var lodgingViewModel = new LodgingViewModel(lodging, HostScreen);
-                lodgingViewModel.RemoveEvent += (sender, args) =>
+                lodgingViewModel.RemoveEvent += (sender, _) =>
                 {
                     if (sender is not null) LodgingViewModels.Remove(lodgingViewModel);
                 };
