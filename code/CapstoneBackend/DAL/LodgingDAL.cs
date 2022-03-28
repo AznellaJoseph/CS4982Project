@@ -155,7 +155,8 @@ namespace CapstoneBackend.DAL
                 };
 
             _connection.Close();
-            return lodging;
+            return lodgingsOnDate;
         }
+
     }
 }

@@ -82,7 +82,6 @@ namespace CapstoneBackend.DAL
 
             cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
 
-
             using var reader = cmd.ExecuteReader();
 
             var waypointIdOrdinal = reader.GetOrdinal("waypointId");

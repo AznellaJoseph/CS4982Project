@@ -80,7 +80,10 @@
                                         <TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
                                         <TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
                                         <TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Event.DisplayName}"/>
-                                        <Button Grid.Column="8" Command="{Binding RemoveCommand}">X</Button>
+                                        <StackPanel Grid.Column="8" Spacing="5">
+	                                        <Button Command="{Binding ViewCommand}">VIEW</Button>
+	                                        <Button Command="{Binding RemoveCommand}">X</Button>
+                                        </StackPanel>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
