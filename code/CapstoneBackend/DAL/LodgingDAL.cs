@@ -152,7 +152,7 @@ namespace CapstoneBackend.DAL
             using MySqlCommand cmd = new(procedure, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add("@lodgingId", MySqlDbType.UInt32).Value = lodgingId;
+            cmd.Parameters.Add("@lodgingId", MySqlDbType.Int32).Value = lodgingId;
 
             return cmd.ExecuteNonQuery() == 1;
         }

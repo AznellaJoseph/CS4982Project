@@ -24,7 +24,6 @@ namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
         public void CallProcedure_WithInvalidTripId_Fails()
         {
             LodgingDal testDAL = new(_connection);
-
             Assert.ThrowsException<MySqlException>(() => testDAL.CreateLodging(-1, "TestLocation", DateTime.Now, DateTime.Now, "Some Notes"));
         }
 
@@ -42,6 +41,7 @@ namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
         [TestCleanup]
         public void TearDown()
         {
+            _connection.Close();
             _connection.Open();
             string removeTrip = $"delete from trip where tripId = {testTripId};";
             string removeLodging = $"delete from lodging where lodgingId = {testLodgingId};";

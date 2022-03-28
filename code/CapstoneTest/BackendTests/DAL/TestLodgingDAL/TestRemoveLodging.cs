@@ -44,6 +44,7 @@ namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
         [TestCleanup]
         public void TearDown()
         {
+            _connection.Close();
             _connection.Open();
             string removeTrip = $"delete from trip where tripId = {testTripId};";
             string removeLodging = $"delete from lodging where lodgingId = {testLodgingId};";
