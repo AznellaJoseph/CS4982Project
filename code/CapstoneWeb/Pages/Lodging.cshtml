@@ -1,0 +1,42 @@
+﻿@page "/trip/{tripId:int}/lodging/{id:int}"
+@model CapstoneWeb.Pages.LodgingModel
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Lodging Overview";
+    var notesVisible = string.IsNullOrEmpty(Model.CurrentLodging.Notes) ? "hide" : string.Empty;
+}
+
+
+<div class="container landing-page">
+
+    <div class="left column">
+        <section title="logo" class="panel logo">
+            INSERT LOGO HERE
+        </section>
+
+        <section title="navigation" class="panel button-group">
+            <form method="post">
+                <button type="submit" asp-page-handler="profile" disabled>Profile</button>
+                <button type="submit" asp-page-handler="logout">Logout</button>
+                <button type="submit" asp-page-handler="back">Back</button>
+            </form>
+        </section>
+
+        <section title="map" class="panel upcoming">
+            <h1>Map</h1>
+        </section>
+    </div>
+
+    <div class="panel right column">
+        <h1>@Model.CurrentLodging.Location</h1>
+
+
+        <div class="info-section">
+            <h2>@Model.CurrentLodging.StartDate - @Model.CurrentLodging.EndDate</h2>
+
+            <p class="@notesVisible">Notes: @Model.CurrentLodging.Notes</p>
+        </div>
+
+    </div>
+
+</div>

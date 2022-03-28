@@ -25,7 +25,7 @@ namespace CapstoneWeb.Pages
         public IList<Trip> Trips { get; private set; }
 
         /// <summary>
-        ///     The fake trip manager used for testing.
+        ///     The trip manager.
         /// </summary>
         public TripManager TripManager { get; set; } = new();
 

@@ -21,15 +21,17 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
                 EndDate = new DateTime(3033, 3, 3)
             };
             var mockScreen = new Mock<IScreen>();
-            TripOverviewPageViewModel tripOverviewPageViewModel = new(testTrip, mockScreen.Object);
+            TripOverviewPageViewModel tripOverviewPageViewModel =
+                new(testTrip, mockScreen.Object, new LodgingManager());
             Assert.AreEqual(mockScreen.Object, tripOverviewPageViewModel.HostScreen);
             Assert.AreEqual(testTrip, tripOverviewPageViewModel.Trip);
             Assert.IsNotNull(tripOverviewPageViewModel.LogoutCommand);
             Assert.IsNotNull(tripOverviewPageViewModel.CreateWaypointCommand);
             Assert.IsNotNull(tripOverviewPageViewModel.CreateTransportationCommand);
+            Assert.IsNotNull(tripOverviewPageViewModel.CreateLodgingCommand);
             Assert.IsNotNull(tripOverviewPageViewModel.BackCommand);
-            Assert.IsNotNull(tripOverviewPageViewModel.LodgingManager);
             Assert.IsNotNull(tripOverviewPageViewModel.EventManager);
+            Assert.IsNotNull(tripOverviewPageViewModel.LodgingManager);
             Assert.IsNotNull(tripOverviewPageViewModel.UrlPathSegment);
             Assert.IsNull(tripOverviewPageViewModel.SelectedDate);
         }

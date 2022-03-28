@@ -1,22 +1,18 @@
-﻿using CapstoneBackend.DAL;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CapstoneBackend.DAL;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
 
 namespace CapstoneTest.BackendTests.DAL
 {
     [TestClass]
     public class TestDatabaseBuilder
     {
-        private static MySqlConnection _connection;
-        private static int TIMEOUT_SECONDS = 30;
+        private static MySqlConnection _connection = new(Connection.ConnectionString);
+        private static readonly int TIMEOUT_SECONDS = 30;
 
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
@@ -33,19 +29,19 @@ namespace CapstoneTest.BackendTests.DAL
                 {
                     _connection.Open();
                 }
-                catch { }
-
-                if (DateTime.Now.CompareTo(endTime) >= 0)
+                catch
                 {
-                    timeOut = true;
-                    break;
+                    // ignored
                 }
+
+                if (DateTime.Now.CompareTo(endTime) < 0) continue;
+                timeOut = true;
+                break;
             }
 
             if (timeOut)
                 throw new TimeoutException("Timed out waiting for the Database connection to open.");
-            else
-                _connection.Close();
+            _connection.Close();
         }
 
         [AssemblyCleanup]
@@ -56,9 +52,9 @@ namespace CapstoneTest.BackendTests.DAL
 
         private static void StartDatabaseServer()
         {
-            var dbProcess = new Process()
+            var dbProcess = new Process
             {
-                StartInfo = new ProcessStartInfo()
+                StartInfo = new ProcessStartInfo
                 {
                     FileName = "capstone.sh",
                     Arguments = "server run",
@@ -75,9 +71,9 @@ namespace CapstoneTest.BackendTests.DAL
 
         private static void StopDatabaseServer()
         {
-            var dbProcess = new Process()
+            var dbProcess = new Process
             {
-                StartInfo = new ProcessStartInfo()
+                StartInfo = new ProcessStartInfo
                 {
                     FileName = "capstone.sh",
                     Arguments = "server stop",
@@ -94,7 +90,9 @@ namespace CapstoneTest.BackendTests.DAL
 
         private static string GetRootPath()
         {
-            var testDirectory = Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName).FullName;
+            var testDirectory = Directory
+                .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName)
+                .FullName;
             var fullDirectory = Directory.GetParent(testDirectory).FullName;
             return fullDirectory;
         }

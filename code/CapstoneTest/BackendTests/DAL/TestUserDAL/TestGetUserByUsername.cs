@@ -8,13 +8,7 @@ namespace CapstoneTest.BackendTests.DAL.TestUserDAL
     [TestClass]
     public class TestGetUserByUsername
     {
-        private MySqlConnection _connection;
-
-        [TestInitialize]
-        public void Setup()
-        {
-            _connection = new MySqlConnection(Connection.ConnectionString);
-        }
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
 
         [TestCleanup]
         public void TearDown()
@@ -25,9 +19,9 @@ namespace CapstoneTest.BackendTests.DAL.TestUserDAL
         [TestMethod]
         public void CallProcedure_NoExistingUsername_ReturnsNull()
         {
-            UserDal testDAL = new(_connection);
+            UserDal testDal = new(_connection);
 
-            var result = testDAL.GetUserByUsername("TestUsername");
+            var result = testDal.GetUserByUsername("TestUsername");
 
             Assert.IsTrue(result is null);
         }
@@ -36,33 +30,33 @@ namespace CapstoneTest.BackendTests.DAL.TestUserDAL
         public void CallProcedure_ExistingUsername_ReturnsUser()
         {
             InsertTestUser();
-            UserDal testDAL = new(_connection);
+            UserDal testDal = new(_connection);
 
-            var result = testDAL.GetUserByUsername("TestUsername");
+            var result = testDal.GetUserByUsername("TestUsername");
 
             Assert.IsTrue(result is not null);
-            Assert.IsTrue(result is User);
+            Assert.IsInstanceOfType(result, typeof(User));
         }
 
         private void InsertTestUser()
         {
-            this._connection.Open();
-            string query = "INSERT user (username, password, fname, lname) " +
-                           "VALUES ('TestUsername', 'TestPassword', 'TestFirstName', 'TestLastName');";
+            _connection.Open();
+            const string query = "INSERT user (username, password, fname, lname) " +
+                                 "VALUES ('TestUsername', 'TestPassword', 'TestFirstName', 'TestLastName');";
 
-            using MySqlCommand cmd = new MySqlCommand(query, _connection);
+            using var cmd = new MySqlCommand(query, _connection);
             cmd.ExecuteNonQuery();
-            this._connection.Close();
+            _connection.Close();
         }
 
         private void DeleteTestUser()
         {
             _connection.Open();
-            string query = "delete from user where username = 'TestUsername';";
+            const string query = "delete from user where username = 'TestUsername';";
 
-            using MySqlCommand cmd = new MySqlCommand(query, _connection);
+            using var cmd = new MySqlCommand(query, _connection);
             cmd.ExecuteNonQuery();
-            this._connection.Close();
+            _connection.Close();
         }
     }
 }

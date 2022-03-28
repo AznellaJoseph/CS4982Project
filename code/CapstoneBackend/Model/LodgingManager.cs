@@ -77,41 +77,6 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Gets the Lodgings on date.
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <param name="selectedDate">The selected date.</param>
-        /// <returns> A response of the Lodgings on that date or a non-success status code and error message. </returns>
-        public virtual Response<IList<Lodging>> GetLodgingsOnDate(int tripId, DateTime selectedDate)
-        {
-            try
-            {
-                var lodgingsOnDate = _dal.GetLodgingsOnDate(tripId, selectedDate);
-
-                return new Response<IList<Lodging>>
-                {
-                    Data = lodgingsOnDate
-                };
-            }
-            catch (MySqlException e)
-            {
-                return new Response<IList<Lodging>>
-                {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
-            catch (Exception)
-            {
-                return new Response<IList<Lodging>>
-                {
-                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
-                    ErrorMessage = Ui.ErrorMessages.InternalServerError
-                };
-            }
-        }
-
-        /// <summary>
         ///     Gets the Lodgings by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
@@ -179,6 +144,44 @@ namespace CapstoneBackend.Model
             catch (Exception)
             {
                 return new Response<bool>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// <summary>
+        ///     Gets the transportation by identifier.
+        /// </summary>
+        /// <param name="lodgingId">The transportation identifier.</param>
+        /// <returns>A response of the waypoint with the given id or a non-success code and error message</returns>
+        public virtual Response<Lodging> GetLodgingById(int lodgingId)
+        {
+            try
+            {
+                var lodging = _dal.GetLodgingById(lodgingId);
+
+                if (lodging is null)
+                    return new Response<Lodging>
+                    {
+                        ErrorMessage = Ui.ErrorMessages.LodgingNotFound,
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound
+                    };
+
+                return new Response<Lodging> {Data = lodging};
+            }
+            catch (MySqlException e)
+            {
+                return new Response<Lodging>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<Lodging>
                 {
                     StatusCode = (uint) Ui.StatusCode.InternalServerError,
                     ErrorMessage = Ui.ErrorMessages.InternalServerError

@@ -29,7 +29,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
                 });
 
 
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object)
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object, new LodgingManager())
             {
                 EventManager = mockEventManager.Object,
                 SelectedDate = startDate
@@ -52,7 +52,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
                 {
                     Data = null
                 });
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object)
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object, new LodgingManager())
             {
                 EventManager = mockEventManager.Object,
                 SelectedDate = startDate
@@ -68,7 +68,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();
             var mockEventManager = new Mock<EventManager>();
-            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object)
+            TripOverviewPageViewModel testViewModel = new(mockTrip.Object, mockScreen.Object, new LodgingManager())
             {
                 EventManager = mockEventManager.Object,
                 SelectedDate = null

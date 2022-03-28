@@ -15,7 +15,7 @@ namespace CapstoneTest.WebTests.Pages
     public class TestCreateTrip
     {
         [TestMethod]
-        public void Post_Success_Redirects()
+        public void Post_Success_RedirectsToIndex()
         {
             var session = new Mock<ISession>();
             var fakeTripManager = new Mock<TripManager>();
@@ -57,6 +57,32 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPost();
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Post_ClashingTripExists_ReturnsErrorMessage()
+        {
+            var session = new Mock<ISession>();
+            var mockValidationManager = new Mock<ValidationManager>();
+            var fakeTripManager = new Mock<TripManager>();
+            mockValidationManager.Setup(um =>
+                    um.FindClashingTrip(0, DateTime.Today, DateTime.Today.AddDays(2)))
+                .Returns(new Response<Trip> { ErrorMessage = $"{Ui.ErrorMessages.ClashingTripDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}" });
+
+            var page = TestPageBuilder.BuildPage<CreateTripModel>(session.Object);
+
+            page.ValidationManager = mockValidationManager.Object;
+
+            page.HttpContext.Session.SetString("userId", "0");
+            page.TripName = "vacation";
+            page.Notes = "notes";
+            page.StartDate = DateTime.Today;
+            page.EndDate = DateTime.Today.AddDays(2);
+
+            var result = page.OnPost();
+
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual($"{Ui.ErrorMessages.ClashingTripDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}", page.ErrorMessage);
         }
 
         [TestMethod]

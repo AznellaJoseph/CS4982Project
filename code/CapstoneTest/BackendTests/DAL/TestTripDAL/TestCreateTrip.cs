@@ -1,52 +1,46 @@
-﻿using CapstoneBackend.DAL;
-using CapstoneBackend.Model;
+﻿using System;
+using CapstoneBackend.DAL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
-using System;
 
 namespace CapstoneTest.BackendTests.DAL.TestTripDAL
 {
     [TestClass]
     public class TestCreateTrip
     {
-        private MySqlConnection _connection;
-        private int testTripId = -1;
-
-        [TestInitialize]
-        public void Setup()
-        {
-            _connection = new MySqlConnection(Connection.ConnectionString);
-        }
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testTripId = -1;
 
         [TestMethod]
         public void CallProcedure_WithInvalidUserId_Fails()
         {
-            TripDal testDAL = new(_connection);
+            TripDal testDal = new(_connection);
 
-            Assert.ThrowsException<MySqlException>(() => testDAL.CreateTrip(-1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now));
+            Assert.ThrowsException<MySqlException>(() =>
+                testDal.CreateTrip(-1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now));
         }
 
         [TestMethod]
         public void CallProcedure_WithValidInput_Succeeds()
         {
-            TripDal testDAL = new(_connection);
+            TripDal testDal = new(_connection);
 
-            int? resultID = testDAL.CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now);
-            testTripId = (int) resultID;
+            int? resultId = testDal.CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now);
+            _testTripId = (int) resultId;
 
-            Assert.IsTrue(resultID is not null);
-            Assert.IsTrue(resultID is int);
+            Assert.IsTrue(resultId is not null);
+            Assert.IsInstanceOfType(resultId, typeof(int));
         }
 
         [TestCleanup]
         public void TearDown()
         {
             _connection.Open();
-            string query = $"delete from trip where tripId = {testTripId};";
+            var query = $"delete from trip where tripId = {_testTripId};";
 
-            using MySqlCommand cmd = new MySqlCommand(query, _connection);
+            using var cmd = new MySqlCommand(query, _connection);
             cmd.ExecuteNonQuery();
-            this._connection.Close();
+            _connection.Close();
         }
     }
 }

@@ -1,31 +1,30 @@
-﻿using CapstoneBackend.DAL;
+﻿using System;
+using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
-using System;
 
-namespace CapstoneTest.BackendTests.DAL.TestWaypointDAL
+namespace CapstoneTest.BackendTests.DAL.TestTransportationDAL
 {
     [TestClass]
     public class TestGetTransportationById
     {
-        private MySqlConnection _connection;
-        private int testTripId;
-        private int testTransportationId;
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testTransportationId;
+        private int _testTripId;
 
         [TestInitialize]
         public void Setup()
         {
-            _connection = new MySqlConnection(Connection.ConnectionString);
-            testTripId = new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now);
+            _testTripId = new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now);
         }
 
         [TestMethod]
         public void CallProcedure_WithInvalidTransportationId_ReturnsNull()
         {
-            TransportationDal testDAL = new(_connection);
+            TransportationDal testDal = new(_connection);
 
-            Transportation? result = testDAL.GetTransportationById(-1);
+            var result = testDal.GetTransportationById(-1);
 
             Assert.IsNull(result);
         }
@@ -33,29 +32,30 @@ namespace CapstoneTest.BackendTests.DAL.TestWaypointDAL
         [TestMethod]
         public void CallProcedure_WithValidTransportationId_ReturnsTransportation()
         {
-            TransportationDal testDAL = new(_connection);
-            testTransportationId = testDAL.CreateTransportation(1, "TestMethod", DateTime.Now, DateTime.Now, "Some Notes");
+            TransportationDal testDal = new(_connection);
+            _testTransportationId =
+                testDal.CreateTransportation(1, "TestMethod", DateTime.Now, DateTime.Now, "Some Notes");
 
-            Transportation? result = testDAL.GetTransportationById(1);
+            var result = testDal.GetTransportationById(1);
 
             Assert.IsNotNull(result);
-            Assert.IsTrue(result is Transportation);
+            Assert.IsInstanceOfType(result, typeof(Transportation));
         }
 
         [TestCleanup]
         public void TearDown()
         {
             _connection.Open();
-            string removeTrip = $"delete from trip where tripId = {testTripId};";
-            string removeWaypoint = $"delete from waypoint where waypointId = {testTransportationId};";
+            var removeTrip = $"delete from trip where tripId = {_testTripId};";
+            var removeWaypoint = $"delete from waypoint where waypointId = {_testTransportationId};";
 
-            using MySqlCommand tripCmd = new MySqlCommand(removeTrip, _connection);
+            using var tripCmd = new MySqlCommand(removeTrip, _connection);
             tripCmd.ExecuteNonQuery();
 
-            using MySqlCommand waypointCmd = new MySqlCommand(removeWaypoint, _connection);
+            using var waypointCmd = new MySqlCommand(removeWaypoint, _connection);
             waypointCmd.ExecuteNonQuery();
 
-            this._connection.Close();
+            _connection.Close();
         }
     }
 }

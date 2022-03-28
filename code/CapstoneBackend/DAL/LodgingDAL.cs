@@ -73,7 +73,7 @@ namespace CapstoneBackend.DAL
             cmd.CommandType = CommandType.StoredProcedure;
             IList<Lodging> lodgingsInTrip = new List<Lodging>();
 
-            cmd.Parameters.Add("@tripId", MySqlDbType.UInt32).Value = tripId;
+            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
 
 
             using var reader = cmd.ExecuteReader();
@@ -92,50 +92,11 @@ namespace CapstoneBackend.DAL
                     Location = reader.GetString(locationOrdinal),
                     StartDate = reader.GetDateTime(startDateOrdinal),
                     EndDate = reader.GetDateTime(endDateOrdinal),
-                    Notes = reader.IsDBNull(notesOrdinal) ? "" : reader.GetString(notesOrdinal)
-                });
-
-            _connection.Close();
-            return lodgingsInTrip;
-        }
-
-        /// <summary>
-        ///     Gets the lodgings on the specified date.
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <param name="selectedDate">The selected date.</param>
-        /// <returns> A list of the lodgings of the trip on the specified date </returns>
-        public virtual IList<Lodging> GetLodgingsOnDate(int tripId, DateTime selectedDate)
-        {
-            _connection.Open();
-            const string procedure = "uspGetLodgingsOnDate";
-            using MySqlCommand cmd = new(procedure, _connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            IList<Lodging> lodgingsOnDate = new List<Lodging>();
-
-            cmd.Parameters.Add("@selectedDate", MySqlDbType.DateTime).Value = selectedDate;
-            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
-
-            using var reader = cmd.ExecuteReaderAsync().Result;
-            var lodgingIdOrdinal = reader.GetOrdinal("lodgingId");
-            var startDateOrdinal = reader.GetOrdinal("startDate");
-            var endDateOrdinal = reader.GetOrdinal("endDate");
-            var locationOrdinal = reader.GetOrdinal("location");
-            var notesOrdinal = reader.GetOrdinal("notes");
-
-            while (reader.Read())
-                lodgingsOnDate.Add(new Lodging
-                {
-                    TripId = tripId,
-                    LodgingId = reader.GetInt32(lodgingIdOrdinal),
-                    Location = reader.GetString(locationOrdinal),
-                    StartDate = reader.GetDateTime(startDateOrdinal),
-                    EndDate = reader.GetDateTime(endDateOrdinal),
                     Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
                 });
 
             _connection.Close();
-            return lodgingsOnDate;
+            return lodgingsInTrip;
         }
 
         /// <summary>
@@ -154,7 +115,48 @@ namespace CapstoneBackend.DAL
 
             cmd.Parameters.Add("@lodgingId", MySqlDbType.Int32).Value = lodgingId;
 
-            return cmd.ExecuteNonQuery() == 1;
+            var removed = cmd.ExecuteNonQuery() == 1;
+            _connection.Close();
+            return removed;
         }
+
+        /// <summary>
+        ///     Gets the transportation by its id.
+        /// </summary>
+        /// <param name="lodgingId">The transportation identifier.</param>
+        /// <returns>The lodging with the given id, null if no matching transportation found</returns>
+        public virtual Lodging? GetLodgingById(int lodgingId)
+        {
+            _connection.Open();
+            const string procedure = "uspGetLodgingById";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@lodgingId", MySqlDbType.Int32).Value = lodgingId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var tripIdOrdinal = reader.GetOrdinal("tripId");
+            var startDateOrdinal = reader.GetOrdinal("startDate");
+            var endDateOrdinal = reader.GetOrdinal("endDate");
+            var locationOrdinal = reader.GetOrdinal("location");
+            var notesOrdinal = reader.GetOrdinal("notes");
+
+            Lodging? lodging = null;
+
+            if (reader.Read())
+                lodging = new Lodging
+                {
+                    TripId = reader.GetInt32(tripIdOrdinal),
+                    LodgingId = lodgingId,
+                    Location = reader.GetString(locationOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
+                };
+
+            _connection.Close();
+            return lodgingsOnDate;
+        }
+
     }
 }
