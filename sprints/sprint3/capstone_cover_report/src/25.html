@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestLodging\TestConstructor.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestLodging
+{
+    [TestClass]
+    public class TestConstructor
+    {
+        [TestMethod]
+        public void Constructor_PropertyCreations()
+        {
+            var mockLodging = new Mock&lt;Lodging&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            var lodgingViewModel = new LodgingViewModel(mockLodging.Object, mockScreen.Object);
+
+            Assert.AreEqual(mockLodging.Object, lodgingViewModel.Lodging);
+            Assert.IsNotNull(lodgingViewModel.HostScreen);
+            Assert.IsNotNull(lodgingViewModel.LodgingManager);
+            Assert.IsNotNull(lodgingViewModel.RemoveCommand);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,9,14,10,1],[15,13,15,51,1],[16,13,16,50,1],[18,13,18,96,1],[20,13,20,75,1],[21,13,21,59,1],[22,13,22,63,1],[23,13,23,62,1],[24,9,24,10,1]]);
+    </script>
+  </body>
+</html>

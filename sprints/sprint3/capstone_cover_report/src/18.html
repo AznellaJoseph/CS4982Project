@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestTripOverviewPage\TestUpdateLodging.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
+{
+    [TestClass]
+    public class TestUpdateLodging
+    {
+        [TestMethod]
+        public void UpdateLodgings_ValidData_Success()
+        {
+            var startDate = DateTime.Now;
+            var mockTrip = new Mock&lt;Trip&gt;();
+            mockTrip.SetupGet(mt =&gt; mt.TripId).Returns(1);
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockLodgingManager = new Mock&lt;LodgingManager&gt;();
+            mockLodgingManager.Setup(wm =&gt; wm.GetLodgingsByTripId(1))
+                .Returns(new Response&lt;IList&lt;Lodging&gt;&gt;
+                {
+                    Data = new List&lt;Lodging&gt;
+                    {
+                        new(), new()
+                    }
+                });
+
+
+            TripOverviewPageViewModel testViewModel =
+                new(mockTrip.Object, mockScreen.Object, mockLodgingManager.Object);
+
+            Assert.AreEqual(2, testViewModel.LodgingViewModels.Count);
+        }
+
+
+        [TestMethod]
+        public void UpdateLodgings_NullData_EmptyLodgingList()
+        {
+            var startDate = DateTime.Now;
+            var mockTrip = new Mock&lt;Trip&gt;();
+            mockTrip.SetupGet(mt =&gt; mt.TripId).Returns(1);
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockLodgingManager = new Mock&lt;LodgingManager&gt;();
+            mockLodgingManager.Setup(em =&gt; em.GetLodgingsByTripId(1))
+                .Returns(new Response&lt;IList&lt;Lodging&gt;&gt;
+                {
+                    Data = null
+                });
+            TripOverviewPageViewModel testViewModel =
+                new(mockTrip.Object, mockScreen.Object, mockLodgingManager.Object);
+
+            Assert.AreEqual(0, testViewModel.LodgingViewModels.Count);
+        }
+
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,42,1],[18,13,18,45,1],[19,13,19,59,1],[20,13,20,50,1],[21,13,21,65,1],[22,13,29,20,1],[32,13,33,84,1],[35,13,35,71,1],[36,9,36,10,1],[41,9,41,10,1],[42,13,42,42,1],[43,13,43,45,1],[44,13,44,59,1],[45,13,45,50,1],[46,13,46,65,1],[47,13,51,20,1],[52,13,53,84,1],[55,13,55,71,1],[56,9,56,10,1]]);
+    </script>
+  </body>
+</html>

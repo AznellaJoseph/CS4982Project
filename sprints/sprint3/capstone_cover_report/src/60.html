@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestLodgingManager\TestCreateLodging.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestLodgingManager
+{
+    [TestClass]
+    public class TestCreateLodging
+    {
+        [TestMethod]
+        public void CreateLodging_InvalidDates_ReturnsErrorMessage()
+        {
+            var mockLodgingDal = new Mock&lt;LodgingDal&gt;();
+            mockLodgingDal.Setup(db =&gt;
+                    db.CreateLodging(1, &quot;Some Hotel&quot;, DateTime.Now.AddDays(4), DateTime.Now, null))
+                .Returns((int) Ui.StatusCode.BadRequest);
+
+            LodgingManager lodgingManager = new(mockLodgingDal.Object);
+
+            var resultResponse =
+                lodgingManager.CreateLodging(1, &quot;Some Hotel&quot;, DateTime.Now.AddDays(4), DateTime.Now, null);
+
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void CreateLodging_ServerMySqlException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;LodgingDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            var currentTime = DateTime.Now;
+            mockDal.Setup(dal =&gt; dal.CreateLodging(1, &quot;Some Hotel&quot;, currentTime, currentTime.AddDays(2), null))
+                .Throws(builder
+                    .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
+            var result = lodgingManager.CreateLodging(1, &quot;Some Hotel&quot;, currentTime, currentTime.AddDays(2), null);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateLodging_ServerException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;LodgingDal&gt;();
+            var currentTime = DateTime.Now;
+            mockDal.Setup(dal =&gt; dal.CreateLodging(1, &quot;Some Hotel&quot;, currentTime, currentTime, null))
+                .Throws(new Exception());
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
+            var result = lodgingManager.CreateLodging(1, &quot;Some Hotel&quot;, currentTime, currentTime, null);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
+
+        [TestMethod]
+        public void CreateLodging_Success()
+        {
+            var mockLodgingDal = new Mock&lt;LodgingDal&gt;();
+            mockLodgingDal.Setup(db =&gt;
+                    db.CreateLodging(1, &quot;Some Hotel&quot;, DateTime.Now, DateTime.Now.AddDays(2), null))
+                .Returns((int) Ui.StatusCode.Success);
+
+            LodgingManager lodgingManager = new(mockLodgingDal.Object);
+
+            var resultResponse =
+                lodgingManager.CreateLodging(1, &quot;Some Hotel&quot;, DateTime.Now, DateTime.Now.AddDays(2), null);
+
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,57,1],[17,13,19,58,1],[21,13,21,72,1],[23,13,24,108,1],[26,13,26,89,1],[27,9,27,10,1],[31,9,31,10,1],[32,13,32,50,1],[33,13,33,55,1],[34,13,34,44,1],[35,13,37,121,1],[39,13,39,65,1],[41,13,41,115,1],[43,13,43,90,1],[44,13,44,88,1],[45,9,45,10,1],[49,9,49,10,1],[50,13,50,50,1],[51,13,51,44,1],[52,13,53,42,1],[55,13,55,65,1],[57,13,57,104,1],[59,13,59,90,1],[60,13,60,88,1],[61,9,61,10,1],[66,9,66,10,1],[67,13,67,57,1],[68,13,70,55,1],[72,13,72,72,1],[74,13,75,108,1],[77,13,77,86,1],[78,9,78,10,1]]);
+    </script>
+  </body>
+</html>

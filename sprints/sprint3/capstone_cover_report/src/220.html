@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\CreateTripPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for Create Trip Window
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class CreateTripPageViewModel : ReactiveViewModelBase
+    {
+        private readonly User _user;
+
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateTripPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The current user&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;the host screen&lt;/param&gt;
+        public CreateTripPageViewModel(User user, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            _user = user;
+            HostScreen = screen;
+            CreateTripCommand = ReactiveCommand.CreateFromObservable(createTrip);
+            CancelCreateTripCommand =
+                ReactiveCommand.CreateFromObservable(() =&gt; HostScreen.Router.NavigateBack.Execute());
+        }
+
+        /// &lt;summary&gt;
+        ///     The trip manager.
+        /// &lt;/summary&gt;
+        public TripManager TripManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The validation manager.
+        /// &lt;/summary&gt;
+        public ValidationManager ValidationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The create trip command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; CreateTripCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The cancel create trip command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateTripCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        ///     The trip name.
+        /// &lt;/summary&gt;
+        public string? TripName { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string? Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? EndDate { get; set; }
+
+        private IObservable&lt;IRoutableViewModel&gt; createTrip()
+        {
+            if (string.IsNullOrEmpty(TripName))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyTripName;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (StartDate is null || EndDate is null)
+            {
+                ErrorMessage = Ui.ErrorMessages.NullTripDate;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var clashingTripResponse =
+                ValidationManager.FindClashingTrip(_user.UserId, StartDate.Value.Date, EndDate.Value.Date);
+
+            if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingTripResponse.ErrorMessage;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var resultResponse =
+                TripManager.CreateTrip(_user.UserId, TripName, Notes, StartDate.Value.Date, EndDate.Value.Date);
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(
+                    new LandingPageViewModel(_user, HostScreen, TripManager));
+
+            ErrorMessage = resultResponse.ErrorMessage;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,46,1],[25,69,26,44,1],[27,9,27,10,1],[28,13,28,26,1],[29,13,29,33,1],[30,13,30,82,1],[31,13,32,60,1],[32,60,32,100,0],[32,100,32,102,1],[33,9,33,10,1],[38,42,38,46,1],[38,47,38,51,1],[38,56,38,61,1],[43,54,43,58,1],[43,59,43,63,1],[43,68,43,73,1],[48,78,48,82,1],[53,70,53,74,1],[60,20,60,26,1],[61,20,61,64,1],[67,35,67,39,1],[67,40,67,44,1],[72,32,72,36,1],[72,37,72,41,1],[77,44,77,48,1],[77,49,77,53,1],[82,42,82,46,1],[82,47,82,51,1],[85,9,85,10,1],[86,13,86,48,1],[87,13,87,14,1],[88,17,88,63,1],[89,17,89,63,1],[92,13,92,54,1],[93,13,93,14,1],[94,17,94,62,1],[95,17,95,63,1],[98,13,99,108,1],[101,13,101,74,1],[102,13,102,14,1],[103,17,103,66,1],[104,17,104,63,1],[107,13,108,113,1],[109,13,109,67,1],[110,17,111,79,0],[113,13,113,56,1],[114,13,114,59,1],[115,9,115,10,1]]);
+    </script>
+  </body>
+</html>

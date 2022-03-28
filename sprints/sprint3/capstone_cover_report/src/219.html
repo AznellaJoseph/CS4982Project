@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\CreateTransportationPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the CreateTransportation Page
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class CreateTransportationPageViewModel : ReactiveViewModelBase
+    {
+        private readonly Trip _trip;
+
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateTransportationPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;trip&quot;&gt;the trip that the transportation is for.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The host screen&lt;/param&gt;
+        public CreateTransportationPageViewModel(Trip trip, IScreen screen) : base(
+            screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            _trip = trip;
+            HostScreen = screen;
+            CreateTransportationCommand = ReactiveCommand.CreateFromObservable(createTransportation);
+            CancelCreateTransportationCommand =
+                ReactiveCommand.CreateFromObservable(() =&gt; HostScreen.Router.NavigateBack.Execute());
+        }
+
+        /// &lt;summary&gt;
+        ///     The transportation manager.
+        /// &lt;/summary&gt;
+        public TransportationManager TransportationManager { get; set; } = new();
+
+        public ValidationManager ValidationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The create transportation command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; CreateTransportationCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The cancel create transportation command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateTransportationCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start time.
+        /// &lt;/summary&gt;
+        public TimeSpan? StartTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end time.
+        /// &lt;/summary&gt;
+        public TimeSpan? EndTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        public string? Method { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string? Notes { get; set; }
+
+        private IObservable&lt;IRoutableViewModel&gt; createTransportation()
+        {
+            if (string.IsNullOrEmpty(Method))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyTransportationMethod;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (StartDate is null || StartTime is null)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var startDate = StartDate.Value.Date + StartTime.Value;
+
+            var endDate = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
+
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(_trip.TripId, startDate, endDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
+            {
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var clashingEventResponse = ValidationManager.FindClashingEvent(_trip.TripId, startDate, endDate);
+
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var resultResponse =
+                TransportationManager.CreateTransportation(_trip.TripId, Method, startDate, endDate, Notes);
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen, new LodgingManager()));
+
+            ErrorMessage = resultResponse.ErrorMessage;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,46,1],[25,79,27,44,1],[28,9,28,10,1],[29,13,29,26,1],[30,13,30,33,1],[31,13,31,102,1],[32,13,33,60,1],[33,60,33,100,0],[33,100,33,102,1],[34,9,34,10,1],[39,62,39,66,1],[39,67,39,71,1],[39,76,39,81,1],[41,54,41,58,1],[41,59,41,63,1],[41,68,41,73,1],[46,88,46,92,1],[51,80,51,84,1],[58,20,58,26,1],[59,20,59,64,1],[65,44,65,48,1],[65,49,65,53,1],[70,38,70,42,1],[70,43,70,47,1],[75,42,75,46,1],[75,47,75,51,1],[80,36,80,40,1],[80,41,80,45,1],[85,33,85,37,1],[85,38,85,42,1],[90,32,90,36,1],[90,37,90,41,1],[93,9,93,10,1],[94,13,94,46,1],[95,13,95,14,1],[96,17,96,75,1],[97,17,97,63,1],[100,13,100,56,1],[101,13,101,14,1],[102,17,102,66,1],[103,17,103,63,1],[106,13,106,68,1],[108,13,108,115,1],[110,13,110,117,1],[112,13,112,72,1],[113,13,113,14,1],[114,17,114,64,1],[115,17,115,63,1],[118,13,118,111,1],[120,13,120,75,1],[121,13,121,14,1],[122,17,122,67,1],[123,17,123,63,1],[126,13,127,109,1],[128,13,128,67,1],[129,17,129,131,0],[131,13,131,56,1],[132,13,132,59,1],[133,9,133,10,1]]);
+    </script>
+  </body>
+</html>

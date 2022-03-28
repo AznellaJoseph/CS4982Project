@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\TripOverviewPage.axaml</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+&lt;UserControl xmlns=&quot;https://github.com/avaloniaui&quot;
+             xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+             xmlns:conv=&quot;clr-namespace:CapstoneDesktop.Converters&quot;
+             x:Class=&quot;CapstoneDesktop.Views.TripOverviewPage&quot;&gt;
+    &lt;UserControl.Resources&gt;
+        &lt;conv:DateFormatter x:Key=&quot;DateFormatter&quot; /&gt;
+    &lt;/UserControl.Resources&gt;
+    &lt;Grid RowDefinitions=&quot;Auto,20,Auto,20,Auto,*,*&quot; ColumnDefinitions=&quot;2*,20,3*&quot; Margin=&quot;20&quot;&gt;
+        &lt;Border Grid.Row=&quot;0&quot; Grid.Column=&quot;0&quot; Grid.ColumnSpan=&quot;3&quot;&gt;
+            &lt;TextBlock Classes=&quot;h1&quot; Text=&quot;{Binding Trip.Name}&quot; TextAlignment=&quot;Center&quot; /&gt;
+        &lt;/Border&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Column=&quot;0&quot; Grid.Row=&quot;2&quot; Grid.ColumnSpan=&quot;3&quot;&gt;
+            &lt;Grid ColumnDefinitions=&quot;*,10,*,10,*&quot;&gt;
+                &lt;Button HorizontalAlignment=&quot;Stretch&quot; Grid.Column=&quot;0&quot;&gt;
+                    &lt;TextBlock Classes=&quot;dark&quot; Text=&quot;PROFILE&quot; TextAlignment=&quot;Center&quot; /&gt;
+                &lt;/Button&gt;
+                &lt;Button HorizontalAlignment=&quot;Stretch&quot; Grid.Column=&quot;2&quot; Command=&quot;{Binding BackCommand}&quot;&gt;
+                    &lt;TextBlock Classes=&quot;dark&quot; Text=&quot;BACK&quot; TextAlignment=&quot;Center&quot; /&gt;
+                &lt;/Button&gt;
+                &lt;Button HorizontalAlignment=&quot;Stretch&quot; Grid.Column=&quot;4&quot; Command=&quot;{Binding LogoutCommand}&quot;&gt;
+                    &lt;TextBlock Classes=&quot;dark&quot; Text=&quot;LOGOUT&quot; TextAlignment=&quot;Center&quot; /&gt;
+                &lt;/Button&gt;
+            &lt;/Grid&gt;
+        &lt;/Border&gt;
+
+		&lt;TextBlock Grid.Column=&quot;0&quot; Classes=&quot;h1 light&quot; Grid.Row=&quot;4&quot; TextAlignment=&quot;Center&quot; Text=&quot;{Binding SelectedDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}&quot;/&gt;
+
+
+		&lt;Border Classes=&quot;container&quot; Grid.Row=&quot;5&quot; Grid.Column=&quot;0&quot; Margin=&quot;0, 5, 0, 5&quot;&gt;
+			&lt;Grid RowDefinitions=&quot;Auto,*,*,10,Auto&quot;&gt;
+
+				&lt;TextBlock Classes=&quot;h1 light&quot; Grid.Row=&quot;0&quot; TextAlignment=&quot;Center&quot; Text=&quot;LODGING&quot;/&gt;
+
+				&lt;ScrollViewer Grid.Row=&quot;2&quot; VerticalContentAlignment=&quot;Top&quot; VerticalScrollBarVisibility=&quot;Auto&quot; HorizontalScrollBarVisibility=&quot;Hidden&quot;&gt;
+					&lt;ItemsControl Items=&quot;{Binding LodgingViewModels}&quot;&gt;
+						&lt;ItemsControl.ItemsPanel&gt;
+							&lt;ItemsPanelTemplate&gt;
+								&lt;StackPanel Orientation=&quot;Vertical&quot; Spacing=&quot;10&quot; /&gt;
+							&lt;/ItemsPanelTemplate&gt;
+						&lt;/ItemsControl.ItemsPanel&gt;
+						&lt;ItemsControl.ItemTemplate&gt;
+							&lt;DataTemplate&gt;
+								&lt;Grid ColumnDefinitions=&quot;*,5,Auto,5,*,10,3*,Auto,*&quot;&gt;
+									&lt;TextBlock Grid.Column=&quot;0&quot; TextAlignment=&quot;Center&quot; Text=&quot;{Binding Lodging.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}&quot;/&gt;
+									&lt;TextBlock Grid.Column=&quot;2&quot; TextAlignment=&quot;Center&quot; Text=&quot;-&quot;/&gt;
+									&lt;TextBlock Grid.Column=&quot;4&quot; TextAlignment=&quot;Center&quot; Text=&quot;{Binding Lodging.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}&quot;/&gt;
+									&lt;TextBlock Grid.Column=&quot;6&quot; TextAlignment=&quot;Center&quot; Text=&quot;{Binding Lodging.Location}&quot;/&gt;
+									&lt;Button Grid.Column=&quot;8&quot; Command=&quot;{Binding RemoveCommand}&quot;&gt;X&lt;/Button&gt;
+								&lt;/Grid&gt;
+							&lt;/DataTemplate&gt;
+						&lt;/ItemsControl.ItemTemplate&gt;
+					&lt;/ItemsControl&gt;
+				&lt;/ScrollViewer&gt;
+				&lt;Grid ColumnDefinitions=&quot;*&quot; Grid.Row=&quot;4&quot;&gt;
+					&lt;Button Grid.Column=&quot;0&quot; HorizontalAlignment=&quot;Stretch&quot; VerticalAlignment=&quot;Stretch&quot;
+                        Command=&quot;{Binding CreateLodgingCommand}&quot;&gt;
+						&lt;TextBlock Classes=&quot;dark&quot; Text=&quot;CREATE LODGING&quot; VerticalAlignment=&quot;Center&quot; TextAlignment=&quot;Center&quot;  /&gt;
+					&lt;/Button&gt;
+                &lt;/Grid&gt;
+			&lt;/Grid&gt;
+		&lt;/Border&gt;
+
+
+        &lt;Border Classes=&quot;container&quot; Grid.Row=&quot;6&quot; Grid.Column=&quot;0&quot;&gt;
+            &lt;Grid RowDefinitions=&quot;Auto,*,*,10,Auto&quot;&gt;
+
+                &lt;TextBlock Classes=&quot;h1 light&quot; Grid.Row=&quot;0&quot; TextAlignment=&quot;Center&quot; Text=&quot;EVENTS&quot;/&gt;
+				
+                &lt;ScrollViewer Grid.Row=&quot;2&quot; VerticalContentAlignment=&quot;Top&quot; VerticalScrollBarVisibility=&quot;Auto&quot; HorizontalScrollBarVisibility=&quot;Hidden&quot;&gt;
+                    &lt;ItemsControl Items=&quot;{Binding EventViewModels}&quot;&gt;
+                        &lt;ItemsControl.ItemsPanel&gt;
+                            &lt;ItemsPanelTemplate&gt;
+                                &lt;StackPanel Orientation=&quot;Vertical&quot; Spacing=&quot;10&quot; /&gt;
+                            &lt;/ItemsPanelTemplate&gt;
+                        &lt;/ItemsControl.ItemsPanel&gt;
+                        &lt;ItemsControl.ItemTemplate&gt;
+                            &lt;DataTemplate&gt;
+                                &lt;Grid ColumnDefinitions=&quot;*,5,Auto,5,*,10,3*,Auto,*&quot;&gt;
+                                        &lt;TextBlock Grid.Column=&quot;0&quot; TextAlignment=&quot;Center&quot; Text=&quot;{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}&quot;/&gt;
+                                        &lt;TextBlock Grid.Column=&quot;2&quot; TextAlignment=&quot;Center&quot; Text=&quot;-&quot;/&gt;
+                                        &lt;TextBlock Grid.Column=&quot;4&quot; TextAlignment=&quot;Center&quot; Text=&quot;{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}&quot;/&gt;
+                                        &lt;TextBlock Grid.Column=&quot;6&quot; TextAlignment=&quot;Center&quot; Text=&quot;{Binding Event.DisplayName}&quot;/&gt;
+                                        &lt;StackPanel Grid.Column=&quot;8&quot; Spacing=&quot;5&quot;&gt;
+	                                        &lt;Button Command=&quot;{Binding ViewCommand}&quot;&gt;VIEW&lt;/Button&gt;
+	                                        &lt;Button Command=&quot;{Binding RemoveCommand}&quot;&gt;X&lt;/Button&gt;
+                                        &lt;/StackPanel&gt;
+                                &lt;/Grid&gt;
+                            &lt;/DataTemplate&gt;
+                        &lt;/ItemsControl.ItemTemplate&gt;
+                    &lt;/ItemsControl&gt;
+                &lt;/ScrollViewer&gt;
+				&lt;Grid ColumnDefinitions=&quot;*,*&quot; Grid.Row=&quot;4&quot;&gt;
+					&lt;Button Grid.Column=&quot;0&quot; HorizontalAlignment=&quot;Stretch&quot; VerticalAlignment=&quot;Stretch&quot;
+                        Command=&quot;{Binding CreateTransportationCommand}&quot;&gt;
+						&lt;TextBlock Classes=&quot;dark&quot; Text=&quot;CREATE TRANSPORTATION&quot; VerticalAlignment=&quot;Center&quot; TextAlignment=&quot;Center&quot; /&gt;
+					&lt;/Button&gt;
+					&lt;Button Grid.Column=&quot;1&quot; HorizontalAlignment=&quot;Stretch&quot; VerticalAlignment=&quot;Stretch&quot;
+							Command=&quot;{Binding CreateWaypointCommand}&quot;&gt;
+						&lt;TextBlock Classes=&quot;dark&quot; Text=&quot;CREATE WAYPOINT&quot; VerticalAlignment=&quot;Center&quot; TextAlignment=&quot;Center&quot; /&gt;
+					&lt;/Button&gt;
+				&lt;/Grid&gt;
+            &lt;/Grid&gt;
+        &lt;/Border&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Row=&quot;4&quot; Grid.RowSpan=&quot;3&quot; Grid.Column=&quot;2&quot;&gt;
+            &lt;Calendar Name=&quot;TripCalendar&quot; IsTodayHighlighted=&quot;False&quot; SelectionMode=&quot;SingleDate&quot; DisplayMode=&quot;Month&quot;
+                      DisplayDate=&quot;{Binding Trip.StartDate}&quot; SelectedDate=&quot;{Binding SelectedDate}&quot;
+                      VerticalAlignment=&quot;Center&quot; HorizontalAlignment=&quot;Center&quot; /&gt;
+        &lt;/Border&gt;
+    &lt;/Grid&gt;
+&lt;/UserControl&gt;
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[1,2,1,13,0],[6,10,6,28,0],[8,6,8,10,0],[8,11,8,25,0],[8,53,8,70,0],[9,10,9,16,0],[9,17,9,21,0],[9,46,9,50,0],[10,14,10,23,0],[10,24,10,31,0],[10,37,10,41,0],[12,10,12,16,0],[12,17,12,24,0],[12,53,12,57,0],[13,14,13,18,0],[13,19,13,36,0],[14,18,14,24,0],[14,25,14,44,0],[15,22,15,31,0],[15,32,15,39,0],[15,47,15,51,0],[17,18,17,24,0],[17,25,17,44,0],[17,71,17,78,0],[18,22,18,31,0],[18,32,18,39,0],[18,47,18,51,0],[20,18,20,24,0],[20,25,20,44,0],[20,71,20,78,0],[21,22,21,31,0],[21,32,21,39,0],[21,47,21,51,0],[26,4,26,13,0],[26,14,26,18,0],[26,30,26,37,0],[26,62,26,75,0],[26,85,26,89,0],[29,4,29,10,0],[29,11,29,18,0],[29,44,29,48,0],[30,5,30,9,0],[30,10,30,24,0],[32,6,32,15,0],[32,16,32,23,0],[32,48,32,61,0],[32,71,32,75,0],[34,6,34,18,0],[34,19,34,23,0],[34,63,34,90,0],[35,7,35,19,0],[35,20,35,25,0],[37,9,37,27,0],[38,10,38,20,0],[38,10,38,20,0],[38,21,38,32,0],[42,9,42,21,0],[43,10,43,14,0],[43,10,43,14,0],[43,15,43,32,0],[44,11,44,20,0],[44,21,44,25,0],[44,60,44,64,0],[45,11,45,20,0],[45,21,45,25,0],[45,60,45,64,0],[46,11,46,20,0],[46,21,46,25,0],[46,60,46,64,0],[47,11,47,20,0],[47,21,47,25,0],[47,60,47,64,0],[48,11,48,17,0],[48,18,48,22,0],[48,34,48,41,0],[48,68,48,69,0],[54,6,54,10,0],[54,11,54,28,0],[55,7,55,13,0],[55,14,55,18,0],[55,60,55,77,0],[56,25,56,32,0],[57,8,57,17,0],[57,18,57,25,0],[57,33,57,37,0],[57,82,57,95,0],[64,10,64,16,0],[64,17,64,24,0],[64,50,64,54,0],[65,14,65,18,0],[65,19,65,33,0],[67,18,67,27,0],[67,28,67,35,0],[67,60,67,73,0],[67,83,67,87,0],[69,18,69,30,0],[69,31,69,35,0],[69,75,69,102,0],[70,22,70,34,0],[70,35,70,40,0],[72,30,72,48,0],[73,34,73,44,0],[73,34,73,44,0],[73,45,73,56,0],[77,30,77,42,0],[78,34,78,38,0],[78,34,78,38,0],[78,39,78,56,0],[79,42,79,51,0],[79,52,79,56,0],[79,91,79,95,0],[80,42,80,51,0],[80,52,80,56,0],[80,91,80,95,0],[81,42,81,51,0],[81,52,81,56,0],[81,91,81,95,0],[82,42,82,51,0],[82,52,82,56,0],[82,91,82,95,0],[83,42,83,52,0],[83,53,83,57,0],[84,43,84,49,0],[84,50,84,57,0],[84,82,84,86,0],[85,43,85,49,0],[85,50,85,57,0],[85,84,85,85,0],[92,6,92,10,0],[92,11,92,28,0],[93,7,93,13,0],[93,14,93,18,0],[93,60,93,77,0],[94,25,94,32,0],[95,8,95,17,0],[95,18,95,25,0],[95,33,95,37,0],[95,89,95,102,0],[97,7,97,13,0],[97,14,97,18,0],[97,60,97,77,0],[98,8,98,15,0],[99,8,99,17,0],[99,18,99,25,0],[99,33,99,37,0],[99,83,99,96,0],[104,10,104,16,0],[104,17,104,24,0],[104,50,104,54,0],[105,14,105,22,0],[105,23,105,27,0],[105,70,105,83,0],[106,23,106,34,0],[106,62,106,74,0],[107,50,107,69,0]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestCreateTrip\TestCreateTripCommand.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
+{
+    [TestClass]
+    public class TestCreateTripCommand
+    {
+        [TestMethod]
+        public void CreateTripCommand_EmptyTripName_ReturnsErrorMessage()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockScreen.Object) {TripManager = mockTripManager.Object};
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.EmptyTripName, createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTripCommand_InvalidDates_ReturnsErrorMessage()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            mockTripManager.Setup(um =&gt; um.CreateTrip(0, &quot;name&quot;, &quot;notes&quot;, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response&lt;int&gt;
+                    {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockValidationManager = new Mock&lt;ValidationManager&gt;();
+            mockValidationManager.Setup(vm =&gt; vm.FindClashingTrip(0, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response&lt;Trip&gt; {Data = null});
+
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockScreen.Object)
+                    {TripManager = mockTripManager.Object, ValidationManager = mockValidationManager.Object};
+
+
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+            createTripWindowViewModel.StartDate = DateTime.Today.AddDays(1);
+            createTripWindowViewModel.EndDate = DateTime.Today;
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate,
+                createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTripCommand_NullStartDate_ReturnsErrorMessage()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var endDate = DateTime.Today.AddDays(1);
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockScreen.Object) {TripManager = mockTripManager.Object};
+
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.EndDate = endDate;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.NullTripDate, createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTripCommand_ClashingTripExists_ReturnsErrorMessage()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var startDate = DateTime.Today;
+            var endDate = DateTime.Today.AddDays(1);
+            var mockValidationManager = new Mock&lt;ValidationManager&gt;();
+            mockValidationManager.Setup(vm =&gt; vm.FindClashingTrip(0, startDate, endDate)).Returns(new Response&lt;Trip&gt;
+            {
+                ErrorMessage =
+                    $&quot;{Ui.ErrorMessages.ClashingTripDates} {startDate.AddDays(-1).ToShortDateString()} to {endDate.ToShortDateString()}&quot;
+            });
+
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockScreen.Object)
+                {
+                    TripManager = mockTripManager.Object,
+                    ValidationManager = mockValidationManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.StartDate = startDate;
+            createTripWindowViewModel.EndDate = endDate;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+
+            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(
+                $&quot;{Ui.ErrorMessages.ClashingTripDates} {startDate.AddDays(-1).ToShortDateString()} to {endDate.ToShortDateString()}&quot;,
+                createTripWindowViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTripCommand_SuccessfulCreation()
+        {
+            var mockUser = new Mock&lt;User&gt;();
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var startDate = DateTime.Today;
+            var endDate = DateTime.Today.AddDays(1);
+            var mockValidationManager = new Mock&lt;ValidationManager&gt;();
+            mockValidationManager.Setup(vm =&gt; vm.FindClashingTrip(0, startDate, endDate)).Returns(new Response&lt;Trip&gt;
+                {Data = null});
+            mockTripManager.Setup(um =&gt; um.CreateTrip(0, &quot;name&quot;, &quot;notes&quot;, startDate, endDate))
+                .Returns(new Response&lt;int&gt; {StatusCode = (uint) Ui.StatusCode.Success});
+
+            CreateTripPageViewModel createTripWindowViewModel =
+                new(mockUser.Object, mockScreen.Object)
+                {
+                    TripManager = mockTripManager.Object,
+                    ValidationManager = mockValidationManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            createTripWindowViewModel.TripName = &quot;name&quot;;
+            createTripWindowViewModel.StartDate = startDate;
+            createTripWindowViewModel.EndDate = endDate;
+            createTripWindowViewModel.Notes = &quot;notes&quot;;
+
+            createTripWindowViewModel.CreateTripCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, createTripWindowViewModel.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,10,1],[18,13,18,45,1],[19,13,19,59,1],[20,13,20,50,1],[21,13,22,96,1],[23,13,23,53,1],[25,13,25,79,1],[27,13,27,35,1],[29,13,29,101,1],[30,9,30,10,1],[34,9,34,10,1],[35,13,35,45,1],[36,13,36,59,1],[37,13,39,119,1],[40,13,40,50,1],[41,13,41,71,1],[42,13,43,60,1],[45,13,47,110,1],[50,13,50,53,1],[52,13,52,57,1],[53,13,53,55,1],[54,13,54,77,1],[55,13,55,64,1],[57,13,57,79,1],[59,13,59,35,1],[61,13,62,57,1],[63,9,63,10,1],[67,9,67,10,1],[68,13,68,45,1],[69,13,69,59,1],[70,13,70,50,1],[71,13,71,53,1],[72,13,73,96,1],[75,13,75,53,1],[77,13,77,57,1],[78,13,78,57,1],[79,13,79,55,1],[81,13,81,79,1],[83,13,83,35,1],[85,13,85,100,1],[86,9,86,10,1],[90,9,90,10,1],[91,13,91,45,1],[92,13,92,59,1],[93,13,93,50,1],[94,13,94,44,1],[95,13,95,53,1],[96,13,96,71,1],[97,13,101,16,1],[103,13,108,19,1],[110,13,110,53,1],[112,13,112,57,1],[113,13,113,61,1],[114,13,114,57,1],[115,13,115,55,1],[117,13,117,79,1],[119,13,119,35,1],[121,13,123,57,1],[124,9,124,10,1],[128,9,128,10,1],[129,13,129,45,1],[130,13,130,59,1],[131,13,131,50,1],[132,13,132,44,1],[133,13,133,53,1],[134,13,134,71,1],[135,13,136,32,1],[137,13,138,89,1],[140,13,145,19,1],[147,13,147,53,1],[149,13,149,57,1],[150,13,150,61,1],[151,13,151,57,1],[152,13,152,55,1],[154,13,154,86,1],[156,13,156,35,1],[158,13,158,83,1],[159,9,159,10,1]]);
+    </script>
+  </body>
+</html>

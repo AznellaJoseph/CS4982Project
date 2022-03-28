@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestTransportationManager\TestRemoveTransportation.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestTransportationManager
+{
+    [TestClass]
+    public class TestRemoveTransportation
+    {
+        [TestMethod]
+        public void RemoveTransportation_TransportationDoesNotExist_ReturnsErrorMessage()
+        {
+            var mock = new Mock&lt;TransportationDal&gt;();
+            mock.Setup(db =&gt; db.RemoveTransportation(2)).Returns(false);
+
+            TransportationManager manager = new(mock.Object);
+            var resultResponse = manager.RemoveTransportation(2);
+
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, resultResponse.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.TransportationNotFound, resultResponse.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RemoveTransportation_ValidTransportationId_ReturnsTrue()
+        {
+            var mock = new Mock&lt;TransportationDal&gt;();
+            mock.Setup(db =&gt; db.RemoveTransportation(1)).Returns(true);
+
+            TransportationManager manager = new(mock.Object);
+            var resultResponse = manager.RemoveTransportation(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
+            Assert.AreEqual(true, resultResponse.Data);
+        }
+
+        [TestMethod]
+        public void RemoveTransportation_ServerMySqlException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;TransportationDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockDal.Setup(dal =&gt; dal.RemoveTransportation(1))
+                .Throws(builder
+                    .WithError((uint)Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+
+            TransportationManager lodgingManager = new(mockDal.Object);
+
+            var result = lodgingManager.RemoveTransportation(1);
+
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void RemoveTransportation_ServerException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;TransportationDal&gt;();
+            mockDal.Setup(dal =&gt; dal.RemoveTransportation(1))
+                .Throws(new Exception());
+
+            TransportationManager transportationManager = new(mockDal.Object);
+
+            var result = transportationManager.RemoveTransportation(1);
+
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,54,1],[17,13,17,73,1],[19,13,19,62,1],[20,13,20,66,1],[22,13,22,89,1],[23,13,23,99,1],[24,9,24,10,1],[28,9,28,10,1],[29,13,29,54,1],[30,13,30,72,1],[32,13,32,62,1],[33,13,33,66,1],[35,13,35,86,1],[36,13,36,56,1],[37,9,37,10,1],[41,9,41,10,1],[42,13,42,57,1],[43,13,43,55,1],[44,13,46,120,1],[48,13,48,72,1],[50,13,50,65,1],[52,13,52,89,1],[53,13,53,88,1],[54,9,54,10,1],[58,9,58,10,1],[59,13,59,57,1],[60,13,61,42,1],[63,13,63,79,1],[65,13,65,72,1],[67,13,67,89,1],[68,13,68,88,1],[69,9,69,10,1]]);
+    </script>
+  </body>
+</html>

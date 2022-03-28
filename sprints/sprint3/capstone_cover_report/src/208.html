@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\EventPage.axaml</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+&lt;UserControl xmlns=&quot;https://github.com/avaloniaui&quot;
+             xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+             xmlns:conv=&quot;clr-namespace:CapstoneDesktop.Converters&quot;
+             x:Class=&quot;CapstoneDesktop.Views.EventPage&quot;&gt;
+    &lt;UserControl.Resources&gt;
+        &lt;conv:DateFormatter x:Key=&quot;DateFormatter&quot; /&gt;
+    &lt;/UserControl.Resources&gt;
+    &lt;Grid RowDefinitions=&quot;2*,20,Auto,20,3*&quot; ColumnDefinitions=&quot;2*,20,3*&quot; Margin=&quot;20&quot;&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Column=&quot;0&quot; Grid.Row=&quot;0&quot;&gt;
+            &lt;Panel /&gt;
+        &lt;/Border&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Column=&quot;0&quot; Grid.Row=&quot;2&quot;&gt;
+            &lt;Grid ColumnDefinitions=&quot;*,10,*,10,*,10,*&quot;&gt;
+                &lt;Button HorizontalAlignment=&quot;Stretch&quot; Grid.Column=&quot;0&quot;&gt;
+                    &lt;TextBlock Classes=&quot;dark&quot; Text=&quot;PROFILE&quot; TextAlignment=&quot;Center&quot; /&gt;
+                &lt;/Button&gt;
+                &lt;Button HorizontalAlignment=&quot;Stretch&quot; Grid.Column=&quot;2&quot; Command=&quot;{Binding BackCommand}&quot;&gt;
+                    &lt;TextBlock Classes=&quot;dark&quot; Text=&quot;BACK&quot; TextAlignment=&quot;Center&quot; /&gt;
+                &lt;/Button&gt;
+                &lt;Button HorizontalAlignment=&quot;Stretch&quot; Grid.Column=&quot;4&quot; Command=&quot;{Binding LogoutCommand}&quot;&gt;
+                    &lt;TextBlock Classes=&quot;dark&quot; Text=&quot;LOGOUT&quot; TextAlignment=&quot;Center&quot; /&gt;
+                &lt;/Button&gt;
+            &lt;/Grid&gt;
+        &lt;/Border&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Column=&quot;0&quot; Grid.Row=&quot;4&quot;&gt;
+            &lt;Panel /&gt;
+        &lt;/Border&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Row=&quot;0&quot; Grid.RowSpan=&quot;5&quot; Grid.Column=&quot;2&quot;&gt;
+            &lt;Grid VerticalAlignment=&quot;Stretch&quot; RowDefinitions=&quot;*,10,*,10,2*&quot;&gt;
+                &lt;TextBlock Grid.Row=&quot;0&quot; TextAlignment=&quot;Center&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;h1 light&quot; Text=&quot;{Binding Event.DisplayName}&quot;/&gt;
+                &lt;StackPanel Grid.Row=&quot;1&quot; Orientation=&quot;Horizontal&quot;&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;light&quot; Text=&quot;{Binding Event.StartDate}&quot;/&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;light&quot; Text=&quot;-&quot;/&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;light&quot; Text=&quot;{Binding Event.EndDate}&quot;/&gt;
+                &lt;/StackPanel&gt;
+                &lt;TextBlock Grid.Row=&quot;2&quot; TextAlignment=&quot;Left&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;light&quot; Text=&quot;{Binding Event.Notes}&quot;/&gt;
+            &lt;/Grid&gt;
+        &lt;/Border&gt;
+    &lt;/Grid&gt;
+&lt;/UserControl&gt;
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[1,2,1,13,0],[6,10,6,28,0],[8,6,8,10,0],[8,11,8,25,0],[8,45,8,62,0],[9,10,9,16,0],[9,17,9,24,0],[9,53,9,57,0],[10,14,10,19,0],[12,10,12,16,0],[12,17,12,24,0],[12,53,12,57,0],[13,14,13,18,0],[13,19,13,36,0],[14,18,14,24,0],[14,25,14,44,0],[15,22,15,31,0],[15,32,15,39,0],[15,47,15,51,0],[17,18,17,24,0],[17,25,17,44,0],[17,71,17,78,0],[18,22,18,31,0],[18,32,18,39,0],[18,47,18,51,0],[20,18,20,24,0],[20,25,20,44,0],[20,71,20,78,0],[21,22,21,31,0],[21,32,21,39,0],[21,47,21,51,0],[25,10,25,16,0],[25,17,25,24,0],[25,53,25,57,0],[26,14,26,19,0],[28,10,28,16,0],[28,17,28,24,0],[28,50,28,54,0],[29,14,29,18,0],[29,19,29,36,0],[29,47,29,61,0],[30,18,30,27,0],[30,28,30,32,0],[30,64,30,81,0],[30,91,30,98,0],[30,110,30,114,0],[31,18,31,28,0],[31,29,31,33,0],[32,22,32,31,0],[32,32,32,45,0],[32,82,32,89,0],[32,98,32,102,0],[33,22,33,31,0],[33,32,33,45,0],[33,82,33,89,0],[33,98,33,102,0],[34,22,34,31,0],[34,32,34,45,0],[34,82,34,89,0],[34,98,34,102,0],[36,18,36,27,0],[36,28,36,32,0],[36,62,36,79,0],[36,89,36,96,0],[36,105,36,109,0]]);
+    </script>
+  </body>
+</html>
