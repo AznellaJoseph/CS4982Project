@@ -19,6 +19,7 @@ A3. The user is taken back to the trip overview
 The user does not enter an end time for the waypoint
 A2. The user does not enter an end time
 A3. The end time for the waypoint is set to the end date of the selected trip
+A4. The new waypoint is submitted
 
 The user does not enter a required field
 A2. The user fails to enter a required field
@@ -29,5 +30,9 @@ A2. The user enters a start date or end date that is before trip start or after 
 A3. The user is shown an error message stating which date (start or end) is invalid and the corresponding trip start or end date that the entered value should fall between
 
 The user enters dates that clash with another event
-A3. The user is shown an error message that there is a clashing event with the dates entered
-________________
+A2. The user enters dates that clash with another event
+A3. The user is shown an error message specifying the clashing event dates
+
+The user does not select a location option from the autocomplete dropdown list of locations
+A2. The user fails to select a location option
+A3. The user is shown an error message that a location must be chosen from the dropdown list
