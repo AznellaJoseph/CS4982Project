@@ -6,7 +6,7 @@ Context: The user is logged in to the system and is viewing the overview of a se
 
 Primary Flow:
 1. The user clicks the “Create Waypoint” button
-2. The user enters the information for the waypoint
+2. The user enters the information for the waypoint (See Select Location Scenario)
 3. The user clicks the "Create Waypoint" button to submit the new waypoint
 
 
@@ -32,7 +32,3 @@ A3. The user is shown an error message stating which date (start or end) is inva
 The user enters dates that clash with another event
 A2. The user enters dates that clash with another event
 A3. The user is shown an error message specifying the clashing event dates
-
-The user does not select a location option from the autocomplete dropdown list of locations
-A2. The user fails to select a location option
-A3. The user is shown an error message that a location must be chosen from the dropdown list

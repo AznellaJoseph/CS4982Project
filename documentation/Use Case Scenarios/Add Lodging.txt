@@ -4,7 +4,7 @@ Context: The user is logged in and is overviewing a trip
 
 Primary Flow:
 1. The user clicks the “Add Lodging” button
-2. The user enters the lodging information
+2. The user enters the lodging information (See Select Location Scenario)
 3. The user confirms the lodging 
 
 Alternative Flows:
@@ -20,7 +20,3 @@ A3. The user is shown an error message specifying which field needs to be filled
 The user enters invalid dates 
 A2. The user enters a start date or end date that is before trip start or after trip end
 A3. The user is shown an error message stating which date (start or end) is invalid and the corresponding trip start or end date that the entered value should fall between
-
-The user does not select a location option from the autocomplete dropdown list of locations
-A2. The user fails to select a location option
-A3. The user is shown an error message that a location must be chosen from the dropdown list
