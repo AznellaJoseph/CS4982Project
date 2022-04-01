@@ -8,7 +8,7 @@ using Moq;
 namespace CapstoneTest.BackendTests.Model.TestValidationManager
 {
     [TestClass]
-    public class TestFindClashingTrip
+    public class TestDetermineIfClashingTripExists
     {
         [TestMethod]
         public void FindClashingTrip_UserHasNoTrips_NullClashingTrip()

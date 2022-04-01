@@ -118,7 +118,7 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var clashingEventResponse = ValidationManager.FindClashingEvent(_trip.TripId, startDate, endDate);
+            var clashingEventResponse = ValidationManager.DetermineIfClashingEventExists(_trip.TripId, startDate, endDate);
 
             if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
             {

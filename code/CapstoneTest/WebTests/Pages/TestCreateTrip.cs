@@ -64,10 +64,9 @@ namespace CapstoneTest.WebTests.Pages
         {
             var session = new Mock<ISession>();
             var mockValidationManager = new Mock<ValidationManager>();
-            var fakeTripManager = new Mock<TripManager>();
             mockValidationManager.Setup(um =>
                     um.DetermineIfClashingTripExists(0, DateTime.Today, DateTime.Today.AddDays(2)))
-                .Returns(new Response<Trip> { ErrorMessage = $"{Ui.ErrorMessages.ClashingTripDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}" });
+                .Returns(new Response<bool> { ErrorMessage = $"{Ui.ErrorMessages.ClashingTripDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}" });
 
             var page = TestPageBuilder.BuildPage<CreateTripModel>(session.Object);
 

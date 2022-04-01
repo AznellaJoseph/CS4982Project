@@ -40,7 +40,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             var mockScreen = new Mock<IScreen>();
             var mockValidationManager = new Mock<ValidationManager>();
             mockValidationManager.Setup(vm => vm.DetermineIfClashingTripExists(0, DateTime.Today.AddDays(1), DateTime.Today))
-                .Returns(new Response<Trip> {Data = null});
+                .Returns(new Response<bool> {Data = false});
 
             CreateTripPageViewModel createTripWindowViewModel =
                 new(mockUser.Object, mockScreen.Object)
@@ -94,7 +94,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             var startDate = DateTime.Today;
             var endDate = DateTime.Today.AddDays(1);
             var mockValidationManager = new Mock<ValidationManager>();
-            mockValidationManager.Setup(vm => vm.DetermineIfClashingTripExists(0, startDate, endDate)).Returns(new Response<Trip>
+            mockValidationManager.Setup(vm => vm.DetermineIfClashingTripExists(0, startDate, endDate)).Returns(new Response<bool>
             {
                 ErrorMessage =
                     $"{Ui.ErrorMessages.ClashingTripDates} {startDate.AddDays(-1).ToShortDateString()} to {endDate.ToShortDateString()}"
@@ -132,8 +132,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             var startDate = DateTime.Today;
             var endDate = DateTime.Today.AddDays(1);
             var mockValidationManager = new Mock<ValidationManager>();
-            mockValidationManager.Setup(vm => vm.DetermineIfClashingTripExists(0, startDate, endDate)).Returns(new Response<Trip>
-                {Data = null});
+            mockValidationManager.Setup(vm => vm.DetermineIfClashingTripExists(0, startDate, endDate)).Returns(new Response<bool>
+                {Data = false});
             mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", startDate, endDate))
                 .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
 
