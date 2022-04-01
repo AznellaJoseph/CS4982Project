@@ -26,7 +26,10 @@ namespace CapstoneBackend.Model
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns>A response of true if the dates are valid, false otherwise. </returns>
+        /// <returns>
+        ///     A response of true if the dates are valid, or a non-success status code and error message specifying the
+        ///     invalidity
+        /// </returns>
         public virtual Response<bool> DetermineIfValidEventDates(int tripId, DateTime startDate, DateTime endDate)
         {
             var currentTrip = TripManager.GetTripByTripId(tripId).Data;

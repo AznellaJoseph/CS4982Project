@@ -38,7 +38,7 @@ namespace CapstoneBackend.DAL
         /// <param name="endDate">The end date.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        ///     The transportation id
+        ///     The transportation id or throws an exception if there was an error
         /// </returns>
         public virtual int CreateTransportation(int tripId, string method, DateTime startDate, DateTime endDate,
             string? notes)
@@ -111,7 +111,7 @@ namespace CapstoneBackend.DAL
         /// </summary>
         /// <param name="transportationId">The transportation identifier.</param>
         /// <returns>
-        ///     True if the transport was removed, false otherwise
+        ///     True if the transportation was removed, false otherwise or throws an exception if there was an error
         /// </returns>
         public virtual bool RemoveTransportation(int transportationId)
         {
@@ -133,7 +133,6 @@ namespace CapstoneBackend.DAL
                 _connection.Close();
                 throw;
             }
-            
         }
 
         /// <summary>

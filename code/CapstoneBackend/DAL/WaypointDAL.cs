@@ -38,7 +38,7 @@ namespace CapstoneBackend.DAL
         /// <param name="endDate">The end date.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        ///     The waypoint id
+        ///     The waypoint id or throws an exception if there was an error
         /// </returns>
         public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate,
             string? notes)
@@ -111,7 +111,7 @@ namespace CapstoneBackend.DAL
         /// </summary>
         /// <param name="waypointId">The waypoint identifier.</param>
         /// <returns>
-        ///     True if the waypoint was removed, false otherwise
+        ///     True if the waypoint was removed, false otherwise or throws an exception if there was an error
         /// </returns>
         public virtual bool RemoveWaypoint(int waypointId)
         {
@@ -124,7 +124,7 @@ namespace CapstoneBackend.DAL
 
             try
             {
-                int result = cmd.ExecuteNonQuery();
+                var result = cmd.ExecuteNonQuery();
                 _connection.Close();
                 return result == 1;
             }

@@ -31,7 +31,7 @@ namespace CapstoneBackend.DAL
 
         /// <summary>Gets the trip by trip identifier.</summary>
         /// <param name="tripId">The trip id.</param>
-        /// <returns>A Trip object if a matching trip exists in the database, null otherwise.</returns>
+        /// <returns>The trip with the matching id, null if no matching trip found. </returns>
         public virtual Trip? GetTripByTripId(int tripId)
         {
             _connection.Open();
@@ -78,7 +78,9 @@ namespace CapstoneBackend.DAL
             using MySqlCommand cmd = new(query, _connection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
+
             using var reader = cmd.ExecuteReaderAsync().Result;
+
             var idOrdinal = reader.GetOrdinal("tripId");
             var nameOrdinal = reader.GetOrdinal("name");
             var notesOrdinal = reader.GetOrdinal("notes");
@@ -110,7 +112,7 @@ namespace CapstoneBackend.DAL
         /// <param name="notes">the notes of the trip</param>
         /// <param name="startDate">the start date of the trip</param>
         /// <param name="endDate">the end date of the trip</param>
-        /// <returns>the trip id of the created trip or null if it failed</returns>
+        /// <returns>The trip id or throws an exception if there was an error</returns>
         public virtual int CreateTrip(int userId, string name, string? notes, DateTime startDate, DateTime endDate)
         {
             _connection.Open();

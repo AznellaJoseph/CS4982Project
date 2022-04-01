@@ -8,7 +8,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for Create Trip Window
+    ///     ViewModel for the CreateTrip Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateTripPageViewModel : ReactiveViewModelBase
@@ -20,8 +20,8 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateTripPageViewModel" /> class.
         /// </summary>
-        /// <param name="user">The current user</param>
-        /// <param name="screen">the host screen</param>
+        /// <param name="user">The user that the trip will be created for</param>
+        /// <param name="screen">the screen</param>
         public CreateTripPageViewModel(User user, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
@@ -96,7 +96,7 @@ namespace CapstoneDesktop.ViewModels
             }
 
             var clashingTripResponse =
-                ValidationManager.FindClashingTrip(_user.UserId, StartDate.Value.Date, EndDate.Value.Date);
+                ValidationManager.DetermineIfClashingTripExists(_user.UserId, StartDate.Value.Date, EndDate.Value.Date);
 
             if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
             {

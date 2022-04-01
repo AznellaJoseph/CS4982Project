@@ -33,7 +33,7 @@ namespace CapstoneDesktop.ViewModels
         public Waypoint Waypoint { get; }
 
         /// <summary>
-        ///     The fake waypoint manager
+        ///     The waypoint manager
         /// </summary>
         public WaypointManager WaypointManager { get; set; } = new();
 
@@ -47,6 +47,9 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public event EventHandler<EventArgs>? RemoveEvent;
 
+        /// <summary>
+        ///     The view command.
+        /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> ViewCommand { get; }
 
         /// <summary>

@@ -48,6 +48,9 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public event EventHandler<EventArgs>? RemoveEvent;
 
+        /// <summary>
+        ///     The view command.
+        /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> ViewCommand { get; }
 
         /// <summary>

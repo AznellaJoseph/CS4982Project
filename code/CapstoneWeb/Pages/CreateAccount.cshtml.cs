@@ -66,7 +66,7 @@ namespace CapstoneWeb.Pages
 
             var response = UserManager.RegisterUser(Username, Password,
                 FirstName, LastName);
-            if (response.StatusCode == (uint)Ui.StatusCode.Success)
+            if (response.StatusCode == (uint) Ui.StatusCode.Success)
             {
                 HttpContext.Session.SetString("userId", $"{response.Data}");
                 return RedirectToPage("Index");

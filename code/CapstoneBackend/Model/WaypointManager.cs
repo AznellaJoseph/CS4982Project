@@ -38,7 +38,7 @@ namespace CapstoneBackend.Model
         /// <param name="startTime">The start time.</param>
         /// <param name="endTime">The end time.</param>
         /// <returns>
-        ///     A response of if the id of the new waypoint or a non-success status code and error message
+        ///     A response of the id of the new waypoint or a non-success status code and error message
         /// </returns>
         public virtual Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime,
             string? notes)
@@ -116,7 +116,7 @@ namespace CapstoneBackend.Model
         ///     Removes the waypoint.
         /// </summary>
         /// <param name="waypointId">The identifier.</param>
-        /// <returns> A response specifying whether or not the waypoint was removed or a non-success status code and error message. </returns>
+        /// <returns> A response specifying the waypoint was removed or a non-success status code and error message. </returns>
         public virtual Response<bool> RemoveWaypoint(int waypointId)
         {
             try
@@ -154,10 +154,10 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Gets the transportation by identifier.
+        ///     Gets the waypoint by identifier.
         /// </summary>
-        /// <param name="waypointId">The transportation identifier.</param>
-        /// <returns>A response of the waypoint with the given id or a non-success code and error message</returns>
+        /// <param name="waypointId">The waypoint identifier.</param>
+        /// <returns>A response of the waypoint with the given id or a non-success status code and error message</returns>
         public virtual Response<Waypoint> GetWaypointById(int waypointId)
         {
             try
