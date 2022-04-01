@@ -68,44 +68,6 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        ///     Gets the waypoints by trip identifier.
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <returns> a list of the waypoints from the trip specified by the trip id </returns>
-        public virtual IList<Waypoint> GetWaypointsByTripId(int tripId)
-        {
-            _connection.Open();
-            const string procedure = "uspGetWaypointsByTripId";
-            using MySqlCommand cmd = new(procedure, _connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            IList<Waypoint> waypointsInTrip = new List<Waypoint>();
-
-            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
-
-            using var reader = cmd.ExecuteReader();
-
-            var waypointIdOrdinal = reader.GetOrdinal("waypointId");
-            var startDateOrdinal = reader.GetOrdinal("startDate");
-            var endDateOrdinal = reader.GetOrdinal("endDate");
-            var locationOrdinal = reader.GetOrdinal("location");
-            var notesOrdinal = reader.GetOrdinal("notes");
-
-            while (reader.Read())
-                waypointsInTrip.Add(new Waypoint
-                {
-                    TripId = tripId,
-                    WaypointId = reader.GetInt32(waypointIdOrdinal),
-                    Location = reader.GetString(locationOrdinal),
-                    StartDate = reader.GetDateTime(startDateOrdinal),
-                    EndDate = reader.GetDateTime(endDateOrdinal),
-                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
-                });
-
-            _connection.Close();
-            return waypointsInTrip;
-        }
-
-        /// <summary>
         ///     Gets the waypyoints on the specified date.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>

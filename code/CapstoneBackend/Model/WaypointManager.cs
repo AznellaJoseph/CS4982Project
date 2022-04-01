@@ -111,39 +111,6 @@ namespace CapstoneBackend.Model
             }
         }
 
-        /// <summary>
-        ///     Gets the waypoints by trip identifier.
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <returns> A response of the waypoints with the entered trip waypointId or a non-success status code and error message.</returns>
-        public virtual Response<IList<Waypoint>> GetWaypointsByTripId(int tripId)
-        {
-            try
-            {
-                var waypointsInTrip = _dal.GetWaypointsByTripId(tripId);
-
-                return new Response<IList<Waypoint>>
-                {
-                    Data = waypointsInTrip
-                };
-            }
-            catch (MySqlException e)
-            {
-                return new Response<IList<Waypoint>>
-                {
-                    StatusCode = e.Code,
-                    ErrorMessage = e.Message
-                };
-            }
-            catch (Exception)
-            {
-                return new Response<IList<Waypoint>>
-                {
-                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
-                    ErrorMessage = Ui.ErrorMessages.InternalServerError
-                };
-            }
-        }
 
         /// <summary>
         ///     Removes the waypoint.
