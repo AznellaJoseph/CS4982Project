@@ -13,11 +13,11 @@ namespace CapstoneVendorPrototype
         /// <param name="args">the args for the execution</param>
         public static void Main(string[] args)
         {
-            Console.WriteLine("Ender a latitude:");
+            Console.WriteLine("Enter a latitude:");
             var latitude = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Ender a longitude:");
+            Console.WriteLine("Enter a longitude:");
             var longitude = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Ender a radius:");
+            Console.WriteLine("Enter a radius:");
             var radius = Convert.ToInt32(Console.ReadLine());
             PlaceClient client = new();
             var result = client.GetPointsOfInterest(latitude, longitude, radius);

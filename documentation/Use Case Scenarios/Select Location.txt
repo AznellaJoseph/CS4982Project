@@ -1,0 +1,19 @@
+Use Case Scenario: Select Location
+
+Context: The user is logged in and is creating a lodging or waypoint for a trip
+
+Primary Flow:
+1. The user begins typing a location in the location autocomplete box
+2. The autocomplete dropdown box populates with possible address entries
+3. The user selects a location from the autocomplete dropdown options for the typed entry
+4. The user is shown a map of the selected address
+
+Alternative Flows:
+
+The user does not select a location option from the autocomplete dropdown list of locations
+A3. The user fails to select a location option
+A4. The user is shown an error message that a location must be chosen from the dropdown list
+
+The user's entry does not match any possible addresses
+A2. The autocomplete dropdown box remains empty
+A3. The user restarts the address query
