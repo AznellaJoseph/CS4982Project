@@ -14,12 +14,12 @@ A3. The user clicks the “Cancel” button
 A4. The user is taken back to the overview of the date chosen
 
 The user enters invalid dates 
-A2. The user enters start date or end date that is before trip start or after trip end
-A3. The user is shown an error message stating which date (start or end) is invalid and the corresponding trip start or end date
+A2. The user enters a start date or end date that is before trip start or after trip end
+A3. The user is shown an error message stating which date (start or end) is invalid and the corresponding trip start or end date that the entered value should fall between
 
 The user enters dates that clash with another event
 A2. The user enters dates that clash with another event
-A3. The user is shown an error message that there is a clashing event with the dates entered
+A3. The user is shown an error message specifying the clashing event dates
 
 The user fails to enter the required fields
 A2. The user fails to enter a method, start date, or start time

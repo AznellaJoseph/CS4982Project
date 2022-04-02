@@ -4,7 +4,7 @@ Context: The user is logged in and is overviewing a trip
 
 Primary Flow:
 1. The user clicks the “Add Lodging” button
-2. The user enters the lodging information
+2. The user enters the lodging information (See Select Location Scenario)
 3. The user confirms the lodging 
 
 Alternative Flows:
@@ -16,3 +16,7 @@ A4. The user is taken back to an overview of the date chosen
 The user does not enter all of the required fields
 A2. The user fails to enter a required field
 A3. The user is shown an error message specifying which field needs to be filled out for submitting
+
+The user enters invalid dates 
+A2. The user enters a start date or end date that is before trip start or after trip end
+A3. The user is shown an error message stating which date (start or end) is invalid and the corresponding trip start or end date that the entered value should fall between
