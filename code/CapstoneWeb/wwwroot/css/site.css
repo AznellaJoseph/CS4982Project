@@ -278,3 +278,5 @@ label {
 }
 
 .trip-header { padding: 1% 0; }
+
+#map { height: 100%; }

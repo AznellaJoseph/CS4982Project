@@ -9,7 +9,7 @@ function initAutocomplete() {
         document.getElementById('location'),
         {
             types: ['establishment'],
-            fields: ['place_id', 'geometry', 'name']
+            fields: ['place_id', 'geometry', 'name', 'formatted_address']
         });
 
     autocomplete.addListener('place_changed', onPlaceChanged);
@@ -24,6 +24,7 @@ function onPlaceChanged() {
     if (!place.geometry) {
         document.getElementById('location').placeholder = 'Enter a place:';
     } else {
-        document.getElementById('map').innerHTML = place.name;
+        const map = new google.maps.Map(document.getElementById('map'), {zoom: 14, center: place.geometry.location });
+        const marker = new google.maps.Marker({ position: place.geometry.location, map: map });
     }
 }
