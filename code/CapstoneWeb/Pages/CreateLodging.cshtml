@@ -12,8 +12,10 @@
     <p class="error @isErrorVisible">@Model.ErrorMessage</p>
 
     <form method="post">
-        <label for="method">Location* </label>
-        <input id="method" asp-for="Location" required />
+        <label for="location">Location* </label>
+        <input id="location" placeholder="Enter a place:" type="text" asp-for="Location" required />
+
+        <div id="map"></div>
 
         <label for="notes">Notes</label>
         <textarea id="notes" asp-for="Notes"></textarea>
@@ -43,3 +45,10 @@
     </form>
 
 </div>
+
+@section Scripts {
+    <script src="~/js/googleMaps.js"></script>
+    <script async
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4&libraries=places&callback=initAutocomplete">
+    </script>
+}
