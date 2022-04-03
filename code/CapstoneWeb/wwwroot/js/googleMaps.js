@@ -31,18 +31,15 @@ function onPlaceChanged() {
 
 function initMap() {
     console.log("initMap");
-    const location = document.getElementById("location").text;
+    var address = document.getElementById("location").innerHTML;
     const geocoder = new google.maps.Geocoder();
     
-    geocoder.geocode({ 'address': location },
+    geocoder.geocode({ 'address': address },
         function(results, status) {
             if (status == google.maps.GeocoderStatus.OK && status != google.maps.GeocoderStatus.ZERO_RESULTS) {
-                console.log(results[0].geometry.location);
                 const map = new google.maps.Map(document.getElementById('map'),
                     { zoom: 20, center: results[0].geometry.location });
                 const marker = new google.maps.Marker({ position: results[0].geometry.location, map: map });
-            } else {
-                console.log(status);
             }
         });
 }

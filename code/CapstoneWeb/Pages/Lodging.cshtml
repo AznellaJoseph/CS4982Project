@@ -30,7 +30,7 @@
     </div>
 
     <div class="panel right column">
-        <h1 id="location">@Model.CurrentLodging.Location</h1>
+        <h1 id="location" >@Model.CurrentLodging.Location</h1>
 
 
         <div class="info-section">
@@ -46,6 +46,6 @@
 @section Scripts {
     <script src="~/js/googleMaps.js"></script>
     <script async
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4&callback=initMap">
     </script>
 }
