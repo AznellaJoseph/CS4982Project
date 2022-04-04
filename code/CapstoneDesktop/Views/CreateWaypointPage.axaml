@@ -7,7 +7,19 @@
                        VerticalAlignment="Top" />
             <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
             <TextBlock Text="WAYPOINT LOCATION:" />
-            <TextBox Watermark="LOCATION NAME" VerticalAlignment="Bottom" Text="{Binding Location, Mode=TwoWay}" />
+			<AutoCompleteBox Watermark="LOCATION NAME" 
+							 Text="{Binding Location, Mode=TwoWay}" 
+							 Items="{Binding AutocompletePredictions, Mode=TwoWay}" 
+							 IsTextCompletionEnabled="True"
+							 FilterMode="Contains"
+							 IsDropDownOpen="True"
+							 MinimumPrefixLength="1"
+							 AsyncPopulator="{Binding AutocompletePredictions}"
+							 IsVisible="True"
+							 IsEnabled="True"
+							 ZIndex="20"
+							 />
+            
             <TextBlock Text="WAYPOINT NOTES" />
             <TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
                      AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
