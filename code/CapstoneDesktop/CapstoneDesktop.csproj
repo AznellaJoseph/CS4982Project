@@ -20,6 +20,8 @@
         <ProjectReference Include="..\..\..\..\Downloads\GMap.NET-dev-avalonia\GMap.NET\GMap.NET.Avalonia\GMap.NET.Avalonia.csproj" />
         <ProjectReference Include="..\..\..\..\Downloads\GMap.NET-dev-avalonia\GMap.NET\GMap.NET.Core\GMap.NET.Core.csproj" />
         <ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj" />
+        <ProjectReference Include="..\GMap.NET.Avalonia\GMap.NET.Avalonia.csproj" />
+        <ProjectReference Include="..\GMap.NET.Core\GMap.NET.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Views\CreateTransportationPage.axaml.cs">

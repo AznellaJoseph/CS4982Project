@@ -13,9 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneWeb", "CapstoneWeb\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneVendorPrototype", "CapstoneVendorPrototype\CapstoneVendorPrototype.csproj", "{B270E9F2-46DC-47B4-A8D6-BDB1CC9D7809}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMap.NET.Core", "..\..\..\Downloads\GMap.NET-dev-avalonia\GMap.NET\GMap.NET.Core\GMap.NET.Core.csproj", "{8EA063AF-2C4D-47CC-BCDE-B41F1992EBDD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMap.NET.Avalonia", "..\..\..\Downloads\GMap.NET-dev-avalonia\GMap.NET\GMap.NET.Avalonia\GMap.NET.Avalonia.csproj", "{A3B2F027-E96B-4E98-AA14-F151C6BB431B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMap.NET.Avalonia", "GMap.NET.Avalonia\GMap.NET.Avalonia.csproj", "{A39FFA0D-FC78-42F2-BF04-7CDB713AC215}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,14 +41,10 @@ Global
 		{B270E9F2-46DC-47B4-A8D6-BDB1CC9D7809}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B270E9F2-46DC-47B4-A8D6-BDB1CC9D7809}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B270E9F2-46DC-47B4-A8D6-BDB1CC9D7809}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EA063AF-2C4D-47CC-BCDE-B41F1992EBDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EA063AF-2C4D-47CC-BCDE-B41F1992EBDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EA063AF-2C4D-47CC-BCDE-B41F1992EBDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EA063AF-2C4D-47CC-BCDE-B41F1992EBDD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3B2F027-E96B-4E98-AA14-F151C6BB431B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3B2F027-E96B-4E98-AA14-F151C6BB431B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3B2F027-E96B-4E98-AA14-F151C6BB431B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3B2F027-E96B-4E98-AA14-F151C6BB431B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A39FFA0D-FC78-42F2-BF04-7CDB713AC215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A39FFA0D-FC78-42F2-BF04-7CDB713AC215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A39FFA0D-FC78-42F2-BF04-7CDB713AC215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A39FFA0D-FC78-42F2-BF04-7CDB713AC215}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
