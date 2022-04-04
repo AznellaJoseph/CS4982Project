@@ -12,19 +12,18 @@
     <PackageReference Include="Avalonia" Version="0.10.6" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
-    <PackageReference Include="GMap.NET.Core" Version="2.0.3" />
    </ItemGroup>
 
 
-  <ItemGroup>
-    <ProjectReference Include="..\GMap.NET.Core\GMap.NET.Core.csproj" />
-  </ItemGroup>
-
-
-  <ItemGroup>
+	<ItemGroup>
     <None Include="..\sn.snk">
       <Link>sn.snk</Link>
     </None>
   </ItemGroup>
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\GMap.NET.Core\GMap.NET.Core.csproj" />
+	</ItemGroup>
 
 </Project>
