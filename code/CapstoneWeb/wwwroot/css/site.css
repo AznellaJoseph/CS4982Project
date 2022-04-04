@@ -313,10 +313,24 @@ label {
     padding: 1% 0;
 }
 
-#map {
-    height: 100%;
+#createmap {
+    height: 125%;
+    width: 50%;
 }
 
-div #map {
-    height: 80%;
+#map {
+    height: 75%;
+}
+
+#notes {
+    height: 100%;
+    width: 150%;
+    resize: none;
+}
+
+.mapnotes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1%;
 }

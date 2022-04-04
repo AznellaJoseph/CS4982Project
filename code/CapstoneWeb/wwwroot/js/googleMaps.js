@@ -12,6 +12,15 @@ function initAutocomplete() {
             fields: ["place_id", "geometry", "name"]
         });
 
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ 'address': 'USA' },
+        function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK && status != google.maps.GeocoderStatus.ZERO_RESULTS) {
+                const map = new google.maps.Map(document.getElementById("createmap"),
+                    { zoom: 1, center: results[0].geometry.location });
+            }
+        });
     autocomplete.addListener("place_changed", onPlaceChanged);
 }
 
@@ -24,7 +33,7 @@ function onPlaceChanged() {
     if (!place.geometry) {
         document.getElementById("location").placeholder = "Enter a place:";
     } else {
-        const map = new google.maps.Map(document.getElementById("map"), {zoom: 20, center: place.geometry.location });
+        const map = new google.maps.Map(document.getElementById("createmap"), {zoom: 20, center: place.geometry.location });
         const marker = new google.maps.Marker({ position: place.geometry.location, map: map });
     }
 }
