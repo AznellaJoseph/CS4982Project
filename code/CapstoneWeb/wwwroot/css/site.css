@@ -43,7 +43,9 @@ h1 {
     width: 45vw;
 }
 
-.data-entry-window form { height: 90%; }
+    .data-entry-window form {
+        height: 90%;
+    }
 
 
 form {
@@ -116,15 +118,25 @@ label {
     width: 100%;
 }
 
-.input-row { padding: 20px 0; }
+.input-row {
+    padding: 20px 0;
+}
 
-.input-group { width: 100%; }
+.input-group {
+    width: 100%;
+}
 
-.error { color: red; }
+.error {
+    color: red;
+}
 
-.warning { color: white; }
+.warning {
+    color: white;
+}
 
-.hide { display: none; }
+.hide {
+    display: none;
+}
 
 .panel {
     background: #002E3D;
@@ -155,7 +167,9 @@ label {
     width: 98%;
 }
 
-.end { margin-top: auto; }
+.end {
+    margin-top: auto;
+}
 
 .row {
     display: flex;
@@ -174,10 +188,10 @@ label {
     width: 70vw;
 }
 
-.landing-page form, .trip-overview form {
-    margin: 5px;
-    min-height: auto;
-}
+    .landing-page form, .trip-overview form {
+        margin: 5px;
+        min-height: auto;
+    }
 
 #trip-list, #events-list, #lodging-list {
     flex: 1;
@@ -206,20 +220,30 @@ label {
     width: 100%;
 }
 
-.landing-page button { padding: 15px; }
+.landing-page button {
+    padding: 15px;
+}
 
 .column {
     display: flex;
     flex-direction: column;
 }
 
-.full-width-button { width: 100%; }
+.full-width-button {
+    width: 100%;
+}
 
-.upcoming { height: 100%; }
+.upcoming {
+    height: 100%;
+}
 
-.info-section { font-size: 12px; }
+.info-section {
+    font-size: 12px;
+}
 
-.name-section { font-weight: bold; }
+.name-section {
+    font-weight: bold;
+}
 
 
 .trip-overview {
@@ -232,7 +256,9 @@ label {
     width: 65vw;
 }
 
-.trip-overview .row { height: 75%; }
+    .trip-overview .row {
+        height: 75%;
+    }
 
 #myCalendar {
     background: #002E3D;
@@ -253,11 +279,17 @@ label {
     padding: 5px;
 }
 
-#myCalendar .vanilla-calendar-btn svg { fill: black; }
+    #myCalendar .vanilla-calendar-btn svg {
+        fill: black;
+    }
 
-#myCalendar .vanilla-calendar-week { background: #007EA7; }
+#myCalendar .vanilla-calendar-week {
+    background: #007EA7;
+}
 
-#myCalendar .vanilla-calendar-week span { color: black; }
+    #myCalendar .vanilla-calendar-week span {
+        color: black;
+    }
 
 #myCalendar .vanilla-calendar-date {
     background: #809848;
@@ -277,6 +309,14 @@ label {
     opacity: 1;
 }
 
-.trip-header { padding: 1% 0; }
+.trip-header {
+    padding: 1% 0;
+}
 
-#map { height: 100%; }
+#map {
+    height: 100%;
+}
+
+div #map {
+    height: 80%;
+}
