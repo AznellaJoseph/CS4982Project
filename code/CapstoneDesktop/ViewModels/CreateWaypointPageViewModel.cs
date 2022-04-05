@@ -41,7 +41,6 @@ namespace CapstoneDesktop.ViewModels
             CreateWaypointCommand = ReactiveCommand.CreateFromObservable(CreateWaypoint);
             CancelCreateWaypointCommand =
                 ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
-            AutoCompleteCommand = ReactiveCommand.Create(UpdateAutoCompleteResultsAsync);
         }
 
         /// <summary>
@@ -64,8 +63,6 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public ReactiveCommand<Unit, Unit> CancelCreateWaypointCommand { get; }
 
-        public ReactiveCommand<Unit, Unit> AutoCompleteCommand { get; }
-
         /// <summary>
         ///     The error message.
         /// </summary>
@@ -87,6 +84,9 @@ namespace CapstoneDesktop.ViewModels
             }
         }
 
+        /// <summary>
+        ///     List of autocomplete results shown in the dropdown.
+        /// </summary>
         public IEnumerable<String> AutocompletePredictions
         {
             get { return _predictions; }
@@ -121,10 +121,7 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public string? Notes { get; set; }
 
-        /// <summary>
-        /// Updates the automatic complete results asynchronously by calling the Google Places API.
-        /// </summary>
-        public async void UpdateAutoCompleteResultsAsync()
+        private async void UpdateAutoCompleteResultsAsync()
         {
             this.AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
         }

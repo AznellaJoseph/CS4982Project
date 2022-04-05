@@ -13,7 +13,6 @@
 							 IsTextCompletionEnabled="True"
 							 FilterMode="None"
 							 />
-            
             <TextBlock Text="WAYPOINT NOTES" />
             <TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
                      AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
