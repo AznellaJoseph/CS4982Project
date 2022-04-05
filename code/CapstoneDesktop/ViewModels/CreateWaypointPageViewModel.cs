@@ -26,6 +26,8 @@ namespace CapstoneDesktop.ViewModels
 
         private string _location = string.Empty;
 
+        private IEnumerable<string> _predictions = new List<string>();
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
         /// </summary>
@@ -39,6 +41,7 @@ namespace CapstoneDesktop.ViewModels
             CreateWaypointCommand = ReactiveCommand.CreateFromObservable(CreateWaypoint);
             CancelCreateWaypointCommand =
                 ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
+            AutoCompleteCommand = ReactiveCommand.Create(UpdateAutoCompleteResultsAsync);
         }
 
         /// <summary>
@@ -61,6 +64,8 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public ReactiveCommand<Unit, Unit> CancelCreateWaypointCommand { get; }
 
+        public ReactiveCommand<Unit, Unit> AutoCompleteCommand { get; }
+
         /// <summary>
         ///     The error message.
         /// </summary>
@@ -79,6 +84,15 @@ namespace CapstoneDesktop.ViewModels
             {
                 this.RaiseAndSetIfChanged(ref _location, value);
                 UpdateAutoCompleteResultsAsync();
+            }
+        }
+
+        public IEnumerable<String> AutocompletePredictions
+        {
+            get { return _predictions; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _predictions, value);
             }
         }
 
@@ -107,7 +121,13 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public string? Notes { get; set; }
 
-        public List<String> AutocompletePredictions { get; set; }
+        /// <summary>
+        /// Updates the automatic complete results asynchronously by calling the Google Places API.
+        /// </summary>
+        public async void UpdateAutoCompleteResultsAsync()
+        {
+            this.AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+        }
 
         private IObservable<IRoutableViewModel> CreateWaypoint()
         {
@@ -152,33 +172,5 @@ namespace CapstoneDesktop.ViewModels
             return Observable.Empty<IRoutableViewModel>();
         }
 
-        private async void UpdateAutoCompleteResultsAsync()
-        {
-            Debug.WriteLine("AUTOCOMPLETING!");
-            var googleAPI = $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={Location}&types=geocode&key=AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4";
-            Debug.WriteLine(googleAPI);
-            this.AutocompletePredictions = new List<string>();
-
-            using (var client = new HttpClient()) 
-            {
-                var response = await client.GetStringAsync(googleAPI);
-                var result = JsonDocument.Parse(response).RootElement.GetProperty("predictions").EnumerateArray();
-
-                while (result.MoveNext())
-                {
-                    var currPrediction = result.Current;
-                    JsonElement description;
-                    if (currPrediction.TryGetProperty("description", out description))
-                    {
-                        this.AutocompletePredictions.Add(description.GetString());
-                    } 
-                }
-            }
-
-            foreach (var place in this.AutocompletePredictions)
-            {
-                Debug.WriteLine(place);
-            }
-        }
     }
 }

@@ -11,13 +11,7 @@
 							 Text="{Binding Location, Mode=TwoWay}" 
 							 Items="{Binding AutocompletePredictions, Mode=TwoWay}" 
 							 IsTextCompletionEnabled="True"
-							 FilterMode="Contains"
-							 IsDropDownOpen="True"
-							 MinimumPrefixLength="1"
-							 AsyncPopulator="{Binding AutocompletePredictions}"
-							 IsVisible="True"
-							 IsEnabled="True"
-							 ZIndex="20"
+							 FilterMode="None"
 							 />
             
             <TextBlock Text="WAYPOINT NOTES" />
