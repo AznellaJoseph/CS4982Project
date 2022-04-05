@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     PageModel for Single Trip Overview
+    ///     PageModel for Trip Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class TripModel : PageModel
@@ -182,10 +182,11 @@ namespace CapstoneWeb.Pages
         }
 
         /// <summary>
-        ///     Called when [get remove lodging].
+        ///     Called when [post remove lodging].
         /// </summary>
         /// <param name="id">The id for the lodging record to remove</param>
         /// <param name="tripId">The trip identifier.</param>
+        /// <returns>Redirect to trip with removed lodging</returns>
         public IActionResult OnPostRemoveLodging(int id, int tripId)
         {
             LodgingManager.RemoveLodging(id);
@@ -200,7 +201,7 @@ namespace CapstoneWeb.Pages
         /// <param name="id">The identifier.</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
-        ///     Redirect to waypoint page
+        ///     Redirect to waypoint
         /// </returns>
         public IActionResult OnGetViewWaypoint(int tripId, int id)
         {
@@ -218,7 +219,7 @@ namespace CapstoneWeb.Pages
         /// <param name="id">The identifier.</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
-        ///     Redirect to transportation page.
+        ///     Redirect to transportation
         /// </returns>
         public IActionResult OnGetViewTransportation(int id, int tripId)
         {

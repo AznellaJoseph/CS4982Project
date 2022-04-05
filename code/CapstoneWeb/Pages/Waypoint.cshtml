@@ -6,35 +6,43 @@
     var notesVisible = string.IsNullOrEmpty(Model.CurrentWaypoint.Notes) ? "hide" : string.Empty;
 }
 
-<div class="container landing-page">
+    <div class="container landing-page">
 
-    <div class="left column">
-        <section title="logo" class="panel logo">
-            INSERT LOGO HERE
-        </section>
+        <div class="left column">
+            <section title="logo" class="panel logo">
+                INSERT LOGO HERE
+            </section>
 
-        <section title="navigation" class="panel button-group">
-            <form method="post">
-                <button type="submit" asp-page-handler="profile" disabled>Profile</button>
-                <button type="submit" asp-page-handler="logout">Logout</button>
-                <button type="submit" asp-page-handler="back">Back</button>
-            </form>
-        </section>
+            <section title="navigation" class="panel button-group">
+                <form method="post">
+                    <button type="submit" asp-page-handler="profile" disabled>Profile</button>
+                    <button type="submit" asp-page-handler="logout">Logout</button>
+                    <button type="submit" asp-page-handler="back">Back</button>
+                </form>
+            </section>
 
-        <section title="map" class="panel upcoming">
-            <h1>Map</h1>
-        </section>
-    </div>
+            <section title="map" class="panel upcoming">
+                <h1>Map</h1>
+                <div id="map"></div>
+            </section>
+        </div>
 
-    <div class="panel right column">
-        <h1>@Model.CurrentWaypoint.DisplayName</h1>
+        <div class="panel right column">
+            <h1 id="location">@Model.CurrentWaypoint.DisplayName</h1>
 
-        <div class="info-section">
-            <h2>@Model.CurrentWaypoint.StartDate >> @Model.CurrentWaypoint.EndDate</h2>
+            <div class="info-section">
+                <h2>@Model.CurrentWaypoint.StartDate >> @Model.CurrentWaypoint.EndDate</h2>
 
-            <p class="@notesVisible">Notes: @Model.CurrentWaypoint.Notes</p>
+                <p class="@notesVisible">Notes: @Model.CurrentWaypoint.Notes</p>
+            </div>
+
         </div>
 
     </div>
 
-</div>
+@section Scripts {
+    <script src="~/js/googleMaps.js"></script>
+    <script async
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4&callback=initMap">
+    </script>
+}

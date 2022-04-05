@@ -15,10 +15,15 @@
         <label for="location">Location* </label>
         <input id="location" placeholder="Enter a place:" type="text" asp-for="Location" required />
 
-        <div id="map"></div>
+        <div class="mapnotes">
+            <div>
+                <label for="notes">Notes</label>
+                <textarea id="notes" asp-for="Notes"></textarea>
+            </div>
 
-        <label for="notes">Notes</label>
-        <textarea id="notes" asp-for="Notes"></textarea>
+            <div id="createmap"></div>
+        </div>
+
 
         <div class="row input-row">
             <div class="input-group">

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace CapstoneWeb.Pages
 {
+    /// <summary>
+    ///     PageModel for Create Lodging Site.
+    /// </summary>
     public class CreateLodgingModel : PageModel
     {
         /// <summary>
@@ -52,9 +55,9 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post].
         /// </summary>
+        /// <param name="tripId">The trip identifier.</param>
         /// <returns>
-        ///     A redirection to the next page or,
-        ///     The current page if there was an error 
+        ///     A redirection to the trip overview page or the current page if there was an error
         /// </returns>
         public IActionResult OnPost(int tripId)
         {
@@ -67,7 +70,7 @@ namespace CapstoneWeb.Pages
             }
 
             var response = LodgingManager.CreateLodging(tripId, Location, StartDate, EndDate, Notes);
-            if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary
                 {
@@ -83,8 +86,8 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post cancel].
         /// </summary>
-        /// <param name="tripId">The trip identifier to add transportation to.</param>
-        /// <returns>Redirects to the trip overview page for this trip ID</returns>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>Redirects to the trip overview page for the trip specified by the trip id</returns>
         public IActionResult OnPostCancel(int tripId)
         {
             var routeValue = new RouteValueDictionary

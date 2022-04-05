@@ -38,7 +38,7 @@ namespace CapstoneBackend.Model
         /// <param name="startTime">The start time.</param>
         /// <param name="endTime">The end time.</param>
         /// <returns>
-        ///     A response of if the Lodging was created in the database or a non-success status code and error message
+        ///     A response of the id of the new lodging or a non-success status code and error message
         /// </returns>
         public virtual Response<int> CreateLodging(int tripId, string location, DateTime startTime, DateTime endTime,
             string? notes)
@@ -80,7 +80,7 @@ namespace CapstoneBackend.Model
         ///     Gets the Lodgings by trip identifier.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns> A response of the Lodgings with the entered trip LodgingId or a non-success status code and error message.</returns>
+        /// <returns> A response of the Lodgings with the entered trip id or a non-success status code and error message.</returns>
         public virtual Response<IList<Lodging>> GetLodgingsByTripId(int tripId)
         {
             try
@@ -114,7 +114,7 @@ namespace CapstoneBackend.Model
         ///     Removes the Lodging.
         /// </summary>
         /// <param name="lodgingId">The identifier.</param>
-        /// <returns> A response specifying whether or not the Lodging was removed or a non-success status code and error message. </returns>
+        /// <returns> A response specifying the Lodging was removed or a non-success status code and error message. </returns>
         public virtual Response<bool> RemoveLodging(int lodgingId)
         {
             try
@@ -152,10 +152,10 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Gets the transportation by identifier.
+        ///     Gets the lodging by identifier.
         /// </summary>
-        /// <param name="lodgingId">The transportation identifier.</param>
-        /// <returns>A response of the waypoint with the given id or a non-success code and error message</returns>
+        /// <param name="lodgingId">The lodging identifier.</param>
+        /// <returns>A response of the lodging with the given id or a non-success code and error message</returns>
         public virtual Response<Lodging> GetLodgingById(int lodgingId)
         {
             try

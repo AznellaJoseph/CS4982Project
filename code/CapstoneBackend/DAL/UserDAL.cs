@@ -33,7 +33,7 @@ namespace CapstoneBackend.DAL
         ///     Gets the user with the specified username
         /// </summary>
         /// <param name="username">The username.</param>
-        /// <returns> The user with the given username or null if a user with the specified username does not exist</returns>
+        /// <returns> The user with the given username or null if no matching user.</returns>
         public virtual User? GetUserByUsername(string username)
         {
             _connection.Open();
@@ -69,7 +69,7 @@ namespace CapstoneBackend.DAL
         /// <param name="password">The password.</param>
         /// <param name="fname">The first name.</param>
         /// <param name="lname">The last name.</param>
-        /// <returns>ID of new user.</returns>
+        /// <returns>The user id or throws an exception if there was an error</returns>
         public virtual int CreateUser(string username, string password, string fname, string lname)
         {
             _connection.Open();

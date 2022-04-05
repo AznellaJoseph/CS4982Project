@@ -83,7 +83,7 @@ namespace CapstoneBackend.Model
         /// <param name="password">The password.</param>
         /// <param name="fname">The first name.</param>
         /// <param name="lname">The last name.</param>
-        /// <returns>A response of the new user's id or a non-success status code and error message.</returns>
+        /// <returns>A response of the id of the new user or a non-success status code and error message.</returns>
         public virtual Response<int> RegisterUser(string username, string password, string fname, string lname)
         {
             var user = _dal.GetUserByUsername(username);

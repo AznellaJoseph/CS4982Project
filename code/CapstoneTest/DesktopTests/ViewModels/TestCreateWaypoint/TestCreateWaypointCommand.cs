@@ -56,8 +56,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
                 {
                     Data = true
                 });
-            mockValidationManager.Setup(vm => vm.FindClashingEvent(0, DateTime.Today.AddDays(1), DateTime.Today))
-                .Returns(new Response<IEvent> {Data = null});
+            mockValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response<bool> {Data = false});
 
             CreateWaypointPageViewModel createWaypointWindowViewModel =
                 new(mockTrip.Object, mockScreen.Object)
@@ -263,9 +263,9 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             mockValidationManager
                 .Setup(vm => vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
                 .Returns(new Response<bool> {Data = true});
-            mockValidationManager.Setup(vm => vm.FindClashingEvent(0,
+            mockValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0,
                     DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
-                .Returns(new Response<IEvent>
+                .Returns(new Response<bool>
                 {
                     ErrorMessage =
                         $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}."

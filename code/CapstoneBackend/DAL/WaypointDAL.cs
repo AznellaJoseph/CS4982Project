@@ -38,7 +38,7 @@ namespace CapstoneBackend.DAL
         /// <param name="endDate">The end date.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        ///     The waypoint id
+        ///     The waypoint id or throws an exception if there was an error
         /// </returns>
         public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate,
             string? notes)
@@ -65,44 +65,6 @@ namespace CapstoneBackend.DAL
                 _connection.Close();
                 throw;
             }
-        }
-
-        /// <summary>
-        ///     Gets the waypoints by trip identifier.
-        /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <returns> a list of the waypoints from the trip specified by the trip id </returns>
-        public virtual IList<Waypoint> GetWaypointsByTripId(int tripId)
-        {
-            _connection.Open();
-            const string procedure = "uspGetWaypointsByTripId";
-            using MySqlCommand cmd = new(procedure, _connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            IList<Waypoint> waypointsInTrip = new List<Waypoint>();
-
-            cmd.Parameters.Add("@tripId", MySqlDbType.Int32).Value = tripId;
-
-            using var reader = cmd.ExecuteReader();
-
-            var waypointIdOrdinal = reader.GetOrdinal("waypointId");
-            var startDateOrdinal = reader.GetOrdinal("startDate");
-            var endDateOrdinal = reader.GetOrdinal("endDate");
-            var locationOrdinal = reader.GetOrdinal("location");
-            var notesOrdinal = reader.GetOrdinal("notes");
-
-            while (reader.Read())
-                waypointsInTrip.Add(new Waypoint
-                {
-                    TripId = tripId,
-                    WaypointId = reader.GetInt32(waypointIdOrdinal),
-                    Location = reader.GetString(locationOrdinal),
-                    StartDate = reader.GetDateTime(startDateOrdinal),
-                    EndDate = reader.GetDateTime(endDateOrdinal),
-                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
-                });
-
-            _connection.Close();
-            return waypointsInTrip;
         }
 
         /// <summary>
@@ -149,7 +111,7 @@ namespace CapstoneBackend.DAL
         /// </summary>
         /// <param name="waypointId">The waypoint identifier.</param>
         /// <returns>
-        ///     True if the waypoint was removed, false otherwise
+        ///     True if the waypoint was removed, false otherwise or throws an exception if there was an error
         /// </returns>
         public virtual bool RemoveWaypoint(int waypointId)
         {
@@ -162,7 +124,7 @@ namespace CapstoneBackend.DAL
 
             try
             {
-                int result = cmd.ExecuteNonQuery();
+                var result = cmd.ExecuteNonQuery();
                 _connection.Close();
                 return result == 1;
             }

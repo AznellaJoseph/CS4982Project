@@ -8,7 +8,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the Trip Overview Page
+    ///     ViewModel for the TripOverview Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
@@ -17,7 +17,7 @@ namespace CapstoneDesktop.ViewModels
         private DateTime? _selectedDate;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
+        ///     Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">The trip.</param>
         /// <param name="screen">The screen.</param>
