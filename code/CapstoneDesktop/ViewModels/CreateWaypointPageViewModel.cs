@@ -1,6 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Net.Http;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using ReactiveUI;
@@ -17,6 +24,10 @@ namespace CapstoneDesktop.ViewModels
 
         private string _error = string.Empty;
 
+        private string _location = string.Empty;
+
+        private IEnumerable<string> _predictions = new List<string>();
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
         /// </summary>
@@ -27,7 +38,7 @@ namespace CapstoneDesktop.ViewModels
         {
             _trip = trip;
             HostScreen = screen;
-            CreateWaypointCommand = ReactiveCommand.CreateFromObservable(createWaypoint);
+            CreateWaypointCommand = ReactiveCommand.CreateFromObservable(CreateWaypoint);
             CancelCreateWaypointCommand =
                 ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
         }
@@ -62,6 +73,30 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
+        ///     The location.
+        /// </summary>
+        public string Location { 
+            get { return _location; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _location, value);
+                UpdateAutoCompleteResultsAsync();
+            }
+        }
+
+        /// <summary>
+        ///     List of autocomplete results shown in the dropdown.
+        /// </summary>
+        public IEnumerable<String> AutocompletePredictions
+        {
+            get { return _predictions; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _predictions, value);
+            }
+        }
+
+        /// <summary>
         ///     The start date.
         /// </summary>
         public DateTimeOffset? StartDate { get; set; }
@@ -82,16 +117,16 @@ namespace CapstoneDesktop.ViewModels
         public TimeSpan? EndTime { get; set; }
 
         /// <summary>
-        ///     The location.
-        /// </summary>
-        public string? Location { get; set; }
-
-        /// <summary>
         ///     The notes.
         /// </summary>
         public string? Notes { get; set; }
 
-        private IObservable<IRoutableViewModel> createWaypoint()
+        private async void UpdateAutoCompleteResultsAsync()
+        {
+            this.AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+        }
+
+        private IObservable<IRoutableViewModel> CreateWaypoint()
         {
             if (string.IsNullOrEmpty(Location))
             {
@@ -134,5 +169,6 @@ namespace CapstoneDesktop.ViewModels
             ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
         }
+
     }
 }
