@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     PageModel for Single Waypoint Overview
+    ///     PageModel for Waypoint Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class WaypointModel : PageModel
@@ -27,7 +27,10 @@ namespace CapstoneWeb.Pages
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns>Redirect to index if the user is not logged in or the current waypoint display</returns>
+        /// <returns>
+        ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current
+        ///     waypoint display
+        /// </returns>
         public IActionResult OnGet(int id, int tripId)
         {
             if (!HttpContext.Session.Keys.Contains("userId"))

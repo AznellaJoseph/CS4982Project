@@ -111,7 +111,7 @@ namespace CapstoneBackend.Model
         /// <param name="notes">The notes.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns> A response of the id of the newly created trip or a non-success status code and error message </returns>
+        /// <returns> A response of the id of the new trip or a non-success status code and error message </returns>
         public virtual Response<int> CreateTrip(int userId, string name, string? notes, DateTime startDate,
             DateTime endDate)
         {

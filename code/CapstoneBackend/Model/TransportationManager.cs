@@ -38,7 +38,7 @@ namespace CapstoneBackend.Model
         /// <param name="endTime">The end time.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        ///     A response of if the transportation was created in the database or a non-success status code and error message
+        ///     A response of the id of the new transportation or a non-success status code and error message
         /// </returns>
         public virtual Response<int> CreateTransportation(int tripId, string method, DateTime startTime,
             DateTime endTime, string? notes)

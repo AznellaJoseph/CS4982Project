@@ -1,6 +1,5 @@
 using System;
 using CapstoneBackend.Model;
-using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -59,16 +58,16 @@ namespace CapstoneWeb.Pages
         /// <returns>Redirect to index or the current page if there is an error </returns>
         public IActionResult OnPost()
         {
-
             var userId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
 
 
-            var clashingTripResponse = ValidationManager.FindClashingTrip(userId, StartDate, EndDate);
+            var clashingTripResponse = ValidationManager.DetermineIfClashingTripExists(userId, StartDate, EndDate);
             if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
             {
                 ErrorMessage = clashingTripResponse.ErrorMessage;
                 return Page();
             }
+
             var response = TripManager.CreateTrip(userId, TripName,
                 Notes,
                 StartDate, EndDate);

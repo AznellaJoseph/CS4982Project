@@ -8,7 +8,7 @@ using Moq;
 namespace CapstoneTest.BackendTests.Model.TestValidationManager
 {
     [TestClass]
-    public class TestFindClashingTrip
+    public class TestDetermineIfClashingTripExists
     {
         [TestMethod]
         public void FindClashingTrip_UserHasNoTrips_NullClashingTrip()
@@ -18,7 +18,7 @@ namespace CapstoneTest.BackendTests.Model.TestValidationManager
 
             var validationManager = new ValidationManager {TripManager = mockTripManager.Object};
 
-            var clashingTripResponse = validationManager.FindClashingTrip(1, DateTime.Today, DateTime.Today.AddDays(1));
+            var clashingTripResponse = validationManager.DetermineIfClashingTripExists(1, DateTime.Today, DateTime.Today.AddDays(1));
 
             Assert.IsNull(clashingTripResponse.Data);
         }
@@ -33,7 +33,7 @@ namespace CapstoneTest.BackendTests.Model.TestValidationManager
             var validationManager = new ValidationManager {TripManager = mockTripManager.Object};
 
             var clashingTripResponse =
-                validationManager.FindClashingTrip(1, DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-3));
+                validationManager.DetermineIfClashingTripExists(1, DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-3));
 
             Assert.IsNull(clashingTripResponse.Data);
         }
@@ -48,7 +48,7 @@ namespace CapstoneTest.BackendTests.Model.TestValidationManager
             var validationManager = new ValidationManager {TripManager = mockTripManager.Object};
 
             var clashingTripResponse =
-                validationManager.FindClashingTrip(1, DateTime.Today.AddDays(2), DateTime.Today.AddDays(3));
+                validationManager.DetermineIfClashingTripExists(1, DateTime.Today.AddDays(2), DateTime.Today.AddDays(3));
 
             Assert.AreEqual((uint) Ui.StatusCode.BadRequest, clashingTripResponse.StatusCode);
             Assert.AreEqual(

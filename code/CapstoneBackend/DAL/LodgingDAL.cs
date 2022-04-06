@@ -121,10 +121,10 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        ///     Gets the transportation by its id.
+        ///     Gets the lodging by its id.
         /// </summary>
-        /// <param name="lodgingId">The transportation identifier.</param>
-        /// <returns>The lodging with the given id, null if no matching transportation found</returns>
+        /// <param name="lodgingId">The lodging identifier.</param>
+        /// <returns>The lodging with the given id, null if no matching lodging found</returns>
         public virtual Lodging? GetLodgingById(int lodgingId)
         {
             _connection.Open();
@@ -157,6 +157,5 @@ namespace CapstoneBackend.DAL
             _connection.Close();
             return lodging;
         }
-
     }
 }

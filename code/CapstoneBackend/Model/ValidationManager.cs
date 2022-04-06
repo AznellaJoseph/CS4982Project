@@ -26,7 +26,10 @@ namespace CapstoneBackend.Model
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns>A response of true if the dates are valid, false otherwise. </returns>
+        /// <returns>
+        ///     A response of true if the dates are valid, or a non-success status code and error message specifying the
+        ///     invalidity
+        /// </returns>
         public virtual Response<bool> DetermineIfValidEventDates(int tripId, DateTime startDate, DateTime endDate)
         {
             var currentTrip = TripManager.GetTripByTripId(tripId).Data;
@@ -77,13 +80,13 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Finds the clashing trip with the chosen start and end dates.
+        ///     Determines if there is a clashing trip with the chosen start and end dates.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns> A response of the clashing trip or a null trip if there is none.</returns>
-        public virtual Response<Trip> FindClashingTrip(int userId, DateTime startDate, DateTime endDate)
+        /// <returns> A response of false if a clashing trip does not exist or a non-success code and error message specifying the clashing trip dates.</returns>
+        public virtual Response<bool> DetermineIfClashingTripExists(int userId, DateTime startDate, DateTime endDate)
         {
             var tripDates = Enumerable.Range(0,
                     (endDate - startDate).Days + 1)
@@ -91,9 +94,9 @@ namespace CapstoneBackend.Model
 
             var userTrips = TripManager.GetTripsByUser(userId);
             if (userTrips.Data == null)
-                return new Response<Trip>
+                return new Response<bool>
                 {
-                    Data = null
+                    Data = false
                 };
 
             var clashingTrip = (from tripDate in tripDates
@@ -102,12 +105,12 @@ namespace CapstoneBackend.Model
                 select userTrip).FirstOrDefault();
 
             if (clashingTrip is null)
-                return new Response<Trip>
+                return new Response<bool>
                 {
-                    Data = clashingTrip
+                    Data = false
                 };
 
-            return new Response<Trip>
+            return new Response<bool>
             {
                 ErrorMessage =
                     $"{Ui.ErrorMessages.ClashingTripDates} {clashingTrip.StartDate.ToShortDateString()} to {clashingTrip.EndDate.ToShortDateString()}.",
@@ -121,8 +124,8 @@ namespace CapstoneBackend.Model
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns>A response of the clashing event or a null event if there is none.</returns>
-        public virtual Response<IEvent> FindClashingEvent(int tripId, DateTime startDate, DateTime endDate)
+        /// <returns>A response of false if a clashing event does not exist or a non-success code and error message specifying the clashing event dates.</returns>
+        public virtual Response<bool> DetermineIfClashingEventExists(int tripId, DateTime startDate, DateTime endDate)
         {
             var eventDates = Enumerable.Range(0,
                     (endDate - startDate).Days + 1)
@@ -138,12 +141,12 @@ namespace CapstoneBackend.Model
                 select eventOnDate).FirstOrDefault();
 
             if (clashingEvent is null)
-                return new Response<IEvent>
+                return new Response<bool>
                 {
-                    Data = clashingEvent
+                    Data = false
                 };
 
-            return new Response<IEvent>
+            return new Response<bool>
             {
                 ErrorMessage =
                     $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.",

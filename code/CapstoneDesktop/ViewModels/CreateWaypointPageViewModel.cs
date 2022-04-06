@@ -15,7 +15,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the CreateWaypoint Window
+    ///     ViewModel for the CreateWaypoint Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateWaypointPageViewModel : ReactiveViewModelBase
@@ -32,7 +32,7 @@ namespace CapstoneDesktop.ViewModels
         ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">the trip that the waypoint will be created for.</param>
-        /// <param name="screen">The host screen</param>
+        /// <param name="screen">The screen</param>
         public CreateWaypointPageViewModel(Trip trip, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
@@ -152,7 +152,7 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var clashingEventResponse = ValidationManager.FindClashingEvent(_trip.TripId, startDate, endDate);
+            var clashingEventResponse = ValidationManager.DetermineIfClashingEventExists(_trip.TripId, startDate, endDate);
 
             if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
             {
@@ -163,7 +163,8 @@ namespace CapstoneDesktop.ViewModels
             var resultResponse = WaypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
                 endDate, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
-                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen, new LodgingManager()));
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen,
+                    new LodgingManager()));
 
             ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
