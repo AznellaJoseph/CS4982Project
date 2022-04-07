@@ -24,6 +24,9 @@
       <Compile Update="Views\CreateTransportationPage.axaml.cs">
         <DependentUpon>CreateTransportationPage.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\LodgingPage.axaml.cs">
+        <DependentUpon>LodgingPage.axaml</DependentUpon>
+      </Compile>
       <Compile Update="Views\LandingPage.axaml.cs">
         <DependentUpon>LandingPage.axaml</DependentUpon>
         <SubType>Code</SubType>
