@@ -7,7 +7,12 @@
                        VerticalAlignment="Top" />
 			<TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
 			<TextBlock Text="LODGING LOCATION:" />
-			<TextBox Watermark="LOCATION" VerticalAlignment="Bottom" Text="{Binding Location, Mode=TwoWay}" />
+			<AutoCompleteBox Watermark="LOCATION NAME"
+							 Text="{Binding Location, Mode=TwoWay}"
+							 Items="{Binding AutocompletePredictions, Mode=TwoWay}"
+							 IsTextCompletionEnabled="True"
+							 FilterMode="None"
+							 />
 			<TextBlock Text="LODGING NOTES" />
 			<TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
                      AcceptsReturn="True" TextWrapping="Wrap" Height="200" />

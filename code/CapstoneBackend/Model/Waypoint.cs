@@ -8,16 +8,6 @@ namespace CapstoneBackend.Model
     public class Waypoint : IEvent
     {
         /// <summary>
-        ///     The event type.
-        /// </summary>
-        public string EventType { get; } = nameof(Waypoint);
-
-        /// <summary>
-        ///     The id.
-        /// </summary>
-        public int Id => WaypointId;
-        
-        /// <summary>
         ///     The waypoint id.
         /// </summary>
         public int WaypointId { get; set; }
@@ -26,6 +16,16 @@ namespace CapstoneBackend.Model
         ///     The location.
         /// </summary>
         public string Location { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     The event type.
+        /// </summary>
+        public string EventType { get; } = nameof(Waypoint);
+
+        /// <summary>
+        ///     The id.
+        /// </summary>
+        public int Id => WaypointId;
 
         /// <summary>
         ///     The notes.

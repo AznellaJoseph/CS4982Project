@@ -18,17 +18,18 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
                 new(mockTrip.Object, mockScreen.Object);
 
             Assert.AreEqual(string.Empty, createWaypointWindowViewModel.ErrorMessage);
+            Assert.AreEqual(string.Empty, createWaypointWindowViewModel.Location);
             Assert.AreEqual(mockScreen.Object, createWaypointWindowViewModel.HostScreen);
             Assert.IsNotNull(createWaypointWindowViewModel.UrlPathSegment);
             Assert.IsNotNull(createWaypointWindowViewModel.CreateWaypointCommand);
             Assert.IsNotNull(createWaypointWindowViewModel.CancelCreateWaypointCommand);
             Assert.IsNotNull(createWaypointWindowViewModel.ValidationManager);
             Assert.IsNotNull(createWaypointWindowViewModel.WaypointManager);
+            Assert.IsNotNull(createWaypointWindowViewModel.AutocompletePredictions);
             Assert.IsNull(createWaypointWindowViewModel.StartDate);
             Assert.IsNull(createWaypointWindowViewModel.EndDate);
             Assert.IsNull(createWaypointWindowViewModel.StartTime);
             Assert.IsNull(createWaypointWindowViewModel.EndTime);
-            Assert.IsNull(createWaypointWindowViewModel.Location);
             Assert.IsNull(createWaypointWindowViewModel.Notes);
         }
     }

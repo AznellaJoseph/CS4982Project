@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using CapstoneBackend.Model;
@@ -16,6 +17,10 @@ namespace CapstoneDesktop.ViewModels
         private readonly Trip _trip;
 
         private string _error = string.Empty;
+
+        private string _location = string.Empty;
+
+        private IEnumerable<string> _predictions = new List<string>();
 
 
         /// <summary>
@@ -57,6 +62,31 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
+        ///     The location.
+        /// </summary>
+        public string Location
+        {
+            get { return _location; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _location, value);
+                UpdateAutoCompleteResultsAsync();
+            }
+        }
+
+        /// <summary>
+        ///     List of autocomplete results shown in the dropdown.
+        /// </summary>
+        public IEnumerable<String> AutocompletePredictions
+        {
+            get { return _predictions; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _predictions, value);
+            }
+        }
+
+        /// <summary>
         ///     The validation manager.
         /// </summary>
         public ValidationManager ValidationManager { get; set; } = new();
@@ -82,14 +112,14 @@ namespace CapstoneDesktop.ViewModels
         public TimeSpan? EndTime { get; set; }
 
         /// <summary>
-        ///     The location.
-        /// </summary>
-        public string? Location { get; set; }
-
-        /// <summary>
         ///     The notes.
         /// </summary>
         public string? Notes { get; set; }
+
+        private async void UpdateAutoCompleteResultsAsync()
+        {
+            this.AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+        }
 
         private IObservable<IRoutableViewModel> createLodging()
         {
@@ -119,7 +149,8 @@ namespace CapstoneDesktop.ViewModels
 
             var resultResponse = LodgingManager.CreateLodging(_trip.TripId, Location, startDate, endDate, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
-                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen, new LodgingManager()));
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen,
+                    new LodgingManager()));
 
             ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();

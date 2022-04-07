@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Reactive;
 using CapstoneBackend.Model;
 using ReactiveUI;
@@ -15,12 +13,10 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
     public class EventPageViewModel : ReactiveViewModelBase
     {
-        public IEvent Event { get; }
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="EventPageViewModel" /> class.
         /// </summary>
-        /// <param name="selectedEvent">The selected event view.</param>
+        /// <param name="selectedEvent">The selected event being displayed.</param>
         /// <param name="screen">The screen.</param>
         public EventPageViewModel(IEvent selectedEvent, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
@@ -32,10 +28,15 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
+        ///     The event.
+        /// </summary>
+        public IEvent Event { get; }
+
+        /// <summary>
         ///     The back command
         /// </summary>
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
-        
+
         /// <summary>
         ///     The logout command
         /// </summary>

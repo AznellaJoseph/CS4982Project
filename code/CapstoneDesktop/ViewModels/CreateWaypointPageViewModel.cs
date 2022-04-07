@@ -1,6 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Net.Http;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using ReactiveUI;
@@ -8,7 +15,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the CreateWaypoint Window
+    ///     ViewModel for the CreateWaypoint Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateWaypointPageViewModel : ReactiveViewModelBase
@@ -17,17 +24,21 @@ namespace CapstoneDesktop.ViewModels
 
         private string _error = string.Empty;
 
+        private string _location = string.Empty;
+
+        private IEnumerable<string> _predictions = new List<string>();
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
         /// </summary>
         /// <param name="trip">the trip that the waypoint will be created for.</param>
-        /// <param name="screen">The host screen</param>
+        /// <param name="screen">The screen</param>
         public CreateWaypointPageViewModel(Trip trip, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
         {
             _trip = trip;
             HostScreen = screen;
-            CreateWaypointCommand = ReactiveCommand.CreateFromObservable(createWaypoint);
+            CreateWaypointCommand = ReactiveCommand.CreateFromObservable(CreateWaypoint);
             CancelCreateWaypointCommand =
                 ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
         }
@@ -62,6 +73,30 @@ namespace CapstoneDesktop.ViewModels
         }
 
         /// <summary>
+        ///     The location.
+        /// </summary>
+        public string Location { 
+            get { return _location; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _location, value);
+                UpdateAutoCompleteResultsAsync();
+            }
+        }
+
+        /// <summary>
+        ///     List of autocomplete results shown in the dropdown.
+        /// </summary>
+        public IEnumerable<String> AutocompletePredictions
+        {
+            get { return _predictions; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _predictions, value);
+            }
+        }
+
+        /// <summary>
         ///     The start date.
         /// </summary>
         public DateTimeOffset? StartDate { get; set; }
@@ -82,16 +117,16 @@ namespace CapstoneDesktop.ViewModels
         public TimeSpan? EndTime { get; set; }
 
         /// <summary>
-        ///     The location.
-        /// </summary>
-        public string? Location { get; set; }
-
-        /// <summary>
         ///     The notes.
         /// </summary>
         public string? Notes { get; set; }
 
-        private IObservable<IRoutableViewModel> createWaypoint()
+        private async void UpdateAutoCompleteResultsAsync()
+        {
+            this.AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+        }
+
+        private IObservable<IRoutableViewModel> CreateWaypoint()
         {
             if (string.IsNullOrEmpty(Location))
             {
@@ -117,7 +152,7 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var clashingEventResponse = ValidationManager.FindClashingEvent(_trip.TripId, startDate, endDate);
+            var clashingEventResponse = ValidationManager.DetermineIfClashingEventExists(_trip.TripId, startDate, endDate);
 
             if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
             {
@@ -128,10 +163,12 @@ namespace CapstoneDesktop.ViewModels
             var resultResponse = WaypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
                 endDate, Notes);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
-                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen, new LodgingManager()));
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen,
+                    new LodgingManager()));
 
             ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
         }
+
     }
 }

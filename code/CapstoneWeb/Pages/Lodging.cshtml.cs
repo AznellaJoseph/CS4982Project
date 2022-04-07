@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace CapstoneWeb.Pages
 {
+    /// <summary>
+    ///     PageModel for Lodging Site.
+    /// </summary>
     public class LodgingModel : PageModel
     {
         /// <summary>

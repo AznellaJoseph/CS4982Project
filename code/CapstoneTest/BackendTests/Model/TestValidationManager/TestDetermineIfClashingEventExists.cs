@@ -8,7 +8,7 @@ using Moq;
 namespace CapstoneTest.BackendTests.Model.TestValidationManager
 {
     [TestClass]
-    public class TestFindClashingEvent
+    public class TestDetermineIfClashingEventExists
     {
         [TestMethod]
         public void FindClashingEvent_NoClashingEvent()
@@ -20,7 +20,7 @@ namespace CapstoneTest.BackendTests.Model.TestValidationManager
             var validationManager = new ValidationManager { EventManager = mockEventManager.Object };
 
             var clashingTripResponse =
-                validationManager.FindClashingEvent(1, DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-5));
+                validationManager.DetermineIfClashingEventExists(1, DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-5));
 
             Assert.IsNull(clashingTripResponse.Data);
         }
@@ -38,7 +38,7 @@ namespace CapstoneTest.BackendTests.Model.TestValidationManager
             var validationManager = new ValidationManager { EventManager = mockEventManager.Object };
 
             var clashingTripResponse =
-                validationManager.FindClashingEvent(1, DateTime.Today, DateTime.Today.AddHours(3));
+                validationManager.DetermineIfClashingEventExists(1, DateTime.Today, DateTime.Today.AddHours(3));
 
             Assert.IsNull(clashingTripResponse.Data);
 

@@ -5,7 +5,7 @@ using System.Linq;
 namespace CapstoneBackend.Model
 {
     /// <summary>
-    ///     A wrapper class to hold and manage the events (waypoint and transportation) objects of a trip.
+    ///     A wrapper class to hold and manage the events (waypoint and transportation) of a trip.
     /// </summary>
     public class EventManager
     {

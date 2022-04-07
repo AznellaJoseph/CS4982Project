@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     PageModel for Single Transportation Overview
+    ///     PageModel for Transportation Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class TransportationModel : PageModel

@@ -1,5 +1,4 @@
 using CapstoneBackend.Model;
-using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -30,14 +29,14 @@ namespace CapstoneWeb.Pages
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        ///     The fake user manager used for testing.
+        ///     The user manager.
         /// </summary>
         public UserManager UserManager { get; set; } = new();
 
         /// <summary>
         ///     Called when [post].
         /// </summary>
-        /// <returns> A redirect to the next page or the current page if there was an error </returns>
+        /// <returns>Redirect to index if the user was not logged in or current page if there was an error </returns>
         public IActionResult OnPostLogin()
         {
             var response = UserManager.GetUserByCredentials(Username, Password);
