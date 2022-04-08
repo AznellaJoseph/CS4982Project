@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\DAL\TestLodgingDAL\TestGetLodgingsByTripId.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
+
+namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
+{
+    [TestClass]
+    public class TestGetLodgingsByTripId
+    {
+        private MySqlConnection _connection;
+        private int testTripId;
+        private int testLodgingId;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _connection = new MySqlConnection(Connection.ConnectionString);
+            testTripId = new TripDal(_connection).CreateTrip(1, &quot;TestTrip&quot;, &quot;Some Notes&quot;, DateTime.Now, DateTime.Now.AddDays(7));
+            testLodgingId = new LodgingDal(_connection).CreateLodging(testTripId, &quot;TestLocation&quot;, DateTime.Now.AddDays(2), DateTime.Now.AddDays(7), &quot;SomeNotes&quot;);
+        }
+
+        [TestMethod]
+        public void CallProcedure_InvalidTripId_ReturnsEmpty()
+        {
+            LodgingDal testDAL = new(_connection);
+
+            IList&lt;Lodging&gt; result = testDAL.GetLodgingsByTripId(-1);
+
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [TestMethod]
+        public void CallProcedure_ValidTripWithLodging_ReturnsList()
+        {
+            LodgingDal testDAL = new(_connection);
+
+            IList&lt;Lodging&gt; result = testDAL.GetLodgingsByTripId(testTripId);
+
+            Assert.AreEqual(1, result.Count);
+        }
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            _connection.Open();
+            string removeTrip = $&quot;delete from trip where tripId = {testTripId};&quot;;
+            string removeLodging = $&quot;delete from lodging where lodgingId = {testLodgingId};&quot;;
+
+            using MySqlCommand tripCmd = new MySqlCommand(removeTrip, _connection);
+            tripCmd.ExecuteNonQuery();
+
+            using MySqlCommand lodgingCmd = new MySqlCommand(removeLodging, _connection);
+            lodgingCmd.ExecuteNonQuery();
+
+            this._connection.Close();
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,9,19,10,1],[20,13,20,76,1],[21,13,21,130,1],[22,13,22,162,1],[23,9,23,10,1],[27,9,27,10,1],[28,13,28,51,1],[30,13,30,69,1],[32,13,32,46,1],[33,9,33,10,1],[37,9,37,10,1],[38,13,38,51,1],[40,13,40,77,1],[42,13,42,46,1],[43,9,43,10,1],[47,9,47,10,1],[48,13,48,32,1],[49,13,49,82,1],[50,13,50,94,1],[52,13,52,84,1],[53,13,53,39,1],[55,13,55,90,1],[56,13,56,42,1],[58,13,58,38,1],[59,9,59,10,1]]);
+    </script>
+  </body>
+</html>

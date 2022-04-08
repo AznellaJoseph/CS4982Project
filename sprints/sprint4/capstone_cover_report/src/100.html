@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\DAL\LodgingDAL.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Data;
+using CapstoneBackend.Model;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneBackend.DAL
+{
+    /// &lt;summary&gt;
+    ///     Data Access Layer (DAL) for accessing Lodging information from the database
+    /// &lt;/summary&gt;
+    public class LodgingDal
+    {
+        private readonly MySqlConnection _connection;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;LodgingDal&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public LodgingDal() : this(new MySqlConnection(Connection.ConnectionString))
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;LodgingDal&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;connection&quot;&gt;The connection.&lt;/param&gt;
+        public LodgingDal(MySqlConnection connection)
+        {
+            _connection = connection;
+        }
+
+        /// &lt;summary&gt;
+        ///     Creates a Lodging.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;location&quot;&gt;The location.&lt;/param&gt;
+        /// &lt;param name=&quot;startDate&quot;&gt;The start date.&lt;/param&gt;
+        /// &lt;param name=&quot;endDate&quot;&gt;The end date.&lt;/param&gt;
+        /// &lt;param name=&quot;notes&quot;&gt;The notes.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     The Lodging id
+        /// &lt;/returns&gt;
+        public virtual int CreateLodging(int tripId, string location, DateTime startDate, DateTime endDate,
+            string? notes)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspCreateLodging&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@tripId&quot;, MySqlDbType.Int32).Value = tripId;
+            cmd.Parameters.Add(&quot;@location&quot;, MySqlDbType.VarChar).Value = location;
+            cmd.Parameters.Add(&quot;@startDate&quot;, MySqlDbType.DateTime).Value = startDate;
+            cmd.Parameters.Add(&quot;@endDate&quot;, MySqlDbType.DateTime).Value = endDate;
+            cmd.Parameters.Add(&quot;@notes&quot;, MySqlDbType.VarChar).Value = notes;
+
+            var lodgingId = Convert.ToInt32(cmd.ExecuteScalar());
+
+            _connection.Close();
+            return lodgingId;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the Lodgings by trip identifier.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt; a list of the Lodgings from the trip specified by the trip id &lt;/returns&gt;
+        public virtual IList&lt;Lodging&gt; GetLodgingsByTripId(int tripId)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspGetLodgingsByTripId&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            IList&lt;Lodging&gt; lodgingsInTrip = new List&lt;Lodging&gt;();
+
+            cmd.Parameters.Add(&quot;@tripId&quot;, MySqlDbType.Int32).Value = tripId;
+
+
+            using var reader = cmd.ExecuteReader();
+
+            var lodgingIdOrdinal = reader.GetOrdinal(&quot;lodgingId&quot;);
+            var startDateOrdinal = reader.GetOrdinal(&quot;startDate&quot;);
+            var endDateOrdinal = reader.GetOrdinal(&quot;endDate&quot;);
+            var locationOrdinal = reader.GetOrdinal(&quot;location&quot;);
+            var notesOrdinal = reader.GetOrdinal(&quot;notes&quot;);
+
+            while (reader.Read())
+                lodgingsInTrip.Add(new Lodging
+                {
+                    TripId = tripId,
+                    LodgingId = reader.GetInt32(lodgingIdOrdinal),
+                    Location = reader.GetString(locationOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
+                });
+
+            _connection.Close();
+            return lodgingsInTrip;
+        }
+
+        /// &lt;summary&gt;
+        ///     Removes the Lodging.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;lodgingId&quot;&gt;The Lodging identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     True if the Lodging was removed, false otherwise
+        /// &lt;/returns&gt;
+        public virtual bool RemoveLodging(int lodgingId)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspRemoveLodging&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@lodgingId&quot;, MySqlDbType.Int32).Value = lodgingId;
+
+            var removed = cmd.ExecuteNonQuery() == 1;
+            _connection.Close();
+            return removed;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the lodging by its id.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;lodgingId&quot;&gt;The lodging identifier.&lt;/param&gt;
+        /// &lt;returns&gt;The lodging with the given id, null if no matching lodging found&lt;/returns&gt;
+        public virtual Lodging? GetLodgingById(int lodgingId)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspGetLodgingById&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@lodgingId&quot;, MySqlDbType.Int32).Value = lodgingId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var tripIdOrdinal = reader.GetOrdinal(&quot;tripId&quot;);
+            var startDateOrdinal = reader.GetOrdinal(&quot;startDate&quot;);
+            var endDateOrdinal = reader.GetOrdinal(&quot;endDate&quot;);
+            var locationOrdinal = reader.GetOrdinal(&quot;location&quot;);
+            var notesOrdinal = reader.GetOrdinal(&quot;notes&quot;);
+
+            Lodging? lodging = null;
+
+            if (reader.Read())
+                lodging = new Lodging
+                {
+                    TripId = reader.GetInt32(tripIdOrdinal),
+                    LodgingId = lodgingId,
+                    Location = reader.GetString(locationOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
+                };
+
+            _connection.Close();
+            return lodging;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,31,19,85,1],[20,9,20,10,1],[21,9,21,10,1],[27,9,27,54,1],[28,9,28,10,1],[29,13,29,38,1],[30,9,30,10,1],[45,9,45,10,1],[46,13,46,32,1],[48,13,48,66,1],[49,13,49,59,1],[51,13,51,77,1],[52,13,52,83,1],[53,13,53,86,1],[54,13,54,82,1],[55,13,55,77,1],[57,13,57,66,1],[59,13,59,33,1],[60,13,60,30,1],[61,9,61,10,1],[69,9,69,10,1],[70,13,70,32,1],[72,13,72,66,1],[73,13,73,59,1],[74,13,74,65,1],[76,13,76,77,1],[79,13,79,52,1],[81,13,81,67,1],[82,13,82,67,1],[83,13,83,63,1],[84,13,84,65,1],[85,13,85,59,1],[87,13,87,34,1],[88,17,96,20,1],[98,13,98,33,1],[99,13,99,35,1],[100,9,100,10,1],[110,9,110,10,1],[111,13,111,32,1],[113,13,113,66,1],[114,13,114,59,1],[116,13,116,83,1],[118,13,118,54,1],[119,13,119,33,1],[120,13,120,28,1],[121,9,121,10,1],[129,9,129,10,0],[130,13,130,32,0],[132,13,132,66,0],[133,13,133,59,0],[135,13,135,83,0],[137,13,137,64,0],[138,13,138,61,0],[139,13,139,67,0],[140,13,140,63,0],[141,13,141,65,0],[142,13,142,59,0],[144,13,144,37,0],[146,13,146,31,0],[147,17,155,19,0],[157,13,157,33,0],[158,13,158,28,0],[159,9,159,10,0]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Utils\GooglePlacesService.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace CapstoneBackend.Utils
+{
+    /// &lt;summary&gt;
+    ///   &lt;para&gt;Utility for calling the Google Places API&lt;/para&gt;
+    ///   &lt;para&gt;Used for Geolocation services.&lt;/para&gt;
+    /// &lt;/summary&gt;
+    public class GooglePlacesService
+    {
+        private const string key = &quot;AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4&quot;;
+
+        /// &lt;summary&gt;
+        ///     Autocompletes the specified search text with location results from Google.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;searchText&quot;&gt;
+        ///     The search text.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     List of autocomplete results
+        /// &lt;/returns&gt;
+        public static async Task&lt;IEnumerable&lt;string&gt;&gt; Autocomplete (string searchText)
+        {
+            var apiEndpoint = $&quot;https://maps.googleapis.com/maps/api/place/autocomplete/json?input={searchText}&amp;types=establishment&amp;key={key}&quot;;
+            List&lt;string&gt; predictions = new();
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetStringAsync(apiEndpoint);
+                var result = JsonDocument.Parse(response).RootElement.GetProperty(&quot;predictions&quot;).EnumerateArray();
+
+                while (result.MoveNext())
+                {
+                    var currPrediction = result.Current;
+                    if (currPrediction.TryGetProperty(&quot;description&quot;, out JsonElement description))
+                    {
+                        predictions.Add(description.GetString());
+                    }
+                }
+            }
+            return predictions;
+        }
+
+
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[29,9,29,10,1],[30,13,30,144,1],[31,13,31,46,1],[32,20,32,49,1],[33,13,33,14,1],[34,17,34,73,1],[35,17,35,115,1],[37,17,37,42,1],[38,17,38,18,1],[39,21,39,57,1],[40,21,40,99,1],[41,21,41,22,1],[42,25,42,66,1],[43,21,43,22,1],[44,17,44,18,1],[45,13,45,14,1],[46,13,46,32,1],[47,9,47,10,1]]);
+    </script>
+  </body>
+</html>

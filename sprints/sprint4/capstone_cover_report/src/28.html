@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestLandingPage\TestLoadTrips.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Collections.Generic;
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestLandingPage
+{
+    [TestClass]
+    public class TestLoadTrips
+    {
+        [TestMethod]
+        public void LoadTrips_UserHasOneTrip_ReturnsCorrectCount()
+        {
+            var mockUser = new Mock&lt;User&gt;
+            {
+                Object =
+                {
+                    UserId = 0
+                }
+            };
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(0))
+                .Returns(new Response&lt;IList&lt;Trip&gt;&gt; {Data = new List&lt;Trip&gt; {new()}});
+
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockScreen.Object, mockTripManager.Object);
+
+            Assert.AreEqual(1, landingPageViewModel.TripViewModels.Count);
+        }
+
+        [TestMethod]
+        public void LoadTrips_UserHasNoTrips_ReturnsCorrectCount()
+        {
+            var mockUser = new Mock&lt;User&gt;
+            {
+                Object =
+                {
+                    UserId = 0
+                }
+            };
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(0)).Returns(new Response&lt;IList&lt;Trip&gt;&gt; {Data = null});
+
+            LandingPageViewModel landingPageViewModel = new(mockUser.Object, mockScreen.Object, mockTripManager.Object);
+
+            Assert.AreEqual(0, landingPageViewModel.TripViewModels.Count);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,22,15,1],[23,13,23,59,1],[24,13,24,50,1],[26,13,27,85,1],[29,13,29,121,1],[31,13,31,75,1],[32,9,32,10,1],[36,9,36,10,1],[37,13,43,15,1],[44,13,44,59,1],[45,13,45,50,1],[47,13,47,112,1],[49,13,49,121,1],[51,13,51,75,1],[52,9,52,10,1]]);
+    </script>
+  </body>
+</html>

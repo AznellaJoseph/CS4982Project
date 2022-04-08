@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\EventPage.axaml</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+&lt;UserControl xmlns=&quot;https://github.com/avaloniaui&quot;
+             xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+             xmlns:conv=&quot;clr-namespace:CapstoneDesktop.Converters&quot;
+             xmlns:avalonia=&quot;clr-namespace:GMap.NET.Avalonia&quot;
+             xmlns:avalonia1=&quot;clr-namespace:GMap.NET.Avalonia;assembly=GMap.NET.Avalonia&quot;
+             x:Class=&quot;CapstoneDesktop.Views.EventPage&quot;&gt;
+    &lt;UserControl.Resources&gt;
+        &lt;conv:DateFormatter x:Key=&quot;DateFormatter&quot; /&gt;
+    &lt;/UserControl.Resources&gt;
+    &lt;Grid RowDefinitions=&quot;2*,20,Auto,20,3*&quot; ColumnDefinitions=&quot;2*,20,3*&quot; Margin=&quot;20&quot;&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Column=&quot;0&quot; Grid.Row=&quot;0&quot;&gt;
+            &lt;Panel /&gt;
+        &lt;/Border&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Column=&quot;0&quot; Grid.Row=&quot;2&quot;&gt;
+            &lt;Grid ColumnDefinitions=&quot;*,10,*,10,*,10,*&quot;&gt;
+                &lt;Button HorizontalAlignment=&quot;Stretch&quot; Grid.Column=&quot;0&quot;&gt;
+                    &lt;TextBlock Classes=&quot;dark&quot; Text=&quot;PROFILE&quot; TextAlignment=&quot;Center&quot; /&gt;
+                &lt;/Button&gt;
+                &lt;Button HorizontalAlignment=&quot;Stretch&quot; Grid.Column=&quot;2&quot; Command=&quot;{Binding BackCommand}&quot;&gt;
+                    &lt;TextBlock Classes=&quot;dark&quot; Text=&quot;BACK&quot; TextAlignment=&quot;Center&quot; /&gt;
+                &lt;/Button&gt;
+                &lt;Button HorizontalAlignment=&quot;Stretch&quot; Grid.Column=&quot;4&quot; Command=&quot;{Binding LogoutCommand}&quot;&gt;
+                    &lt;TextBlock Classes=&quot;dark&quot; Text=&quot;LOGOUT&quot; TextAlignment=&quot;Center&quot; /&gt;
+                &lt;/Button&gt;
+            &lt;/Grid&gt;
+        &lt;/Border&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Column=&quot;0&quot; Grid.Row=&quot;4&quot;&gt;
+            &lt;Panel Name=&quot;MapContainer&quot; /&gt;
+        &lt;/Border&gt;
+        &lt;Border Classes=&quot;container&quot; Grid.Row=&quot;0&quot; Grid.RowSpan=&quot;5&quot; Grid.Column=&quot;2&quot;&gt;
+            &lt;Grid VerticalAlignment=&quot;Stretch&quot; RowDefinitions=&quot;*,10,*,10,2*&quot;&gt;
+                &lt;TextBlock Grid.Row=&quot;0&quot; TextAlignment=&quot;Center&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;h1 light&quot; Text=&quot;{Binding Event.DisplayName}&quot;/&gt;
+                &lt;StackPanel Grid.Row=&quot;1&quot; Orientation=&quot;Horizontal&quot;&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;light&quot; Text=&quot;{Binding Event.StartDate}&quot;/&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;light&quot; Text=&quot;-&quot;/&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;light&quot; Text=&quot;{Binding Event.EndDate}&quot;/&gt;
+                &lt;/StackPanel&gt;
+                &lt;TextBlock Grid.Row=&quot;2&quot; TextAlignment=&quot;Left&quot; VerticalAlignment=&quot;Center&quot; Classes=&quot;light&quot; Text=&quot;{Binding Event.Notes}&quot;/&gt;
+            &lt;/Grid&gt;
+        &lt;/Border&gt;
+    &lt;/Grid&gt;
+&lt;/UserControl&gt;
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[1,2,1,13,0],[8,10,8,28,0],[10,6,10,10,0],[10,11,10,25,0],[10,45,10,62,0],[11,10,11,16,0],[11,17,11,24,0],[11,53,11,57,0],[12,14,12,19,0],[14,10,14,16,0],[14,17,14,24,0],[14,53,14,57,0],[15,14,15,18,0],[15,19,15,36,0],[16,18,16,24,0],[16,25,16,44,0],[17,22,17,31,0],[17,32,17,39,0],[17,47,17,51,0],[19,18,19,24,0],[19,25,19,44,0],[19,71,19,78,0],[20,22,20,31,0],[20,32,20,39,0],[20,47,20,51,0],[22,18,22,24,0],[22,25,22,44,0],[22,71,22,78,0],[23,22,23,31,0],[23,32,23,39,0],[23,47,23,51,0],[27,10,27,16,0],[27,17,27,24,0],[27,53,27,57,0],[28,14,28,19,0],[28,20,28,24,0],[30,10,30,16,0],[30,17,30,24,0],[30,50,30,54,0],[31,14,31,18,0],[31,19,31,36,0],[31,47,31,61,0],[32,18,32,27,0],[32,28,32,32,0],[32,64,32,81,0],[32,91,32,98,0],[32,110,32,114,0],[33,18,33,28,0],[33,29,33,33,0],[34,22,34,31,0],[34,32,34,45,0],[34,82,34,89,0],[34,98,34,102,0],[35,22,35,31,0],[35,32,35,45,0],[35,82,35,89,0],[35,98,35,102,0],[36,22,36,31,0],[36,32,36,45,0],[36,82,36,89,0],[36,98,36,102,0],[38,18,38,27,0],[38,28,38,32,0],[38,62,38,79,0],[38,89,38,96,0],[38,105,38,109,0]]);
+    </script>
+  </body>
+</html>

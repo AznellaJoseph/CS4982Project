@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\DAL\WaypointDAL.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Data;
+using CapstoneBackend.Model;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneBackend.DAL
+{
+    /// &lt;summary&gt;
+    ///     Data Access Layer (DAL) for accessing Waypoint information from the database
+    /// &lt;/summary&gt;
+    public class WaypointDal
+    {
+        private readonly MySqlConnection _connection;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;WaypointDal&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public WaypointDal() : this(new MySqlConnection(Connection.ConnectionString))
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;WaypointDal&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;connection&quot;&gt;The connection.&lt;/param&gt;
+        public WaypointDal(MySqlConnection connection)
+        {
+            _connection = connection;
+        }
+
+        /// &lt;summary&gt;
+        ///     Creates a waypoint.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;location&quot;&gt;The location.&lt;/param&gt;
+        /// &lt;param name=&quot;startDate&quot;&gt;The start date.&lt;/param&gt;
+        /// &lt;param name=&quot;endDate&quot;&gt;The end date.&lt;/param&gt;
+        /// &lt;param name=&quot;notes&quot;&gt;The notes.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     The waypoint id or throws an exception if there was an error
+        /// &lt;/returns&gt;
+        public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate,
+            string? notes)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspCreateWaypoint&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@tripId&quot;, MySqlDbType.Int32).Value = tripId;
+            cmd.Parameters.Add(&quot;@location&quot;, MySqlDbType.VarChar).Value = location;
+            cmd.Parameters.Add(&quot;@startDate&quot;, MySqlDbType.DateTime).Value = startDate;
+            cmd.Parameters.Add(&quot;@endDate&quot;, MySqlDbType.DateTime).Value = endDate;
+            cmd.Parameters.Add(&quot;@notes&quot;, MySqlDbType.VarChar).Value = notes;
+
+            try
+            {
+                var waypointId = Convert.ToInt32(cmd.ExecuteScalar());
+                _connection.Close();
+                return waypointId;
+            }
+            catch
+            {
+                _connection.Close();
+                throw;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the waypyoints on the specified date.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;selectedDate&quot;&gt;The selected date.&lt;/param&gt;
+        /// &lt;returns&gt; A list of the waypoints of the trip on the specified date &lt;/returns&gt;
+        public virtual IList&lt;Waypoint&gt; GetWaypointsOnDate(int tripId, DateTime selectedDate)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspGetWaypointsOnDate&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            IList&lt;Waypoint&gt; waypointsOnDate = new List&lt;Waypoint&gt;();
+
+            cmd.Parameters.Add(&quot;@selectedDate&quot;, MySqlDbType.DateTime).Value = selectedDate;
+            cmd.Parameters.Add(&quot;@tripId&quot;, MySqlDbType.Int32).Value = tripId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var waypointIdOrdinal = reader.GetOrdinal(&quot;waypointId&quot;);
+            var startDateOrdinal = reader.GetOrdinal(&quot;startDate&quot;);
+            var endDateOrdinal = reader.GetOrdinal(&quot;endDate&quot;);
+            var locationOrdinal = reader.GetOrdinal(&quot;location&quot;);
+            var notesOrdinal = reader.GetOrdinal(&quot;notes&quot;);
+
+            while (reader.Read())
+                waypointsOnDate.Add(new Waypoint
+                {
+                    TripId = tripId,
+                    WaypointId = reader.GetInt32(waypointIdOrdinal),
+                    Location = reader.GetString(locationOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
+                });
+
+            _connection.Close();
+            return waypointsOnDate;
+        }
+
+        /// &lt;summary&gt;
+        ///     Removes the waypoint.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;waypointId&quot;&gt;The waypoint identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     True if the waypoint was removed, false otherwise or throws an exception if there was an error
+        /// &lt;/returns&gt;
+        public virtual bool RemoveWaypoint(int waypointId)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspRemoveWaypoint&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@waypointId&quot;, MySqlDbType.Int32).Value = waypointId;
+
+            try
+            {
+                var result = cmd.ExecuteNonQuery();
+                _connection.Close();
+                return result == 1;
+            }
+            catch
+            {
+                _connection.Close();
+                throw;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the waypoint by identifier.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;waypointId&quot;&gt;The waypoint identifier.&lt;/param&gt;
+        /// &lt;returns&gt;The waypoint with the given id, null if no matching waypoint found.&lt;/returns&gt;
+        public virtual Waypoint? GetWaypointById(int waypointId)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspGetWaypointById&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@waypointId&quot;, MySqlDbType.Int32).Value = waypointId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var tripIdOrdinal = reader.GetOrdinal(&quot;tripId&quot;);
+            var startDateOrdinal = reader.GetOrdinal(&quot;startDate&quot;);
+            var endDateOrdinal = reader.GetOrdinal(&quot;endDate&quot;);
+            var locationOrdinal = reader.GetOrdinal(&quot;location&quot;);
+            var notesOrdinal = reader.GetOrdinal(&quot;notes&quot;);
+
+            Waypoint? waypoint = null;
+
+            if (reader.Read())
+                waypoint = new Waypoint
+                {
+                    TripId = reader.GetInt32(tripIdOrdinal),
+                    WaypointId = waypointId,
+                    Location = reader.GetString(locationOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal),
+                    Notes = reader.IsDBNull(notesOrdinal) ? string.Empty : reader.GetString(notesOrdinal)
+                };
+
+            _connection.Close();
+            return waypoint;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,32,19,86,1],[20,9,20,10,1],[21,9,21,10,1],[27,9,27,55,1],[28,9,28,10,1],[29,13,29,38,1],[30,9,30,10,1],[45,9,45,10,1],[46,13,46,32,1],[48,13,48,66,1],[49,13,49,59,1],[51,13,51,77,1],[52,13,52,83,1],[53,13,53,86,1],[54,13,54,82,1],[55,13,55,77,1],[58,13,58,14,1],[59,17,59,71,1],[60,17,60,37,1],[61,17,61,35,1],[63,13,63,18,1],[64,13,64,14,1],[65,17,65,37,1],[66,17,66,23,1],[68,9,68,10,1],[77,9,77,10,1],[78,13,78,32,1],[80,13,80,66,1],[81,13,81,59,1],[82,13,82,68,1],[84,13,84,92,1],[85,13,85,77,1],[87,13,87,64,1],[88,13,88,69,1],[89,13,89,67,1],[90,13,90,63,1],[91,13,91,65,1],[92,13,92,59,1],[94,13,94,34,1],[95,17,103,20,1],[105,13,105,33,1],[106,13,106,36,1],[107,9,107,10,1],[117,9,117,10,1],[118,13,118,32,1],[120,13,120,66,1],[121,13,121,59,1],[123,13,123,85,1],[126,13,126,14,1],[127,17,127,52,1],[128,17,128,37,1],[129,17,129,36,1],[131,13,131,18,0],[132,13,132,14,0],[133,17,133,37,0],[134,17,134,23,0],[136,9,136,10,1],[144,9,144,10,1],[145,13,145,32,1],[147,13,147,66,1],[148,13,148,59,1],[150,13,150,85,1],[152,13,152,64,1],[153,13,153,61,1],[154,13,154,67,1],[155,13,155,63,1],[156,13,156,65,1],[157,13,157,59,1],[159,13,159,39,1],[161,13,161,31,1],[162,17,170,19,1],[172,13,172,33,1],[173,13,173,29,1],[174,9,174,10,1]]);
+    </script>
+  </body>
+</html>

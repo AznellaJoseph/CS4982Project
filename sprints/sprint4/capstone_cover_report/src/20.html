@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestTransportation\TestRemoveCommand.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
+{
+    [TestClass]
+    public class TestRemoveCommand
+    {
+        [TestMethod]
+        public void RemoveCommand_Success()
+        {
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var transportation = new Transportation
+            {
+                TransportationId = 1
+            };
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockTransportationManager.Setup(tm =&gt; tm.RemoveTransportation(1))
+                .Returns(new Response&lt;bool&gt;
+                {
+                    Data = true
+                });
+
+            var eventRemoved = false;
+
+            var viewModel = new TransportationViewModel(transportation, mockScreen.Object)
+            {
+                TransportationManager = mockTransportationManager.Object
+            };
+            viewModel.RemoveEvent += (_, _) =&gt; eventRemoved = true;
+
+            var testScheduler = new TestScheduler();
+
+            viewModel.RemoveCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.IsTrue(eventRemoved);
+        }
+
+        [TestMethod]
+        public void RemoveCommand_Failure()
+        {
+            var mockTransportationManager = new Mock&lt;TransportationManager&gt;();
+            var transportation = new Transportation
+            {
+                TransportationId = 1
+            };
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockTransportationManager.Setup(wm =&gt; wm.RemoveTransportation(1))
+                .Returns(new Response&lt;bool&gt;
+                {
+                    Data = false
+                });
+            var eventRemoved = false;
+            var viewModel = new TransportationViewModel(transportation, mockScreen.Object)
+            {
+                TransportationManager = mockTransportationManager.Object
+            };
+            viewModel.RemoveEvent += (_, _) =&gt; eventRemoved = true;
+
+            var testScheduler = new TestScheduler();
+
+            viewModel.RemoveCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.IsFalse(eventRemoved);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,79,1],[18,13,21,15,1],[22,13,22,50,1],[23,13,27,20,1],[29,13,29,38,1],[31,13,34,15,1],[35,13,35,48,1],[35,48,35,67,1],[35,67,35,68,1],[37,13,37,53,1],[39,13,39,59,1],[41,13,41,35,1],[43,13,43,41,1],[44,9,44,10,1],[48,9,48,10,1],[49,13,49,79,1],[50,13,53,15,1],[54,13,54,50,1],[55,13,59,20,1],[60,13,60,38,1],[61,13,64,15,1],[65,13,65,48,1],[65,48,65,67,0],[65,67,65,68,1],[67,13,67,53,1],[69,13,69,59,1],[71,13,71,35,1],[73,13,73,42,1],[74,9,74,10,1]]);
+    </script>
+  </body>
+</html>

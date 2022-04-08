@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\ReactiveViewModelBase.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ReactiveViewModelBase Class that serves as a base for ViewModels that need reactive functionality
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;ReactiveUI.IRoutableViewModel&quot; /&gt;
+    public class ReactiveViewModelBase : ViewModelBase, IRoutableViewModel
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;ReactiveViewModelBase&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hostScreen&quot;&gt;The host screen.&lt;/param&gt;
+        /// &lt;param name=&quot;urlPathSegment&quot;&gt;The URL path segment.&lt;/param&gt;
+        public ReactiveViewModelBase(IScreen hostScreen, string? urlPathSegment)
+        {
+            HostScreen = hostScreen;
+            UrlPathSegment = urlPathSegment;
+        }
+
+        /// &lt;summary&gt;
+        ///     The host screen.
+        /// &lt;/summary&gt;
+        public IScreen HostScreen { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The url path segment.
+        /// &lt;/summary&gt;
+        public string? UrlPathSegment { get; set; }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,81,1],[18,9,18,10,1],[19,13,19,37,1],[20,13,20,45,1],[21,9,21,10,1],[26,37,26,41,1],[26,42,26,46,1],[31,41,31,45,1],[31,46,31,50,1]]);
+    </script>
+  </body>
+</html>

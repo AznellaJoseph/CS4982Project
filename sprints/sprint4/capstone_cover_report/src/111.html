@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\CreateTransportation.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Create Transportation Site
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class CreateTransportationModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string ErrorMessage { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The method.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Method { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime StartDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime EndDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The transportation manager.
+        /// &lt;/summary&gt;
+        public TransportationManager TransportationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The validation manager.
+        /// &lt;/summary&gt;
+        public ValidationManager ValidationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     Called when [post].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;Redirect to trip or the current page if there was an error &lt;/returns&gt;
+        public IActionResult OnPost(int tripId)
+        {
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
+            {
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Page();
+            }
+
+            var clashingEventResponse = ValidationManager.DetermineIfClashingEventExists(tripId, StartDate, EndDate);
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Page();
+            }
+
+            var response = TransportationManager.CreateTransportation(tripId, Method, StartDate, EndDate, Notes);
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
+            {
+                var routeValue = new RouteValueDictionary
+                {
+                    {&quot;tripId&quot;, tripId}
+                };
+                return RedirectToPage(&quot;Trip&quot;, routeValue);
+            }
+
+            ErrorMessage = response.ErrorMessage;
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post cancel].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier to add transportation to.&lt;/param&gt;
+        /// &lt;returns&gt;Redirects to the trip overview page for the trip specified by the trip id&lt;/returns&gt;
+        public IActionResult OnPostCancel(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[20,38,20,42,1],[20,43,20,47,1],[26,32,26,36,1],[26,37,26,41,1],[32,37,32,41,1],[32,42,32,46,1],[32,51,32,63,1],[38,35,38,39,1],[38,40,38,44,1],[38,49,38,61,1],[44,31,44,35,1],[44,36,44,40,1],[49,62,49,66,1],[49,67,49,71,1],[49,76,49,81,1],[54,54,54,58,1],[54,59,54,63,1],[54,68,54,73,1],[61,9,61,10,1],[62,13,62,111,1],[64,13,64,72,1],[65,13,65,14,1],[66,17,66,64,1],[67,17,67,31,1],[70,13,70,118,1],[71,13,71,75,1],[72,13,72,14,1],[73,17,73,67,1],[74,17,74,31,1],[77,13,77,114,1],[78,13,78,74,1],[79,13,79,14,1],[80,17,83,19,1],[84,17,84,59,1],[87,13,87,50,1],[88,13,88,27,1],[89,9,89,10,1],[97,9,97,10,1],[98,13,101,15,1],[102,13,102,55,1],[103,9,103,10,1]]);
+    </script>
+  </body>
+</html>

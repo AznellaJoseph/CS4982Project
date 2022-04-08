@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\TransportationViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for a single Transportation
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ReactiveViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.IEventViewModel&quot; /&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class TransportationViewModel : ReactiveViewModelBase, IEventViewModel
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TransportationViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;transportation&quot;&gt;The transportation.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public TransportationViewModel(Transportation transportation, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            HostScreen = screen;
+            Transportation = transportation;
+            RemoveCommand = ReactiveCommand.Create(removeTransportation);
+            ViewCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new EventPageViewModel(transportation, screen)));
+        }
+
+        /// &lt;summary&gt;
+        ///     The transportation
+        /// &lt;/summary&gt;
+        public Transportation Transportation { get; }
+
+        /// &lt;summary&gt;
+        ///     The transportation manager
+        /// &lt;/summary&gt;
+        public TransportationManager TransportationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The remove command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; RemoveCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The remove event
+        /// &lt;/summary&gt;
+        public event EventHandler&lt;EventArgs&gt;? RemoveEvent;
+
+        /// &lt;summary&gt;
+        ///     The view command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; ViewCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The Event.
+        /// &lt;/summary&gt;
+        public IEvent Event =&gt; Transportation;
+
+        private void removeTransportation()
+        {
+            if (TransportationManager.RemoveTransportation(Transportation.TransportationId).Data)
+                RemoveEvent?.Invoke(this, EventArgs.Empty);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[21,89,22,44,1],[23,9,23,10,1],[24,13,24,33,1],[25,13,25,45,1],[26,13,26,74,1],[27,13,28,17,1],[28,17,28,99,0],[28,99,28,101,1],[29,9,29,10,1],[34,48,34,52,1],[39,62,39,66,1],[39,67,39,71,1],[39,76,39,81,1],[44,60,44,64,1],[54,72,54,76,0],[59,32,59,46,1],[62,9,62,10,1],[63,13,63,98,1],[64,17,64,60,1],[65,9,65,10,1]]);
+    </script>
+  </body>
+</html>

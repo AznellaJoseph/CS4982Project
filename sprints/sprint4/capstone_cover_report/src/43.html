@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Utils\TestGoogleGeocodeService\TestGetLocationByAddress.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace CapstoneTest.BackendTests.Utils.TestGoogleGeocodeService
+{
+    [TestClass]
+    public class TestGetLocationByAddress
+    {
+        [TestMethod]
+        public void GetLocationByAddress_ValidAddress_ReturnsValidLocation()
+        {
+            var locationResult = GoogleGeocodeService.GetLocationByAddress(&quot;Starbucks, South Park Street, Carrollton, GA 30117&quot;);
+
+            Assert.AreEqual(33.5591996, locationResult.Latitude);
+            Assert.AreEqual(-85.0764036, locationResult.Longitude);
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,130,1],[19,13,19,66,1],[20,13,20,68,1],[21,9,21,10,1]]);
+    </script>
+  </body>
+</html>

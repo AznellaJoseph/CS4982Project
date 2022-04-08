@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\EventPage.axaml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using GMap.NET;
+using GMap.NET.Avalonia;
+using GMap.NET.MapProviders;
+using ReactiveUI;
+
+namespace CapstoneDesktop.Views
+{
+
+    /// &lt;summary&gt;
+    ///     User Control for the Event Page Functionality
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;EventPageViewModel&quot; /&gt;
+    public class EventPage : ReactiveUserControl&lt;EventPageViewModel&gt;
+    {
+
+        public GMapControl MainMap { get; set; }
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;EventPage&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public EventPage()
+        {
+            InitializeComponent();
+
+
+        }
+
+        private void InitializeComponent()
+        {
+            this.WhenActivated(disposables =&gt;
+            {
+                EventPageViewModel? viewModel = (EventPageViewModel?)DataContext;
+                if (viewModel?.Event is Waypoint waypoint)
+                {
+                    MainMap = new GMapControl();
+                    var container = this.Get&lt;Panel&gt;(&quot;MapContainer&quot;);
+                    container.Children.Add(MainMap);
+                    GoogleMapProvider.Instance.ApiKey = &quot;AIzaSyARhel5-jZFkChP1uASkhk0G7qYc5cRiWA&quot;;
+                    MainMap.MapProvider = GMapProviders.GoogleMap;
+                    var result = GoogleGeocodeService.GetLocationByAddress(waypoint.Location);
+                    MainMap.Position = new PointLatLng(result.Latitude, result.Longitude);
+                    MainMap.FillEmptyTiles = true;
+                }
+            });
+            AvaloniaXamlLoader.Load(this);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[22,38,22,42,0],[22,43,22,47,0],[26,9,26,27,0],[27,9,27,10,0],[28,13,28,35,0],[31,9,31,10,0],[34,9,34,10,0],[35,13,36,13,0],[36,13,36,14,0],[36,14,37,17,0],[37,17,37,82,0],[37,82,38,17,0],[38,17,38,59,0],[38,59,39,17,0],[39,17,39,18,0],[39,18,40,21,0],[40,21,40,49,0],[40,49,41,21,0],[41,21,41,69,0],[41,69,42,21,0],[42,21,42,53,0],[42,53,43,21,0],[43,21,43,99,0],[43,99,44,21,0],[44,21,44,67,0],[44,67,45,21,0],[45,21,45,95,0],[45,95,46,21,0],[46,21,46,91,0],[46,91,47,21,0],[47,21,47,51,0],[47,51,48,17,0],[48,17,48,18,0],[48,18,49,13,0],[49,13,49,14,0],[49,14,49,16,0],[50,13,50,43,0],[51,9,51,10,0]]);
+    </script>
+  </body>
+</html>
