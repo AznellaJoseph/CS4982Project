@@ -50,6 +50,6 @@ namespace CapstoneBackend.Model
         /// <summary>
         ///     The display name.
         /// </summary>
-        public string DisplayName => Location;
+        public string DisplayName => Location[..Location.IndexOf(",", StringComparison.Ordinal)];
     }
 }
