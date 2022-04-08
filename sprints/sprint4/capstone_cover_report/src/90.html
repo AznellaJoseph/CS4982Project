@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\Transportation.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A model class for the Transportation object
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneBackend.Model.IEvent&quot; /&gt;
+    public class Transportation : IEvent
+    {
+        /// &lt;summary&gt;
+        ///     The transportation id.
+        /// &lt;/summary&gt;
+        public int TransportationId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The method.
+        /// &lt;/summary&gt;
+        public string Method { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The event type.
+        /// &lt;/summary&gt;
+        public string EventType { get; } = nameof(Transportation);
+
+        /// &lt;summary&gt;
+        ///     The id.
+        /// &lt;/summary&gt;
+        public int Id =&gt; TransportationId;
+
+        /// &lt;summary&gt;
+        ///     The trip id.
+        /// &lt;/summary&gt;
+        public int TripId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTime? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The display name.
+        /// &lt;/summary&gt;
+        public string DisplayName =&gt; Method;
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string Notes { get; set; } = string.Empty;
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,39,14,43,1],[14,44,14,48,1],[19,32,19,36,1],[19,37,19,41,1],[19,46,19,58,1],[24,35,24,39,1],[24,44,24,66,1],[29,26,29,42,1],[34,29,34,33,1],[34,34,34,38,1],[39,37,39,41,1],[39,42,39,46,1],[44,36,44,40,1],[44,41,44,45,1],[49,38,49,44,1],[54,31,54,35,1],[54,36,54,40,1],[54,45,54,57,1]]);
+    </script>
+  </body>
+</html>

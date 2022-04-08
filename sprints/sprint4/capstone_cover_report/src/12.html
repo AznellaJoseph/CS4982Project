@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\WebTests\Pages\TestWaypoint.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Collections.Generic;
+using System.Text;
+using CapstoneBackend.Model;
+using CapstoneWeb.Pages;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.WebTests.Pages
+{
+    [TestClass]
+    public class TestWaypoint
+    {
+        [TestMethod]
+        public void Get_UserIdNotFound_RedirectToIndex()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            session.SetupGet(s =&gt; s.Keys).Returns(new List&lt;string&gt;());
+
+            var page = TestPageBuilder.BuildPage&lt;WaypointModel&gt;(session.Object);
+            var result = page.OnGet(1, 8);
+
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;Index&quot;, redirect.PageName);
+        }
+
+        [TestMethod]
+        public void Get_NonExistingWaypoint_RedirectsToTrip()
+        {
+            var outBytes = Encoding.UTF8.GetBytes(&quot;50&quot;);
+            var session = new Mock&lt;ISession&gt;();
+            session.SetupGet(s =&gt; s.Keys).Returns(new List&lt;string&gt; {&quot;userId&quot;});
+            session.Setup(s =&gt; s.TryGetValue(&quot;userId&quot;, out outBytes)).Returns(true);
+
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            mockWaypointManager.Setup(tm =&gt; tm.GetWaypointById(3))
+                .Returns(new Response&lt;Waypoint&gt; {Data = null});
+
+            var page = TestPageBuilder.BuildPage&lt;WaypointModel&gt;(session.Object);
+            page.WaypointManager = mockWaypointManager.Object;
+
+            var result = page.OnGet(3, 8);
+
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;Trip&quot;, redirect.PageName);
+        }
+
+        [TestMethod]
+        public void Get_TripIdsDoNotMatch_RedirectsToTrip()
+        {
+            var outBytes = Encoding.UTF8.GetBytes(&quot;50&quot;);
+            var session = new Mock&lt;ISession&gt;();
+            session.SetupGet(s =&gt; s.Keys).Returns(new List&lt;string&gt; {&quot;userId&quot;});
+            session.Setup(s =&gt; s.TryGetValue(&quot;userId&quot;, out outBytes)).Returns(true);
+
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            mockWaypointManager.Setup(tm =&gt; tm.GetWaypointById(3))
+                .Returns(new Response&lt;Waypoint&gt; {Data = new Waypoint {TripId = 2}});
+
+            var page = TestPageBuilder.BuildPage&lt;WaypointModel&gt;(session.Object);
+            page.WaypointManager = mockWaypointManager.Object;
+
+            var result = page.OnGet(3, 8);
+
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;Trip&quot;, redirect.PageName);
+        }
+
+        [TestMethod]
+        public void Get_Success_ReturnsPageResult()
+        {
+            var outBytes = Encoding.UTF8.GetBytes(&quot;50&quot;);
+            var session = new Mock&lt;ISession&gt;();
+            session.SetupGet(s =&gt; s.Keys).Returns(new List&lt;string&gt; {&quot;userId&quot;});
+            session.Setup(s =&gt; s.TryGetValue(&quot;userId&quot;, out outBytes)).Returns(true);
+
+
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            mockWaypointManager.Setup(tm =&gt; tm.GetWaypointById(3))
+                .Returns(new Response&lt;Waypoint&gt; {Data = new Waypoint {TripId = 8}});
+
+            var page = TestPageBuilder.BuildPage&lt;WaypointModel&gt;(session.Object);
+            page.WaypointManager = mockWaypointManager.Object;
+
+            var result = page.OnGet(3, 8);
+
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.IsNotNull(page.CurrentWaypoint);
+        }
+
+        [TestMethod]
+        public void PostBack_RedirectsToTrip()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            session.SetupGet(s =&gt; s.Keys).Returns(new List&lt;string&gt; {&quot;userId&quot;});
+            var page = TestPageBuilder.BuildPage&lt;WaypointModel&gt;(session.Object);
+
+            var result = page.OnPostBack(0);
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;Trip&quot;, redirect.PageName);
+        }
+
+        [TestMethod]
+        public void PostLogout_RedirectsToIndexWithoutUserId()
+        {
+            var session = new Mock&lt;ISession&gt;();
+            session.SetupGet(s =&gt; s.Keys).Returns(new List&lt;string&gt; {&quot;userId&quot;});
+            var page = TestPageBuilder.BuildPage&lt;WaypointModel&gt;(session.Object);
+
+            var result = page.OnPostLogout();
+            session.Verify(s =&gt; s.Remove(&quot;userId&quot;));
+            Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+
+            var redirect = (RedirectToPageResult) result;
+            Assert.AreEqual(&quot;Index&quot;, redirect.PageName);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,10,1],[19,13,19,48,1],[20,13,20,71,1],[22,13,22,81,1],[23,13,23,43,1],[25,13,25,75,1],[26,13,26,58,1],[27,13,27,57,1],[28,9,28,10,1],[32,9,32,10,1],[33,13,33,57,1],[34,13,34,48,1],[35,13,35,80,1],[36,13,36,85,1],[38,13,38,67,1],[39,13,40,64,1],[42,13,42,81,1],[43,13,43,63,1],[45,13,45,43,1],[47,13,47,75,1],[48,13,48,58,1],[49,13,49,56,1],[50,9,50,10,1],[54,9,54,10,1],[55,13,55,57,1],[56,13,56,48,1],[57,13,57,80,1],[58,13,58,85,1],[60,13,60,67,1],[61,13,62,85,1],[64,13,64,81,1],[65,13,65,63,1],[67,13,67,43,1],[69,13,69,75,1],[70,13,70,58,1],[71,13,71,56,1],[72,9,72,10,1],[76,9,76,10,1],[77,13,77,57,1],[78,13,78,48,1],[79,13,79,80,1],[80,13,80,85,1],[83,13,83,67,1],[84,13,85,85,1],[87,13,87,81,1],[88,13,88,63,1],[90,13,90,43,1],[92,13,92,65,1],[93,13,93,52,1],[94,9,94,10,1],[98,9,98,10,1],[99,13,99,48,1],[100,13,100,80,1],[101,13,101,81,1],[103,13,103,45,1],[104,13,104,75,1],[106,13,106,58,1],[107,13,107,56,1],[108,9,108,10,1],[112,9,112,10,1],[113,13,113,48,1],[114,13,114,80,1],[115,13,115,81,1],[117,13,117,46,1],[118,13,118,53,1],[119,13,119,75,1],[121,13,121,58,1],[122,13,122,57,1],[123,9,123,10,1]]);
+    </script>
+  </body>
+</html>

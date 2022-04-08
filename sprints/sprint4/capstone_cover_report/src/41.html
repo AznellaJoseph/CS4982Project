@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\Converters\TestDateFormatter\TestConvertBack.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Globalization;
+using CapstoneDesktop.Converters;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace CapstoneTest.DesktopTests.Converters.TestDateFormatter
+{
+    [TestClass]
+    public class TestConvertBack
+    {
+        [TestMethod]
+        public void ConvertBack_ThrowsException()
+        {
+            var testFormatter = new DateFormatter();
+
+            Assert.ThrowsException&lt;NotSupportedException&gt;(() =&gt; testFormatter.ConvertBack(&quot;convert&quot;, typeof(DateTime),
+                &quot;String&quot;, CultureInfo.CurrentCulture));
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[13,9,13,10,1],[14,13,14,53,1],[16,13,16,65,1],[16,65,17,54,1],[17,54,17,56,1],[18,9,18,10,1]]);
+    </script>
+  </body>
+</html>

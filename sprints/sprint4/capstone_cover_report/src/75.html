@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\DAL\TestTripDAL\TestGetTripsByUserId.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneTest.BackendTests.DAL.TestTripDAL
+{
+    [TestClass]
+    public class TestGetTripsByUserId
+    {
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testTripId;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _testTripId = new TripDal(_connection).CreateTrip(1, &quot;TestTrip&quot;, &quot;Some Notes&quot;, DateTime.Now, DateTime.Now);
+        }
+
+        [TestMethod]
+        public void CallProcedure_WithInvalidUserId_ReturnsEmpty()
+        {
+            TripDal testDal = new(_connection);
+
+            var resultList = testDal.GetTripsByUserId(-1);
+
+            Assert.AreEqual(0, resultList.Count);
+        }
+
+        [TestMethod]
+        public void CallProcedure_WithValidUserId_Succeeds()
+        {
+            TripDal testDal = new(_connection);
+
+            var resultList = testDal.GetTripsByUserId(1);
+
+            Assert.IsTrue(resultList.Count &gt; 0);
+        }
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            _connection.Open();
+            var query = $&quot;delete from trip where tripId = {_testTripId};&quot;;
+
+            using var cmd = new MySqlCommand(query, _connection);
+            cmd.ExecuteNonQuery();
+            _connection.Close();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[11,9,11,89,1],[16,9,16,10,1],[17,13,17,120,1],[18,9,18,10,1],[22,9,22,10,1],[23,13,23,48,1],[25,13,25,59,1],[27,13,27,50,1],[28,9,28,10,1],[32,9,32,10,1],[33,13,33,48,1],[35,13,35,58,1],[37,13,37,49,1],[38,9,38,10,1],[42,9,42,10,1],[43,13,43,32,1],[44,13,44,75,1],[46,13,46,66,1],[47,13,47,35,1],[48,13,48,33,1],[49,9,49,10,1]]);
+    </script>
+  </body>
+</html>

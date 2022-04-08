@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\DAL\TripDAL.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Data;
+using CapstoneBackend.Model;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneBackend.DAL
+{
+    /// &lt;summary&gt;
+    ///     Data Access Layer (DAL) for accessing Trip information from the database
+    /// &lt;/summary&gt;
+    public class TripDal
+    {
+        private readonly MySqlConnection _connection;
+
+        /// &lt;summary&gt;
+        ///     Creates a TripDal
+        /// &lt;/summary&gt;
+        public TripDal() : this(new MySqlConnection(Connection.ConnectionString))
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Creates a TripDal using a specific connection.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;connection&quot;&gt;a MySQLConnection&lt;/param&gt;
+        public TripDal(MySqlConnection connection)
+        {
+            _connection = connection;
+        }
+
+        /// &lt;summary&gt;Gets the trip by trip identifier.&lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip id.&lt;/param&gt;
+        /// &lt;returns&gt;The trip with the matching id, null if no matching trip found. &lt;/returns&gt;
+        public virtual Trip? GetTripByTripId(int tripId)
+        {
+            _connection.Open();
+            const string query = &quot;uspGetTripByTripId&quot;;
+            using MySqlCommand cmd = new(query, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@tripId&quot;, MySqlDbType.Int32).Value = tripId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var userIdOrdinal = reader.GetOrdinal(&quot;userId&quot;);
+            var nameOrdinal = reader.GetOrdinal(&quot;name&quot;);
+            var notesOrdinal = reader.GetOrdinal(&quot;notes&quot;);
+            var startDateOrdinal = reader.GetOrdinal(&quot;startDate&quot;);
+            var endDateOrdinal = reader.GetOrdinal(&quot;endDate&quot;);
+
+            Trip? trip = null;
+
+            if (reader.Read())
+                trip = new Trip
+                {
+                    TripId = tripId,
+                    UserId = reader.GetInt32(userIdOrdinal),
+                    Name = reader.GetString(nameOrdinal),
+                    Notes = reader.GetString(notesOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal)
+                };
+
+            _connection.Close();
+            return trip;
+        }
+
+
+        /// &lt;summary&gt;
+        ///     Gets trips of the user with the given id.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;userId&quot;&gt;the user&#39;s id&lt;/param&gt;
+        /// &lt;returns&gt;A list of trips of the user with the given id.&lt;/returns&gt;
+        public virtual IList&lt;Trip&gt; GetTripsByUserId(int userId)
+        {
+            _connection.Open();
+            const string query = &quot;uspGetTripsByUserId&quot;;
+            using MySqlCommand cmd = new(query, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(&quot;@userId&quot;, MySqlDbType.Int32).Value = userId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+
+            var idOrdinal = reader.GetOrdinal(&quot;tripId&quot;);
+            var nameOrdinal = reader.GetOrdinal(&quot;name&quot;);
+            var notesOrdinal = reader.GetOrdinal(&quot;notes&quot;);
+            var startDateOrdinal = reader.GetOrdinal(&quot;startDate&quot;);
+            var endDateOrdinal = reader.GetOrdinal(&quot;endDate&quot;);
+
+            IList&lt;Trip&gt; trips = new List&lt;Trip&gt;();
+
+            while (reader.Read())
+                trips.Add(new Trip
+                {
+                    TripId = reader.GetInt32(idOrdinal),
+                    UserId = userId,
+                    Name = reader.GetString(nameOrdinal),
+                    Notes = reader.GetString(notesOrdinal),
+                    StartDate = reader.GetDateTime(startDateOrdinal),
+                    EndDate = reader.GetDateTime(endDateOrdinal)
+                });
+
+            _connection.Close();
+            return trips;
+        }
+
+        /// &lt;summary&gt;
+        ///     Creates a Trip in the database
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;userId&quot;&gt;the userId&lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;the name of the trip&lt;/param&gt;
+        /// &lt;param name=&quot;notes&quot;&gt;the notes of the trip&lt;/param&gt;
+        /// &lt;param name=&quot;startDate&quot;&gt;the start date of the trip&lt;/param&gt;
+        /// &lt;param name=&quot;endDate&quot;&gt;the end date of the trip&lt;/param&gt;
+        /// &lt;returns&gt;The trip id or throws an exception if there was an error&lt;/returns&gt;
+        public virtual int CreateTrip(int userId, string name, string? notes, DateTime startDate, DateTime endDate)
+        {
+            _connection.Open();
+            const string procedure = &quot;uspCreateTrip&quot;;
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(&quot;@userId&quot;, MySqlDbType.Int32).Value = userId;
+            cmd.Parameters.Add(&quot;@notes&quot;, MySqlDbType.VarChar).Value = notes ?? string.Empty;
+            cmd.Parameters.Add(&quot;@name&quot;, MySqlDbType.VarChar).Value = name;
+            cmd.Parameters.Add(&quot;@startDate&quot;, MySqlDbType.Date).Value = startDate;
+            cmd.Parameters.Add(&quot;@endDate&quot;, MySqlDbType.Date).Value = endDate;
+
+            try
+            {
+                var tripId = cmd.ExecuteScalar();
+                _connection.Close();
+                return Convert.ToInt32(tripId);
+            }
+            catch
+            {
+                _connection.Close();
+                throw;
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,28,19,82,1],[20,9,20,10,1],[21,9,21,10,1],[27,9,27,51,1],[28,9,28,10,1],[29,13,29,38,1],[30,9,30,10,1],[36,9,36,10,1],[37,13,37,32,1],[39,13,39,62,1],[40,13,40,59,1],[42,13,42,77,1],[44,13,44,64,1],[45,13,45,61,1],[46,13,46,57,1],[47,13,47,59,1],[48,13,48,67,1],[49,13,49,63,1],[51,13,51,31,1],[53,13,53,31,1],[54,17,62,19,1],[64,13,64,33,1],[65,13,65,25,1],[66,9,66,10,1],[75,9,75,10,1],[76,13,76,32,1],[78,13,78,62,1],[79,13,79,59,1],[80,13,80,77,1],[82,13,82,64,1],[84,13,84,57,1],[85,13,85,57,1],[86,13,86,59,1],[87,13,87,67,1],[88,13,88,63,1],[90,13,90,50,1],[92,13,92,34,1],[93,17,101,20,1],[103,13,103,33,1],[104,13,104,26,1],[105,9,105,10,1],[117,9,117,10,1],[118,13,118,32,1],[120,13,120,66,1],[121,13,121,59,1],[123,13,123,77,1],[124,13,124,93,1],[125,13,125,75,1],[126,13,126,82,1],[127,13,127,78,1],[130,13,130,14,1],[131,17,131,50,1],[132,17,132,37,1],[133,17,133,48,1],[135,13,135,18,1],[136,13,136,14,1],[137,17,137,37,1],[138,17,138,23,1],[140,9,140,10,1]]);
+    </script>
+  </body>
+</html>

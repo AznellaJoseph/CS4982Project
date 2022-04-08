@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\Converters\TestDateFormatter\TestConvert.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Globalization;
+using CapstoneDesktop.Converters;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace CapstoneTest.DesktopTests.Converters.TestDateFormatter
+{
+    [TestClass]
+    public class TestConvert
+    {
+        [TestMethod]
+        public void Convert_NullValue_ReturnsNull()
+        {
+            var testFormatter = new DateFormatter();
+
+            var result = testFormatter.Convert(null, typeof(DateTime), &quot;Both&quot;, CultureInfo.CurrentCulture);
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public void Convert_EnumCannotParseParameter_ReturnsDateToString()
+        {
+            var testFormatter = new DateFormatter();
+
+            var result = testFormatter.Convert(DateTime.Today, typeof(DateTime), &quot;Test&quot;, CultureInfo.CurrentCulture);
+
+            Assert.AreEqual(result, DateTime.Today.ToString(CultureInfo.CurrentCulture));
+        }
+
+        [TestMethod]
+        public void Convert_DateShownBoth_ReturnsDateWithTimeString()
+        {
+            var testFormatter = new DateFormatter();
+            var testDate = DateTime.Parse(&quot;11/12/2013 12:12:12&quot;);
+
+            var result = testFormatter.Convert(testDate, typeof(DateTime), &quot;Both&quot;, new CultureInfo(&quot;en-US&quot;));
+
+            Assert.AreEqual(result, testDate.ToString(&quot;MM/dd/yyyy hh:mm tt&quot;, new CultureInfo(&quot;en-US&quot;)));
+        }
+
+        [TestMethod]
+        public void Convert_DateShownDateOnly_ReturnsDateString()
+        {
+            var testFormatter = new DateFormatter();
+
+            var result = testFormatter.Convert(DateTime.Today, typeof(DateTime), &quot;Date&quot;, CultureInfo.CurrentCulture);
+
+            Assert.AreEqual(result, DateTime.Today.ToString(&quot;MM/dd/yyyy&quot;, CultureInfo.CurrentCulture));
+        }
+
+        [TestMethod]
+        public void Convert_DateShownTimeOnly_ReturnsTimeString()
+        {
+            var testFormatter = new DateFormatter();
+            var testDate = DateTime.Parse(&quot;11/12/2013 12:12:12&quot;);
+
+            var result = testFormatter.Convert(testDate, typeof(DateTime), &quot;Time&quot;, CultureInfo.CurrentCulture);
+
+            Assert.AreEqual(result, testDate.ToString(&quot;hh:mm tt&quot;, CultureInfo.CurrentCulture));
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[13,9,13,10,1],[14,13,14,53,1],[16,13,16,108,1],[18,13,18,35,1],[19,9,19,10,1],[23,9,23,10,1],[24,13,24,53,1],[26,13,26,118,1],[28,13,28,90,1],[29,9,29,10,1],[33,9,33,10,1],[34,13,34,53,1],[35,13,35,66,1],[37,13,37,110,1],[39,13,39,105,1],[40,9,40,10,1],[44,9,44,10,1],[45,13,45,53,1],[47,13,47,118,1],[49,13,49,104,1],[50,9,50,10,1],[54,9,54,10,1],[55,13,55,53,1],[56,13,56,66,1],[58,13,58,112,1],[60,13,60,96,1],[61,9,61,10,1]]);
+    </script>
+  </body>
+</html>

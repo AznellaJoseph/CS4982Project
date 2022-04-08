@@ -6,8 +6,6 @@
     var notesVisible = string.IsNullOrEmpty(Model.CurrentLodging.Notes) ? "hide" : string.Empty;
 }
 
-<body onload="initMap()">
-
 <div class="container landing-page">
 
     <div class="left column">
@@ -42,7 +40,6 @@
     </div>
 
 </div>
-</body>
 @section Scripts {
     <script src="~/js/googleMaps.js"></script>
     <script async

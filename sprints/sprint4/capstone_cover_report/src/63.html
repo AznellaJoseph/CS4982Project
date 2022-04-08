@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestLodgingManager\TestGetLodgingsInTrip.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestLodgingManager
+{
+    [TestClass]
+    public class TestGetLodgingsInTrip
+    {
+        [TestMethod]
+        public void GetLodgingsInTrip_EmptySet_ReturnsEmptyList()
+        {
+            IList&lt;Lodging&gt; fakeLodgings = new List&lt;Lodging&gt;();
+
+            var mockLodgingDal = new Mock&lt;LodgingDal&gt;();
+            mockLodgingDal.Setup(db =&gt; db.GetLodgingsByTripId(1)).Returns(fakeLodgings);
+
+            LodgingManager lodgingManager = new(mockLodgingDal.Object);
+
+            var resultResponse =
+                lodgingManager.GetLodgingsByTripId(1);
+
+            Assert.AreEqual(0, resultResponse.Data?.Count);
+        }
+
+        [TestMethod]
+        public void GetLodgingsInTrip_YieldsSetWithOneValue_ReturnsExpectedList()
+        {
+            IList&lt;Lodging&gt; fakeLodgings = new List&lt;Lodging&gt;
+            {
+                new()
+                {
+                    TripId = 1,
+                    LodgingId = 1,
+                    Location = &quot;Some Hotel&quot;,
+                    StartDate = DateTime.Today,
+                    EndDate = DateTime.Today.AddDays(1),
+                    Notes = &quot;notes&quot;
+                }
+            };
+
+            var mockLodgingDal = new Mock&lt;LodgingDal&gt;();
+            mockLodgingDal.Setup(db =&gt; db.CreateLodging(1, &quot;Some Hotel&quot;, DateTime.Today, DateTime.Today.AddDays(1), &quot;notes&quot;))
+                .Returns(1);
+            mockLodgingDal.Setup(db =&gt; db.GetLodgingsByTripId(1)).Returns(fakeLodgings);
+
+            LodgingManager lodgingManager = new(mockLodgingDal.Object);
+
+            var resultResponse =
+                lodgingManager.GetLodgingsByTripId(1);
+
+            Assert.AreEqual(1, resultResponse.Data?.Count);
+            Assert.AreEqual(1, resultResponse.Data?[0].TripId);
+            Assert.AreEqual(1, resultResponse.Data?[0].LodgingId);
+            Assert.AreEqual(&quot;Some Hotel&quot;, resultResponse.Data?[0].Location);
+            Assert.AreEqual(DateTime.Today, resultResponse.Data?[0].StartDate);
+            Assert.AreEqual(DateTime.Today.AddDays(1), resultResponse.Data?[0].EndDate);
+            Assert.AreEqual(&quot;notes&quot;, resultResponse.Data?[0].Notes);
+        }
+
+        [TestMethod]
+        public void GetLodgingsInTrip_YieldsSetWithMultipleValues_ReturnsExpectedList()
+        {
+            IList&lt;Lodging&gt; fakeLodgings = new List&lt;Lodging&gt;
+            {
+                new()
+                {
+                    TripId = 1,
+                    LodgingId = 1,
+                    Location = &quot;Some Hotel&quot;,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                },
+                new()
+                {
+                    TripId = 1,
+                    LodgingId = 2,
+                    Location = &quot;1602 Maple St&quot;,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                }
+            };
+
+            var mockLodgingDal = new Mock&lt;LodgingDal&gt;();
+            mockLodgingDal.Setup(db =&gt; db.CreateLodging(1, &quot;Some Hotel&quot;, DateTime.Now, DateTime.Now, null))
+                .Returns(1);
+            mockLodgingDal.Setup(db =&gt; db.CreateLodging(1, &quot;1602 Maple St&quot;, DateTime.Now, DateTime.Now, null))
+                .Returns(1);
+            mockLodgingDal.Setup(db =&gt; db.GetLodgingsByTripId(1)).Returns(fakeLodgings);
+
+            LodgingManager lodgingManager = new(mockLodgingDal.Object);
+
+            var resultResponse =
+                lodgingManager.GetLodgingsByTripId(1);
+
+            Assert.AreEqual(2, resultResponse.Data?.Count);
+        }
+
+
+        [TestMethod]
+        public void GetLodgingsInTrip_ServerMySqlException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;LodgingDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockDal.Setup(dal =&gt; dal.GetLodgingsByTripId(1))
+                .Throws(builder.WithError((uint)Ui.StatusCode.InternalServerError, &quot;test&quot;).Build());
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
+            var result = lodgingManager.GetLodgingsByTripId(1);
+
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(&quot;test&quot;, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetLodgingsInTrip_ServerException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;LodgingDal&gt;();
+            mockDal.Setup(dal =&gt; dal.GetLodgingsByTripId(1))
+                .Throws(new Exception());
+
+            LodgingManager lodgingManager = new(mockDal.Object);
+
+            var result = lodgingManager.GetLodgingsByTripId(1);
+
+            Assert.AreEqual((uint)Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, result.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,63,1],[19,13,19,57,1],[20,13,20,89,1],[22,13,22,72,1],[24,13,25,55,1],[27,13,27,60,1],[28,9,28,10,1],[32,9,32,10,1],[33,13,44,15,1],[46,13,46,57,1],[47,13,48,29,1],[49,13,49,89,1],[51,13,51,72,1],[53,13,54,55,1],[56,13,56,60,1],[57,13,57,64,1],[58,13,58,67,1],[59,13,59,77,1],[60,13,60,80,1],[61,13,61,89,1],[62,13,62,69,1],[63,9,63,10,1],[67,9,67,10,1],[68,13,86,15,1],[88,13,88,57,1],[89,13,90,29,1],[91,13,92,29,1],[93,13,93,89,1],[95,13,95,72,1],[97,13,98,55,1],[100,13,100,60,1],[101,9,101,10,1],[106,9,106,10,1],[107,13,107,50,1],[108,13,108,55,1],[109,13,110,101,1],[112,13,112,65,1],[114,13,114,64,1],[116,13,116,89,1],[117,13,117,58,1],[118,9,118,10,1],[122,9,122,10,1],[123,13,123,50,1],[124,13,125,42,1],[127,13,127,65,1],[129,13,129,64,1],[131,13,131,89,1],[132,13,132,88,1],[133,9,133,10,1]]);
+    </script>
+  </body>
+</html>

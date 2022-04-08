@@ -37,7 +37,7 @@
                                 @lodging.StartDate - @lodging.EndDate
                             </div>
                             <div class="name-section">
-                                @lodging.Location
+                                @lodging.Location[..lodging.Location.IndexOf(",", StringComparison.Ordinal)]
                             </div>
 
                             <div class="icon-section">

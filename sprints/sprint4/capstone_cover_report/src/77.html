@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\DAL\TestTransportationDAL\TestGetTransportationById.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneTest.BackendTests.DAL.TestTransportationDAL
+{
+    [TestClass]
+    public class TestGetTransportationById
+    {
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testTransportationId;
+        private int _testTripId;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _testTripId = new TripDal(_connection).CreateTrip(1, &quot;TestTrip&quot;, &quot;Some Notes&quot;, DateTime.Now, DateTime.Now);
+        }
+
+        [TestMethod]
+        public void CallProcedure_WithInvalidTransportationId_ReturnsNull()
+        {
+            TransportationDal testDal = new(_connection);
+
+            var result = testDal.GetTransportationById(-1);
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public void CallProcedure_WithValidTransportationId_ReturnsTransportation()
+        {
+            TransportationDal testDal = new(_connection);
+            _testTransportationId =
+                testDal.CreateTransportation(1, &quot;TestMethod&quot;, DateTime.Now, DateTime.Now, &quot;Some Notes&quot;);
+
+            var result = testDal.GetTransportationById(1);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(Transportation));
+        }
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            _connection.Open();
+            var removeTrip = $&quot;delete from trip where tripId = {_testTripId};&quot;;
+            var removeWaypoint = $&quot;delete from waypoint where waypointId = {_testTransportationId};&quot;;
+
+            using var tripCmd = new MySqlCommand(removeTrip, _connection);
+            tripCmd.ExecuteNonQuery();
+
+            using var waypointCmd = new MySqlCommand(removeWaypoint, _connection);
+            waypointCmd.ExecuteNonQuery();
+
+            _connection.Close();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[12,9,12,89,1],[18,9,18,10,1],[19,13,19,120,1],[20,9,20,10,1],[24,9,24,10,1],[25,13,25,58,1],[27,13,27,60,1],[29,13,29,35,1],[30,9,30,10,1],[34,9,34,10,1],[35,13,35,58,1],[36,13,37,105,1],[39,13,39,59,1],[41,13,41,38,1],[42,13,42,69,1],[43,9,43,10,1],[47,9,47,10,1],[48,13,48,32,1],[49,13,49,80,1],[50,13,50,102,1],[52,13,52,75,1],[53,13,53,39,1],[55,13,55,83,1],[56,13,56,43,1],[58,13,58,33,1],[59,9,59,10,1]]);
+    </script>
+  </body>
+</html>

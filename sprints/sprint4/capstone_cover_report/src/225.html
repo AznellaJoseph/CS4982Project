@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\CreateWaypointPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the CreateWaypoint Page
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class CreateWaypointPageViewModel : ReactiveViewModelBase
+    {
+        private readonly Trip _trip;
+
+        private string _error = string.Empty;
+
+        private string _location = string.Empty;
+
+        private IEnumerable&lt;string&gt; _predictions = new List&lt;string&gt;();
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CreateWaypointPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;trip&quot;&gt;the trip that the waypoint will be created for.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen&lt;/param&gt;
+        public CreateWaypointPageViewModel(Trip trip, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            _trip = trip;
+            HostScreen = screen;
+            CreateWaypointCommand = ReactiveCommand.CreateFromObservable(CreateWaypoint);
+            CancelCreateWaypointCommand =
+                ReactiveCommand.CreateFromObservable(() =&gt; HostScreen.Router.NavigateBack.Execute());
+        }
+
+        /// &lt;summary&gt;
+        ///     The waypoint manager.
+        /// &lt;/summary&gt;
+        public WaypointManager WaypointManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The validation manager.
+        /// &lt;/summary&gt;
+        public ValidationManager ValidationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The create waypoint command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; CreateWaypointCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The cancel create waypoint command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelCreateWaypointCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        public string Location { 
+            get { return _location; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _location, value);
+                UpdateAutoCompleteResultsAsync();
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     List of autocomplete results shown in the dropdown.
+        /// &lt;/summary&gt;
+        public IEnumerable&lt;String&gt; AutocompletePredictions
+        {
+            get { return _predictions; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _predictions, value);
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start time.
+        /// &lt;/summary&gt;
+        public TimeSpan? StartTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end time.
+        /// &lt;/summary&gt;
+        public TimeSpan? EndTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string? Notes { get; set; }
+
+        private async void UpdateAutoCompleteResultsAsync()
+        {
+            this.AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+        }
+
+        private IObservable&lt;IRoutableViewModel&gt; CreateWaypoint()
+        {
+            if (string.IsNullOrEmpty(Location))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyLocation;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (StartDate is null || StartTime is null)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var startDate = StartDate.Value.Date + StartTime.Value;
+
+            var endDate = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
+
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(_trip.TripId, startDate, endDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
+            {
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var clashingEventResponse = ValidationManager.DetermineIfClashingEventExists(_trip.TripId, startDate, endDate);
+
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var resultResponse = WaypointManager.CreateWaypoint(_trip.TripId, Location, startDate,
+                endDate, Notes);
+            if (string.IsNullOrEmpty(resultResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(_trip, HostScreen,
+                    new LodgingManager()));
+
+            ErrorMessage = resultResponse.ErrorMessage;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[25,9,25,46,1],[27,9,27,49,1],[29,9,29,71,1],[36,73,37,44,1],[38,9,38,10,1],[39,13,39,26,1],[40,13,40,33,1],[41,13,41,90,1],[42,13,43,60,1],[43,60,43,100,0],[43,100,43,102,1],[44,9,44,10,1],[49,50,49,54,1],[49,55,49,59,1],[49,64,49,69,1],[54,54,54,58,1],[54,59,54,63,1],[54,68,54,73,1],[59,82,59,86,1],[64,74,64,78,1],[71,20,71,26,1],[72,20,72,64,1],[79,17,79,18,1],[79,19,79,36,1],[79,37,79,38,1],[81,13,81,14,1],[82,17,82,65,1],[83,17,83,50,1],[84,13,84,14,1],[92,17,92,18,1],[92,19,92,39,1],[92,40,92,41,1],[94,13,94,14,1],[95,17,95,68,1],[96,13,96,14,1],[102,44,102,48,1],[102,49,102,53,1],[107,38,107,42,1],[107,43,107,47,1],[112,42,112,46,1],[112,47,112,51,1],[117,36,117,40,1],[117,41,117,45,1],[122,32,122,36,1],[122,37,122,41,1],[125,9,125,10,1],[126,13,126,93,1],[127,9,127,10,1],[130,9,130,10,1],[131,13,131,48,1],[132,13,132,14,1],[133,17,133,63,1],[134,17,134,63,1],[137,13,137,56,1],[138,13,138,14,1],[139,17,139,66,1],[140,17,140,63,1],[143,13,143,68,1],[145,13,145,115,1],[147,13,147,117,1],[149,13,149,72,1],[150,13,150,14,1],[151,17,151,64,1],[152,17,152,63,1],[155,13,155,124,1],[157,13,157,75,1],[158,13,158,14,1],[159,17,159,67,1],[160,17,160,63,1],[163,13,164,33,1],[165,13,165,67,1],[166,17,167,44,0],[169,13,169,56,1],[170,13,170,59,1],[171,9,171,10,1]]);
+    </script>
+  </body>
+</html>

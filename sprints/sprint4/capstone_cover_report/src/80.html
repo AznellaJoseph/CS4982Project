@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\DAL\TestLodgingDAL\TestCreateLodging.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+using System;
+
+namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
+{
+    [TestClass]
+    public class TestCreateLodging
+    {
+        private MySqlConnection _connection;
+        private int testTripId;
+        private int testLodgingId;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _connection = new MySqlConnection(Connection.ConnectionString);
+            testTripId = new TripDal(_connection).CreateTrip(1, &quot;TestTrip&quot;, &quot;Some Notes&quot;, DateTime.Now, DateTime.Now);
+        }
+
+        [TestMethod]
+        public void CallProcedure_WithInvalidTripId_Fails()
+        {
+            LodgingDal testDAL = new(_connection);
+            Assert.ThrowsException&lt;MySqlException&gt;(() =&gt; testDAL.CreateLodging(-1, &quot;TestLocation&quot;, DateTime.Now, DateTime.Now, &quot;Some Notes&quot;));
+        }
+
+        [TestMethod]
+        public void CallProcedure_WithValidInput_Succeeds()
+        {
+            LodgingDal testDAL = new(_connection);
+
+            int? resultID = testDAL.CreateLodging(testTripId, &quot;TestLocation&quot;, DateTime.Now, DateTime.Now, &quot;Some Notes&quot;);
+            testLodgingId = (int) resultID;
+
+            Assert.IsTrue(resultID.HasValue);
+        }
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            _connection.Close();
+            _connection.Open();
+            string removeTrip = $&quot;delete from trip where tripId = {testTripId};&quot;;
+            string removeLodging = $&quot;delete from lodging where lodgingId = {testLodgingId};&quot;;
+
+            using MySqlCommand tripCmd = new MySqlCommand(removeTrip, _connection);
+            tripCmd.ExecuteNonQuery();
+
+            using MySqlCommand lodgingCmd = new MySqlCommand(removeLodging, _connection);
+            lodgingCmd.ExecuteNonQuery();
+
+            this._connection.Close();
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,10,1],[19,13,19,76,1],[20,13,20,119,1],[21,9,21,10,1],[25,9,25,10,1],[26,13,26,51,1],[27,13,27,58,1],[27,58,27,141,1],[27,141,27,143,1],[28,9,28,10,1],[32,9,32,10,1],[33,13,33,51,1],[35,13,35,121,1],[36,13,36,44,1],[38,13,38,46,1],[39,9,39,10,1],[43,9,43,10,1],[44,13,44,33,1],[45,13,45,32,1],[46,13,46,82,1],[47,13,47,94,1],[49,13,49,84,1],[50,13,50,39,1],[52,13,52,90,1],[53,13,53,42,1],[55,13,55,38,1],[56,9,56,10,1]]);
+    </script>
+  </body>
+</html>

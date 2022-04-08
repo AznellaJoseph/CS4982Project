@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\Response.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.Utils;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     Response Class used in the managers to specify the status and error messages of server actions
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name=&quot;T&quot;&gt;&lt;/typeparam&gt;
+    public class Response&lt;T&gt;
+    {
+        /// &lt;summary&gt;
+        ///     The status code of the response
+        /// &lt;/summary&gt;
+        public uint StatusCode { get; set; } = (uint) Ui.StatusCode.Success;
+
+        /// &lt;summary&gt;
+        ///     The data of the response
+        /// &lt;/summary&gt;
+        public T? Data { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The error message of the response
+        /// &lt;/summary&gt;
+        public string? ErrorMessage { get; set; }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,34,14,38,1],[14,39,14,43,1],[14,48,14,76,1],[19,26,19,30,1],[19,31,19,35,1],[24,39,24,43,1],[24,44,24,48,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\LodgingPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Reactive;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the Lodging Page
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ReactiveViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;ReactiveUI.IRoutableViewModel&quot; /&gt;
+    public class LodgingPageViewModel : ReactiveViewModelBase
+    {
+        public Lodging Lodging { get; }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;LodgingPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;lodging&quot;&gt;The selected lodging to view.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public LodgingPageViewModel(Lodging lodging, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            Lodging = lodging;
+            BackCommand = ReactiveCommand.CreateFromObservable(() =&gt; HostScreen.Router.NavigateBack.Execute());
+            LogoutCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
+        }
+
+        /// &lt;summary&gt;
+        ///     The back command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; BackCommand { get; }
+        
+        /// &lt;summary&gt;
+        ///     The logout command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; LogoutCommand { get; }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,34,18,38,0],[25,72,26,44,0],[27,9,27,10,0],[28,13,28,31,0],[29,13,29,70,0],[29,70,29,110,0],[29,110,29,112,0],[30,13,31,17,0],[31,17,31,87,0],[31,87,31,89,0],[32,9,32,10,0],[37,58,37,62,0],[42,74,42,78,0]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestValidationManager\TestDetermineIfClashingTripExists.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestValidationManager
+{
+    [TestClass]
+    public class TestDetermineIfClashingTripExists
+    {
+        [TestMethod]
+        public void FindClashingTrip_UserHasNoTrips_NullClashingTrip()
+        {
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(1)).Returns(new Response&lt;IList&lt;Trip&gt;&gt; {Data = null});
+
+            var validationManager = new ValidationManager {TripManager = mockTripManager.Object};
+
+            var clashingTripResponse = validationManager.DetermineIfClashingTripExists(1, DateTime.Today, DateTime.Today.AddDays(1));
+
+            Assert.IsFalse(clashingTripResponse.Data);
+        }
+
+        [TestMethod]
+        public void FindClashingTrip_NoClashingTrip()
+        {
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(1)).Returns(new Response&lt;IList&lt;Trip&gt;&gt;
+                {Data = new List&lt;Trip&gt; {new() {StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(4)}}});
+
+            var validationManager = new ValidationManager {TripManager = mockTripManager.Object};
+
+            var clashingTripResponse =
+                validationManager.DetermineIfClashingTripExists(1, DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-3));
+
+            Assert.IsFalse(clashingTripResponse.Data);
+        }
+
+        [TestMethod]
+        public void FindClashingTrip_ClashingTripExists_ReturnsErrorMessage()
+        {
+            var mockTripManager = new Mock&lt;TripManager&gt;();
+            mockTripManager.Setup(tm =&gt; tm.GetTripsByUser(1)).Returns(new Response&lt;IList&lt;Trip&gt;&gt;
+                {Data = new List&lt;Trip&gt; {new() {StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(4)}}});
+
+            var validationManager = new ValidationManager {TripManager = mockTripManager.Object};
+
+            var clashingTripResponse =
+                validationManager.DetermineIfClashingTripExists(1, DateTime.Today.AddDays(2), DateTime.Today.AddDays(3));
+
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, clashingTripResponse.StatusCode);
+            Assert.AreEqual(
+                $&quot;{Ui.ErrorMessages.ClashingTripDates} {DateTime.Today.ToShortDateString()} to {DateTime.Today.AddDays(4).ToShortDateString()}.&quot;,
+                clashingTripResponse.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,59,1],[18,13,18,112,1],[20,13,20,98,1],[22,13,22,134,1],[24,13,24,55,1],[25,9,25,10,1],[29,9,29,10,1],[30,13,30,59,1],[31,13,32,116,1],[34,13,34,98,1],[36,13,37,124,1],[39,13,39,55,1],[40,9,40,10,1],[44,9,44,10,1],[45,13,45,59,1],[46,13,47,116,1],[49,13,49,98,1],[51,13,52,122,1],[54,13,54,95,1],[55,13,57,52,1],[58,9,58,10,1]]);
+    </script>
+  </body>
+</html>

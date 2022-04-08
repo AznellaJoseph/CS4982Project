@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestTripManager\TestCreateTrip.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestTripManager
+{
+    [TestClass]
+    public class TestCreateTrip
+    {
+        [TestMethod]
+        public void CreateTrip_StartDateAfterEndDate_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;TripDal&gt;();
+            var tripManager = new TripManager(mockDal.Object);
+
+            var result = tripManager.CreateTrip(1, string.Empty, null, DateTime.Now.AddDays(1), DateTime.Now);
+
+            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, result.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTrip_Success()
+        {
+            var mockDal = new Mock&lt;TripDal&gt;();
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now;
+            mockDal.Setup(dal =&gt; dal.CreateTrip(1, string.Empty, null, startDate, endDate)).Returns(1);
+
+            var tripManager = new TripManager(mockDal.Object);
+
+            var result = tripManager.CreateTrip(1, string.Empty, null, startDate, endDate);
+
+            Assert.AreEqual((uint) Ui.StatusCode.Success, result.StatusCode);
+            Assert.AreEqual(1, result.Data);
+        }
+
+        [TestMethod]
+        public void CreateTrip_ServerMySqlException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;TripDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now;
+            mockDal.Setup(dal =&gt; dal.CreateTrip(1, string.Empty, null, startDate, endDate))
+                .Throws(builder.WithError((uint) Ui.StatusCode.InternalServerError, &quot;test&quot;).Build());
+
+            var tripManager = new TripManager(mockDal.Object);
+
+            var result = tripManager.CreateTrip(1, string.Empty, null, startDate, endDate);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(&quot;test&quot;, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateTrip_ServerException_ReturnsErrorMessage()
+        {
+            var mockDal = new Mock&lt;TripDal&gt;();
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now;
+            mockDal.Setup(dal =&gt; dal.CreateTrip(1, string.Empty, null, startDate, endDate))
+                .Throws(new Exception(&quot;test&quot;));
+
+            var tripManager = new TripManager(mockDal.Object);
+
+            var result = tripManager.CreateTrip(1, string.Empty, null, startDate, endDate);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, result.StatusCode);
+            Assert.AreEqual(&quot;test&quot;, result.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,47,1],[17,13,17,63,1],[19,13,19,111,1],[21,13,21,81,1],[22,13,22,85,1],[23,9,23,10,1],[27,9,27,10,1],[28,13,28,47,1],[29,13,29,42,1],[30,13,30,40,1],[31,13,31,104,1],[33,13,33,63,1],[35,13,35,92,1],[37,13,37,78,1],[38,13,38,45,1],[39,9,39,10,1],[43,9,43,10,1],[44,13,44,47,1],[45,13,45,55,1],[46,13,46,42,1],[47,13,47,40,1],[48,13,49,102,1],[51,13,51,63,1],[53,13,53,92,1],[55,13,55,90,1],[56,13,56,58,1],[57,9,57,10,1],[61,9,61,10,1],[62,13,62,47,1],[63,13,63,42,1],[64,13,64,40,1],[65,13,66,48,1],[68,13,68,63,1],[70,13,70,92,1],[72,13,72,90,1],[73,13,73,58,1],[74,9,74,10,1]]);
+    </script>
+  </body>
+</html>

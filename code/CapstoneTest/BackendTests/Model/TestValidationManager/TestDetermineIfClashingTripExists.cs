@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,7 +21,7 @@ namespace CapstoneTest.BackendTests.Model.TestValidationManager
 
             var clashingTripResponse = validationManager.DetermineIfClashingTripExists(1, DateTime.Today, DateTime.Today.AddDays(1));
 
-            Assert.IsNull(clashingTripResponse.Data);
+            Assert.IsFalse(clashingTripResponse.Data);
         }
 
         [TestMethod]
@@ -35,7 +36,7 @@ namespace CapstoneTest.BackendTests.Model.TestValidationManager
             var clashingTripResponse =
                 validationManager.DetermineIfClashingTripExists(1, DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-3));
 
-            Assert.IsNull(clashingTripResponse.Data);
+            Assert.IsFalse(clashingTripResponse.Data);
         }
 
         [TestMethod]

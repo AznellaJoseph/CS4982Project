@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\ValidationManager.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Linq;
+using CapstoneBackend.Utils;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     ValidationManager to validate trips and event dates
+    /// &lt;/summary&gt;
+    public class ValidationManager
+    {
+        /// &lt;summary&gt;
+        ///     The trip manager.
+        /// &lt;/summary&gt;
+        public TripManager TripManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The event manager.
+        /// &lt;/summary&gt;
+        public EventManager EventManager { get; set; } = new();
+
+
+        /// &lt;summary&gt;
+        ///     Determines if the entered event dates are valid in relation to the trip.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;startDate&quot;&gt;The start date.&lt;/param&gt;
+        /// &lt;param name=&quot;endDate&quot;&gt;The end date.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     A response of true if the dates are valid, or a non-success status code and error message specifying the
+        ///     invalidity
+        /// &lt;/returns&gt;
+        public virtual Response&lt;bool&gt; DetermineIfValidEventDates(int tripId, DateTime startDate, DateTime endDate)
+        {
+            var currentTrip = TripManager.GetTripByTripId(tripId).Data;
+
+            if (currentTrip is null)
+                return new Response&lt;bool&gt;
+                {
+                    ErrorMessage = Ui.ErrorMessages.TripNotFound,
+                    StatusCode = (uint) Ui.StatusCode.DataNotFound
+                };
+
+            if (startDate.CompareTo(currentTrip.StartDate) &lt; 0)
+                return new Response&lt;bool&gt;
+                {
+                    ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate +
+                                   currentTrip.StartDate.ToShortDateString(),
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                };
+
+            if (startDate.CompareTo(currentTrip.EndDate) &gt; 0)
+                return new Response&lt;bool&gt;
+                {
+                    ErrorMessage = Ui.ErrorMessages.EventStartDateAfterTripEndDate +
+                                   currentTrip.EndDate.ToShortDateString(),
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                };
+
+            if (endDate.CompareTo(currentTrip.StartDate) &lt; 0)
+                return new Response&lt;bool&gt;
+                {
+                    ErrorMessage = Ui.ErrorMessages.EventEndDateBeforeTripStartDate +
+                                   currentTrip.StartDate.ToShortDateString(),
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                };
+
+            if (endDate.CompareTo(currentTrip.EndDate) &gt; 0)
+                return new Response&lt;bool&gt;
+                {
+                    ErrorMessage = Ui.ErrorMessages.EventEndDateAfterTripEndDate +
+                                   currentTrip.EndDate.ToShortDateString(),
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                };
+
+            return new Response&lt;bool&gt;
+            {
+                Data = true
+            };
+        }
+
+        /// &lt;summary&gt;
+        ///     Determines if there is a clashing trip with the chosen start and end dates.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;userId&quot;&gt;The user identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;startDate&quot;&gt;The start date.&lt;/param&gt;
+        /// &lt;param name=&quot;endDate&quot;&gt;The end date.&lt;/param&gt;
+        /// &lt;returns&gt; A response of false if a clashing trip does not exist or a non-success code and error message specifying the clashing trip dates.&lt;/returns&gt;
+        public virtual Response&lt;bool&gt; DetermineIfClashingTripExists(int userId, DateTime startDate, DateTime endDate)
+        {
+            var tripDates = Enumerable.Range(0,
+                    (endDate - startDate).Days + 1)
+                .Select(day =&gt; startDate.AddDays(day)).ToList();
+
+            var userTrips = TripManager.GetTripsByUser(userId);
+            if (userTrips.Data == null)
+                return new Response&lt;bool&gt;
+                {
+                    Data = false
+                };
+
+            var clashingTrip = (from tripDate in tripDates
+                from userTrip in userTrips.Data
+                where tripDate &gt;= userTrip.StartDate &amp;&amp; tripDate &lt;= userTrip.EndDate
+                select userTrip).FirstOrDefault();
+
+            if (clashingTrip is null)
+                return new Response&lt;bool&gt;
+                {
+                    Data = false
+                };
+
+            return new Response&lt;bool&gt;
+            {
+                ErrorMessage =
+                    $&quot;{Ui.ErrorMessages.ClashingTripDates} {clashingTrip.StartDate.ToShortDateString()} to {clashingTrip.EndDate.ToShortDateString()}.&quot;,
+                StatusCode = (uint) Ui.StatusCode.BadRequest
+            };
+        }
+
+        /// &lt;summary&gt;
+        ///     Finds the clashing event with the chosen start and end dates.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;startDate&quot;&gt;The start date.&lt;/param&gt;
+        /// &lt;param name=&quot;endDate&quot;&gt;The end date.&lt;/param&gt;
+        /// &lt;returns&gt;A response of false if a clashing event does not exist or a non-success code and error message specifying the clashing event dates.&lt;/returns&gt;
+        public virtual Response&lt;bool&gt; DetermineIfClashingEventExists(int tripId, DateTime startDate, DateTime endDate)
+        {
+            var eventDates = Enumerable.Range(0,
+                    (endDate - startDate).Days + 1)
+                .Select(day =&gt; startDate.AddDays(day)).ToList();
+
+            var clashingEvent = (from eventDate in eventDates
+                select EventManager.GetEventsOnDate(tripId, eventDate).Data
+                into eventsOnDate
+                where eventsOnDate is not null
+                from eventOnDate in eventsOnDate
+                where startDate &gt;= eventOnDate.StartDate &amp;&amp; startDate &lt;= eventOnDate.EndDate ||
+                      endDate &gt;= eventOnDate.StartDate &amp;&amp; endDate &lt;= eventOnDate.EndDate
+                select eventOnDate).FirstOrDefault();
+
+            if (clashingEvent is null)
+                return new Response&lt;bool&gt;
+                {
+                    Data = false
+                };
+
+            return new Response&lt;bool&gt;
+            {
+                ErrorMessage =
+                    $&quot;{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.&quot;,
+                StatusCode = (uint) Ui.StatusCode.BadRequest
+            };
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,42,15,46,1],[15,47,15,51,1],[15,56,15,61,1],[20,44,20,48,1],[20,49,20,53,1],[20,58,20,63,1],[34,9,34,10,1],[35,13,35,72,1],[37,13,37,37,1],[38,17,42,19,1],[44,13,44,64,1],[45,17,50,19,1],[52,13,52,62,1],[53,17,58,19,1],[60,13,60,62,1],[61,17,66,19,1],[68,13,68,60,1],[69,17,74,19,1],[76,13,79,15,1],[80,9,80,10,1],[90,9,90,10,1],[91,13,93,32,1],[93,32,93,54,1],[93,54,93,65,1],[95,13,95,64,1],[96,13,96,40,1],[97,17,100,19,1],[102,13,103,17,1],[103,17,103,34,1],[103,34,103,48,1],[103,48,104,23,1],[104,23,104,85,1],[104,85,105,24,1],[105,24,105,32,1],[105,32,105,51,1],[107,13,107,38,1],[108,17,111,19,1],[113,13,118,15,1],[119,9,119,10,1],[129,9,129,10,1],[130,13,132,32,1],[132,32,132,54,1],[132,54,132,65,1],[134,13,135,24,1],[135,24,135,76,1],[135,76,137,23,1],[137,23,137,47,1],[137,47,138,17,1],[138,17,138,37,1],[138,37,138,49,1],[138,49,139,23,1],[139,23,140,89,1],[140,89,141,24,1],[141,24,141,35,1],[141,35,141,54,1],[143,13,143,39,1],[144,17,147,19,1],[149,13,154,15,1],[155,9,155,10,1]]);
+    </script>
+  </body>
+</html>
