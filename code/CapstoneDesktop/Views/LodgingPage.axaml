@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:CapstoneDesktop.Converters"
+             xmlns:avalonia="clr-namespace:GMap.NET.Avalonia"
+             xmlns:avalonia1="clr-namespace:GMap.NET.Avalonia;assembly=GMap.NET.Avalonia"
+             x:Class="CapstoneDesktop.Views.LodgingPage">
+    <UserControl.Resources>
+        <conv:DateFormatter x:Key="DateFormatter" />
+    </UserControl.Resources>
+    <Grid RowDefinitions="2*,20,Auto,20,3*" ColumnDefinitions="2*,20,3*" Margin="20">
+        <Border Classes="container" Grid.Column="0" Grid.Row="0">
+            <Panel />
+        </Border>
+        <Border Classes="container" Grid.Column="0" Grid.Row="2">
+            <Grid ColumnDefinitions="*,10,*,10,*,10,*">
+                <Button HorizontalAlignment="Stretch" Grid.Column="0">
+                    <TextBlock Classes="dark" Text="PROFILE" TextAlignment="Center" />
+                </Button>
+                <Button HorizontalAlignment="Stretch" Grid.Column="2" Command="{Binding BackCommand}">
+                    <TextBlock Classes="dark" Text="BACK" TextAlignment="Center" />
+                </Button>
+                <Button HorizontalAlignment="Stretch" Grid.Column="4" Command="{Binding LogoutCommand}">
+                    <TextBlock Classes="dark" Text="LOGOUT" TextAlignment="Center" />
+                </Button>
+            </Grid>
+        </Border>
+        <Border Classes="container" Grid.Column="0" Grid.Row="4">
+            <Panel Name="MapContainer" />
+        </Border>
+        <Border Classes="container" Grid.Row="0" Grid.RowSpan="5" Grid.Column="2">
+            <Grid VerticalAlignment="Stretch" RowDefinitions="*,10,*,10,2*">
+                <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Classes="h1 light" Text="{Binding Lodging.Location}"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light" Text="{Binding Lodging.StartDate}"/>
+                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light" Text="-"/>
+                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light" Text="{Binding Lodging.EndDate}"/>
+                </StackPanel>
+                <TextBlock Grid.Row="2" TextAlignment="Left" VerticalAlignment="Center" Classes="light" Text="{Binding Lodging.Notes}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
