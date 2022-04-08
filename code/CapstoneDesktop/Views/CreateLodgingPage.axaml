@@ -12,12 +12,20 @@
 							 Items="{Binding AutocompletePredictions, Mode=TwoWay}"
 							 IsTextCompletionEnabled="True"
 							 FilterMode="None"
+							 DropDownClosed="AutoCompleteBox_OnDropDownClosed"
 							 />
-			<TextBlock Text="LODGING NOTES" />
-			<TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
-                     AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
-
-			<Grid ColumnDefinitions="*,10,*" RowDefinitions="*,10,*">
+			
+            <Grid ColumnDefinitions="*,10,*">
+				<StackPanel Grid.Column="0">
+                    <TextBlock Text="LODGING NOTES" />
+                    <TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
+                             AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
+				</StackPanel>
+                <Panel Grid.Column="2" Name="MapContainer"/>
+            </Grid>
+           
+            
+            <Grid ColumnDefinitions="*,10,*" RowDefinitions="*,10,*">
 				<DatePicker Grid.Column="0" Grid.Row="0" SelectedDate="{Binding StartDate}" Header="START DATE" />
 				<TimePicker Grid.Column="2" Grid.Row="0" SelectedTime="{Binding StartTime}" Header="START TIME" />
 				<DatePicker Grid.Column="0" Grid.Row="2" SelectedDate="{Binding EndDate}" Header="END DATE" />
