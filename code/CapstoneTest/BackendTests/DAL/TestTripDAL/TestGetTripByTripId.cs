@@ -31,7 +31,7 @@ namespace CapstoneTest.BackendTests.DAL.TestTripDAL
             var result = testDal.GetTripByTripId(1);
 
             Assert.IsNotNull(result);
-            Assert.IsTrue(result is Trip);
+            Assert.IsInstanceOfType(result, typeof(Trip));
         }
 
         [TestCleanup]

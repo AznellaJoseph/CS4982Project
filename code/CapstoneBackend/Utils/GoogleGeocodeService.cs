@@ -1,41 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
+﻿using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace CapstoneBackend.Utils
 {
+    /// <summary>
+    /// Utility for calling the Google Geocode API for retrieving longitude and latitude for maps
+    /// </summary>
     public class GoogleGeocodeService
     {
+        private const string Key = "AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4";
 
-        private const string key = "AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4";
+        /// <summary>
+        /// Gets the location by address.
+        /// </summary>
+        /// <param name="address">The address.</param>
+        /// <returns>A location object with the longitude and latitude of the entered address</returns>
+        public static Location GetLocationByAddress(string address)
+        {
+            var addressWithNoSpaces = address.Replace(" ", "+");
+            var apiEndpoint =
+                $"https://maps.googleapis.com/maps/api/geocode/json?address={addressWithNoSpaces}&key={Key}";
+            Location location = new();
+            string response;
+            using (var client = new HttpClient())
+            {
+                response = client.GetStringAsync(apiEndpoint).Result;
+            }
 
+            var result = JsonDocument.Parse(response).RootElement.GetProperty("results")[0].GetProperty("geometry")
+                .GetProperty("location");
+            location.Latitude = result.GetProperty("lat").GetDouble();
+            location.Longitude = result.GetProperty("lng").GetDouble();
+            return location;
+        }
+
+        /// <summary>
+        /// Location object used to store longitudes and latitudes
+        /// </summary>
         public struct Location
         {
             public double Latitude;
             public double Longitude;
-
-        }
-        public static Location GetLocationByAddress(string address)
-        {
-            string addressWithNoSpaces = address.Replace(" ", "+");
-            var apiEndpoint = $"https://maps.googleapis.com/maps/api/geocode/json?address={addressWithNoSpaces}&key={key}";
-            Location location = new();
-            string response;
-            using (var client = new HttpClient())
-            { 
-                response = client.GetStringAsync(apiEndpoint).Result;
-            }
-            var result = JsonDocument.Parse(response).RootElement.GetProperty("results")[0].GetProperty("geometry")
-                                     .GetProperty("location");
-            location.Latitude = result.GetProperty("lat").GetDouble();
-            location.Longitude = result.GetProperty("lng").GetDouble();
-            return location;
         }
     }
 }

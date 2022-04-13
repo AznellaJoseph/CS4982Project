@@ -1,11 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:conv="clr-namespace:CapstoneDesktop.Converters"
-             xmlns:avalonia="clr-namespace:GMap.NET.Avalonia"
-             xmlns:avalonia1="clr-namespace:GMap.NET.Avalonia;assembly=GMap.NET.Avalonia"
              x:Class="CapstoneDesktop.Views.EventPage">
     <UserControl.Resources>
-        <conv:DateFormatter x:Key="DateFormatter" />
     </UserControl.Resources>
     <Grid RowDefinitions="2*,20,Auto,20,3*" ColumnDefinitions="2*,20,3*" Margin="20">
         <Border Classes="container" Grid.Column="0" Grid.Row="0">
@@ -29,13 +25,17 @@
         </Border>
         <Border Classes="container" Grid.Row="0" Grid.RowSpan="5" Grid.Column="2">
             <Grid VerticalAlignment="Stretch" RowDefinitions="*,10,*,10,2*">
-                <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Classes="h1 light" Text="{Binding Event.DisplayName}"/>
+                <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Classes="h1 light"
+                           Text="{Binding Event.DisplayName}" />
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light" Text="{Binding Event.StartDate}"/>
-                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light" Text="-"/>
-                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light" Text="{Binding Event.EndDate}"/>
+                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light"
+                               Text="{Binding Event.StartDate}" />
+                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light" Text="-" />
+                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light"
+                               Text="{Binding Event.EndDate}" />
                 </StackPanel>
-                <TextBlock Grid.Row="2" TextAlignment="Left" VerticalAlignment="Center" Classes="light" Text="{Binding Event.Notes}"/>
+                <TextBlock Grid.Row="2" TextAlignment="Left" VerticalAlignment="Center" Classes="light"
+                           Text="{Binding Event.Notes}" />
             </Grid>
         </Border>
     </Grid>

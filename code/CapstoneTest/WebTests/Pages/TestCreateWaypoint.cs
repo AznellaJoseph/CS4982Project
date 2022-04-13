@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using CapstoneWeb.Pages;
@@ -21,13 +20,13 @@ namespace CapstoneTest.WebTests.Pages
             var fakeWaypointManager = new Mock<WaypointManager>();
             var currentTime = DateTime.Now;
             fakeWaypointManager.Setup(um => um.CreateWaypoint(0, "1601 Maple St", currentTime, currentTime, "notes"))
-                .Returns(new Response<int> { Data = 0 });
+                .Returns(new Response<int> {Data = 0});
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime))
-                .Returns(new Response<bool> { Data = true });
+                .Returns(new Response<bool> {Data = true});
             fakeValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0, currentTime, currentTime))
-                .Returns(new Response<bool> { Data = false });
+                .Returns(new Response<bool> {Data = false});
 
             page.WaypointManager = fakeWaypointManager.Object;
             page.ValidationManager = fakeValidationManager.Object;
@@ -38,7 +37,7 @@ namespace CapstoneTest.WebTests.Pages
             page.EndDate = currentTime;
             var result = page.OnPost(0);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Trip", redirect.PageName);
         }
 
@@ -50,12 +49,13 @@ namespace CapstoneTest.WebTests.Pages
             var currentTime = DateTime.Now;
             fakeWaypointManager.Setup(um =>
                     um.CreateWaypoint(0, "1601 Maple St", currentTime.AddDays(1), currentTime, "notes"))
-                .Returns(new Response<int> { StatusCode = (uint)Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
+                .Returns(new Response<int>
+                    {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime.AddDays(1), currentTime))
-                .Returns(new Response<bool> { Data = true });
+                .Returns(new Response<bool> {Data = true});
             fakeValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0, currentTime.AddDays(1), currentTime))
-                .Returns(new Response<bool> { Data = false });
+                .Returns(new Response<bool> {Data = false});
 
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.WaypointManager = fakeWaypointManager.Object;
@@ -79,7 +79,8 @@ namespace CapstoneTest.WebTests.Pages
 
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime.AddDays(2)))
-                .Returns(new Response<bool> { ErrorMessage = $"{Ui.ErrorMessages.EventStartDateBeforeTripStartDate} {DateTime.Now.AddDays(1)}" });
+                .Returns(new Response<bool>
+                    {ErrorMessage = $"{Ui.ErrorMessages.EventStartDateBeforeTripStartDate} {DateTime.Now.AddDays(1)}"});
 
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.ValidationManager = fakeValidationManager.Object;
@@ -90,7 +91,8 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPost(0);
 
             Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual($"{Ui.ErrorMessages.EventStartDateBeforeTripStartDate} {DateTime.Now.AddDays(1)}", page.ErrorMessage);
+            Assert.AreEqual($"{Ui.ErrorMessages.EventStartDateBeforeTripStartDate} {DateTime.Now.AddDays(1)}",
+                page.ErrorMessage);
         }
 
         [TestMethod]
@@ -101,8 +103,10 @@ namespace CapstoneTest.WebTests.Pages
 
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime.AddDays(2)))
-                .Returns(new Response<bool> { Data = true});
-            fakeValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0, currentTime, currentTime.AddDays(2))).Returns(new Response<bool>{ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}"});
+                .Returns(new Response<bool> {Data = true});
+            fakeValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0, currentTime, currentTime.AddDays(2)))
+                .Returns(new Response<bool>
+                    {ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}"});
 
             var page = TestPageBuilder.BuildPage<CreateWaypointModel>(session.Object);
             page.ValidationManager = fakeValidationManager.Object;
@@ -113,7 +117,8 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPost(0);
 
             Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual($"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Now} {DateTime.Now.AddDays(1)}", page.ErrorMessage);
+            Assert.AreEqual($"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Now} {DateTime.Now.AddDays(1)}",
+                page.ErrorMessage);
         }
 
         [TestMethod]
@@ -125,7 +130,7 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPostCancel(1);
 
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Trip", redirect.PageName);
             Assert.AreEqual(1, redirect.RouteValues["tripId"]);
         }

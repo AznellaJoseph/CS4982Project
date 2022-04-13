@@ -6,9 +6,10 @@ using ReactiveUI;
 namespace CapstoneDesktop.Views
 {
     /// <summary>
-    ///     User Control for the Landing Page Functionality
+    /// User Control for the Landing Page Functionality
     /// </summary>
-    /// <seealso cref="Avalonia.ReactiveUI.ReactiveUserControl&lt;CapstoneDesktop.ViewModels.LandingPageViewModel&gt;" />
+    /// <seealso cref="Avalonia.ReactiveUI.ReactiveUserControl&lt;LandingPageViewModel&gt;" />
+    /// <seealso />
     public class LandingPage : ReactiveUserControl<LandingPageViewModel>
     {
         /// <summary>
@@ -21,7 +22,7 @@ namespace CapstoneDesktop.Views
 
         private void InitializeComponent()
         {
-            this.WhenActivated(disposables => { });
+            this.WhenActivated(_ => { });
             AvaloniaXamlLoader.Load(this);
         }
     }

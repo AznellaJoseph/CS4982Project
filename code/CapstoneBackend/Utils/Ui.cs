@@ -12,7 +12,6 @@
         {
             Success = 200,
             BadRequest = 400,
-            UnauthorizedAccess = 401,
             DataNotFound = 404,
             InternalServerError = 500
         }

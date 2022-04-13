@@ -206,7 +206,7 @@ namespace CapstoneTest.WebTests.Pages
         {
             var session = new Mock<ISession>();
             var page = TestPageBuilder.BuildPage<TripModel>(session.Object);
-            ;
+            
             var result = page.OnGetViewTransportation(1, 1);
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
             var redirect = (RedirectToPageResult) result;

@@ -16,11 +16,13 @@
     background-color: var(--vanilla-calendar-bg-color);
     border-radius: var(--vanilla-calendar-border-radius);
     border: solid 1px var(--vanilla-calendar-border-color);
+    box-shadow: 0 4px 22px 0 #000000;
     box-shadow: 0 4px 22px 0 rgba(0, 0, 0, 0.05);
     margin: 0 auto;
     overflow: hidden;
     width: 350px;
 }
+
 @media (max-width:1200px) {
     .vanilla-calendar {
         width: auto;
