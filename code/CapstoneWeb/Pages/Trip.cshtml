@@ -12,7 +12,8 @@
 
 <div class="container trip-overview">
 
-    <div class="panel">
+    <div class="trip-panel">
+        <img  src="~/png/waypointz_logo.png" alt="logo of application" />
         <h1>@Model.CurrentTrip.Name</h1>
     </div>
 
@@ -42,12 +43,16 @@
 
                             <div class="icon-section">
                                 <form method="post">
-                                    <button type="submit" asp-page-handler="RemoveLodging">Remove</button>
+                                    <button type="submit" asp-page-handler="RemoveLodging">
+                                        <img src="~/png/remove_icon.png" alt="Remove"/>
+                                    </button>
                                     <input type="hidden" name="id" value="@lodging.LodgingId"/>
                                     <input type="hidden" name="tripId" value="@lodging.TripId"/>
                                 </form>
                             </div>
-                            <a asp-page="/lodging" asp-route-id="@lodging.LodgingId" asp-route-tripId="@lodging.TripId">View</a>
+                            <a asp-page="/lodging" asp-route-id="@lodging.LodgingId" asp-route-tripId="@lodging.TripId">
+                                <img src="~/png/view_icon.png" alt="View"/>
+                            </a>
                         </div>
                     }
                 </div>
