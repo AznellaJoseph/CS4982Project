@@ -122,17 +122,9 @@ namespace CapstoneBackend.DAL
 
             cmd.Parameters.Add("@waypointId", MySqlDbType.Int32).Value = waypointId;
 
-            try
-            {
-                var result = cmd.ExecuteNonQuery();
-                _connection.Close();
-                return result == 1;
-            }
-            catch
-            {
-                _connection.Close();
-                throw;
-            }
+            var result = cmd.ExecuteNonQuery();
+            _connection.Close();
+            return result == 1;
         }
 
         /// <summary>
