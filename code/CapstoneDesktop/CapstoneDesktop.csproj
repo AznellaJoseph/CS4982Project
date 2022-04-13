@@ -7,6 +7,7 @@
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
         <None Remove=".gitignore" />
+        <None Remove="Assets\waypointz_logo.png" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.10.10" />

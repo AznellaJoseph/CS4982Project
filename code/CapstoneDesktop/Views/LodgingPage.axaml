@@ -5,8 +5,14 @@
     </UserControl.Resources>
     <Grid RowDefinitions="2*,20,Auto,20,3*" ColumnDefinitions="2*,20,3*" Margin="20">
         <Border Classes="container" Grid.Column="0" Grid.Row="0">
-            <Panel />
-        </Border>
+            <Panel Height="265" >
+                <Canvas Height="265" Margin="15" >
+                    <Grid ColumnDefinitions="Auto,25,Auto" RowDefinitions="265">
+                        <TextBlock Grid.Column="2" Classes="logoText" TextAlignment="Center" VerticalAlignment="Center">WAYPOINTZ</TextBlock>
+                        <Image Grid.Column="0" Source="../Assets/waypointz_logo.png"></Image>
+                    </Grid>
+                </Canvas>
+            </Panel>        </Border>
         <Border Classes="container" Grid.Column="0" Grid.Row="2">
             <Grid ColumnDefinitions="*,10,*,10,*,10,*">
                 <Button HorizontalAlignment="Stretch" Grid.Column="0">
