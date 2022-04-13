@@ -7,6 +7,8 @@
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
         <None Remove=".gitignore" />
+        <None Remove="Assets\remove_icon.png" />
+        <None Remove="Assets\view_icon.png" />
         <None Remove="Assets\waypointz_logo.png" />
     </ItemGroup>
     <ItemGroup>
