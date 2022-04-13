@@ -36,5 +36,10 @@ namespace CapstoneBackend.Model
         ///     The notes.
         /// </summary>
         public string Notes { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     The display name.
+        /// </summary>
+        public string DisplayName => Location[..Location.IndexOf(",", StringComparison.Ordinal)];
     }
 }

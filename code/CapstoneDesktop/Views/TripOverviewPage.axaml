@@ -44,7 +44,7 @@
 									<TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Lodging.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
 									<TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
 									<TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Lodging.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
-									<TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Lodging.Location}"/>
+									<TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Lodging.DisplayName}"/>
 									<StackPanel Grid.Column="8" Spacing="5">
                                         <Button Command="{Binding ViewCommand}">VIEW</Button>
                                         <Button Command="{Binding RemoveCommand}">X</Button>
