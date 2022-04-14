@@ -49,6 +49,9 @@
 									<TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Lodging.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
 									<TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Lodging.DisplayName}"/>
 									<StackPanel Grid.Column="8" Spacing="5" Orientation="Horizontal">
+                                        <Button Command="{Binding EditCommand}" Width="35" Height="35">
+                                            <Image Source="../Assets/edit_icon.png"/>
+                                        </Button>
 										<Button Command="{Binding ViewCommand}" Width="35" Height="35">
 											<Image Source="../Assets/view_icon.png"/>
 										</Button>
@@ -91,6 +94,9 @@
 									<TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
 									<TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Event.DisplayName}"/>
 									<StackPanel Grid.Column="8" Spacing="5" Orientation="Horizontal">
+                                        <Button Command="{Binding EditCommand}" Width="35" Height="35">
+                                            <Image Source="../Assets/edit_icon.png"/>
+                                        </Button>
 										<Button Command="{Binding ViewCommand}" Width="35" Height="35">
 											<Image Source="../Assets/view_icon.png"/>
 										</Button>

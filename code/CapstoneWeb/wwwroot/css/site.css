@@ -364,10 +364,6 @@ label {
     padding: 1%;
 }
 
-img[alt="View"] {
+img[alt="Remove"], img[alt="Edit"], img[alt="View"], button img[alt="Remove"], a img[alt="Edit"], a img[alt="View"] {
     height: 30%;
-}
-
-img[alt="Remove"] {
-    height: 20%;
 }

@@ -43,6 +43,9 @@
 
                             <div class="icon-section">
                                 <form method="post">
+                                    <a asp-page="/lodging" asp-route-id="@lodging.LodgingId" asp-route-tripId="@lodging.TripId">
+                                        <img src="~/png/edit_icon.png" alt="Edit"/>
+                                    </a>
                                     <button type="submit" asp-page-handler="RemoveLodging">
                                         <img src="~/png/remove_icon.png" alt="Remove"/>
                                     </button>

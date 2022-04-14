@@ -23,6 +23,8 @@ namespace CapstoneDesktop.ViewModels
             RemoveCommand = ReactiveCommand.Create(removeLodging);
             ViewCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new LodgingPageViewModel(lodging, screen)));
+            EditCommand = ReactiveCommand.CreateFromObservable(() =>
+                HostScreen.Router.Navigate.Execute(new LodgingPageViewModel(lodging, screen)));
         }
 
         /// <summary>
@@ -45,7 +47,15 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public event EventHandler<EventArgs>? RemoveEvent;
 
+        /// <summary>
+        ///     The view command.
+        /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> ViewCommand { get; }
+
+        /// <summary>
+        ///     The edit command.
+        /// </summary>
+        public ReactiveCommand<Unit, IRoutableViewModel> EditCommand { get; }
 
         private void removeLodging()
         {

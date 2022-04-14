@@ -6,7 +6,7 @@ namespace CapstoneDesktop.ViewModels
     ///     IEventViewModel for the ViewModels that make use of the EventManager and Event Models
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.IRemovable" />
-    public interface IEventViewModel : IRemovable, IViewable
+    public interface IEventViewModel : IRemovable, IViewable, IEditable
     {
         /// <summary>
         ///     The event.
