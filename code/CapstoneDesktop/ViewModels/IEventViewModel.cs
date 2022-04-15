@@ -1,3 +1,4 @@
+using Avalonia.Media.Imaging;
 using CapstoneBackend.Model;
 
 namespace CapstoneDesktop.ViewModels
@@ -12,5 +13,10 @@ namespace CapstoneDesktop.ViewModels
         ///     The event.
         /// </summary>
         public IEvent Event { get; }
+
+        /// <summary>
+        ///     The image path.
+        /// </summary>
+        public string ImagePath { get; }
     }
 }

@@ -9,8 +9,10 @@
         <None Remove=".gitignore" />
         <None Remove="Assets\edit_icon.png" />
         <None Remove="Assets\remove_icon.png" />
+        <None Remove="Assets\transportation_icon.png" />
         <None Remove="Assets\view_icon.png" />
         <None Remove="Assets\waypointz_logo.png" />
+        <None Remove="Assets\waypoint_icon.png" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.10.10" />

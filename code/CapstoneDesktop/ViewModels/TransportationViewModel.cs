@@ -1,5 +1,8 @@
 using System;
 using System.Reactive;
+using Avalonia;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using CapstoneBackend.Model;
 using ReactiveUI;
 
@@ -64,6 +67,11 @@ namespace CapstoneDesktop.ViewModels
         ///     The Event.
         /// </summary>
         public IEvent Event => Transportation;
+
+        /// <summary>
+        ///     The image path.
+        /// </summary>
+        public string ImagePath => "../Assets/transportation_icon.png";
 
         private void removeTransportation()
         {

@@ -3,14 +3,14 @@
              xmlns:conv="clr-namespace:CapstoneDesktop.Converters"
              x:Class="CapstoneDesktop.Views.TripOverviewPage">
 	<UserControl.Resources>
-		<conv:DateFormatter x:Key="DateFormatter" />
+        <conv:DateFormatter x:Key="DateFormatter" />
 	</UserControl.Resources>
 	<Grid RowDefinitions="Auto,20,Auto,20,Auto,*,*" ColumnDefinitions="2*,20,3*" Margin="20">
 		<Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 				<Image Source="../Assets/waypointz_logo.png" Height="40"/>
 				<TextBlock Classes="h1" Text="{Binding Trip.Name}" TextAlignment="Center" />
-            </StackPanel>
+			</StackPanel>
 		</Border>
 		<Border Classes="container" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
 			<Grid ColumnDefinitions="*,10,*,10,*">
@@ -49,12 +49,13 @@
 									<TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Lodging.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
 									<TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Lodging.DisplayName}"/>
 									<StackPanel Grid.Column="8" Spacing="5" Orientation="Horizontal">
-                                        <Button Command="{Binding EditCommand}" Width="35" Height="35">
-                                            <Image Source="../Assets/edit_icon.png"/>
-                                        </Button>
 										<Button Command="{Binding ViewCommand}" Width="35" Height="35">
 											<Image Source="../Assets/view_icon.png"/>
 										</Button>
+										<Button Command="{Binding EditCommand}" Width="35" Height="35">
+											<Image Source="../Assets/edit_icon.png"/>
+										</Button>
+
 										<Button Command="{Binding RemoveCommand}" Width="35" Height="35">
 											<Image Source="../Assets/remove_icon.png"/>
 										</Button>
@@ -88,17 +89,18 @@
 						</ItemsControl.ItemsPanel>
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
-								<Grid ColumnDefinitions="*,5,Auto,5,*,10,3*,Auto,*">
-									<TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
-									<TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
-									<TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
-									<TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Event.DisplayName}"/>
-									<StackPanel Grid.Column="8" Spacing="5" Orientation="Horizontal">
-                                        <Button Command="{Binding EditCommand}" Width="35" Height="35">
-                                            <Image Source="../Assets/edit_icon.png"/>
-                                        </Button>
+								<Grid ColumnDefinitions="Auto,*,5,Auto,5,*,10,3*,Auto,*">
+										<Image Grid.Column="0" Source="{Binding Event.ImagePath}"/>
+									<TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
+									<TextBlock Grid.Column="3" TextAlignment="Center" Text="-"/>
+									<TextBlock Grid.Column="5" TextAlignment="Center" Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
+									<TextBlock Grid.Column="7" TextAlignment="Center" Text="{Binding Event.DisplayName}"/>
+									<StackPanel Grid.Column="9" Spacing="5" Orientation="Horizontal">
 										<Button Command="{Binding ViewCommand}" Width="35" Height="35">
 											<Image Source="../Assets/view_icon.png"/>
+										</Button>
+										<Button Command="{Binding EditCommand}" Width="35" Height="35">
+											<Image Source="../Assets/edit_icon.png"/>
 										</Button>
 										<Button Command="{Binding RemoveCommand}" Width="35" Height="35">
 											<Image Source="../Assets/remove_icon.png"/>

@@ -44,18 +44,19 @@
                             <div class="icon-section">
                                 <form method="post">
                                     <a asp-page="/lodging" asp-route-id="@lodging.LodgingId" asp-route-tripId="@lodging.TripId">
-                                        <img src="~/png/edit_icon.png" alt="Edit"/>
+                                        <img src="~/png/view_icon.png" alt="View" />
+                                    </a>
+                                    <a asp-page="/lodging" asp-route-id="@lodging.LodgingId" asp-route-tripId="@lodging.TripId">
+                                        <img src="~/png/edit_icon.png" alt="Edit" />
                                     </a>
                                     <button type="submit" asp-page-handler="RemoveLodging">
-                                        <img src="~/png/remove_icon.png" alt="Remove"/>
+                                        <img src="~/png/remove_icon.png" alt="Remove" />
                                     </button>
-                                    <input type="hidden" name="id" value="@lodging.LodgingId"/>
-                                    <input type="hidden" name="tripId" value="@lodging.TripId"/>
+                                    <input type="hidden" name="id" value="@lodging.LodgingId" />
+                                    <input type="hidden" name="tripId" value="@lodging.TripId" />
                                 </form>
                             </div>
-                            <a asp-page="/lodging" asp-route-id="@lodging.LodgingId" asp-route-tripId="@lodging.TripId">
-                                <img src="~/png/view_icon.png" alt="View"/>
-                            </a>
+
                         </div>
                     }
                 </div>
