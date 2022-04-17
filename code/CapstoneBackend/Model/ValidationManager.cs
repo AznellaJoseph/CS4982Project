@@ -153,5 +153,35 @@ namespace CapstoneBackend.Model
                 StatusCode = (uint) Ui.StatusCode.BadRequest
             };
         }
+
+        /// <summary>
+        ///     Determines if the input is a valid location based on the Google Place Search.
+        /// </summary>
+        /// <param name="locationInput">
+        ///     The location input to validate.
+        /// </param>
+        /// <returns>
+        ///     Success Response if valid, Error Response if invalid
+        /// </returns>
+        public virtual Response<bool> DetermineIfValidLocation(string locationInput)
+        {
+            bool isValid = GooglePlacesService.IsLocationValid(locationInput).Result;
+
+            if (isValid)
+            {
+                return new Response<bool>
+                {
+                    Data = true
+                };
+            }
+            else
+            {
+                return new Response<bool>
+                {
+                    ErrorMessage = Ui.ErrorMessages.InvalidLocation,
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                };
+            }
+        }
     }
 }
