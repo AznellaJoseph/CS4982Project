@@ -47,6 +47,16 @@ namespace CapstoneBackend.Utils
         }
 
 
+        /// <summary>
+        ///     Determines whether the specified search text is a valid location according to 
+        ///     the Google Place Search API.
+        /// </summary>
+        /// <param name="searchText">
+        ///     The input text.
+        /// </param>
+        /// <returns>
+        ///   <c>true</c> if location is valid, otherwise, <c>false</c>.
+        /// </returns>
         public static async Task<bool> IsLocationValid(string searchText)
         {
             var apiEndpoint = $"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={searchText}&inputtype=textquery&key={key}";
