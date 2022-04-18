@@ -19,6 +19,13 @@
     width: auto;
 }
 
+.icon-section form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-self: center;
+}
+
 .logo {
     align-self: center;
     height: 40%;
