@@ -1,12 +1,13 @@
 ﻿using System;
 using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 
 namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
 {
     [TestClass]
-    public class TestGetLodgingsByTripId
+    public class TestGetLodgingById
     {
         private readonly MySqlConnection _connection = new(Connection.ConnectionString);
         private int _testLodgingId;
@@ -15,30 +16,30 @@ namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
         [TestInitialize]
         public void Setup()
         {
-            _testTripId =
-                new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now.AddDays(7));
-            _testLodgingId = new LodgingDal(_connection).CreateLodging(_testTripId, "TestLocation",
-                DateTime.Now.AddDays(2), DateTime.Now.AddDays(7), "SomeNotes");
+            _testTripId = new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now);
         }
 
         [TestMethod]
-        public void CallProcedure_InvalidTripId_ReturnsEmpty()
+        public void CallProcedure_WithInvalidLodgingId_ReturnsNull()
         {
             LodgingDal testDal = new(_connection);
 
-            var result = testDal.GetLodgingsByTripId(-1);
+            var result = testDal.GetLodgingById(-1);
 
-            Assert.AreEqual(0, result.Count);
+            Assert.IsNull(result);
         }
 
         [TestMethod]
-        public void CallProcedure_ValidTripWithLodging_ReturnsList()
+        public void CallProcedure_WithValidLodgingId_ReturnsLodging()
         {
             LodgingDal testDal = new(_connection);
+            _testLodgingId =
+                testDal.CreateLodging(1, "TestMethod", DateTime.Now, DateTime.Now, "Some Notes");
 
-            var result = testDal.GetLodgingsByTripId(_testTripId);
+            var result = testDal.GetLodgingById(1);
 
-            Assert.AreEqual(1, result.Count);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(Lodging));
         }
 
         [TestCleanup]

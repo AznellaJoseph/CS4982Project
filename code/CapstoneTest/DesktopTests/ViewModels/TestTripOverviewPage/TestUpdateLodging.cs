@@ -14,7 +14,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
         [TestMethod]
         public void UpdateLodgings_ValidData_Success()
         {
-            var startDate = DateTime.Now;
             var mockTrip = new Mock<Trip>();
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();
@@ -39,7 +38,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTripOverviewPage
         [TestMethod]
         public void UpdateLodgings_NullData_EmptyLodgingList()
         {
-            var startDate = DateTime.Now;
             var mockTrip = new Mock<Trip>();
             mockTrip.SetupGet(mt => mt.TripId).Returns(1);
             var mockScreen = new Mock<IScreen>();

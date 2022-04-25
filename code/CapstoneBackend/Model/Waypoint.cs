@@ -20,7 +20,7 @@ namespace CapstoneBackend.Model
         /// <summary>
         ///     The event type.
         /// </summary>
-        public string EventType { get; } = nameof(Waypoint);
+        public string EventType => nameof(Waypoint);
 
         /// <summary>
         ///     The id.

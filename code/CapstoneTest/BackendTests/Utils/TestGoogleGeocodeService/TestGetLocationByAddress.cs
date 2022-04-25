@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CapstoneBackend.Utils;
+﻿using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CapstoneTest.BackendTests.Utils.TestGoogleGeocodeService
@@ -14,7 +9,8 @@ namespace CapstoneTest.BackendTests.Utils.TestGoogleGeocodeService
         [TestMethod]
         public void GetLocationByAddress_ValidAddress_ReturnsValidLocation()
         {
-            var locationResult = GoogleGeocodeService.GetLocationByAddress("Starbucks, South Park Street, Carrollton, GA 30117");
+            var locationResult =
+                GoogleGeocodeService.GetLocationByAddress("Starbucks, South Park Street, Carrollton, GA 30117");
 
             Assert.AreEqual(33.5591996, locationResult.Latitude);
             Assert.AreEqual(-85.0764036, locationResult.Longitude);

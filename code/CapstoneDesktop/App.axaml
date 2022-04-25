@@ -67,6 +67,10 @@
             <Setter Property="FontSize" Value="24" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
+        <Style Selector="TextBlock.logoText">
+            <Setter Property="FontSize" Value="42" />
+            <Setter Property="FontWeight" Value="ExtraBold" />
+        </Style>
         <Style Selector="Calendar CalendarDayButton:blackout">
             <Setter Property="Background" Value="{StaticResource ThemeControlBrush}" />
         </Style>

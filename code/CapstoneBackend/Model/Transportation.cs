@@ -21,7 +21,7 @@ namespace CapstoneBackend.Model
         /// <summary>
         ///     The event type.
         /// </summary>
-        public string EventType { get; } = nameof(Transportation);
+        public string EventType => nameof(Transportation);
 
         /// <summary>
         ///     The id.

@@ -21,6 +21,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestWaypoint
             Assert.IsNotNull(waypointViewModel.WaypointManager);
             Assert.IsNotNull(waypointViewModel.RemoveCommand);
             Assert.IsNotNull(waypointViewModel.HostScreen);
+            Assert.IsNotNull(waypointViewModel.ViewCommand);
         }
     }
 }

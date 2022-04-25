@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Reactive;
 using CapstoneBackend.Model;
 using ReactiveUI;
@@ -15,8 +13,6 @@ namespace CapstoneDesktop.ViewModels
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />
     public class LodgingPageViewModel : ReactiveViewModelBase
     {
-        public Lodging Lodging { get; }
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="LodgingPageViewModel" /> class.
         /// </summary>
@@ -31,11 +27,13 @@ namespace CapstoneDesktop.ViewModels
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
         }
 
+        public Lodging Lodging { get; }
+
         /// <summary>
         ///     The back command
         /// </summary>
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
-        
+
         /// <summary>
         ///     The logout command
         /// </summary>

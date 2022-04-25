@@ -1,31 +1,29 @@
-﻿using CapstoneBackend.DAL;
-using CapstoneBackend.Model;
+﻿using System;
+using CapstoneBackend.DAL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
-using System;
 
 namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
 {
     [TestClass]
     public class TestRemoveLodging
     {
-        private MySqlConnection _connection;
-        private int testTripId;
-        private int testLodgingId;
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testLodgingId;
+        private int _testTripId;
 
         [TestInitialize]
         public void Setup()
         {
-            _connection = new MySqlConnection(Connection.ConnectionString);
-            testTripId = new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now);
+            _testTripId = new TripDal(_connection).CreateTrip(1, "TestTrip", "Some Notes", DateTime.Now, DateTime.Now);
         }
 
         [TestMethod]
         public void CallProcedure_WithInvalidLodgingId_ReturnsFalse()
         {
-            LodgingDal testDAL = new(_connection);
+            LodgingDal testDal = new(_connection);
 
-            bool result = testDAL.RemoveLodging(-1);
+            var result = testDal.RemoveLodging(-1);
 
             Assert.IsFalse(result);
         }
@@ -33,10 +31,10 @@ namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
         [TestMethod]
         public void CallProcedure_WithValidLodgingId_ReturnsTrue()
         {
-            LodgingDal testDAL = new(_connection);
-            testLodgingId = testDAL.CreateLodging(1, "TestLocation", DateTime.Now, DateTime.Now, "Some Notes");
+            LodgingDal testDal = new(_connection);
+            _testLodgingId = testDal.CreateLodging(1, "TestLocation", DateTime.Now, DateTime.Now, "Some Notes");
 
-            bool result = testDAL.RemoveLodging(testLodgingId);
+            var result = testDal.RemoveLodging(_testLodgingId);
 
             Assert.IsTrue(result);
         }
@@ -46,16 +44,16 @@ namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
         {
             _connection.Close();
             _connection.Open();
-            string removeTrip = $"delete from trip where tripId = {testTripId};";
-            string removeLodging = $"delete from lodging where lodgingId = {testLodgingId};";
+            var removeTrip = $"delete from trip where tripId = {_testTripId};";
+            var removeLodging = $"delete from lodging where lodgingId = {_testLodgingId};";
 
-            using MySqlCommand tripCmd = new MySqlCommand(removeTrip, _connection);
+            using var tripCmd = new MySqlCommand(removeTrip, _connection);
             tripCmd.ExecuteNonQuery();
 
-            using MySqlCommand lodgingCmd = new MySqlCommand(removeLodging, _connection);
+            using var lodgingCmd = new MySqlCommand(removeLodging, _connection);
             lodgingCmd.ExecuteNonQuery();
 
-            this._connection.Close();
+            _connection.Close();
         }
     }
 }

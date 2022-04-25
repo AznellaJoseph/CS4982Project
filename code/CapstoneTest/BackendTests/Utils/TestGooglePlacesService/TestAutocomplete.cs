@@ -1,8 +1,6 @@
-﻿using CapstoneBackend.Utils;
+﻿using System.Collections;
+using CapstoneBackend.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using ReactiveUI;
-using System.Collections;
 
 namespace CapstoneTest.BackendTests.Utils.TestGooglePlacesService
 {
@@ -12,7 +10,7 @@ namespace CapstoneTest.BackendTests.Utils.TestGooglePlacesService
         [TestMethod]
         public void Autocomplete_EmptyString_ReturnsEmptyList()
         {
-            string input = string.Empty;
+            var input = string.Empty;
 
             IEnumerable result = GooglePlacesService.Autocomplete(input).Result;
 
@@ -22,15 +20,13 @@ namespace CapstoneTest.BackendTests.Utils.TestGooglePlacesService
         [TestMethod]
         public void Autocomplete_ValidLocation_ReturnsFullList()
         {
-            string input = "Atlanta";
-            int minimumResults = 3;
+            const string input = "Atlanta";
+            const int minimumResults = 3;
 
             IEnumerable result = GooglePlacesService.Autocomplete(input).Result;
 
-            for (int iterator = 0; iterator < minimumResults; iterator++) {
+            for (var iterator = 0; iterator < minimumResults; iterator++)
                 Assert.IsTrue(result.GetEnumerator().MoveNext());
-            }
         }
-
     }
 }

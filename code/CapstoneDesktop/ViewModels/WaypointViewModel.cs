@@ -1,5 +1,8 @@
 using System;
 using System.Reactive;
+using Avalonia;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using CapstoneBackend.Model;
 using ReactiveUI;
 
@@ -24,6 +27,8 @@ namespace CapstoneDesktop.ViewModels
             Waypoint = waypoint;
             RemoveCommand = ReactiveCommand.Create(removeWaypoint);
             ViewCommand = ReactiveCommand.CreateFromObservable(() =>
+                HostScreen.Router.Navigate.Execute(new EventPageViewModel(waypoint, screen)));
+            EditCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new EventPageViewModel(waypoint, screen)));
         }
 
@@ -53,13 +58,25 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> ViewCommand { get; }
 
         /// <summary>
+        ///     The edit command.
+        /// </summary>
+        public ReactiveCommand<Unit, IRoutableViewModel> EditCommand { get; }
+
+        /// <summary>
         ///     The Event.
         /// </summary>
         public IEvent Event => Waypoint;
+
+        /// <summary>
+        ///     The image path.
+        /// </summary>
+        public string ImagePath => "../Assets/waypoint_icon.png";
 
         private void removeWaypoint()
         {
             if (WaypointManager.RemoveWaypoint(Waypoint.WaypointId).Data) RemoveEvent?.Invoke(this, EventArgs.Empty);
         }
+
+
     }
 }
