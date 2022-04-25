@@ -48,7 +48,8 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
 
             var mockWaypointDal = new Mock<WaypointDal>();
 
-            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St, Carrollton, GA 30117", currentTime, currentTime, "notes"))
+            mockWaypointDal.Setup(db =>
+                    db.CreateWaypoint(1, "1601 Maple St, Carrollton, GA 30117", currentTime, currentTime, "notes"))
                 .Returns(1);
             mockWaypointDal.Setup(db => db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
 

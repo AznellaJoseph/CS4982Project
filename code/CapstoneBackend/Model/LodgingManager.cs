@@ -188,5 +188,36 @@ namespace CapstoneBackend.Model
                 };
             }
         }
+
+        /// <summary>
+        ///     Edits the lodging.
+        /// </summary>
+        /// <param name="lodging">The lodging.</param>
+        /// <returns>A response of if the lodging was updated or a non-success code and error message</returns>
+        public virtual Response<bool> EditLodging(Lodging lodging)
+        {
+            try
+            {
+                var updated = _dal.EditLodging(lodging);
+
+                return new Response<bool> {Data = updated};
+            }
+            catch (MySqlException e)
+            {
+                return new Response<bool>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<bool>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
     }
 }

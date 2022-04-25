@@ -164,5 +164,31 @@ namespace CapstoneBackend.DAL
             _connection.Close();
             return waypoint;
         }
+
+        /// <summary>
+        /// Edits the waypoint.
+        /// </summary>
+        /// <param name="waypoint">The waypoint.</param>
+        /// <returns>
+        /// True if the waypoint was updated, false otherwise
+        /// </returns>
+        public virtual bool EditWaypoint(Waypoint waypoint)
+        {
+            _connection.Open();
+            const string procedure = "uspEditWaypoint";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@waypointId", MySqlDbType.Int32).Value = waypoint.WaypointId;
+            cmd.Parameters.Add("@location", MySqlDbType.VarChar).Value = waypoint.Location;
+            cmd.Parameters.Add("@startDate", MySqlDbType.DateTime).Value = waypoint.StartDate;
+            cmd.Parameters.Add("@endDate", MySqlDbType.DateTime).Value = waypoint.EndDate;
+            cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = waypoint.Notes;
+
+            var updated = cmd.ExecuteNonQuery() == 1;
+            _connection.Close();
+
+            return updated;
+        }
     }
 }

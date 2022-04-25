@@ -157,5 +157,31 @@ namespace CapstoneBackend.DAL
             _connection.Close();
             return lodging;
         }
+
+        /// <summary>
+        /// Edits the lodging.
+        /// </summary>
+        /// <param name="lodging">The lodging.</param>
+        /// <returns>
+        /// True if the lodging was updated, false otherwise
+        /// </returns>
+        public virtual bool EditLodging(Lodging lodging)
+        {
+            _connection.Open();
+            const string procedure = "uspEditLodging";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@lodgingId", MySqlDbType.Int32).Value = lodging.LodgingId;
+            cmd.Parameters.Add("@location", MySqlDbType.VarChar).Value = lodging.Location;
+            cmd.Parameters.Add("@startDate", MySqlDbType.DateTime).Value = lodging.StartDate;
+            cmd.Parameters.Add("@endDate", MySqlDbType.DateTime).Value = lodging.EndDate;
+            cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = lodging.Notes;
+
+            var updated = cmd.ExecuteNonQuery() == 1;
+            _connection.Close();
+
+            return updated;
+        }
     }
 }

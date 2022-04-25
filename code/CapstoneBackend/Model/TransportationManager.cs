@@ -187,5 +187,36 @@ namespace CapstoneBackend.Model
                 };
             }
         }
+
+        /// <summary>
+        ///     Edits the transportation.
+        /// </summary>
+        /// <param name="transportation">The transportation.</param>
+        /// <returns>A response of if the transportation was updated or a non-success code and error message</returns>
+        public virtual Response<bool> EditTransportation(Transportation transportation)
+        {
+            try
+            {
+                var updated = _dal.EditTransportation(transportation);
+
+                return new Response<bool> {Data = updated};
+            }
+            catch (MySqlException e)
+            {
+                return new Response<bool>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<bool>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
     }
 }

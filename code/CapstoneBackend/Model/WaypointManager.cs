@@ -190,5 +190,38 @@ namespace CapstoneBackend.Model
                 };
             }
         }
+
+        /// <summary>
+        ///     Edits the waypoint.
+        /// </summary>
+        /// <param name="waypoint">The waypoint.</param>
+        /// <returns>
+        ///     A response of if the waypoint was updated or a non-success code and error message
+        /// </returns>
+        public virtual Response<bool> EditWaypoint(Waypoint waypoint)
+        {
+            try
+            {
+                var updated = _dal.EditWaypoint(waypoint);
+
+                return new Response<bool> {Data = updated};
+            }
+            catch (MySqlException e)
+            {
+                return new Response<bool>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<bool>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
     }
 }
