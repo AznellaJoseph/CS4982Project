@@ -3,6 +3,7 @@ DROP PROCEDURE IF EXISTS uspEditWaypoint;
 DELIMITER $
 
 CREATE PROCEDURE uspEditWaypoint(
+	waypointId INT,
 	location VARCHAR(75),
 	notes VARCHAR(500),
 	startDate DATETIME,
