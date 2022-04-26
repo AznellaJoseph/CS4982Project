@@ -12,8 +12,8 @@ CREATE PROCEDURE uspEditTransportation(
 
 BEGIN
 	UPDATE transportation
-	SET method = method, startDate = startDate, endDate = endDate, notes = notes
-	WHERE transportationId = transportationId;
+	SET transportation.method = method, transportation.startDate = startDate, transportation.endDate = endDate, transportation.notes = notes
+	WHERE transportation.transportationId = transportationId;
 END$
 
 DELIMITER ;

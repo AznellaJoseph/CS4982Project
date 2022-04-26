@@ -12,8 +12,8 @@ CREATE PROCEDURE uspEditLodging(
 
 BEGIN
 	UPDATE lodging
-	SET location = location, startDate = startDate, endDate = endDate, notes = notes
-	WHERE lodgingId = lodgingId;
+	SET lodging.location = location, lodging.startDate = startDate, lodging.endDate = endDate, lodging.notes = notes
+	WHERE lodging.lodgingId = lodgingId;
 END$
 
 DELIMITER ;

@@ -11,8 +11,8 @@ CREATE PROCEDURE uspEditWaypoint(
 
 BEGIN
 	UPDATE waypoint
-	SET location = location, startDate = startDate, endDate = endDate, notes = notes
-	WHERE waypointId = waypointId;
+	SET waypoint.location = location, waypoint.startDate = startDate, waypoint.endDate = endDate, waypoint.notes = notes
+	WHERE waypoint.waypointId = waypointId;
 END$
 
 DELIMITER ;
