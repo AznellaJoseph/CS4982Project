@@ -47,13 +47,13 @@ namespace CapstoneTest.BackendTests.DAL.TestTransportationDAL
         {
             _connection.Open();
             var removeTrip = $"delete from trip where tripId = {_testTripId};";
-            var removeWaypoint = $"delete from waypoint where waypointId = {_testTransportationId};";
+            var removeTransportation = $"delete from transportation where transportationId = {_testTransportationId};";
 
             using var tripCmd = new MySqlCommand(removeTrip, _connection);
             tripCmd.ExecuteNonQuery();
 
-            using var waypointCmd = new MySqlCommand(removeWaypoint, _connection);
-            waypointCmd.ExecuteNonQuery();
+            using var transportationCmd = new MySqlCommand(removeTransportation, _connection);
+            transportationCmd.ExecuteNonQuery();
 
             _connection.Close();
         }

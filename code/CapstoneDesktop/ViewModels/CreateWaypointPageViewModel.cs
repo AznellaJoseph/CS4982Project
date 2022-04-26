@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Net.Http;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using ReactiveUI;
@@ -75,8 +69,9 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The location.
         /// </summary>
-        public string Location { 
-            get { return _location; }
+        public string Location
+        {
+            get => _location;
             set
             {
                 this.RaiseAndSetIfChanged(ref _location, value);
@@ -87,13 +82,10 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     List of autocomplete results shown in the dropdown.
         /// </summary>
-        public IEnumerable<String> AutocompletePredictions
+        public IEnumerable<string> AutocompletePredictions
         {
-            get { return _predictions; }
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _predictions, value);
-            }
+            get => _predictions;
+            set => this.RaiseAndSetIfChanged(ref _predictions, value);
         }
 
         /// <summary>
@@ -123,7 +115,7 @@ namespace CapstoneDesktop.ViewModels
 
         private async void UpdateAutoCompleteResultsAsync()
         {
-            this.AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+            AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
         }
 
         private IObservable<IRoutableViewModel> CreateWaypoint()
@@ -160,7 +152,8 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            var clashingEventResponse = ValidationManager.DetermineIfClashingEventExists(_trip.TripId, startDate, endDate);
+            var clashingEventResponse =
+                ValidationManager.DetermineIfClashingEventExists(_trip.TripId, startDate, endDate);
 
             if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
             {
@@ -177,6 +170,5 @@ namespace CapstoneDesktop.ViewModels
             ErrorMessage = resultResponse.ErrorMessage;
             return Observable.Empty<IRoutableViewModel>();
         }
-
     }
 }

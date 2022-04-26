@@ -66,7 +66,7 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public string Location
         {
-            get { return _location; }
+            get => _location;
             set
             {
                 this.RaiseAndSetIfChanged(ref _location, value);
@@ -77,13 +77,10 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     List of autocomplete results shown in the dropdown.
         /// </summary>
-        public IEnumerable<String> AutocompletePredictions
+        public IEnumerable<string> AutocompletePredictions
         {
-            get { return _predictions; }
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _predictions, value);
-            }
+            get => _predictions;
+            set => this.RaiseAndSetIfChanged(ref _predictions, value);
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace CapstoneDesktop.Views
     public class EventPage : ReactiveUserControl<EventPageViewModel>
     {
 
-        public GMapControl MainMap { get; set; }
+        public GMapControl? MainMap { get; set; }
         /// <summary>
         ///     Initializes a new instance of the <see cref="EventPage" /> class.
         /// </summary>
@@ -32,20 +32,18 @@ namespace CapstoneDesktop.Views
 
         private void InitializeComponent()
         {
-            this.WhenActivated(disposables =>
+            this.WhenActivated(_ =>
             {
-                EventPageViewModel? viewModel = (EventPageViewModel?)DataContext;
-                if (viewModel?.Event is Waypoint waypoint)
-                {
-                    MainMap = new GMapControl();
-                    var container = this.Get<Panel>("MapContainer");
-                    container.Children.Add(MainMap);
-                    GoogleMapProvider.Instance.ApiKey = "AIzaSyARhel5-jZFkChP1uASkhk0G7qYc5cRiWA";
-                    MainMap.MapProvider = GMapProviders.GoogleMap;
-                    var result = GoogleGeocodeService.GetLocationByAddress(waypoint.Location);
-                    MainMap.Position = new PointLatLng(result.Latitude, result.Longitude);
-                    MainMap.FillEmptyTiles = true;
-                }
+                var viewModel = (EventPageViewModel?)DataContext;
+                if (viewModel?.Event is not Waypoint waypoint) return;
+                MainMap = new GMapControl();
+                var container = this.Get<Panel>("MapContainer");
+                container.Children.Add(MainMap);
+                GoogleMapProvider.Instance.ApiKey = "AIzaSyARhel5-jZFkChP1uASkhk0G7qYc5cRiWA";
+                MainMap.MapProvider = GMapProviders.GoogleMap;
+                var result = GoogleGeocodeService.GetLocationByAddress(waypoint.Location);
+                MainMap.Position = new PointLatLng(result.Latitude, result.Longitude);
+                MainMap.FillEmptyTiles = true;
             });
             AvaloniaXamlLoader.Load(this);
         }

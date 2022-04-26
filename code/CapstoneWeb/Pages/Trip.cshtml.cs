@@ -230,5 +230,42 @@ namespace CapstoneWeb.Pages
             };
             return RedirectToPage("Transportation", routeValues);
         }
+
+        /// <summary>
+        ///     Called when [get edit waypoint].
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        ///     Redirect to waypoint
+        /// </returns>
+        public IActionResult OnGetEditWaypoint(int tripId, int id)
+        {
+            var routeValues = new RouteValueDictionary
+            {
+                {"id", id},
+                {"tripId", tripId}
+            };
+            return RedirectToPage("Waypoint", routeValues);
+        }
+
+        /// <summary>
+        ///     Called when [get edit transportation].
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        ///     Redirect to transportation
+        /// </returns>
+        public IActionResult OnGetEditTransportation(int id, int tripId)
+        {
+            var routeValues = new RouteValueDictionary
+            {
+                {"id", id},
+                {"tripId", tripId}
+            };
+            return RedirectToPage("Transportation", routeValues);
+        }
+
     }
 }

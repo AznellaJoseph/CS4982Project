@@ -21,6 +21,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestLodging
             Assert.IsNotNull(lodgingViewModel.HostScreen);
             Assert.IsNotNull(lodgingViewModel.LodgingManager);
             Assert.IsNotNull(lodgingViewModel.RemoveCommand);
+            Assert.IsNotNull(lodgingViewModel.ViewCommand);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace CapstoneDesktop.Views
     /// <summary>
     ///     User Control for the Trip Overview Functionality
     /// </summary>
-    /// <seealso cref="Avalonia.ReactiveUI.ReactiveUserControl&lt;CapstoneDesktop.ViewModels.TripOverviewPageViewModel&gt;" />
+    /// <seealso cref="Avalonia.ReactiveUI.ReactiveUserControl&lt;TripOverviewPageViewModel&gt;" />
     public class TripOverviewPage : ReactiveUserControl<TripOverviewPageViewModel>
     {
         /// <summary>
@@ -23,7 +23,7 @@ namespace CapstoneDesktop.Views
 
         private void InitializeComponent()
         {
-            this.WhenActivated(disposables =>
+            this.WhenActivated(_ =>
             {
                 if (DataContext is null) return;
                 var context = (TripOverviewPageViewModel) DataContext;

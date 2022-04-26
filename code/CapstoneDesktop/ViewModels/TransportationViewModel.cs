@@ -1,5 +1,8 @@
 using System;
 using System.Reactive;
+using Avalonia;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using CapstoneBackend.Model;
 using ReactiveUI;
 
@@ -25,6 +28,8 @@ namespace CapstoneDesktop.ViewModels
             Transportation = transportation;
             RemoveCommand = ReactiveCommand.Create(removeTransportation);
             ViewCommand = ReactiveCommand.CreateFromObservable(() =>
+                HostScreen.Router.Navigate.Execute(new EventPageViewModel(transportation, screen)));
+            EditCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new EventPageViewModel(transportation, screen)));
         }
 
@@ -54,14 +59,25 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> ViewCommand { get; }
 
         /// <summary>
+        ///     The edit command.
+        /// </summary>
+        public ReactiveCommand<Unit, IRoutableViewModel> EditCommand { get; }
+
+        /// <summary>
         ///     The Event.
         /// </summary>
         public IEvent Event => Transportation;
+
+        /// <summary>
+        ///     The image path.
+        /// </summary>
+        public string ImagePath => "../Assets/transportation_icon.png";
 
         private void removeTransportation()
         {
             if (TransportationManager.RemoveTransportation(Transportation.TransportationId).Data)
                 RemoveEvent?.Invoke(this, EventArgs.Empty);
         }
+
     }
 }

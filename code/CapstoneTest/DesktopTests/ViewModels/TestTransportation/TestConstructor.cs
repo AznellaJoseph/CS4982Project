@@ -22,6 +22,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestTransportation
             Assert.IsNotNull(transportationViewModel.HostScreen);
             Assert.IsNotNull(transportationViewModel.TransportationManager);
             Assert.IsNotNull(transportationViewModel.RemoveCommand);
+            Assert.IsNotNull(transportationViewModel.ViewCommand);
         }
     }
 }

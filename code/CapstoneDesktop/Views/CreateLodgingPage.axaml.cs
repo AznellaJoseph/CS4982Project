@@ -1,5 +1,3 @@
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using CapstoneDesktop.ViewModels;
@@ -9,7 +7,7 @@ namespace CapstoneDesktop.Views
     public class CreateLodgingPage : ReactiveUserControl<CreateLodgingPageViewModel>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateLodgingPage"/> class.
+        ///     Initializes a new instance of the <see cref="CreateLodgingPage" /> class.
         /// </summary>
         public CreateLodgingPage()
         {

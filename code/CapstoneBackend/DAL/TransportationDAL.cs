@@ -122,17 +122,9 @@ namespace CapstoneBackend.DAL
 
             cmd.Parameters.Add("@transportationId", MySqlDbType.Int32).Value = transportationId;
 
-            try
-            {
-                var result = cmd.ExecuteNonQuery();
-                _connection.Close();
-                return result == 1;
-            }
-            catch
-            {
-                _connection.Close();
-                throw;
-            }
+            var result = cmd.ExecuteNonQuery();
+            _connection.Close();
+            return result == 1;
         }
 
         /// <summary>

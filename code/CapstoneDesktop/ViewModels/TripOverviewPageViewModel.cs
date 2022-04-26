@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Reactive;
 using CapstoneBackend.Model;
 using ReactiveUI;
@@ -142,7 +143,7 @@ namespace CapstoneDesktop.ViewModels
                         return;
                 }
 
-                viewModel.RemoveEvent += (sender, e) =>
+                viewModel.RemoveEvent += (sender, _) =>
                 {
                     if (sender is not null)
                         EventViewModels.Remove((IEventViewModel) sender);

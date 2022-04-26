@@ -36,7 +36,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
                 {
                     TripId = 1,
                     LodgingId = 1,
-                    Location = "Some Hotel",
+                    Location = "Hilton Atlanta, Cobb Pkwy",
                     StartDate = DateTime.Today,
                     EndDate = DateTime.Today.AddDays(1),
                     Notes = "notes"
@@ -44,7 +44,7 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
             };
 
             var mockLodgingDal = new Mock<LodgingDal>();
-            mockLodgingDal.Setup(db => db.CreateLodging(1, "Some Hotel", DateTime.Today, DateTime.Today.AddDays(1), "notes"))
+            mockLodgingDal.Setup(db => db.CreateLodging(1, "Hilton Atlanta, Cobb Pkwy", DateTime.Today, DateTime.Today.AddDays(1), "notes"))
                 .Returns(1);
             mockLodgingDal.Setup(db => db.GetLodgingsByTripId(1)).Returns(fakeLodgings);
 
@@ -56,7 +56,8 @@ namespace CapstoneTest.BackendTests.Model.TestLodgingManager
             Assert.AreEqual(1, resultResponse.Data?.Count);
             Assert.AreEqual(1, resultResponse.Data?[0].TripId);
             Assert.AreEqual(1, resultResponse.Data?[0].LodgingId);
-            Assert.AreEqual("Some Hotel", resultResponse.Data?[0].Location);
+            Assert.AreEqual("Hilton Atlanta, Cobb Pkwy", resultResponse.Data?[0].Location);
+            Assert.AreEqual("Hilton Atlanta", resultResponse.Data?[0].DisplayName);
             Assert.AreEqual(DateTime.Today, resultResponse.Data?[0].StartDate);
             Assert.AreEqual(DateTime.Today.AddDays(1), resultResponse.Data?[0].EndDate);
             Assert.AreEqual("notes", resultResponse.Data?[0].Notes);
