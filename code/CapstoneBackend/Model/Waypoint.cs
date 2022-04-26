@@ -51,5 +51,17 @@ namespace CapstoneBackend.Model
         ///     The display name.
         /// </summary>
         public string DisplayName => Location[..Location.IndexOf(",", StringComparison.Ordinal)];
+
+        public bool Equals(IEvent? other)
+        {
+            return other is not null && other.Id.Equals(Id) && other.DisplayName.Equals(DisplayName) && other.EndDate.Equals(EndDate) &&
+                   other.EventType.Equals(EventType) && other.Notes.Equals(Notes) &&
+                   other.StartDate.Equals(StartDate) && other.TripId.Equals(TripId);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, DisplayName, EventType);
+        }
     }
 }
