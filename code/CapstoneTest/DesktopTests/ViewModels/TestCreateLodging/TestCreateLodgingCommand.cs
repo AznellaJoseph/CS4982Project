@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using CapstoneDesktop.ViewModels;
@@ -31,6 +32,39 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
         }
 
         [TestMethod]
+        public void CreateLodgingCommand_InvalidLocation_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock<Trip>();
+            var mockLodgingManager = new Mock<LodgingManager>();
+            var mockScreen = new Mock<IScreen>();
+            var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Some-Invalid-Location-Text"))
+                .Returns(new Response<bool>
+                {
+                    ErrorMessage = Ui.ErrorMessages.InvalidLocation,
+                    StatusCode = (uint)Ui.StatusCode.BadRequest
+                });
+
+            CreateLodgingPageViewModel createLodgingPageViewModel =
+                new(mockTrip.Object, mockScreen.Object) {
+                    LodgingManager = mockLodgingManager.Object,
+                    ValidationManager = mockValidationManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            createLodgingPageViewModel.Location = "Some-Invalid-Location-Text";
+            createLodgingPageViewModel.StartDate = DateTime.Today;
+            createLodgingPageViewModel.StartTime = TimeSpan.Zero;
+
+            createLodgingPageViewModel.CreateLodgingCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidLocation, createLodgingPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
         public void CreateLodgingCommand_InvalidDates_ReturnsErrorMessage()
         {
             var mockTrip = new Mock<Trip>
@@ -51,6 +85,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
             mockValidationManager.Setup(vm =>
                     vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(1) + TimeSpan.Zero,
                         DateTime.Today + TimeSpan.Zero))
+                .Returns(new Response<bool>
+                {
+                    Data = true
+                });
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
                 .Returns(new Response<bool>
                 {
                     Data = true
@@ -91,7 +130,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
 
             var testScheduler = new TestScheduler();
 
-            createLodgingPageViewModel.Location = "Paris, Italy";
+            createLodgingPageViewModel.Location = "Atlanta";
             createLodgingPageViewModel.Notes = "notes";
 
             createLodgingPageViewModel.CreateLodgingCommand.Execute().Subscribe();
@@ -117,6 +156,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
             var mockLodgingManager = new Mock<LodgingManager>();
             var mockScreen = new Mock<IScreen>();
             var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
+                .Returns(new Response<bool>
+                {
+                    Data = true
+                });
             mockValidationManager.Setup(vm =>
                     vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(-3) + TimeSpan.Zero,
                         DateTime.Today + TimeSpan.Zero))
@@ -137,7 +181,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
 
             var testScheduler = new TestScheduler();
 
-            createLodgingPageViewModel.Location = "Plane";
+            createLodgingPageViewModel.Location = "Paris, Italy";
             createLodgingPageViewModel.StartDate = DateTime.Now.AddDays(-3);
             createLodgingPageViewModel.StartTime = TimeSpan.Zero;
             createLodgingPageViewModel.EndDate = DateTime.Now;
@@ -166,6 +210,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
             var mockLodgingManager = new Mock<LodgingManager>();
             var mockScreen = new Mock<IScreen>();
             var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
+                .Returns(new Response<bool>
+                {
+                    Data = true
+                });
             mockValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0,
                     DateTime.Today.AddDays(-1) + TimeSpan.Zero, DateTime.Today.AddDays(-3) + TimeSpan.Zero))
                 .Returns(new Response<bool>
@@ -185,7 +234,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
 
             var testScheduler = new TestScheduler();
 
-            createLodgingPageViewModel.Location = "Airport";
+            createLodgingPageViewModel.Location = "Paris, Italy";
             createLodgingPageViewModel.StartDate = DateTimeOffset.Now.AddDays(-1);
             createLodgingPageViewModel.StartTime = TimeSpan.Zero;
             createLodgingPageViewModel.EndDate = DateTime.Today.AddDays(-3);

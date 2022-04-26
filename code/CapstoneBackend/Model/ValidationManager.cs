@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using CapstoneBackend.Utils;
 
 namespace CapstoneBackend.Model
@@ -165,7 +167,7 @@ namespace CapstoneBackend.Model
         /// </returns>
         public virtual Response<bool> DetermineIfValidLocation(string locationInput)
         {
-            bool isValid = GooglePlacesService.IsLocationValid(locationInput).Result;
+            var isValid = GooglePlacesService.IsLocationValid(locationInput);
 
             if (isValid)
             {

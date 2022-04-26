@@ -57,18 +57,27 @@ namespace CapstoneBackend.Utils
         /// <returns>
         ///   <c>true</c> if location is valid, otherwise, <c>false</c>.
         /// </returns>
-        public static async Task<bool> IsLocationValid(string searchText)
+        public static bool IsLocationValid(string searchText)
         {
             var apiEndpoint = $"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={searchText}&inputtype=textquery&key={key}";
             bool output = false;
 
             using (var client = new HttpClient())
             {
-                var response = await client.GetStringAsync(apiEndpoint);
-                int result = JsonDocument.Parse(response).RootElement.GetProperty("candidates").GetArrayLength();
-                if (result > 0)
+                string response = null;
+
+                try
                 {
-                    output = true;
+                    response = client.GetStringAsync(apiEndpoint).Result;
+                    int result = JsonDocument.Parse(response).RootElement.GetProperty("candidates").GetArrayLength();
+                    if (result > 0)
+                    {
+                        output = true;
+                    }
+                }
+                catch
+                {
+                    output = false;
                 }
             }
 

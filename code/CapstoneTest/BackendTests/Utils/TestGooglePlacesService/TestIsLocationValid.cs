@@ -14,7 +14,7 @@ namespace CapstoneTest.BackendTests.Utils.TestGooglePlacesService
         {
             string input = string.Empty;
 
-            bool result = GooglePlacesService.IsLocationValid(input).Result;
+            bool result = GooglePlacesService.IsLocationValid(input);
 
             Assert.IsFalse(result);
         }
@@ -24,7 +24,7 @@ namespace CapstoneTest.BackendTests.Utils.TestGooglePlacesService
         {
             string input = "Atlanta";
 
-            bool result = GooglePlacesService.IsLocationValid(input).Result;
+            bool result = GooglePlacesService.IsLocationValid(input);
 
             Assert.IsTrue(result);
         }
