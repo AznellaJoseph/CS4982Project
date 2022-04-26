@@ -204,6 +204,11 @@ namespace CapstoneBackend.Model
             {
                 var updated = _dal.EditWaypoint(waypoint);
 
+                if (!updated)
+                    return new Response<bool>
+                    {
+                        StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.WaypointNotFound
+                    };
                 return new Response<bool> {Data = updated};
             }
             catch (MySqlException e)

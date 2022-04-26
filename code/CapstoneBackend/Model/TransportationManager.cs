@@ -199,6 +199,13 @@ namespace CapstoneBackend.Model
             {
                 var updated = _dal.EditTransportation(transportation);
 
+                if (!updated)
+                    return new Response<bool>
+                    {
+                        StatusCode = (uint) Ui.StatusCode.BadRequest,
+                        ErrorMessage = Ui.ErrorMessages.TransportationNotFound
+                    };
+
                 return new Response<bool> {Data = updated};
             }
             catch (MySqlException e)

@@ -200,6 +200,10 @@ namespace CapstoneBackend.Model
             {
                 var updated = _dal.EditLodging(lodging);
 
+                if (!updated)
+                    return new Response<bool>
+                        {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.LodgingNotFound};
+
                 return new Response<bool> {Data = updated};
             }
             catch (MySqlException e)

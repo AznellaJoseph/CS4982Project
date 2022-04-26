@@ -30,7 +30,7 @@ namespace CapstoneBackend.Model
         /// <summary>
         ///     The end date.
         /// </summary>
-        public DateTime? EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         /// <summary>
         ///     The notes.
