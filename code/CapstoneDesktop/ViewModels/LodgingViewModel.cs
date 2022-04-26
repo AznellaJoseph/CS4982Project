@@ -9,7 +9,7 @@ namespace CapstoneDesktop.ViewModels
     ///     ViewModel for a single Lodging
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ReactiveViewModelBase" />
-    public class LodgingViewModel : ReactiveViewModelBase, IRemovable
+    public class LodgingViewModel : ReactiveViewModelBase, IRemovable, IEditable
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="LodgingViewModel" /> class.
@@ -24,7 +24,7 @@ namespace CapstoneDesktop.ViewModels
             ViewCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new LodgingPageViewModel(lodging, screen)));
             EditCommand = ReactiveCommand.CreateFromObservable(() =>
-                HostScreen.Router.Navigate.Execute(new LodgingPageViewModel(lodging, screen)));
+                HostScreen.Router.Navigate.Execute(new EditLodgingPageViewModel(lodging, screen)));
         }
 
         /// <summary>
@@ -38,16 +38,6 @@ namespace CapstoneDesktop.ViewModels
         public LodgingManager LodgingManager { get; set; } = new();
 
         /// <summary>
-        ///     The remove command.
-        /// </summary>
-        public ReactiveCommand<Unit, Unit> RemoveCommand { get; }
-
-        /// <summary>
-        ///     The remove event.
-        /// </summary>
-        public event EventHandler<EventArgs>? RemoveEvent;
-
-        /// <summary>
         ///     The view command.
         /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> ViewCommand { get; }
@@ -56,6 +46,16 @@ namespace CapstoneDesktop.ViewModels
         ///     The edit command.
         /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> EditCommand { get; }
+
+        /// <summary>
+        ///     The remove command.
+        /// </summary>
+        public ReactiveCommand<Unit, Unit> RemoveCommand { get; }
+
+        /// <summary>
+        ///     The remove event.
+        /// </summary>
+        public event EventHandler<EventArgs>? RemoveEvent;
 
         private void removeLodging()
         {

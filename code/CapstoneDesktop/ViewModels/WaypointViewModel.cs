@@ -1,8 +1,5 @@
 using System;
 using System.Reactive;
-using Avalonia;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using CapstoneBackend.Model;
 using ReactiveUI;
 
@@ -29,7 +26,7 @@ namespace CapstoneDesktop.ViewModels
             ViewCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new EventPageViewModel(waypoint, screen)));
             EditCommand = ReactiveCommand.CreateFromObservable(() =>
-                HostScreen.Router.Navigate.Execute(new EventPageViewModel(waypoint, screen)));
+                HostScreen.Router.Navigate.Execute(new EditWaypointPageViewModel(waypoint, screen)));
         }
 
         /// <summary>
@@ -76,7 +73,5 @@ namespace CapstoneDesktop.ViewModels
         {
             if (WaypointManager.RemoveWaypoint(Waypoint.WaypointId).Data) RemoveEvent?.Invoke(this, EventArgs.Empty);
         }
-
-
     }
 }

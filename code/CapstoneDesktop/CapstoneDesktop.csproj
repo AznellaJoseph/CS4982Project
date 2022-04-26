@@ -30,6 +30,12 @@
       <Compile Update="Views\CreateTransportationPage.axaml.cs">
         <DependentUpon>CreateTransportationPage.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\EditLodgingPage.axaml.cs">
+        <DependentUpon>EditLodgingPage.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\EditWaypointPage.axaml.cs">
+        <DependentUpon>EditWaypointPage.axaml</DependentUpon>
+      </Compile>
       <Compile Update="Views\LodgingPage.axaml.cs">
         <DependentUpon>LodgingPage.axaml</DependentUpon>
       </Compile>

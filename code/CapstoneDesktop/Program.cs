@@ -36,10 +36,17 @@ namespace CapstoneDesktop
                 typeof(IViewFor<CreateTransportationPageViewModel>));
             Locator.CurrentMutable.Register(() => new CreateAccountPage(),
                 typeof(IViewFor<CreateAccountPageViewModel>));
-            Locator.CurrentMutable.Register(() => new CreateLodgingPage(), typeof(IViewFor<CreateLodgingPageViewModel>));
+            Locator.CurrentMutable.Register(() => new CreateLodgingPage(),
+                typeof(IViewFor<CreateLodgingPageViewModel>));
             Locator.CurrentMutable.Register(() => new LandingPage(), typeof(IViewFor<LandingPageViewModel>));
             Locator.CurrentMutable.Register(() => new EventPage(), typeof(IViewFor<EventPageViewModel>));
             Locator.CurrentMutable.Register(() => new LodgingPage(), typeof(IViewFor<LodgingPageViewModel>));
+            Locator.CurrentMutable.Register(() => new EditTransportationPage(),
+                typeof(IViewFor<EditTransportationPageViewModel>));
+            Locator.CurrentMutable.Register(() => new EditLodgingPage(),
+                typeof(IViewFor<EditLodgingPageViewModel>));
+            Locator.CurrentMutable.Register(() => new EditWaypointPage(),
+                typeof(IViewFor<EditWaypointPageViewModel>));
             return AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()

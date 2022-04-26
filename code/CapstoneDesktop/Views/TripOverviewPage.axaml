@@ -2,131 +2,143 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:conv="clr-namespace:CapstoneDesktop.Converters"
              x:Class="CapstoneDesktop.Views.TripOverviewPage">
-	<UserControl.Resources>
+    <UserControl.Resources>
         <conv:DateFormatter x:Key="DateFormatter" />
-	</UserControl.Resources>
-	<Grid RowDefinitions="Auto,20,Auto,20,Auto,*,*" ColumnDefinitions="2*,20,3*" Margin="20">
-		<Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-				<Image Source="../Assets/waypointz_logo.png" Height="40"/>
-				<TextBlock Classes="h1" Text="{Binding Trip.Name}" TextAlignment="Center" />
-			</StackPanel>
-		</Border>
-		<Border Classes="container" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
-			<Grid ColumnDefinitions="*,10,*,10,*">
-				<Button HorizontalAlignment="Stretch" Grid.Column="0">
-					<TextBlock Classes="dark" Text="PROFILE" TextAlignment="Center" />
-				</Button>
-				<Button HorizontalAlignment="Stretch" Grid.Column="2" Command="{Binding BackCommand}">
-					<TextBlock Classes="dark" Text="BACK" TextAlignment="Center" />
-				</Button>
-				<Button HorizontalAlignment="Stretch" Grid.Column="4" Command="{Binding LogoutCommand}">
-					<TextBlock Classes="dark" Text="LOGOUT" TextAlignment="Center" />
-				</Button>
-			</Grid>
-		</Border>
+    </UserControl.Resources>
+    <Grid RowDefinitions="Auto,20,Auto,20,Auto,*,*" ColumnDefinitions="2*,20,3*" Margin="20">
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Source="../Assets/waypointz_logo.png" Height="40" />
+                <TextBlock Classes="h1" Text="{Binding Trip.Name}" TextAlignment="Center" />
+            </StackPanel>
+        </Border>
+        <Border Classes="container" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
+            <Grid ColumnDefinitions="*,10,*,10,*">
+                <Button HorizontalAlignment="Stretch" Grid.Column="0">
+                    <TextBlock Classes="dark" Text="PROFILE" TextAlignment="Center" />
+                </Button>
+                <Button HorizontalAlignment="Stretch" Grid.Column="2" Command="{Binding BackCommand}">
+                    <TextBlock Classes="dark" Text="BACK" TextAlignment="Center" />
+                </Button>
+                <Button HorizontalAlignment="Stretch" Grid.Column="4" Command="{Binding LogoutCommand}">
+                    <TextBlock Classes="dark" Text="LOGOUT" TextAlignment="Center" />
+                </Button>
+            </Grid>
+        </Border>
 
-		<TextBlock Grid.Column="0" Classes="h1 light" Grid.Row="4" TextAlignment="Center" Text="{Binding SelectedDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}"/>
-
-
-		<Border Classes="container" Grid.Row="5" Grid.Column="0" Margin="0, 5, 0, 5">
-			<Grid RowDefinitions="Auto,*,*,10,Auto">
-
-				<TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="LODGING"/>
-
-				<ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
-					<ItemsControl Items="{Binding LodgingViewModels}">
-						<ItemsControl.ItemsPanel>
-							<ItemsPanelTemplate>
-								<StackPanel Orientation="Vertical" Spacing="10" />
-							</ItemsPanelTemplate>
-						</ItemsControl.ItemsPanel>
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<Grid ColumnDefinitions="*,5,Auto,5,*,10,3*,Auto,*">
-									<TextBlock Grid.Column="0" TextAlignment="Center" Text="{Binding Lodging.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
-									<TextBlock Grid.Column="2" TextAlignment="Center" Text="-"/>
-									<TextBlock Grid.Column="4" TextAlignment="Center" Text="{Binding Lodging.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
-									<TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Lodging.DisplayName}"/>
-									<StackPanel Grid.Column="8" Spacing="5" Orientation="Horizontal">
-										<Button Command="{Binding ViewCommand}" Width="35" Height="35">
-											<Image Source="../Assets/view_icon.png"/>
-										</Button>
-										<Button Command="{Binding EditCommand}" Width="35" Height="35">
-											<Image Source="../Assets/edit_icon.png"/>
-										</Button>
-
-										<Button Command="{Binding RemoveCommand}" Width="35" Height="35">
-											<Image Source="../Assets/remove_icon.png"/>
-										</Button>
-									</StackPanel>
-								</Grid>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-				</ScrollViewer>
-				<Grid ColumnDefinitions="*" Grid.Row="4">
-					<Button Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                        Command="{Binding CreateLodgingCommand}">
-						<TextBlock Classes="dark" Text="CREATE LODGING" VerticalAlignment="Center" TextAlignment="Center"  />
-					</Button>
-				</Grid>
-			</Grid>
-		</Border>
+        <TextBlock Grid.Column="0" Classes="h1 light" Grid.Row="4" TextAlignment="Center"
+                   Text="{Binding SelectedDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}" />
 
 
-		<Border Classes="container" Grid.Row="6" Grid.Column="0">
-			<Grid RowDefinitions="Auto,*,*,10,Auto">
+        <Border Classes="container" Grid.Row="5" Grid.Column="0" Margin="0, 5, 0, 5">
+            <Grid RowDefinitions="Auto,*,*,10,Auto">
 
-				<TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="EVENTS"/>
+                <TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="LODGING" />
 
-				<ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
-					<ItemsControl Items="{Binding EventViewModels}">
-						<ItemsControl.ItemsPanel>
-							<ItemsPanelTemplate>
-								<StackPanel Orientation="Vertical" Spacing="10" />
-							</ItemsPanelTemplate>
-						</ItemsControl.ItemsPanel>
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<Grid ColumnDefinitions="Auto,*,5,Auto,5,*,10,3*,Auto,*">
-										<Image Grid.Column="0" Source="{Binding Event.ImagePath}"/>
-									<TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
-									<TextBlock Grid.Column="3" TextAlignment="Center" Text="-"/>
-									<TextBlock Grid.Column="5" TextAlignment="Center" Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
-									<TextBlock Grid.Column="7" TextAlignment="Center" Text="{Binding Event.DisplayName}"/>
-									<StackPanel Grid.Column="9" Spacing="5" Orientation="Horizontal">
-										<Button Command="{Binding ViewCommand}" Width="35" Height="35">
-											<Image Source="../Assets/view_icon.png"/>
-										</Button>
-										<Button Command="{Binding EditCommand}" Width="35" Height="35">
-											<Image Source="../Assets/edit_icon.png"/>
-										</Button>
-										<Button Command="{Binding RemoveCommand}" Width="35" Height="35">
-											<Image Source="../Assets/remove_icon.png"/>
-										</Button>
-									</StackPanel>
-								</Grid>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-				</ScrollViewer>
-				<Grid ColumnDefinitions="*,*" Grid.Row="4">
-					<Button Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                        Command="{Binding CreateTransportationCommand}">
-						<TextBlock Classes="dark" Text="CREATE TRANSPORTATION" VerticalAlignment="Center" TextAlignment="Center" />
-					</Button>
-					<Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-							Command="{Binding CreateWaypointCommand}">
-						<TextBlock Classes="dark" Text="CREATE WAYPOINT" VerticalAlignment="Center" TextAlignment="Center" />
-					</Button>
-				</Grid>
-			</Grid>
-		</Border>
-		<Border Classes="container" Grid.Row="4" Grid.RowSpan="3" Grid.Column="2">
-			<Calendar Name="TripCalendar" IsTodayHighlighted="False" SelectionMode="SingleDate" DisplayMode="Month"
+                <ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden">
+                    <ItemsControl Items="{Binding LodgingViewModels}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" Spacing="10" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*,Auto,*">
+                                    <TextBlock Grid.Column="0" TextAlignment="Center"
+                                               Text="{Binding Lodging.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}" />
+                                    <TextBlock Grid.Column="2" TextAlignment="Center" Text="-" />
+                                    <TextBlock Grid.Column="4" TextAlignment="Center"
+                                               Text="{Binding Lodging.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}" />
+                                    <TextBlock Grid.Column="6" TextAlignment="Center"
+                                               Text="{Binding Lodging.DisplayName}" />
+                                    <StackPanel Grid.Column="8" Spacing="5" Orientation="Horizontal">
+                                        <Button Command="{Binding ViewCommand}" Width="35" Height="35">
+                                            <Image Source="../Assets/view_icon.png" />
+                                        </Button>
+                                        <Button Command="{Binding EditCommand}" Width="35" Height="35">
+                                            <Image Source="../Assets/edit_icon.png" />
+                                        </Button>
+
+                                        <Button Command="{Binding RemoveCommand}" Width="35" Height="35">
+                                            <Image Source="../Assets/remove_icon.png" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Grid ColumnDefinitions="*" Grid.Row="4">
+                    <Button Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Command="{Binding CreateLodgingCommand}">
+                        <TextBlock Classes="dark" Text="CREATE LODGING" VerticalAlignment="Center"
+                                   TextAlignment="Center" />
+                    </Button>
+                </Grid>
+            </Grid>
+        </Border>
+
+
+        <Border Classes="container" Grid.Row="6" Grid.Column="0">
+            <Grid RowDefinitions="Auto,*,*,10,Auto">
+
+                <TextBlock Classes="h1 light" Grid.Row="0" TextAlignment="Center" Text="EVENTS" />
+
+                <ScrollViewer Grid.Row="2" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden">
+                    <ItemsControl Items="{Binding EventViewModels}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" Spacing="10" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto,*,5,Auto,5,*,10,3*,Auto,*">
+                                    <Image Grid.Column="0" Source="{Binding Event.ImagePath}" />
+                                    <TextBlock Grid.Column="1" TextAlignment="Center"
+                                               Text="{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}" />
+                                    <TextBlock Grid.Column="3" TextAlignment="Center" Text="-" />
+                                    <TextBlock Grid.Column="5" TextAlignment="Center"
+                                               Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}" />
+                                    <TextBlock Grid.Column="7" TextAlignment="Center"
+                                               Text="{Binding Event.DisplayName}" />
+                                    <StackPanel Grid.Column="9" Spacing="5" Orientation="Horizontal">
+                                        <Button Command="{Binding ViewCommand}" Width="35" Height="35">
+                                            <Image Source="../Assets/view_icon.png" />
+                                        </Button>
+                                        <Button Command="{Binding EditCommand}" Width="35" Height="35">
+                                            <Image Source="../Assets/edit_icon.png" />
+                                        </Button>
+                                        <Button Command="{Binding RemoveCommand}" Width="35" Height="35">
+                                            <Image Source="../Assets/remove_icon.png" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Grid ColumnDefinitions="*,*" Grid.Row="4">
+                    <Button Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Command="{Binding CreateTransportationCommand}">
+                        <TextBlock Classes="dark" Text="CREATE TRANSPORTATION" VerticalAlignment="Center"
+                                   TextAlignment="Center" />
+                    </Button>
+                    <Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Command="{Binding CreateWaypointCommand}">
+                        <TextBlock Classes="dark" Text="CREATE WAYPOINT" VerticalAlignment="Center"
+                                   TextAlignment="Center" />
+                    </Button>
+                </Grid>
+            </Grid>
+        </Border>
+        <Border Classes="container" Grid.Row="4" Grid.RowSpan="3" Grid.Column="2">
+            <Calendar Name="TripCalendar" IsTodayHighlighted="False" SelectionMode="SingleDate" DisplayMode="Month"
                       DisplayDate="{Binding Trip.StartDate}" SelectedDate="{Binding SelectedDate}"
                       VerticalAlignment="Center" HorizontalAlignment="Center" />
-		</Border>
-	</Grid>
+        </Border>
+    </Grid>
 </UserControl>
