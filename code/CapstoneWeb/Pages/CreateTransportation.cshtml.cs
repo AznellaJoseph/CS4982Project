@@ -67,7 +67,7 @@ namespace CapstoneWeb.Pages
                 return Page();
             }
 
-            var clashingEventResponse = ValidationManager.DetermineIfClashingEventExists(tripId, StartDate, EndDate);
+            var clashingEventResponse = ValidationManager.FindClashingEvent(tripId, StartDate, EndDate);
             if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
             {
                 ErrorMessage = clashingEventResponse.ErrorMessage;
