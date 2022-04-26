@@ -39,7 +39,11 @@ namespace CapstoneBackend.Utils
                     var currPrediction = result.Current;
                     if (currPrediction.TryGetProperty("description", out JsonElement description))
                     {
-                        predictions.Add(description.GetString());
+                        var address = description.GetString();
+                        if (!string.IsNullOrEmpty(address))
+                        {
+                            predictions.Add(address);
+                        }
                     }
                 }
             }
@@ -64,7 +68,7 @@ namespace CapstoneBackend.Utils
 
             using (var client = new HttpClient())
             {
-                string response = null;
+                string response;
 
                 try
                 {
