@@ -202,7 +202,7 @@ namespace CapstoneBackend.Model
                 if (!updated)
                     return new Response<bool>
                     {
-                        StatusCode = (uint) Ui.StatusCode.BadRequest,
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound,
                         ErrorMessage = Ui.ErrorMessages.TransportationNotFound
                     };
 

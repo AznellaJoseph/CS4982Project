@@ -55,8 +55,8 @@ namespace CapstoneBackend.Model
 
         public bool Equals(IEvent? other)
         {
-
-            return other is not null && other.Id.Equals(Id) && other.DisplayName.Equals(DisplayName) && other.EndDate.Equals(EndDate) &&
+            return other is not null && other.Id.Equals(Id) && other.DisplayName.Equals(DisplayName) &&
+                   other.EndDate.Equals(EndDate) &&
                    other.EventType.Equals(EventType) && other.Notes.Equals(Notes) &&
                    other.StartDate.Equals(StartDate) && other.TripId.Equals(TripId);
         }

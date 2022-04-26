@@ -202,7 +202,9 @@ namespace CapstoneBackend.Model
 
                 if (!updated)
                     return new Response<bool>
-                        {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.LodgingNotFound};
+                    {
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound, ErrorMessage = Ui.ErrorMessages.LodgingNotFound
+                    };
 
                 return new Response<bool> {Data = updated};
             }
