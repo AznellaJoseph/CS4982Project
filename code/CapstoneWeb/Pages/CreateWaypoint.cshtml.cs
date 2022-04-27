@@ -62,7 +62,14 @@ namespace CapstoneWeb.Pages
         /// </returns>
         public IActionResult OnPost(int tripId)
         {
+            var validLocationResponse = ValidationManager.DetermineIfValidLocation(Location);
             var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
+
+            if (!string.IsNullOrEmpty(validLocationResponse.ErrorMessage))
+            {
+                ErrorMessage = validLocationResponse.ErrorMessage;
+                return Page();
+            }
 
             if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
             {

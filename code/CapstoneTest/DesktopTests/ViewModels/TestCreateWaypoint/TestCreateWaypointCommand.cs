@@ -32,6 +32,38 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
         }
 
         [TestMethod]
+        public void CreateWaypointCommand_InvalidLocation_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock<Trip>();
+            var mockWaypointManager = new Mock<WaypointManager>();
+            var mockScreen = new Mock<IScreen>();
+            var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Some-Invalid-Location-Text"))
+                .Returns(new Response<bool>
+                {
+                    ErrorMessage = Ui.ErrorMessages.InvalidLocation,
+                    StatusCode = (uint)Ui.StatusCode.BadRequest
+                });
+            CreateWaypointPageViewModel createWaypointPageViewModel = new(mockTrip.Object, mockScreen.Object)
+            {
+                WaypointManager = mockWaypointManager.Object,
+                ValidationManager = mockValidationManager.Object
+            };
+
+            var testScheduler = new TestScheduler();
+
+            createWaypointPageViewModel.Location = "Some-Invalid-Location-Text";
+            createWaypointPageViewModel.StartDate = DateTime.Today;
+            createWaypointPageViewModel.StartTime = TimeSpan.Zero;
+
+            createWaypointPageViewModel.CreateWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidLocation, createWaypointPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
         public void CreateWaypointCommand_InvalidDates_ReturnsErrorMessage()
         {
             var mockTrip = new Mock<Trip>
@@ -58,6 +90,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
                 });
             mockValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0, DateTime.Today.AddDays(1), DateTime.Today))
                 .Returns(new Response<bool> {Data = false});
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
+                .Returns(new Response<bool>
+                {
+                    Data = true
+                });
 
             CreateWaypointPageViewModel createWaypointWindowViewModel =
                 new(mockTrip.Object, mockScreen.Object)
@@ -154,6 +191,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
             var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
+                .Returns(new Response<bool>
+                {
+                    Data = true
+                });
             mockValidationManager.Setup(vm =>
                     vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(-3) + TimeSpan.Zero,
                         DateTime.Today + TimeSpan.Zero))
@@ -174,7 +216,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 
             var testScheduler = new TestScheduler();
 
-            createWaypointViewModel.Location = "Plane";
+            createWaypointViewModel.Location = "Paris, Italy";
             createWaypointViewModel.StartDate = DateTime.Now.AddDays(-3);
             createWaypointViewModel.StartTime = TimeSpan.Zero;
             createWaypointViewModel.EndDate = DateTime.Now;
@@ -203,6 +245,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             var mockWaypointManager = new Mock<WaypointManager>();
             var mockScreen = new Mock<IScreen>();
             var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
+                .Returns(new Response<bool>
+                {
+                    Data = true
+                });
             mockValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0,
                     DateTime.Today.AddDays(-1) + TimeSpan.Zero, DateTime.Today.AddDays(-3) + TimeSpan.Zero))
                 .Returns(new Response<bool>
@@ -222,7 +269,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 
             var testScheduler = new TestScheduler();
 
-            createWaypointViewModel.Location = "Airport";
+            createWaypointViewModel.Location = "Paris, Italy";
             createWaypointViewModel.StartDate = DateTimeOffset.Now.AddDays(-1);
             createWaypointViewModel.StartTime = TimeSpan.Zero;
             createWaypointViewModel.EndDate = DateTime.Today.AddDays(-3);
@@ -270,6 +317,11 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
                     ErrorMessage =
                         $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}."
                 });
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
+                .Returns(new Response<bool>
+                {
+                    Data = true
+                });
 
 
             CreateWaypointPageViewModel createWaypointPageViewModel =
@@ -280,7 +332,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
 
             var testScheduler = new TestScheduler();
 
-            createWaypointPageViewModel.Location = "1601 Maple St";
+            createWaypointPageViewModel.Location = "Paris, Italy";
             createWaypointPageViewModel.StartDate = DateTime.Today.AddDays(1);
             createWaypointPageViewModel.StartTime = TimeSpan.Zero;
             createWaypointPageViewModel.EndDate = DateTime.Today.AddDays(3);
