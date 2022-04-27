@@ -153,54 +153,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
         }
 
         [TestMethod]
-        public void CreateLodgingCommand_EventEndBeforeTripStart_ReturnsErrorMessage()
-        {
-            var mockTrip = new Mock<Trip>
-            {
-                Object =
-                {
-                    StartDate = DateTime.Today.AddDays(-2),
-                    EndDate = DateTime.Now
-                }
-            };
-            var mockLodgingManager = new Mock<LodgingManager>();
-            var mockScreen = new Mock<IScreen>();
-            var mockValidationManager = new Mock<ValidationManager>();
-            mockValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0,
-                    DateTime.Today.AddDays(-1) + TimeSpan.Zero, DateTime.Today.AddDays(-3) + TimeSpan.Zero))
-                .Returns(new Response<bool>
-                {
-                    ErrorMessage = Ui.ErrorMessages.EventEndDateBeforeTripStartDate +
-                                   mockTrip.Object.StartDate.ToShortDateString(),
-                    StatusCode = (uint) Ui.StatusCode.BadRequest
-                });
-
-
-            CreateLodgingPageViewModel createLodgingPageViewModel =
-                new(mockTrip.Object, mockScreen.Object)
-                {
-                    ValidationManager = mockValidationManager.Object,
-                    LodgingManager = mockLodgingManager.Object
-                };
-
-            var testScheduler = new TestScheduler();
-
-            createLodgingPageViewModel.Location = "Airport";
-            createLodgingPageViewModel.StartDate = DateTimeOffset.Now.AddDays(-1);
-            createLodgingPageViewModel.StartTime = TimeSpan.Zero;
-            createLodgingPageViewModel.EndDate = DateTime.Today.AddDays(-3);
-            createLodgingPageViewModel.EndTime = TimeSpan.Zero;
-
-            createLodgingPageViewModel.CreateLodgingCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(
-                Ui.ErrorMessages.EventEndDateBeforeTripStartDate + mockTrip.Object.StartDate.ToShortDateString(),
-                createLodgingPageViewModel.ErrorMessage);
-        }
-
-        [TestMethod]
         public void CreateLodgingCommand_SuccessfulCreation()
         {
             var mockLodgingManager = new Mock<LodgingManager>();

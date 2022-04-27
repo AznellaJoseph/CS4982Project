@@ -74,7 +74,7 @@ namespace CapstoneTest.WebTests.Pages
 
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime.AddDays(2)))
-                .Returns(new Response<bool> { ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Now} {DateTime.Now.AddDays(1)}"});
+                .Returns(new Response<bool> { ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}"});
 
             var page = TestPageBuilder.BuildPage<CreateLodgingModel>(session.Object);
             page.ValidationManager = fakeValidationManager.Object;
@@ -85,7 +85,7 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPost(0);
 
             Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual($"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Now} {DateTime.Now.AddDays(1)}", page.ErrorMessage);
+            Assert.AreEqual($"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}", page.ErrorMessage);
         }
 
         [TestMethod]

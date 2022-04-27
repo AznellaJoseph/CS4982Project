@@ -9,8 +9,8 @@ namespace CapstoneDesktop.ViewModels
 {
     public class EditLodgingPageViewModel : ReactiveViewModelBase
     {
-        private string _error = string.Empty;
         private readonly Lodging _lodging;
+        private string _error = string.Empty;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="EditLodgingPageViewModel" /> class.
@@ -118,6 +118,12 @@ namespace CapstoneDesktop.ViewModels
             if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
             {
                 ErrorMessage = validDatesResponse.ErrorMessage;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (startDate.CompareTo(endDate) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

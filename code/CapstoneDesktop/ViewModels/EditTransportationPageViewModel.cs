@@ -121,6 +121,12 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
+            if (startDate.CompareTo(endDate) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
             var updatedTransportation = new Transportation
             {
                 TransportationId = _transportation.TransportationId,
