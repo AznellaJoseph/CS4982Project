@@ -132,12 +132,20 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
+            var validLocationResponse = ValidationManager.DetermineIfValidLocation(Location);
+
+            if (!string.IsNullOrEmpty(validLocationResponse.ErrorMessage))
+            {
+                ErrorMessage = validLocationResponse.ErrorMessage;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
             var startDate = StartDate.Value.Date + StartTime.Value;
 
             var endDate = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
 
             var validDatesResponse = ValidationManager.DetermineIfValidEventDates(_trip.TripId, startDate, endDate);
-
+            
             if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
             {
                 ErrorMessage = validDatesResponse.ErrorMessage;

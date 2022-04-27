@@ -43,6 +43,7 @@
             public static readonly string InvalidFirstName = "You must enter a first name.";
             public static readonly string InvalidLastName = "You must enter a last name.";
             public static readonly string InvalidConfirmedPassword = "You must confirm your password.";
+            public static readonly string InvalidLocation = "You must enter a valid location.";
             public static readonly string TransportationNotFound = "A transportation with the given ID was not found.";
             public static readonly string EventStartDateBeforeTripStartDate = "The event start date cannot be before ";
             public static readonly string EventStartDateAfterTripEndDate = "The event start date cannot be after ";

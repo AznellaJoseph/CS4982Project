@@ -24,6 +24,8 @@ namespace CapstoneTest.WebTests.Pages
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime))
                 .Returns(new Response<bool> { Data = true });
+            fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("Hilton"))
+                .Returns(new Response<bool> { Data = true });
 
             var page = TestPageBuilder.BuildPage<CreateLodgingModel>(session.Object);
             page.LodgingManager = manager.Object;
@@ -52,6 +54,8 @@ namespace CapstoneTest.WebTests.Pages
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime.AddDays(1), currentTime))
                 .Returns(new Response<bool> { Data = true });
+            fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("Hilton"))
+                .Returns(new Response<bool> { Data = true });
 
             var page = TestPageBuilder.BuildPage<CreateLodgingModel>(session.Object);
             page.LodgingManager = manager.Object;
@@ -75,6 +79,8 @@ namespace CapstoneTest.WebTests.Pages
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime.AddDays(2)))
                 .Returns(new Response<bool> { ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}"});
+            fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("Hilton"))
+                .Returns(new Response<bool> { Data = true });
 
             var page = TestPageBuilder.BuildPage<CreateLodgingModel>(session.Object);
             page.ValidationManager = fakeValidationManager.Object;
@@ -86,6 +92,30 @@ namespace CapstoneTest.WebTests.Pages
 
             Assert.IsInstanceOfType(result, typeof(PageResult));
             Assert.AreEqual($"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}", page.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void Post_InvalidLocation_ReturnsErrorMessage()
+        {
+            var session = new Mock<ISession>();
+            var currentTime = DateTime.Now;
+
+            var fakeValidationManager = new Mock<ValidationManager>();
+            fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime))
+                .Returns(new Response<bool> { Data = true });
+            fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("Hilton"))
+                .Returns(new Response<bool> { Data = false, ErrorMessage = Ui.ErrorMessages.InvalidLocation });
+
+            var page = TestPageBuilder.BuildPage<CreateLodgingModel>(session.Object);
+            page.ValidationManager = fakeValidationManager.Object;
+            page.Location = "Hilton";
+            page.StartDate = currentTime;
+            page.EndDate = currentTime;
+
+            var result = page.OnPost(0);
+
+            Assert.IsInstanceOfType(result, typeof(PageResult));
+            Assert.AreEqual(Ui.ErrorMessages.InvalidLocation, page.ErrorMessage);
         }
 
         [TestMethod]
