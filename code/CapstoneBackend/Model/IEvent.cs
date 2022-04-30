@@ -5,7 +5,7 @@ namespace CapstoneBackend.Model
     /// <summary>
     ///     IEvent Interface to encapsulate the events (waypoints, transportation) in a trip
     /// </summary>
-    public interface IEvent : IComparable<IEvent>
+    public interface IEvent : IComparable<IEvent>, IEquatable<IEvent>
     {
         /// <summary>
         ///     The event type.
@@ -30,7 +30,7 @@ namespace CapstoneBackend.Model
         /// <summary>
         ///     The end date.
         /// </summary>
-        public DateTime? EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         /// <summary>
         ///     The display name.

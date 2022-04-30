@@ -30,7 +30,7 @@ namespace CapstoneDesktop.ViewModels
             ViewCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new EventPageViewModel(transportation, screen)));
             EditCommand = ReactiveCommand.CreateFromObservable(() =>
-                HostScreen.Router.Navigate.Execute(new EventPageViewModel(transportation, screen)));
+                HostScreen.Router.Navigate.Execute(new EditTransportationPageViewModel(transportation, screen)));
         }
 
         /// <summary>

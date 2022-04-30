@@ -6,7 +6,7 @@ CREATE TABLE waypoint
     tripId INT UNSIGNED NOT NULL, 
     location VARCHAR(75) NOT NULL,
     startDate DATETIME NOT NULL,
-    endDate DATETIME,
+    endDate DATETIME NOT NULL,
     notes VARCHAR(500),
     PRIMARY KEY (waypointId),
     CONSTRAINT fk_waypoint_tripId

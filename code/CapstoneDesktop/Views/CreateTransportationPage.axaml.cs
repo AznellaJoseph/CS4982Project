@@ -5,7 +5,7 @@ using CapstoneDesktop.ViewModels;
 namespace CapstoneDesktop.Views
 {
     /// <summary>
-    ///     User Control for Create Waypoint Functionality
+    ///     User Control for Create Transportation Functionality
     /// </summary>
     public class CreateTransportationPage : ReactiveUserControl<CreateTransportationPageViewModel>
     {

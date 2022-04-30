@@ -41,7 +41,7 @@ namespace CapstoneBackend.Model
         /// <summary>
         ///     The end date.
         /// </summary>
-        public DateTime? EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         /// <summary>
         ///     The display name.
@@ -52,5 +52,18 @@ namespace CapstoneBackend.Model
         ///     The notes.
         /// </summary>
         public string Notes { get; set; } = string.Empty;
+
+        public bool Equals(IEvent? other)
+        {
+            return other is not null && other.Id.Equals(Id) && other.DisplayName.Equals(DisplayName) &&
+                   other.EndDate.Equals(EndDate) &&
+                   other.EventType.Equals(EventType) && other.Notes.Equals(Notes) &&
+                   other.StartDate.Equals(StartDate) && other.TripId.Equals(TripId);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, DisplayName, EventType);
+        }
     }
 }

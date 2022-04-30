@@ -164,5 +164,31 @@ namespace CapstoneBackend.DAL
             _connection.Close();
             return transportation;
         }
+
+        /// <summary>
+        /// Edits the transportation.
+        /// </summary>
+        /// <param name="transportation">The transportation.</param>
+        /// <returns>
+        /// True if the transportation was updated, false otherwise
+        /// </returns>
+        public virtual bool EditTransportation(Transportation transportation)
+        {
+            _connection.Open();
+            const string procedure = "uspEditTransportation";
+            using MySqlCommand cmd = new(procedure, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@transportationId", MySqlDbType.Int32).Value = transportation.TransportationId;
+            cmd.Parameters.Add("@method", MySqlDbType.VarChar).Value = transportation.Method;
+            cmd.Parameters.Add("@startDate", MySqlDbType.DateTime).Value = transportation.StartDate;
+            cmd.Parameters.Add("@endDate", MySqlDbType.DateTime).Value = transportation.EndDate;
+            cmd.Parameters.Add("@notes", MySqlDbType.VarChar).Value = transportation.Notes;
+
+            var updated = cmd.ExecuteNonQuery() == 1;
+            _connection.Close();
+
+            return updated;
+        }
     }
 }

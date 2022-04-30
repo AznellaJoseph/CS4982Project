@@ -153,7 +153,7 @@ namespace CapstoneDesktop.ViewModels
             }
 
             var clashingEventResponse =
-                ValidationManager.DetermineIfClashingEventExists(_trip.TripId, startDate, endDate);
+                ValidationManager.FindClashingEvent(_trip.TripId, startDate, endDate);
 
             if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
             {

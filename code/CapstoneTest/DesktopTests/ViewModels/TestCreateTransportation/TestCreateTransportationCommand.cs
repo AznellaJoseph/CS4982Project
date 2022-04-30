@@ -161,9 +161,9 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
             mockValidationManager
                 .Setup(vm => vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
                 .Returns(new Response<bool> {Data = true});
-            mockValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0,
+            mockValidationManager.Setup(vm => vm.FindClashingEvent(0,
                     DateTime.Today.AddDays(1) + TimeSpan.Zero, DateTime.Today.AddDays(3) + TimeSpan.Zero))
-                .Returns(new Response<bool>
+                .Returns(new Response<IEvent>
                 {
                     ErrorMessage =
                         $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}."
@@ -218,8 +218,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTransportation
                 {
                     Data = true
                 });
-            mockValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0, DateTime.Today.AddDays(1), DateTime.Today))
-                .Returns(new Response<bool> {Data = false});
+            mockValidationManager.Setup(vm => vm.FindClashingEvent(0, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response<IEvent> {Data = null});
 
             CreateTransportationPageViewModel createTransportationWindowViewModel =
                 new(mockTrip.Object, mockScreen.Object)

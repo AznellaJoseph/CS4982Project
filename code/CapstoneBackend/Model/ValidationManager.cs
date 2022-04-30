@@ -21,7 +21,6 @@ namespace CapstoneBackend.Model
         /// </summary>
         public EventManager EventManager { get; set; } = new();
 
-
         /// <summary>
         ///     Determines if the entered event dates are valid in relation to the trip.
         /// </summary>
@@ -127,7 +126,7 @@ namespace CapstoneBackend.Model
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
         /// <returns>A response of false if a clashing event does not exist or a non-success code and error message specifying the clashing event dates.</returns>
-        public virtual Response<bool> DetermineIfClashingEventExists(int tripId, DateTime startDate, DateTime endDate)
+        public virtual Response<IEvent> FindClashingEvent(int tripId, DateTime startDate, DateTime endDate)
         {
             var eventDates = Enumerable.Range(0,
                     (endDate - startDate).Days + 1)
@@ -143,13 +142,14 @@ namespace CapstoneBackend.Model
                 select eventOnDate).FirstOrDefault();
 
             if (clashingEvent is null)
-                return new Response<bool>
+                return new Response<IEvent>
                 {
-                    Data = false
+                    Data = null
                 };
 
-            return new Response<bool>
+            return new Response<IEvent>
             {
+                Data = clashingEvent,
                 ErrorMessage =
                     $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.",
                 StatusCode = (uint) Ui.StatusCode.BadRequest

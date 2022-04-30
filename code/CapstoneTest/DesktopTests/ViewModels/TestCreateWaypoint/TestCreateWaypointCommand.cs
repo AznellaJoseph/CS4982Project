@@ -310,9 +310,9 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             mockValidationManager
                 .Setup(vm => vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
                 .Returns(new Response<bool> {Data = true});
-            mockValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0,
+            mockValidationManager.Setup(vm => vm.FindClashingEvent(0,
                     DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
-                .Returns(new Response<bool>
+                .Returns(new Response<IEvent>
                 {
                     ErrorMessage =
                         $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}."
