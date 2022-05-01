@@ -8,7 +8,7 @@ namespace CapstoneBackend.Utils
     /// </summary>
     public class GoogleGeocodeService
     {
-        private const string Key = "AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4";
+        private const string Key = "AIzaSyB_TdvmfkvpMjDjMQnd3bDvhkNbrjRq5_I";
 
         /// <summary>
         /// Gets the location by address.

@@ -1,13 +1,13 @@
-﻿@page "/trip/{tripId:int}/waypoint/create"
-@model CapstoneWeb.Pages.CreateWaypointModel
+﻿@page "/trip/{tripId:int}/lodging/edit/{id:int}"
+@model CapstoneWeb.Pages.EditLodgingModel
 @{
     Layout = "Shared/_Layout";
-    ViewData["Title"] = "Create Waypoint";
+    ViewData["Title"] = "Edit Lodging";
     var isErrorVisible = string.IsNullOrEmpty(Model.ErrorMessage) ? "hide" : string.Empty;
 }
 
 <div class="container data-entry-window column">
-    <h1>Create Waypoint </h1>
+    <h1>Edit Lodging</h1>
 
     <p class="error @isErrorVisible">@Model.ErrorMessage</p>
 
@@ -24,6 +24,7 @@
             <div id="createmap"></div>
         </div>
 
+
         <div class="row input-row">
             <div class="input-group">
                 <label for="startDate">Start Date*</label>
@@ -34,10 +35,11 @@
                 <label for="endDate">End Date*</label>
                 <input id="endDate" asp-for="EndDate" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
             </div>
+
         </div>
 
         <div class="button-group">
-            <button type="submit">Create Waypoint</button>
+            <button type="submit">Update Lodging</button>
             <button type="submit" asp-page-handler="cancel" formnovalidate>Cancel</button>
         </div>
 
