@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     PageModel for Create Lodging Site.
+    ///     PageModel for Editing Lodging.
     /// </summary>
     public class EditLodgingModel : PageModel
     {
@@ -44,7 +45,7 @@ namespace CapstoneWeb.Pages
         public string Notes { get; set; }
 
         /// <summary>
-        ///     The transportation manager.
+        ///     The lodging manager.
         /// </summary>
         public LodgingManager LodgingManager { get; set; } = new();
 
@@ -54,6 +55,11 @@ namespace CapstoneWeb.Pages
         public ValidationManager ValidationManager { get; set; } = new();
 
 
+        /// <summary>
+        ///     Called when [get].
+        /// </summary>
+        /// <param name="id">The identifier for the lodging record.</param>
+        /// <param name="tripId">The trip identifier.</param>
         public IActionResult OnGet(int id, int tripId)
         {
             if (!HttpContext.Session.Keys.Contains("userId"))
@@ -76,6 +82,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post].
         /// </summary>
+        /// <param name="id"> The id of the lodging record to edit</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
         ///     A redirection to the trip overview page or the current page if there was an error
@@ -108,17 +115,18 @@ namespace CapstoneWeb.Pages
             };
 
             var response = LodgingManager.EditLodging(updatedLodging);
-            if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
+            if (!string.IsNullOrEmpty(response.ErrorMessage))
             {
-                var routeValue = new RouteValueDictionary
+                ErrorMessage = response.ErrorMessage;
+                return Page();
+                
+            }
+
+            var routeValue = new RouteValueDictionary
                 {
                     {"tripId", tripId}
                 };
-                return RedirectToPage("Trip", routeValue);
-            }
-
-            ErrorMessage = response.ErrorMessage;
-            return Page();
+            return RedirectToPage("Trip", routeValue);
         }
 
         /// <summary>
