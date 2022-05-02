@@ -56,6 +56,7 @@ namespace CapstoneWeb.Pages
 
         /// <summary>
         ///     Called when [get].
+        ///     Retrieves waypoint values to pre-fill
         /// </summary>
         /// <param name="id">The identifier for the waypoint.</param>
         /// <param name="tripId">The trip identifier.</param>
@@ -69,6 +70,12 @@ namespace CapstoneWeb.Pages
             if (waypointResponse.Data is null) return RedirectToPage("Trip", tripId);
 
             if (waypointResponse.Data.TripId != tripId) return RedirectToPage("Trip", tripId);
+
+            var waypoint = waypointResponse.Data;
+            Location = waypoint.Location;
+            StartDate = waypoint.StartDate;
+            EndDate = waypoint.EndDate;
+            Notes = waypoint.Notes;
 
             return Page();
         }
