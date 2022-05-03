@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     PageModel for Create Waypoint Site
+    ///     PageModel for Create Transportation Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
-    public class EditWaypointModel : PageModel
+    public class EditTransportationModel : PageModel
     {
         /// <summary>
         ///     The error message.
@@ -21,10 +21,10 @@ namespace CapstoneWeb.Pages
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        ///     The location.
+        ///     The method.
         /// </summary>
         [BindProperty]
-        public string Location { get; set; }
+        public string Method { get; set; }
 
         /// <summary>
         ///     The start date.
@@ -39,43 +39,47 @@ namespace CapstoneWeb.Pages
         public DateTime EndDate { get; set; } = DateTime.Now;
 
         /// <summary>
-        ///     The notes.
+        ///     The end date.
         /// </summary>
         [BindProperty]
         public string Notes { get; set; }
 
         /// <summary>
-        ///     The waypoint manager.
+        ///     The transportation manager.
         /// </summary>
-        public WaypointManager WaypointManager { get; set; } = new();
+        public TransportationManager TransportationManager { get; set; } = new();
 
         /// <summary>
         ///     The validation manager.
         /// </summary>
         public ValidationManager ValidationManager { get; set; } = new();
 
+
         /// <summary>
         ///     Called when [get].
-        ///     Retrieves waypoint values to pre-fill
         /// </summary>
-        /// <param name="id">The identifier for the waypoint.</param>
+        /// <param name="id">The identifier of the transportation to update.</param>
         /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current
+        ///     transportation display
+        /// </returns>
         public IActionResult OnGet(int id, int tripId)
         {
             if (!HttpContext.Session.Keys.Contains("userId"))
                 return RedirectToPage("Index");
 
-            var waypointResponse = WaypointManager.GetWaypointById(id);
+            var transportationResponse = TransportationManager.GetTransportationById(id);
 
-            if (waypointResponse.Data is null) return RedirectToPage("Trip", tripId);
+            if (transportationResponse.Data is null) return RedirectToPage("Trip", tripId);
 
-            if (waypointResponse.Data.TripId != tripId) return RedirectToPage("Trip", tripId);
+            if (transportationResponse.Data.TripId != tripId) return RedirectToPage("Trip", tripId);
 
-            var waypoint = waypointResponse.Data;
-            Location = waypoint.Location;
-            StartDate = waypoint.StartDate;
-            EndDate = waypoint.EndDate;
-            Notes = waypoint.Notes;
+            var transportation = transportationResponse.Data;
+            Method = transportation.Method;
+            StartDate = transportation.StartDate;
+            EndDate = transportation.EndDate;
+            Notes = transportation.Notes;
 
             return Page();
         }
@@ -83,21 +87,12 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post].
         /// </summary>
-        /// <param name="id">The identifier for the waypoint.</param>
+        /// <param name="id">The identifier of the transportation to update.</param>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns>
-        ///     The redirection to the trip overview page or the current page if there was an error
-        /// </returns>
+        /// <returns>Redirect to trip or the current page if there was an error </returns>
         public IActionResult OnPost(int id, int tripId)
         {
-            var validLocationResponse = ValidationManager.DetermineIfValidLocation(Location);
             var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
-
-            if (!string.IsNullOrEmpty(validLocationResponse.ErrorMessage))
-            {
-                ErrorMessage = validLocationResponse.ErrorMessage;
-                return Page();
-            }
 
             if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
             {
@@ -112,18 +107,18 @@ namespace CapstoneWeb.Pages
                 return Page();
             }
 
-            var updatedWaypoint = new Waypoint
+            var updatedTransportation = new Transportation
             {
+                TransportationId = id,
                 TripId = tripId,
-                WaypointId = id,
-                Location = Location,
+                Method = Method,
                 StartDate = StartDate,
                 EndDate = EndDate,
                 Notes = Notes
             };
 
-            var response = WaypointManager.EditWaypoint(updatedWaypoint);
-            if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
+            var response = TransportationManager.EditTransportation(updatedTransportation);
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary
                 {
@@ -139,8 +134,8 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post cancel].
         /// </summary>
-        /// <param name="tripId">The trip identifier.</param>
-        /// <returns>Redirects to the trip overview page for the trip specified by the trip id </returns>
+        /// <param name="tripId">The trip identifier to add transportation to.</param>
+        /// <returns>Redirects to the trip overview page for the trip specified by the trip id</returns>
         public IActionResult OnPostCancel(int tripId)
         {
             var routeValue = new RouteValueDictionary
