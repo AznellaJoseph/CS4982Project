@@ -10,7 +10,7 @@ namespace CapstoneBackend.Utils
     /// </summary>
     public class GooglePlacesService
     {
-        private const string Key = "AIzaSyDmYx_C23N0TLFO234gBQBBL3EMZ9HYIG4";
+        private const string Key = "AIzaSyB_TdvmfkvpMjDjMQnd3bDvhkNbrjRq5_I";
 
         /// <summary>
         ///     Autocompletes the specified search text with location results from Google.

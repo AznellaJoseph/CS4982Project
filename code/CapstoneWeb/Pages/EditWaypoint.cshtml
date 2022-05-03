@@ -1,13 +1,13 @@
-﻿@page "/trip/{tripId:int}/waypoint/create"
-@model CapstoneWeb.Pages.CreateWaypointModel
+﻿@page "/trip/{tripId:int}/waypoint/edit/{id:int}"
+@model CapstoneWeb.Pages.EditWaypointModel
 @{
     Layout = "Shared/_Layout";
-    ViewData["Title"] = "Create Waypoint";
+    ViewData["Title"] = "Edit Waypoint";
     var isErrorVisible = string.IsNullOrEmpty(Model.ErrorMessage) ? "hide" : string.Empty;
 }
 
 <div class="container data-entry-window column">
-    <h1>Create Waypoint </h1>
+    <h1>Edit Waypoint </h1>
 
     <p class="error @isErrorVisible">@Model.ErrorMessage</p>
 
@@ -37,7 +37,7 @@
         </div>
 
         <div class="button-group">
-            <button type="submit">Create Waypoint</button>
+            <button type="submit">Update Waypoint</button>
             <button type="submit" asp-page-handler="cancel" formnovalidate>Cancel</button>
         </div>
 

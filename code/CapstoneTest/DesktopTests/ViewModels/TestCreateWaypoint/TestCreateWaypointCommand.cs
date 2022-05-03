@@ -88,8 +88,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
                 {
                     Data = true
                 });
-            mockValidationManager.Setup(vm => vm.DetermineIfClashingEventExists(0, DateTime.Today.AddDays(1), DateTime.Today))
-                .Returns(new Response<bool> {Data = false});
+            mockValidationManager.Setup(vm => vm.FindClashingEvent(0, DateTime.Today.AddDays(1), DateTime.Today))
+                .Returns(new Response<IEvent> {Data = null});
             mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
                 .Returns(new Response<bool>
                 {

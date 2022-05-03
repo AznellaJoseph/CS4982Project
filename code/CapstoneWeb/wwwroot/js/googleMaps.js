@@ -1,11 +1,11 @@
 ﻿
-let autocomplete;
+var autocomplete;
 
 /**
  * Initializes the autocomplete on an input element with  the ID: 'location'
  * */
 function initAutocomplete() {
-    autocomplete = new google.maps.places.Autocomplete(
+        autocomplete = new google.maps.places.Autocomplete(
         document.getElementById("location"),
         {
             types: ["establishment"],

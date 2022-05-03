@@ -69,7 +69,7 @@ function _createEvent(event, _index) {
                 <a href="/trip/${tripId}/?handler=View${type}&id=${id}">
                     <img src="../../png/view_icon.png" alt="View"/>
                 </a>
-                <a href="/trip/${tripId}/?handler=Edit${type}&id=${id}">
+                <a href="/trip/${tripId}/${type}/edit/${id}">
                     <img src="../../png/edit_icon.png" alt="Edit"/>
                 </a>
                 <div class="icon-section removeButton" data-id="${id}" data-event-type="${type}">
