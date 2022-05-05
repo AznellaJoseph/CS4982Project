@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Reactive;
+using Avalonia.Media.Imaging;
 using CapstoneBackend.Model;
 using ReactiveUI;
 
@@ -67,7 +69,8 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The image path.
         /// </summary>
-        public string ImagePath => "../Assets/waypoint_icon.png";
+        /// 
+        public IBitmap ImagePath => new Bitmap(Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName).FullName, "Assets/waypoint_icon.png"));
 
         private void removeWaypoint()
         {

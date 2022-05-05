@@ -17,6 +17,6 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The image path.
         /// </summary>
-        public string ImagePath { get; }
+        public IBitmap ImagePath { get; }
     }
 }

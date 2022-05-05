@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reactive;
 using Avalonia;
 using Avalonia.Media.Imaging;
@@ -71,7 +72,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The image path.
         /// </summary>
-        public string ImagePath => "../Assets/transportation_icon.png";
+        public IBitmap ImagePath => new Bitmap(Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName).FullName, "Assets/transportation_icon.png"));
 
         private void removeTransportation()
         {
