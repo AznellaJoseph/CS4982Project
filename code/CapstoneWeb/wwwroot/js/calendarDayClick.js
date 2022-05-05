@@ -86,32 +86,20 @@ function _createEvent(event, _index) {
     let type = event.eventType;
     const tripId = parseInt($("#tripId").attr("value"));
 
-    let startDate = new Date(event.startDate);
-    let endDate = new Date(event.endDate);
-
-    if (startDate.getDate() != endDate.getDate()) {
-        endDate = "CONT'D";
-    } else {
-        endDate = endDate.toLocaleTimeString('en-US');
-    }
-
-    startDate = startDate.toLocaleTimeString('en-US');
-    
-    //console.log(event.startDate + event.startDate.type);
-    //console.log(event.endDate + event.endDate.type);
-
     $("#events-list").append(
         `
-            <div class="event list-item" data-id=${id}>
-                <div class="icon-section">
-                    <img src="../../png/${type}_icon.png" alt="${type}"/>
-                </div>
-                <div class="info-section">
-                    ${_formatDate(event)}
-                </div>
-                <div class="name-section">
-                    ${event.displayName}
-                </div>
+        <div class="event list-item" data-id=${id}>
+            <div class="icon-section">
+                <img src="../../png/${type}_icon.png" alt="${type}"/>
+            </div>
+            <div class="info-section">
+                ${_formatDate(event)}
+            </div>
+            <div class="name-section">
+                ${event.displayName}
+            </div>
+
+            <div class="icon-section">
                 <a href="/trip/${tripId}/?handler=View${type}&id=${id}">
                     <img src="../../png/view_icon.png" alt="View"/>
                 </a>
@@ -121,9 +109,9 @@ function _createEvent(event, _index) {
                 <div class="icon-section removeButton" data-id="${id}" data-event-type="${type}">
                     <img src="../../png/remove_icon.png" alt="Remove"/>
                 </div>
-
             </div>
-        `);
+        </div>
+    `);
 }
 
 function _onGetEventsSuccess(response) {

@@ -33,12 +33,19 @@
                 <div id="lodging-list" class="list">
                     @foreach (var lodging in Model.Lodgings)
                     {
-                        <div class="list-item" id="@lodging.LodgingId">
+                        <div class="event list-item" id="@lodging.LodgingId">
                             <div class="info-section">
                                 @lodging.StartDate.ToShortDateString() - @lodging.EndDate.ToShortDateString()
                             </div>
                             <div class="name-section">
-                                @lodging.DisplayName
+                                @if (lodging.DisplayName.Length > 25)
+                                {
+                                    @lodging.DisplayName.Substring(0, 25);
+                                }
+                                else
+                                {
+                                    @lodging.DisplayName
+                                }
                             </div>
 
                             <div class="icon-section">
