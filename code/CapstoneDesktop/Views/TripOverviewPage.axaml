@@ -136,9 +136,11 @@
             </Grid>
         </Border>
         <Border Classes="container" Grid.Row="4" Grid.RowSpan="3" Grid.Column="2">
-            <Calendar Name="TripCalendar" IsTodayHighlighted="False" SelectionMode="SingleDate" DisplayMode="Month"
+			<Viewbox Stretch="Uniform">
+				<Calendar Name="TripCalendar" IsTodayHighlighted="False" SelectionMode="SingleDate" DisplayMode="Month"
                       DisplayDate="{Binding Trip.StartDate}" SelectedDate="{Binding SelectedDate}"
                       VerticalAlignment="Center" HorizontalAlignment="Center" />
-        </Border>
+			</Viewbox>
+		</Border>
     </Grid>
 </UserControl>
