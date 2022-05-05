@@ -26,7 +26,10 @@ namespace CapstoneWeb.Pages
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns>Redirect to index if the user is not logged in or the current lodging display</returns>
+        /// <returns>
+        ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current
+        ///     lodging display
+        /// </returns>
         public IActionResult OnGet(int id, int tripId)
         {
             if (!HttpContext.Session.Keys.Contains("userId"))
@@ -56,7 +59,7 @@ namespace CapstoneWeb.Pages
         ///     Called when [post back].
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns>Redirect to trip</returns>
+        /// <returns>Redirects to the trip overview page for the trip specified by the trip id</returns>
         public IActionResult OnPostBack(int tripId)
         {
             var routeValue = new RouteValueDictionary

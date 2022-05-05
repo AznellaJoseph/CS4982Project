@@ -7,15 +7,18 @@ using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
+    /// <summary>
+    ///     ViewModel for the Edit Waypoint Page
+    /// </summary>
     public class EditWaypointPageViewModel : ReactiveViewModelBase
     {
-        private string _error = string.Empty;
         private readonly Waypoint _waypoint;
+        private string _error = string.Empty;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="EditWaypointPageViewModel" /> class.
         /// </summary>
-        /// <param name="waypoint">The waypoint.</param>
+        /// <param name="waypoint">The waypoint being edited.</param>
         /// <param name="screen">The screen.</param>
         public EditWaypointPageViewModel(Waypoint waypoint, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
@@ -83,7 +86,7 @@ namespace CapstoneDesktop.ViewModels
         public TimeSpan? EndTime { get; set; }
 
         /// <summary>
-        ///     The method.
+        ///     The location.
         /// </summary>
         public string? Location { get; set; }
 

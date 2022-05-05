@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     PageModel for Create Waypoint Site
+    ///     PageModel for Edit Waypoint Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class EditWaypointModel : PageModel
@@ -56,10 +56,13 @@ namespace CapstoneWeb.Pages
 
         /// <summary>
         ///     Called when [get].
-        ///     Retrieves waypoint values to pre-fill
         /// </summary>
-        /// <param name="id">The identifier for the waypoint.</param>
+        /// <param name="id">The identifier of the waypoint to edit.</param>
         /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current
+        ///     waypoint display
+        /// </returns>
         public IActionResult OnGet(int id, int tripId)
         {
             if (!HttpContext.Session.Keys.Contains("userId"))
@@ -86,7 +89,7 @@ namespace CapstoneWeb.Pages
         /// <param name="id">The identifier for the waypoint.</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
-        ///     The redirection to the trip overview page or the current page if there was an error
+        ///     Redirect to the trip overview page or the current page if there was an error
         /// </returns>
         public IActionResult OnPost(int id, int tripId)
         {
@@ -123,7 +126,7 @@ namespace CapstoneWeb.Pages
             };
 
             var response = WaypointManager.EditWaypoint(updatedWaypoint);
-            if (response.StatusCode.Equals((uint)Ui.StatusCode.Success))
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
             {
                 var routeValue = new RouteValueDictionary
                 {

@@ -8,7 +8,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for Create Account Page
+    ///     ViewModel for the Create Account Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     /// <seealso cref="ReactiveUI.IRoutableViewModel" />

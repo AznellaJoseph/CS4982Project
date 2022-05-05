@@ -90,7 +90,7 @@
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
 								<Grid ColumnDefinitions="Auto,Auto,*,5,Auto,5,*,10,3*,Auto,*">
-									<Image Grid.Column="0"/>
+									<Image Grid.Column="0" Source="{Binding Event.ImagePath}"/>
 									<TextBlock Grid.Column="2" TextAlignment="Center" Text="{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>
 									<TextBlock Grid.Column="4" TextAlignment="Center" Text="-"/>
 									<TextBlock Grid.Column="6" TextAlignment="Center" Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}"/>

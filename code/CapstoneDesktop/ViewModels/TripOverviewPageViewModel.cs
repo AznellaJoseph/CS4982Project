@@ -19,7 +19,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
         /// </summary>
-        /// <param name="trip">The trip.</param>
+        /// <param name="trip">The trip being viewed.</param>
         /// <param name="screen">The screen.</param>
         /// <param name="lodgingManager">The lodging manager.</param>
         public TripOverviewPageViewModel(Trip trip,
@@ -79,7 +79,7 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> CreateLodgingCommand { get; }
 
         /// <summary>
-        ///     The waypoint viewmodels.
+        ///     The event viewmodels.
         /// </summary>
         public ObservableCollection<IEventViewModel> EventViewModels { get; }
 

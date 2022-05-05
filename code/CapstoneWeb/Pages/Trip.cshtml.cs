@@ -160,7 +160,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post remove].
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The identifier of the waypoint to remove.</param>
         /// <returns>
         ///     The json result of removing the waypoint specified by the id
         /// </returns>
@@ -172,7 +172,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [get remove transportation].
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The identifier of the transportation to remove.</param>
         /// <returns>
         ///     The json result of removing the transportation specified by the id
         /// </returns>
@@ -184,7 +184,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post remove lodging].
         /// </summary>
-        /// <param name="id">The id for the lodging record to remove</param>
+        /// <param name="id">The identifier of the lodging to remove</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>Redirect to trip with removed lodging</returns>
         public IActionResult OnPostRemoveLodging(int id, int tripId)
@@ -198,7 +198,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [get view waypoint].
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The identifier of the waypoint to view.</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
         ///     Redirect to waypoint
@@ -216,7 +216,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [get view transportation].
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The identifier of the transportation to view.</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
         ///     Redirect to transportation
@@ -234,10 +234,10 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [get edit waypoint].
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The identifier of the waypoint to edit.</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
-        ///     Redirect to waypoint
+        ///     Redirect to edit waypoint page
         /// </returns>
         public IActionResult OnGetEditWaypoint(int tripId, int id)
         {
@@ -252,10 +252,10 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [get edit transportation].
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The identifier of the transportation to edit.</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
-        ///     Redirect to transportation
+        ///     Redirect to edit transportation page
         /// </returns>
         public IActionResult OnGetEditTransportation(int id, int tripId)
         {
@@ -266,6 +266,5 @@ namespace CapstoneWeb.Pages
             };
             return RedirectToPage("Transportation", routeValues);
         }
-
     }
 }

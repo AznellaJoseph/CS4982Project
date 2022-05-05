@@ -5,7 +5,7 @@ using Avalonia.Data.Converters;
 namespace CapstoneDesktop.Converters
 {
     /// <summary>
-    ///     DateFormatter to be used when displaying dates
+    ///     DateFormatter used when displaying dates
     /// </summary>
     /// <seealso cref="Avalonia.Data.Converters.IValueConverter" />
     public class DateFormatter : IValueConverter
@@ -31,12 +31,12 @@ namespace CapstoneDesktop.Converters
                 DataShown.Both => date.ToString("MM/dd/yyyy hh:mm tt", culture),
                 DataShown.Date => date.ToString("MM/dd/yyyy", culture),
                 DataShown.Time => date.ToString("hh:mm tt", culture),
-                _ => throw new NotImplementedException()
+                _ => date.ToString(culture)
             };
         }
 
         /// <summary>
-        ///     Converts a value.
+        ///     Converts a value back.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <param name="targetType">The type of the target.</param>

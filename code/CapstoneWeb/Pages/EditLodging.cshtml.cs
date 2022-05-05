@@ -1,8 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using CapstoneBackend.Model;
-using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
@@ -10,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     PageModel for Editing Lodging.
+    ///     PageModel for Edit Lodging Site
     /// </summary>
     public class EditLodgingModel : PageModel
     {
@@ -39,7 +37,7 @@ namespace CapstoneWeb.Pages
         public DateTime EndDate { get; set; } = DateTime.Now;
 
         /// <summary>
-        ///     The end date.
+        ///     The notes.
         /// </summary>
         [BindProperty]
         public string Notes { get; set; }
@@ -58,8 +56,12 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [get].
         /// </summary>
-        /// <param name="id">The identifier for the lodging record.</param>
+        /// <param name="id">The identifier for the lodging to edit.</param>
         /// <param name="tripId">The trip identifier.</param>
+        /// <returns>
+        ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current
+        ///     lodging display
+        /// </returns>
         public IActionResult OnGet(int id, int tripId)
         {
             if (!HttpContext.Session.Keys.Contains("userId"))
@@ -85,7 +87,7 @@ namespace CapstoneWeb.Pages
         /// <param name="id"> The id of the lodging record to edit</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
-        ///     A redirection to the trip overview page or the current page if there was an error
+        ///     Redirect to the trip overview page or the current page if there was an error
         /// </returns>
         public IActionResult OnPost(int id, int tripId)
         {
@@ -119,13 +121,12 @@ namespace CapstoneWeb.Pages
             {
                 ErrorMessage = response.ErrorMessage;
                 return Page();
-                
             }
 
             var routeValue = new RouteValueDictionary
-                {
-                    {"tripId", tripId}
-                };
+            {
+                {"tripId", tripId}
+            };
             return RedirectToPage("Trip", routeValue);
         }
 

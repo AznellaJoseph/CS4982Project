@@ -67,7 +67,7 @@ namespace CapstoneBackend.DAL
 
 
         /// <summary>
-        ///     Gets trips of the user with the given id.
+        ///     Gets the trips of the user with the given id.
         /// </summary>
         /// <param name="userId">the user's id</param>
         /// <returns>A list of trips of the user with the given id.</returns>
@@ -105,14 +105,14 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        ///     Creates a Trip in the database
+        ///     Creates a Trip
         /// </summary>
         /// <param name="userId">the userId</param>
         /// <param name="name">the name of the trip</param>
         /// <param name="notes">the notes of the trip</param>
         /// <param name="startDate">the start date of the trip</param>
         /// <param name="endDate">the end date of the trip</param>
-        /// <returns>The trip id or throws an exception if there was an error</returns>
+        /// <returns>The id of the new trip or throws an exception if there was an error</returns>
         public virtual int CreateTrip(int userId, string name, string? notes, DateTime startDate, DateTime endDate)
         {
             _connection.Open();

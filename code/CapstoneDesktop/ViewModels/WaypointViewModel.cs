@@ -8,7 +8,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for a single Waypoint
+    ///     ViewModel for a single Waypoint, used in the trip overview event list
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ReactiveViewModelBase" />
     /// <seealso cref="CapstoneDesktop.ViewModels.IEventViewModel" />
@@ -47,11 +47,6 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, Unit> RemoveCommand { get; }
 
         /// <summary>
-        ///     The remove event
-        /// </summary>
-        public event EventHandler<EventArgs>? RemoveEvent;
-
-        /// <summary>
         ///     The view command.
         /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> ViewCommand { get; }
@@ -62,6 +57,11 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> EditCommand { get; }
 
         /// <summary>
+        ///     The remove event
+        /// </summary>
+        public event EventHandler<EventArgs>? RemoveEvent;
+
+        /// <summary>
         ///     The Event.
         /// </summary>
         public IEvent Event => Waypoint;
@@ -69,8 +69,10 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The image path.
         /// </summary>
-        /// 
-        public IBitmap ImagePath => new Bitmap(Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName).FullName, "Assets/waypoint_icon.png"));
+        public IBitmap ImagePath =>
+            new Bitmap(Path.Combine(
+                Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
+                    .FullName).FullName, "Assets/waypoint_icon.png"));
 
         private void removeWaypoint()
         {

@@ -1,6 +1,4 @@
 using System;
-using System.Reactive;
-using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
@@ -9,11 +7,6 @@ namespace CapstoneDesktop.ViewModels
     /// </summary>
     public interface IRemovable
     {
-        /// <summary>
-        ///     The remove command.
-        /// </summary>
-        public ReactiveCommand<Unit, Unit> RemoveCommand { get; }
-
         /// <summary>
         ///     The remove event.
         /// </summary>

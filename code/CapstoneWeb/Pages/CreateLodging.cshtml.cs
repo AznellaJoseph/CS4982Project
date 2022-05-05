@@ -37,13 +37,13 @@ namespace CapstoneWeb.Pages
         public DateTime EndDate { get; set; } = DateTime.Now;
 
         /// <summary>
-        ///     The end date.
+        ///     The notes.
         /// </summary>
         [BindProperty]
         public string Notes { get; set; }
 
         /// <summary>
-        ///     The transportation manager.
+        ///     The lodging manager.
         /// </summary>
         public LodgingManager LodgingManager { get; set; } = new();
 

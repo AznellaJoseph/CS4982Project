@@ -52,6 +52,13 @@ namespace CapstoneBackend.Model
         /// </summary>
         public string DisplayName => Location[..Location.IndexOf(",", StringComparison.Ordinal)];
 
+        /// <summary>
+        ///     Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        ///     True if the current object is equal to the parameter, false otherwise />.
+        /// </returns>
         public bool Equals(IEvent? other)
         {
             return other is not null && other.Id.Equals(Id) && other.DisplayName.Equals(DisplayName) &&
@@ -60,6 +67,12 @@ namespace CapstoneBackend.Model
                    other.StartDate.Equals(StartDate) && other.TripId.Equals(TripId);
         }
 
+        /// <summary>
+        ///     Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             return HashCode.Combine(Id, DisplayName, EventType);

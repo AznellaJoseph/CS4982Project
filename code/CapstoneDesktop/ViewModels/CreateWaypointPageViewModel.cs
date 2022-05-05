@@ -9,7 +9,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the CreateWaypoint Page
+    ///     ViewModel for the Create Waypoint Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateWaypointPageViewModel : ReactiveViewModelBase
@@ -25,7 +25,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateWaypointPageViewModel" /> class.
         /// </summary>
-        /// <param name="trip">the trip that the waypoint will be created for.</param>
+        /// <param name="trip">the trip that the waypoint is being created for.</param>
         /// <param name="screen">The screen</param>
         public CreateWaypointPageViewModel(Trip trip, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])

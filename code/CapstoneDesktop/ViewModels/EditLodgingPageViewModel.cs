@@ -7,6 +7,9 @@ using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
+    /// <summary>
+    ///     ViewModel for the Edit Lodging Page
+    /// </summary>
     public class EditLodgingPageViewModel : ReactiveViewModelBase
     {
         private readonly Lodging _lodging;
@@ -15,7 +18,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="EditLodgingPageViewModel" /> class.
         /// </summary>
-        /// <param name="lodging">The lodging.</param>
+        /// <param name="lodging">The lodging being edited.</param>
         /// <param name="screen">The screen.</param>
         public EditLodgingPageViewModel(Lodging lodging, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
@@ -83,7 +86,7 @@ namespace CapstoneDesktop.ViewModels
         public TimeSpan? EndTime { get; set; }
 
         /// <summary>
-        ///     The method.
+        ///     The location.
         /// </summary>
         public string? Location { get; set; }
 

@@ -36,7 +36,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [post].
         /// </summary>
-        /// <returns>Redirect to index if the user was not logged in or current page if there was an error </returns>
+        /// <returns>Redirect to index if the user was successfully logged in or current page with an error </returns>
         public IActionResult OnPostLogin()
         {
             var response = UserManager.GetUserByCredentials(Username, Password);
@@ -47,7 +47,6 @@ namespace CapstoneWeb.Pages
             }
 
             ErrorMessage = response.ErrorMessage;
-
             return Page();
         }
 

@@ -60,7 +60,7 @@ namespace CapstoneWeb.Pages
         ///     Called when [post back].
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
-        /// <returns>Redirect to trip</returns>
+        /// <returns>Redirects to the trip overview page for the trip specified by the trip id</returns>
         public IActionResult OnPostBack(int tripId)
         {
             var routeValue = new RouteValueDictionary

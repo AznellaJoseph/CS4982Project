@@ -38,7 +38,7 @@ namespace CapstoneBackend.DAL
         /// <param name="endDate">The end date.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        ///     The waypoint id or throws an exception if there was an error
+        ///     The id of the new waypoint or throws an exception if there was an error
         /// </returns>
         public virtual int CreateWaypoint(int tripId, string location, DateTime startDate, DateTime endDate,
             string? notes)
@@ -111,7 +111,7 @@ namespace CapstoneBackend.DAL
         /// </summary>
         /// <param name="waypointId">The waypoint identifier.</param>
         /// <returns>
-        ///     True if the waypoint was removed, false otherwise or throws an exception if there was an error
+        ///     True if the waypoint was removed, false otherwise
         /// </returns>
         public virtual bool RemoveWaypoint(int waypointId)
         {
@@ -166,11 +166,11 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        /// Edits the waypoint.
+        ///     Edits the waypoint.
         /// </summary>
         /// <param name="waypoint">The waypoint.</param>
         /// <returns>
-        /// True if the waypoint was updated, false otherwise
+        ///     True if the waypoint was updated, false otherwise
         /// </returns>
         public virtual bool EditWaypoint(Waypoint waypoint)
         {

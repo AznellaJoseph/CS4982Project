@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using CapstoneBackend.Utils;
 
 namespace CapstoneBackend.Model
 {
     /// <summary>
-    ///     ValidationManager to validate trips and event dates
+    ///     ValidationManager to validate trip and event dates
     /// </summary>
     public class ValidationManager
     {
@@ -86,7 +84,10 @@ namespace CapstoneBackend.Model
         /// <param name="userId">The user identifier.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns> A response of false if a clashing trip does not exist or a non-success code and error message specifying the clashing trip dates.</returns>
+        /// <returns>
+        ///     A response of false if a clashing trip does not exist or a non-success code and error message specifying the
+        ///     clashing trip dates.
+        /// </returns>
         public virtual Response<bool> DetermineIfClashingTripExists(int userId, DateTime startDate, DateTime endDate)
         {
             var tripDates = Enumerable.Range(0,
@@ -125,7 +126,10 @@ namespace CapstoneBackend.Model
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
-        /// <returns>A response of false if a clashing event does not exist or a non-success code and error message specifying the clashing event dates.</returns>
+        /// <returns>
+        ///     A response of the clashing event and a non-success code and error message specifying the clashing event dates
+        ///     or an empty response.
+        /// </returns>
         public virtual Response<IEvent> FindClashingEvent(int tripId, DateTime startDate, DateTime endDate)
         {
             var eventDates = Enumerable.Range(0,
@@ -163,27 +167,22 @@ namespace CapstoneBackend.Model
         ///     The location input to validate.
         /// </param>
         /// <returns>
-        ///     Success Response if valid, Error Response if invalid
+        ///     A response specifying the entered location is valid, a non-success status code and error method if otherwise
         /// </returns>
         public virtual Response<bool> DetermineIfValidLocation(string locationInput)
         {
             var isValid = GooglePlacesService.IsLocationValid(locationInput);
 
             if (isValid)
-            {
                 return new Response<bool>
                 {
                     Data = true
                 };
-            }
-            else
+            return new Response<bool>
             {
-                return new Response<bool>
-                {
-                    ErrorMessage = Ui.ErrorMessages.InvalidLocation,
-                    StatusCode = (uint) Ui.StatusCode.BadRequest
-                };
-            }
+                ErrorMessage = Ui.ErrorMessages.InvalidLocation,
+                StatusCode = (uint) Ui.StatusCode.BadRequest
+            };
         }
     }
 }
