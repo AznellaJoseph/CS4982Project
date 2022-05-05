@@ -677,15 +677,13 @@ namespace GMap.NET.Avalonia
 
                 ItemsPanel = _itemsPanelTemplateInstance;
 
-                if (_styleInstance == null)
+                _styleInstance = new Style();
                 {
-                    _styleInstance = new Style();
-                    {
-                        _styleInstance.Setters.Add(new Setter(Canvas.LeftProperty, new Binding("LocalPositionX")));
-                        _styleInstance.Setters.Add(new Setter(Canvas.TopProperty, new Binding("LocalPositionY")));
-                        _styleInstance.Setters.Add(new Setter(Panel.ZIndexProperty, new Binding("ZIndex")));
-                    }
+                    _styleInstance.Setters.Add(new Setter(Canvas.LeftProperty, new Binding("LocalPositionX")));
+                    _styleInstance.Setters.Add(new Setter(Canvas.TopProperty, new Binding("LocalPositionY")));
+                    _styleInstance.Setters.Add(new Setter(Panel.ZIndexProperty, new Binding("ZIndex")));
                 }
+
 
                 if (!Styles.Contains(_styleInstance))
                 {
@@ -1493,10 +1491,8 @@ namespace GMap.NET.Avalonia
                     {
                         DrawMap(drawingContext);
 
-#if DEBUG
                         drawingContext.DrawLine(_virtualCenterCrossPen, new Point(-20, 0), new Point(20, 0));
                         drawingContext.DrawLine(_virtualCenterCrossPen, new Point(0, -20), new Point(0, 20));
-#endif
                     }
                 }
                 else
@@ -1515,6 +1511,7 @@ namespace GMap.NET.Avalonia
             {
                 var p1 = FromLatLngToLocal(SelectedArea.LocationTopLeft);
                 var p2 = FromLatLngToLocal(SelectedArea.LocationRightBottom);
+
 
                 long x1 = p1.X;
                 long y1 = p1.Y;

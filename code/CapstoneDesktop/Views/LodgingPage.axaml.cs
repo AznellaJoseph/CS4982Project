@@ -28,19 +28,21 @@ namespace CapstoneDesktop.Views
 
         private void InitializeComponent()
         {
-            this.WhenActivated(_ =>
+            this.WhenActivated(disposables =>
             {
                 if (DataContext is null) return;
                 var viewModel = (LodgingPageViewModel)DataContext;
                 MainMap = new GMapControl();
                 var lodging = viewModel.Lodging;
                 var container = this.Get<Panel>("MapContainer");
+                container.Children.Clear();
                 container.Children.Add(MainMap);
-                GoogleMapProvider.Instance.ApiKey = "AIzaSyARhel5-jZFkChP1uASkhk0G7qYc5cRiWA";
+                GoogleMapProvider.Instance.ApiKey = "AIzaSyB_TdvmfkvpMjDjMQnd3bDvhkNbrjRq5_I";
                 MainMap.MapProvider = GMapProviders.GoogleMap;
                 var result = GoogleGeocodeService.GetLocationByAddress(lodging.Location);
                 MainMap.Position = new PointLatLng(result.Latitude, result.Longitude);
                 MainMap.FillEmptyTiles = true;
+                disposables.Add(MainMap);
             });
             AvaloniaXamlLoader.Load(this);
         }
