@@ -199,7 +199,7 @@ label {
     flex-wrap: nowrap;
     height: auto;
     justify-content: space-between;
-    padding: 15px;
+    padding: 1em;
     width: 98%;
 }
 
@@ -224,10 +224,10 @@ label {
     width: 70vw;
 }
 
-    .landing-page form, .trip-overview form {
-        margin: 5px;
-        min-height: auto;
-    }
+.landing-page form, .trip-overview form {
+    margin: 5px;
+    min-height: auto;
+}
 
 #trip-list, #events-list, #lodging-list {
     flex: 1;
@@ -274,7 +274,8 @@ label {
 }
 
 .info-section {
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 1.5em;
 }
 
 .name-section {
@@ -292,9 +293,9 @@ label {
     width: 65vw;
 }
 
-    .trip-overview .row {
-        height: 75%;
-    }
+.trip-overview .row {
+    height: 75%;
+}
 
 #myCalendar {
     background: #002E3D;
@@ -309,23 +310,37 @@ label {
     flex-direction: column;
 }
 
+.icon-section button {
+    padding: 3px;
+}
+
+.event.list-item {
+    min-height: 25px;
+    max-height: 50px;
+}
+
+.event.list-item .removeButton, .event.list-item .removeButton a {
+    display: inline;
+    text-decoration: none;
+}
+
 
 #myCalendar .vanilla-calendar-btn {
     background: #007EA7;
     padding: 5px;
 }
 
-    #myCalendar .vanilla-calendar-btn svg {
-        fill: black;
-    }
+#myCalendar .vanilla-calendar-btn svg {
+    fill: black;
+}
 
 #myCalendar .vanilla-calendar-week {
     background: #007EA7;
 }
 
-    #myCalendar .vanilla-calendar-week span {
-        color: black;
-    }
+#myCalendar .vanilla-calendar-week span {
+    color: black;
+}
 
 #myCalendar .vanilla-calendar-date {
     background: #809848;
@@ -372,5 +387,5 @@ label {
 }
 
 img[alt="Remove"], img[alt="Edit"], img[alt="View"], img[alt="Transportation"], img[alt="Waypoint"] {
-    height: 30%;
+    height: 100%;
 }
