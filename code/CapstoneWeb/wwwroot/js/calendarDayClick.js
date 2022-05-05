@@ -1,3 +1,5 @@
+var currentDate = null;
+
 function _registerCalendarDayClick() {
     $(".vanilla-calendar-date").click(_onCalendarDayClick);
 }
@@ -12,6 +14,7 @@ function _onCalendarDayClick() {
 
     const pad = function (num) { return (`00${num}`).slice(-2) };
     let date = new Date($(this).attr("data-calendar-date"));
+    currentDate = date;
     date = date.getUTCFullYear() +
         "-" +
         pad(date.getUTCMonth() + 1) +
@@ -30,6 +33,35 @@ function _onCalendarDayClick() {
         success: _onGetEventsSuccess
     }
     );
+}
+
+function _formatDate(event) {
+    let startDate = new Date(event.startDate);
+    let endDate = new Date(event.endDate);
+
+    let options = { hour: '2-digit', minute: '2-digit' };
+
+    if (startDate.getDate() != endDate.getDate()) {
+        if (startDate.getDate() < currentDate.getDate()) {
+            startDate = "PREV";
+        }
+        else {
+            startDate = startDate.toLocaleTimeString('en-US', options);
+        }
+
+        if (endDate.getDate() > currentDate.getDate()) {
+            endDate = "CONT'D";
+        }
+        else {
+            endDate = endDate.toLocaleTimeString('en-US', options);
+        }
+    }
+    else {
+        startDate = startDate.toLocaleTimeString('en-US', options);
+        endDate = endDate.toLocaleTimeString('en-US', options);
+    }
+
+    return `${ startDate } - ${ endDate }`
 }
 
 function _onRemoveClick() {
@@ -54,6 +86,20 @@ function _createEvent(event, _index) {
     let type = event.eventType;
     const tripId = parseInt($("#tripId").attr("value"));
 
+    let startDate = new Date(event.startDate);
+    let endDate = new Date(event.endDate);
+
+    if (startDate.getDate() != endDate.getDate()) {
+        endDate = "CONT'D";
+    } else {
+        endDate = endDate.toLocaleTimeString('en-US');
+    }
+
+    startDate = startDate.toLocaleTimeString('en-US');
+    
+    //console.log(event.startDate + event.startDate.type);
+    //console.log(event.endDate + event.endDate.type);
+
     $("#events-list").append(
         `
             <div class="event list-item" data-id=${id}>
@@ -61,7 +107,7 @@ function _createEvent(event, _index) {
                     <img src="../../png/${type}_icon.png" alt="${type}"/>
                 </div>
                 <div class="info-section">
-                    ${event.startDate} - ${event.endDate}
+                    ${_formatDate(event)}
                 </div>
                 <div class="name-section">
                     ${event.displayName}

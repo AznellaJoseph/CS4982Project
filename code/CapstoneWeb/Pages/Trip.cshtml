@@ -35,7 +35,7 @@
                     {
                         <div class="list-item" id="@lodging.LodgingId">
                             <div class="info-section">
-                                @lodging.StartDate - @lodging.EndDate
+                                @lodging.StartDate.ToShortDateString() - @lodging.EndDate.ToShortDateString()
                             </div>
                             <div class="name-section">
                                 @lodging.DisplayName
