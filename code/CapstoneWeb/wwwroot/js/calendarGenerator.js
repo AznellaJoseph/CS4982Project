@@ -44,5 +44,6 @@ const calendarData = formatAvailableDates(tripDateRange);
 let myCalendar = new VanillaCalendar({
     selector: "#myCalendar",
     availableDates: calendarData,
-    datesFilter: true
+    datesFilter: true,
+    date: tripStartDate
 });
