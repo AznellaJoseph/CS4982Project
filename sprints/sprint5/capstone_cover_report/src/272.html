@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\TripViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Reactive;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for a single Trip, used in the trip list of a user
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class TripViewModel : ViewModelBase
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TripViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;trip&quot;&gt;The trip.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public TripViewModel(Trip trip, IScreen screen)
+        {
+            Trip = trip;
+            TripClickCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                screen.Router.Navigate.Execute(new TripOverviewPageViewModel(Trip, screen, new LodgingManager())));
+        }
+
+        /// &lt;summary&gt;
+        ///     The trip.
+        /// &lt;/summary&gt;
+        public Trip Trip { get; }
+
+        /// &lt;summary&gt;
+        ///     The trip click command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; TripClickCommand { get; }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,56,1],[19,9,19,10,1],[20,13,20,25,1],[21,13,22,17,1],[22,17,22,114,0],[22,114,22,116,1],[23,9,23,10,1],[28,28,28,32,1],[33,77,33,81,1]]);
+    </script>
+  </body>
+</html>

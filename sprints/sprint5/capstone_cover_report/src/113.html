@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\LodgingManager.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A wrapper class for the LodgingDal. Manages the collection of Lodgings and informs of server errors.
+    /// &lt;/summary&gt;
+    public class LodgingManager
+    {
+        private readonly LodgingDal _dal;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;LodgingManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public LodgingManager() : this(new LodgingDal())
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;LodgingManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
+        public LodgingManager(LodgingDal dal)
+        {
+            _dal = dal;
+        }
+
+        /// &lt;summary&gt;
+        ///     Creates the Lodging.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;location&quot;&gt;The location.&lt;/param&gt;
+        /// &lt;param name=&quot;notes&quot;&gt;The notes.&lt;/param&gt;
+        /// &lt;param name=&quot;startTime&quot;&gt;The start time.&lt;/param&gt;
+        /// &lt;param name=&quot;endTime&quot;&gt;The end time.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     A response of the id of the new lodging or a non-success status code and error message
+        /// &lt;/returns&gt;
+        public virtual Response&lt;int&gt; CreateLodging(int tripId, string location, DateTime startTime, DateTime endTime,
+            string? notes)
+        {
+            if (startTime.CompareTo(endTime) &gt; 0)
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.BadRequest,
+                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
+                };
+
+            try
+            {
+                var lodgingId = _dal.CreateLodging(tripId, location, startTime, endTime, notes);
+                return new Response&lt;int&gt;
+                {
+                    Data = lodgingId
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the Lodgings by trip identifier.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt; A response of the Lodgings with the entered trip id or a non-success status code and error message.&lt;/returns&gt;
+        public virtual Response&lt;IList&lt;Lodging&gt;&gt; GetLodgingsByTripId(int tripId)
+        {
+            try
+            {
+                var lodgingsInTrip = _dal.GetLodgingsByTripId(tripId);
+
+                return new Response&lt;IList&lt;Lodging&gt;&gt;
+                {
+                    Data = lodgingsInTrip
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;IList&lt;Lodging&gt;&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;IList&lt;Lodging&gt;&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Removes the Lodging.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;lodgingId&quot;&gt;The identifier.&lt;/param&gt;
+        /// &lt;returns&gt; A response specifying the Lodging was removed or a non-success status code and error message. &lt;/returns&gt;
+        public virtual Response&lt;bool&gt; RemoveLodging(int lodgingId)
+        {
+            try
+            {
+                var removed = _dal.RemoveLodging(lodgingId);
+
+                if (!removed)
+                    return new Response&lt;bool&gt;
+                    {
+                        ErrorMessage = Ui.ErrorMessages.LodgingNotFound,
+                        StatusCode = (uint) Ui.StatusCode.BadRequest
+                    };
+
+                return new Response&lt;bool&gt;
+                {
+                    Data = removed
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;bool&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;bool&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the lodging by identifier.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;lodgingId&quot;&gt;The lodging identifier.&lt;/param&gt;
+        /// &lt;returns&gt;A response of the lodging with the given id or a non-success code and error message&lt;/returns&gt;
+        public virtual Response&lt;Lodging&gt; GetLodgingById(int lodgingId)
+        {
+            try
+            {
+                var lodging = _dal.GetLodgingById(lodgingId);
+
+                if (lodging is null)
+                    return new Response&lt;Lodging&gt;
+                    {
+                        ErrorMessage = Ui.ErrorMessages.LodgingNotFound,
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound
+                    };
+
+                return new Response&lt;Lodging&gt; {Data = lodging};
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;Lodging&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;Lodging&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Edits the lodging.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;lodging&quot;&gt;The lodging.&lt;/param&gt;
+        /// &lt;returns&gt;A response of if the lodging was updated or a non-success code and error message&lt;/returns&gt;
+        public virtual Response&lt;bool&gt; EditLodging(Lodging lodging)
+        {
+            try
+            {
+                var updated = _dal.EditLodging(lodging);
+
+                if (!updated)
+                    return new Response&lt;bool&gt;
+                    {
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound, ErrorMessage = Ui.ErrorMessages.LodgingNotFound
+                    };
+
+                return new Response&lt;bool&gt; {Data = updated};
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;bool&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;bool&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,35,19,57,1],[20,9,20,10,1],[21,9,21,10,1],[27,9,27,46,1],[28,9,28,10,1],[29,13,29,24,1],[30,9,30,10,1],[45,9,45,10,1],[46,13,46,50,1],[47,17,51,19,1],[54,13,54,14,1],[55,17,55,97,1],[56,17,59,19,1],[61,13,61,37,1],[62,13,62,14,1],[63,17,67,19,1],[69,13,69,30,1],[70,13,70,14,1],[71,17,75,19,1],[77,9,77,10,1],[85,9,85,10,1],[87,13,87,14,1],[88,17,88,71,1],[90,17,93,19,1],[95,13,95,37,1],[96,13,96,14,1],[97,17,101,19,1],[103,13,103,30,1],[104,13,104,14,1],[105,17,109,19,1],[111,9,111,10,1],[119,9,119,10,1],[121,13,121,14,1],[122,17,122,61,1],[124,17,124,30,1],[125,21,129,23,1],[131,17,134,19,1],[136,13,136,37,1],[137,13,137,14,1],[138,17,142,19,1],[144,13,144,30,1],[145,13,145,14,1],[146,17,150,19,1],[152,9,152,10,1],[160,9,160,10,1],[162,13,162,14,1],[163,17,163,62,1],[165,17,165,37,1],[166,21,170,23,1],[172,17,172,63,1],[174,13,174,37,1],[175,13,175,14,1],[176,17,180,19,1],[182,13,182,30,1],[183,13,183,14,1],[184,17,188,19,1],[190,9,190,10,1],[198,9,198,10,1],[200,13,200,14,1],[201,17,201,57,1],[203,17,203,30,1],[204,21,207,23,1],[209,17,209,60,1],[211,13,211,37,1],[212,13,212,14,1],[213,17,217,19,1],[219,13,219,30,1],[220,13,220,14,1],[221,17,225,19,1],[227,9,227,10,1]]);
+    </script>
+  </body>
+</html>

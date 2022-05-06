@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\TripOverviewPage.axaml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneDesktop.ViewModels;
+using ReactiveUI;
+
+namespace CapstoneDesktop.Views
+{
+    /// &lt;summary&gt;
+    ///     User Control for the Trip Overview Functionality
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Avalonia.ReactiveUI.ReactiveUserControl&amp;lt;TripOverviewPageViewModel&amp;gt;&quot; /&gt;
+    public class TripOverviewPage : ReactiveUserControl&lt;TripOverviewPageViewModel&gt;
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TripOverviewPage&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public TripOverviewPage()
+        {
+            InitializeComponent();
+        }
+
+        private void InitializeComponent()
+        {
+            this.WhenActivated(_ =&gt;
+            {
+                if (DataContext is null) return;
+                var context = (TripOverviewPageViewModel) DataContext;
+                var calendar = this.FindControl&lt;Calendar&gt;(&quot;TripCalendar&quot;);
+                calendar.BlackoutDates?.Add(
+                    new CalendarDateRange(DateTime.MinValue, context.Trip.StartDate.AddDays(-1)));
+                calendar.BlackoutDates?.Add(new CalendarDateRange(context.Trip.EndDate.AddDays(1), DateTime.MaxValue));
+            });
+            AvaloniaXamlLoader.Load(this);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,9,19,34,0],[20,9,20,10,0],[21,13,21,35,0],[22,9,22,10,0],[25,9,25,10,0],[26,13,27,13,0],[27,13,27,14,0],[27,14,28,17,0],[28,17,28,41,0],[28,41,28,42,0],[28,42,28,49,0],[28,49,29,17,0],[29,17,29,71,0],[29,71,30,17,0],[30,17,30,75,0],[30,75,31,17,0],[31,17,32,99,0],[32,99,33,17,0],[33,17,33,120,0],[33,120,34,13,0],[34,13,34,14,0],[34,14,34,16,0],[35,13,35,43,0],[36,9,36,10,0]]);
+    </script>
+  </body>
+</html>

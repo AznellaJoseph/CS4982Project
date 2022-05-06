@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestEditTransportation\TestConstructor.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneDesktop.ViewModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestEditTransportation
+{
+    [TestClass]
+    public class TestConstructor
+    {
+        [TestMethod]
+        public void Constructor_PropertyCreations()
+        {
+            Transportation transportation = new()
+            {
+                EndDate = DateTime.Today.AddDays(3),
+                StartDate = DateTime.Today,
+                Method = &quot;Plane&quot;,
+                TransportationId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            EditTransportationPageViewModel editTransportationPageViewModel = new(transportation, mockScreen.Object);
+
+            Assert.AreEqual(editTransportationPageViewModel.HostScreen, mockScreen.Object);
+            Assert.AreEqual(editTransportationPageViewModel.StartDate, transportation.StartDate.Date);
+            Assert.AreEqual(editTransportationPageViewModel.StartTime, transportation.StartDate.TimeOfDay);
+            Assert.AreEqual(editTransportationPageViewModel.EndDate, transportation.EndDate.Date);
+            Assert.AreEqual(editTransportationPageViewModel.EndTime, transportation.EndDate.TimeOfDay);
+            Assert.AreEqual(editTransportationPageViewModel.Method, transportation.Method);
+            Assert.AreEqual(editTransportationPageViewModel.Notes, transportation.Notes);
+            Assert.IsNotNull(editTransportationPageViewModel.EditTransportationCommand);
+            Assert.IsNotNull(editTransportationPageViewModel.CancelEditTransportationCommand);
+            Assert.IsNotNull(editTransportationPageViewModel.TransportationManager);
+            Assert.IsNotNull(editTransportationPageViewModel.ValidationManager);
+            Assert.IsNotNull(editTransportationPageViewModel.UrlPathSegment);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,24,15,1],[25,13,25,50,1],[26,13,26,118,1],[28,13,28,92,1],[29,13,29,103,1],[30,13,30,108,1],[31,13,31,99,1],[32,13,32,104,1],[33,13,33,92,1],[34,13,34,90,1],[35,13,35,89,1],[36,13,36,95,1],[37,13,37,85,1],[38,13,38,81,1],[39,13,39,78,1],[40,9,40,10,1]]);
+    </script>
+  </body>
+</html>

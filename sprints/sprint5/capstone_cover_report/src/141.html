@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\EditWaypoint.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Edit Waypoint Site
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class EditWaypointModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string ErrorMessage { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Location { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime StartDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime EndDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The waypoint manager.
+        /// &lt;/summary&gt;
+        public WaypointManager WaypointManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The validation manager.
+        /// &lt;/summary&gt;
+        public ValidationManager ValidationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     Called when [get].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier of the waypoint to edit.&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current
+        ///     waypoint display
+        /// &lt;/returns&gt;
+        public IActionResult OnGet(int id, int tripId)
+        {
+            if (!HttpContext.Session.Keys.Contains(&quot;userId&quot;))
+                return RedirectToPage(&quot;Index&quot;);
+
+            var waypointResponse = WaypointManager.GetWaypointById(id);
+
+            if (waypointResponse.Data is null) return RedirectToPage(&quot;Trip&quot;, tripId);
+
+            if (waypointResponse.Data.TripId != tripId) return RedirectToPage(&quot;Trip&quot;, tripId);
+
+            var waypoint = waypointResponse.Data;
+            Location = waypoint.Location;
+            StartDate = waypoint.StartDate;
+            EndDate = waypoint.EndDate;
+            Notes = waypoint.Notes;
+
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier for the waypoint.&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to the trip overview page or the current page if there was an error
+        /// &lt;/returns&gt;
+        public IActionResult OnPost(int id, int tripId)
+        {
+            var validLocationResponse = ValidationManager.DetermineIfValidLocation(Location);
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
+
+            if (!string.IsNullOrEmpty(validLocationResponse.ErrorMessage))
+            {
+                ErrorMessage = validLocationResponse.ErrorMessage;
+                return Page();
+            }
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
+            {
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Page();
+            }
+
+            var clashingEventResponse = ValidationManager.FindClashingEvent(tripId, StartDate, EndDate);
+            if (clashingEventResponse.Data is not null &amp;&amp; clashingEventResponse.Data.Id != id)
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Page();
+            }
+
+            var updatedWaypoint = new Waypoint
+            {
+                TripId = tripId,
+                WaypointId = id,
+                Location = Location,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                Notes = Notes
+            };
+
+            var response = WaypointManager.EditWaypoint(updatedWaypoint);
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
+            {
+                var routeValue = new RouteValueDictionary
+                {
+                    {&quot;tripId&quot;, tripId}
+                };
+                return RedirectToPage(&quot;Trip&quot;, routeValue);
+            }
+
+            ErrorMessage = response.ErrorMessage;
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post cancel].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;Redirects to the trip overview page for the trip specified by the trip id &lt;/returns&gt;
+        public IActionResult OnPostCancel(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[21,38,21,42,1],[21,43,21,47,1],[27,34,27,38,1],[27,39,27,43,1],[33,37,33,41,1],[33,42,33,46,1],[33,51,33,63,1],[39,35,39,39,1],[39,40,39,44,1],[39,49,39,61,1],[45,31,45,35,1],[45,36,45,40,1],[50,50,50,54,1],[50,55,50,59,1],[50,64,50,69,1],[55,54,55,58,1],[55,59,55,63,1],[55,68,55,73,1],[67,9,67,10,1],[68,13,68,62,1],[69,17,69,48,1],[71,13,71,72,1],[73,13,73,47,1],[73,48,73,86,1],[75,13,75,56,1],[75,57,75,95,1],[77,13,77,50,1],[78,13,78,42,1],[79,13,79,44,1],[80,13,80,40,1],[81,13,81,36,1],[83,13,83,27,1],[84,9,84,10,1],[95,9,95,10,1],[96,13,96,94,1],[97,13,97,111,1],[99,13,99,75,1],[100,13,100,14,1],[101,17,101,67,1],[102,17,102,31,1],[105,13,105,72,1],[106,13,106,14,1],[107,17,107,64,1],[108,17,108,31,1],[111,13,111,105,1],[112,13,112,95,1],[113,13,113,14,1],[114,17,114,67,1],[115,17,115,31,1],[118,13,126,15,1],[128,13,128,74,1],[129,13,129,74,1],[130,13,130,14,1],[131,17,134,19,1],[135,17,135,59,1],[138,13,138,50,1],[139,13,139,27,1],[140,9,140,10,1],[148,9,148,10,1],[149,13,152,15,1],[153,13,153,55,1],[154,9,154,10,1]]);
+    </script>
+  </body>
+</html>

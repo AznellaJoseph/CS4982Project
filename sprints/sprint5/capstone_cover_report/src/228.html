@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\CreateAccountPage.axaml</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+&lt;UserControl xmlns=&quot;https://github.com/avaloniaui&quot;
+             xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+             x:Class=&quot;CapstoneDesktop.Views.CreateAccountPage&quot;&gt;
+
+    &lt;Border Classes=&quot;container&quot; VerticalAlignment=&quot;Center&quot; HorizontalAlignment=&quot;Center&quot; Padding=&quot;30&quot;&gt;
+        &lt;StackPanel Spacing=&quot;10&quot; Width=&quot;500&quot;&gt;
+            &lt;TextBlock Classes=&quot;h1&quot; Text=&quot;CREATE ACCOUNT&quot; FontSize=&quot;24&quot; TextAlignment=&quot;Center&quot; /&gt;
+
+            &lt;TextBlock Text=&quot;{Binding ErrorMessage}&quot; Foreground=&quot;Red&quot; /&gt;
+
+            &lt;TextBlock Text=&quot;USERNAME:&quot; /&gt;
+            &lt;TextBox Watermark=&quot;USERNAME&quot; Text=&quot;{Binding Username, Mode=TwoWay}&quot; /&gt;
+
+            &lt;TextBlock Text=&quot;FIRST NAME:&quot; /&gt;
+            &lt;TextBox Watermark=&quot;FIRST NAME&quot; Text=&quot;{Binding FirstName, Mode=TwoWay}&quot; /&gt;
+
+            &lt;TextBlock Text=&quot;LAST NAME:&quot; /&gt;
+            &lt;TextBox Watermark=&quot;LAST NAME&quot; Text=&quot;{Binding LastName, Mode=TwoWay}&quot; /&gt;
+
+            &lt;TextBlock Text=&quot;PASSWORD:&quot; /&gt;
+            &lt;TextBox PasswordChar=&quot;*&quot; Watermark=&quot;PASSWORD&quot; Text=&quot;{Binding Password, Mode=TwoWay}&quot; /&gt;
+
+            &lt;TextBlock Text=&quot;RE-ENTER PASSWORD:&quot; /&gt;
+            &lt;TextBox PasswordChar=&quot;*&quot; Watermark=&quot;PASSWORD&quot; Text=&quot;{Binding ConfirmedPassword, Mode=TwoWay}&quot; /&gt;
+
+            &lt;Grid ColumnDefinitions=&quot;*,10,*&quot;&gt;
+                &lt;Button Grid.Column=&quot;0&quot; HorizontalAlignment=&quot;Stretch&quot; Command=&quot;{Binding SubmitAccountCommand}&quot;
+                        IsDefault=&quot;True&quot;&gt;
+                    &lt;Button.Content&gt;
+                        &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;CREATE ACCOUNT&quot; /&gt;
+                    &lt;/Button.Content&gt;
+                &lt;/Button&gt;
+                &lt;Button Grid.Column=&quot;2&quot; HorizontalAlignment=&quot;Stretch&quot; Command=&quot;{Binding CancelCreateAccountCommand}&quot;&gt;
+                    &lt;Button.Content&gt;
+                        &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;CANCEL&quot; /&gt;
+                    &lt;/Button.Content&gt;
+                &lt;/Button&gt;
+            &lt;/Grid&gt;
+        &lt;/StackPanel&gt;
+    &lt;/Border&gt;
+&lt;/UserControl&gt;
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[1,2,1,13,0],[5,6,5,12,0],[5,13,5,20,0],[5,60,5,79,0],[6,10,6,20,0],[6,21,6,28,0],[7,14,7,23,0],[7,24,7,31,0],[7,37,7,41,0],[7,73,7,86,0],[9,14,9,23,0],[9,24,9,28,0],[9,54,9,64,0],[11,14,11,23,0],[11,24,11,28,0],[12,14,12,21,0],[12,22,12,31,0],[12,43,12,47,0],[14,14,14,23,0],[14,24,14,28,0],[15,14,15,21,0],[15,22,15,31,0],[15,45,15,49,0],[17,14,17,23,0],[17,24,17,28,0],[18,14,18,21,0],[18,22,18,31,0],[18,44,18,48,0],[20,14,20,23,0],[20,24,20,28,0],[21,14,21,21,0],[21,22,21,34,0],[21,39,21,48,0],[21,60,21,64,0],[23,14,23,23,0],[23,24,23,28,0],[24,14,24,21,0],[24,22,24,34,0],[24,39,24,48,0],[24,60,24,64,0],[26,14,26,18,0],[26,19,26,36,0],[27,18,27,24,0],[27,25,27,29,0],[27,71,27,78,0],[30,26,30,35,0],[30,36,30,49,0],[30,59,30,63,0],[33,18,33,24,0],[33,25,33,29,0],[33,71,33,78,0],[35,26,35,35,0],[35,36,35,49,0],[35,59,35,63,0]]);
+    </script>
+  </body>
+</html>

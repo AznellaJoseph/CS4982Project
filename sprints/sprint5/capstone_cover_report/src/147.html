@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\Waypoint.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Linq;
+using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Waypoint Site
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class WaypointModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The current waypoint.
+        /// &lt;/summary&gt;
+        public Waypoint CurrentWaypoint { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     The waypoint manager.
+        /// &lt;/summary&gt;
+        public WaypointManager WaypointManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     Called when [get].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current
+        ///     waypoint display
+        /// &lt;/returns&gt;
+        public IActionResult OnGet(int id, int tripId)
+        {
+            if (!HttpContext.Session.Keys.Contains(&quot;userId&quot;))
+                return RedirectToPage(&quot;Index&quot;);
+
+            var waypointResponse = WaypointManager.GetWaypointById(id);
+
+            if (waypointResponse.Data is null) return RedirectToPage(&quot;Trip&quot;, tripId);
+
+            if (waypointResponse.Data.TripId != tripId) return RedirectToPage(&quot;Trip&quot;, tripId);
+
+            CurrentWaypoint = waypointResponse.Data;
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post logout].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;Redirect to index&lt;/returns&gt;
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Remove(&quot;userId&quot;);
+            return RedirectToPage(&quot;Index&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post back].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;Redirects to the trip overview page for the trip specified by the trip id&lt;/returns&gt;
+        public IActionResult OnPostBack(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,43,18,47,1],[18,48,18,60,1],[23,50,23,54,1],[23,55,23,59,1],[23,64,23,69,1],[35,9,35,10,1],[36,13,36,62,1],[37,17,37,48,1],[39,13,39,72,1],[41,13,41,47,1],[41,48,41,86,1],[43,13,43,56,1],[43,57,43,95,1],[45,13,45,53,1],[46,13,46,27,1],[47,9,47,10,1],[54,9,54,10,1],[55,13,55,50,1],[56,13,56,44,1],[57,9,57,10,1],[65,9,65,10,1],[66,13,69,15,1],[70,13,70,55,1],[71,9,71,10,1]]);
+    </script>
+  </body>
+</html>

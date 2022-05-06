@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\Lodging.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A model class for the Lodging object
+    /// &lt;/summary&gt;
+    public class Lodging
+    {
+        /// &lt;summary&gt;
+        ///     The lodging id.
+        /// &lt;/summary&gt;
+        public int LodgingId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        public string Location { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The trip id.
+        /// &lt;/summary&gt;
+        public int TripId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTime EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string Notes { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The display name.
+        /// &lt;/summary&gt;
+        public string DisplayName =&gt; Location[..Location.IndexOf(&quot;,&quot;, StringComparison.Ordinal)];
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[13,32,13,36,1],[13,37,13,41,1],[18,34,18,38,1],[18,39,18,43,1],[18,48,18,60,1],[23,29,23,33,1],[23,34,23,38,1],[28,37,28,41,1],[28,42,28,46,1],[33,35,33,39,1],[33,40,33,44,1],[38,31,38,35,1],[38,36,38,40,1],[38,45,38,57,1],[43,38,43,97,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Utils\GoogleGeocodeService.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Net.Http;
+using System.Text.Json;
+
+namespace CapstoneBackend.Utils
+{
+    /// &lt;summary&gt;
+    ///     Utility for calling the Google Geocode API for retrieving longitude and latitude for maps
+    /// &lt;/summary&gt;
+    public class GoogleGeocodeService
+    {
+        private const string Key = &quot;AIzaSyB_TdvmfkvpMjDjMQnd3bDvhkNbrjRq5_I&quot;;
+
+        /// &lt;summary&gt;
+        ///     Gets the location by address.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;address&quot;&gt;The address.&lt;/param&gt;
+        /// &lt;returns&gt;A location object with the longitude and latitude of the entered address&lt;/returns&gt;
+        public static Location GetLocationByAddress(string address)
+        {
+            var addressWithNoSpaces = address.Replace(&quot; &quot;, &quot;+&quot;);
+            var apiEndpoint =
+                $&quot;https://maps.googleapis.com/maps/api/geocode/json?address={addressWithNoSpaces}&amp;key={Key}&quot;;
+            Location location = new();
+            string response;
+            using (var client = new HttpClient())
+            {
+                response = client.GetStringAsync(apiEndpoint).Result;
+            }
+
+            var result = JsonDocument.Parse(response).RootElement.GetProperty(&quot;results&quot;)[0].GetProperty(&quot;geometry&quot;)
+                .GetProperty(&quot;location&quot;);
+            location.Latitude = result.GetProperty(&quot;lat&quot;).GetDouble();
+            location.Longitude = result.GetProperty(&quot;lng&quot;).GetDouble();
+            return location;
+        }
+
+        /// &lt;summary&gt;
+        ///     Location object used to store longitudes and latitudes
+        /// &lt;/summary&gt;
+        public struct Location
+        {
+            /// &lt;summary&gt;
+            ///     The latitude
+            /// &lt;/summary&gt;
+            public double Latitude;
+
+            /// &lt;summary&gt;
+            ///     The longitude
+            /// &lt;/summary&gt;
+            public double Longitude;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,9,19,10,1],[20,13,20,65,1],[21,13,22,110,1],[23,13,23,39,1],[25,20,25,49,1],[26,13,26,14,1],[27,17,27,70,1],[28,13,28,14,1],[30,13,31,42,1],[32,13,32,71,1],[33,13,33,72,1],[34,13,34,29,1],[35,9,35,10,1]]);
+    </script>
+  </body>
+</html>

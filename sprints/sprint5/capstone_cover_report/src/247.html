@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\LodgingPage.axaml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using GMap.NET;
+using GMap.NET.Avalonia;
+using GMap.NET.MapProviders;
+using ReactiveUI;
+
+namespace CapstoneDesktop.Views
+{
+    /// &lt;summary&gt;
+    ///     User Control for the Lodging Page Functionality
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;LodgingPageViewModel&quot; /&gt;
+    public class LodgingPage : ReactiveUserControl&lt;LodgingPageViewModel&gt;
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;LodgingPage&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public LodgingPage()
+        {
+            InitializeComponent();
+        }
+
+        public GMapControl? MainMap { get; set; }
+
+        private void InitializeComponent()
+        {
+            this.WhenActivated(disposables =&gt;
+            {
+                if (DataContext is null) return;
+                var viewModel = (LodgingPageViewModel) DataContext;
+                MainMap = new GMapControl();
+                var lodging = viewModel.Lodging;
+                var container = this.Get&lt;Panel&gt;(&quot;MapContainer&quot;);
+                container.Children.Clear();
+                container.Children.Add(MainMap);
+                GoogleMapProvider.Instance.ApiKey = &quot;AIzaSyB_TdvmfkvpMjDjMQnd3bDvhkNbrjRq5_I&quot;;
+                MainMap.MapProvider = GMapProviders.GoogleMap;
+                var result = GoogleGeocodeService.GetLocationByAddress(lodging.Location);
+                MainMap.Position = new PointLatLng(result.Latitude, result.Longitude);
+                MainMap.FillEmptyTiles = true;
+                disposables.Add(MainMap);
+            });
+            AvaloniaXamlLoader.Load(this);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[22,9,22,29,0],[23,9,23,10,0],[24,13,24,35,0],[25,9,25,10,0],[27,39,27,43,0],[27,44,27,48,0],[30,9,30,10,0],[31,13,32,13,0],[32,13,32,14,0],[32,14,33,17,0],[33,17,33,41,0],[33,41,33,42,0],[33,42,33,49,0],[33,49,34,17,0],[34,17,34,68,0],[34,68,35,17,0],[35,17,35,45,0],[35,45,36,17,0],[36,17,36,49,0],[36,49,37,17,0],[37,17,37,65,0],[37,65,38,17,0],[38,17,38,44,0],[38,44,39,17,0],[39,17,39,49,0],[39,49,40,17,0],[40,17,40,95,0],[40,95,41,17,0],[41,17,41,63,0],[41,63,42,17,0],[42,17,42,90,0],[42,90,43,17,0],[43,17,43,87,0],[43,87,44,17,0],[44,17,44,47,0],[44,47,45,17,0],[45,17,45,42,0],[45,42,46,13,0],[46,13,46,14,0],[46,14,46,16,0],[47,13,47,43,0],[48,9,48,10,0]]);
+    </script>
+  </body>
+</html>

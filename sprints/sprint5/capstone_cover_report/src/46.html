@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestCreateLodging\TestCreateLodgingCommand.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
+{
+    [TestClass]
+    public class TestCreateLodgingCommand
+    {
+        [TestMethod]
+        public void CreateLodgingCommand_NullLocation_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockLodgingManager = new Mock&lt;LodgingManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateLodgingPageViewModel createLodgingPageViewModel =
+                new(mockTrip.Object, mockScreen.Object) {LodgingManager = mockLodgingManager.Object};
+
+            var testScheduler = new TestScheduler();
+
+            createLodgingPageViewModel.CreateLodgingCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.EmptyLocation, createLodgingPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateLodgingCommand_InvalidLocation_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockLodgingManager = new Mock&lt;LodgingManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockValidationManager = new Mock&lt;ValidationManager&gt;();
+            mockValidationManager.Setup(vm =&gt; vm.DetermineIfValidLocation(&quot;Some-Invalid-Location-Text&quot;))
+                .Returns(new Response&lt;bool&gt;
+                {
+                    ErrorMessage = Ui.ErrorMessages.InvalidLocation,
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                });
+
+            CreateLodgingPageViewModel createLodgingPageViewModel =
+                new(mockTrip.Object, mockScreen.Object)
+                {
+                    LodgingManager = mockLodgingManager.Object,
+                    ValidationManager = mockValidationManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            createLodgingPageViewModel.Location = &quot;Some-Invalid-Location-Text&quot;;
+            createLodgingPageViewModel.StartDate = DateTime.Today;
+            createLodgingPageViewModel.StartTime = TimeSpan.Zero;
+
+            createLodgingPageViewModel.CreateLodgingCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidLocation, createLodgingPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateLodgingCommand_InvalidDates_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today,
+                    EndDate = DateTime.Today.AddDays(2)
+                }
+            };
+            var mockLodgingManager = new Mock&lt;LodgingManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            mockLodgingManager.Setup(um =&gt;
+                    um.CreateLodging(0, &quot;Paris, Italy&quot;, DateTime.Today.AddDays(1) + TimeSpan.Zero,
+                        DateTime.Today + TimeSpan.Zero, &quot;notes&quot;))
+                .Returns(new Response&lt;int&gt; {ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
+            var mockValidationManager = new Mock&lt;ValidationManager&gt;();
+            mockValidationManager.Setup(vm =&gt;
+                    vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(1) + TimeSpan.Zero,
+                        DateTime.Today + TimeSpan.Zero))
+                .Returns(new Response&lt;bool&gt;
+                {
+                    Data = true
+                });
+            mockValidationManager.Setup(vm =&gt; vm.DetermineIfValidLocation(&quot;Paris, Italy&quot;))
+                .Returns(new Response&lt;bool&gt;
+                {
+                    Data = true
+                });
+
+            CreateLodgingPageViewModel createLodgingPageViewModel =
+                new(mockTrip.Object, mockScreen.Object)
+                {
+                    ValidationManager = mockValidationManager.Object,
+                    LodgingManager = mockLodgingManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            createLodgingPageViewModel.Location = &quot;Paris, Italy&quot;;
+            createLodgingPageViewModel.Notes = &quot;notes&quot;;
+            createLodgingPageViewModel.StartDate = DateTime.Today.AddDays(1);
+            createLodgingPageViewModel.StartTime = TimeSpan.Zero;
+            createLodgingPageViewModel.EndDate = DateTime.Today;
+            createLodgingPageViewModel.EndTime = TimeSpan.Zero;
+
+            createLodgingPageViewModel.CreateLodgingCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate,
+                createLodgingPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateLodgingCommand_NullDates_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            CreateLodgingPageViewModel createLodgingPageViewModel =
+                new(mockTrip.Object, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            createLodgingPageViewModel.Location = &quot;Atlanta&quot;;
+            createLodgingPageViewModel.Notes = &quot;notes&quot;;
+
+            createLodgingPageViewModel.CreateLodgingCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidEventDate,
+                createLodgingPageViewModel.ErrorMessage);
+        }
+
+
+        [TestMethod]
+        public void CreateLodgingCommand_InvalidEventDates_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
+            var mockLodgingManager = new Mock&lt;LodgingManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockValidationManager = new Mock&lt;ValidationManager&gt;();
+            mockValidationManager.Setup(vm =&gt; vm.DetermineIfValidLocation(&quot;Paris, Italy&quot;))
+                .Returns(new Response&lt;bool&gt;
+                {
+                    Data = true
+                });
+            mockValidationManager.Setup(vm =&gt;
+                    vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(-3) + TimeSpan.Zero,
+                        DateTime.Today + TimeSpan.Zero))
+                .Returns(new Response&lt;bool&gt;
+                {
+                    ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate +
+                                   mockTrip.Object.StartDate.ToShortDateString(),
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                });
+
+
+            CreateLodgingPageViewModel createLodgingPageViewModel =
+                new(mockTrip.Object, mockScreen.Object)
+                {
+                    ValidationManager = mockValidationManager.Object,
+                    LodgingManager = mockLodgingManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            createLodgingPageViewModel.Location = &quot;Paris, Italy&quot;;
+            createLodgingPageViewModel.StartDate = DateTime.Now.AddDays(-3);
+            createLodgingPageViewModel.StartTime = TimeSpan.Zero;
+            createLodgingPageViewModel.EndDate = DateTime.Now;
+            createLodgingPageViewModel.EndTime = TimeSpan.Zero;
+
+            createLodgingPageViewModel.CreateLodgingCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(
+                Ui.ErrorMessages.EventStartDateBeforeTripStartDate + mockTrip.Object.StartDate.ToShortDateString(),
+                createLodgingPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void CreateLodgingCommand_SuccessfulCreation()
+        {
+            var mockLodgingManager = new Mock&lt;LodgingManager&gt;();
+            mockLodgingManager.Setup(um =&gt; um.CreateLodging(0, &quot;Paris, Italy&quot;, DateTime.Today, DateTime.Today, null))
+                .Returns(new Response&lt;int&gt; {StatusCode = (uint) Ui.StatusCode.Success});
+            var mockTrip = new Mock&lt;Trip&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            CreateLodgingPageViewModel createLodgingPageViewModel =
+                new(mockTrip.Object, mockScreen.Object) {LodgingManager = mockLodgingManager.Object};
+
+            var testScheduler = new TestScheduler();
+
+            createLodgingPageViewModel.Location = &quot;Paris, Italy&quot;;
+            createLodgingPageViewModel.StartDate = DateTime.Today;
+            createLodgingPageViewModel.EndDate = DateTime.Today;
+            createLodgingPageViewModel.StartTime = DateTime.Today.TimeOfDay;
+            createLodgingPageViewModel.EndTime = DateTime.Today.TimeOfDay;
+
+            createLodgingPageViewModel.CreateLodgingCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, createLodgingPageViewModel.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,10,1],[18,13,18,45,1],[19,13,19,65,1],[20,13,20,50,1],[21,13,22,102,1],[24,13,24,53,1],[26,13,26,83,1],[28,13,28,35,1],[30,13,30,102,1],[31,9,31,10,1],[35,9,35,10,1],[36,13,36,45,1],[37,13,37,65,1],[38,13,38,50,1],[39,13,39,71,1],[40,13,45,20,1],[47,13,52,19,1],[54,13,54,53,1],[56,13,56,80,1],[57,13,57,67,1],[58,13,58,66,1],[60,13,60,83,1],[62,13,62,35,1],[64,13,64,104,1],[65,9,65,10,1],[69,9,69,10,1],[70,13,77,15,1],[78,13,78,65,1],[79,13,79,50,1],[80,13,83,96,1],[84,13,84,71,1],[85,13,91,20,1],[92,13,96,20,1],[98,13,103,19,1],[105,13,105,53,1],[107,13,107,66,1],[108,13,108,56,1],[109,13,109,78,1],[110,13,110,66,1],[111,13,111,65,1],[112,13,112,64,1],[114,13,114,83,1],[116,13,116,35,1],[118,13,119,58,1],[120,9,120,10,1],[124,9,124,10,1],[125,13,125,45,1],[126,13,126,50,1],[128,13,129,57,1],[131,13,131,53,1],[133,13,133,61,1],[134,13,134,56,1],[136,13,136,83,1],[138,13,138,35,1],[140,13,141,58,1],[142,9,142,10,1],[147,9,147,10,1],[148,13,155,15,1],[156,13,156,65,1],[157,13,157,50,1],[158,13,158,71,1],[159,13,163,20,1],[164,13,172,20,1],[175,13,180,19,1],[182,13,182,53,1],[184,13,184,66,1],[185,13,185,77,1],[186,13,186,66,1],[187,13,187,63,1],[188,13,188,64,1],[190,13,190,83,1],[192,13,192,35,1],[194,13,196,58,1],[197,9,197,10,1],[201,9,201,10,1],[202,13,202,65,1],[203,13,204,89,1],[205,13,205,45,1],[206,13,206,50,1],[207,13,208,102,1],[210,13,210,53,1],[212,13,212,66,1],[213,13,213,67,1],[214,13,214,65,1],[215,13,215,77,1],[216,13,216,75,1],[218,13,218,90,1],[220,13,220,35,1],[222,13,222,84,1],[223,9,223,10,1]]);
+    </script>
+  </body>
+</html>

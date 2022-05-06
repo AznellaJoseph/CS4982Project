@@ -1,4 +1,14 @@
-﻿using System;
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestTransportationManager\TestGetTransportationOnDate.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
@@ -15,10 +25,10 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         public void GetTransportationOnDate_EmptySet_ReturnsEmptyList()
         {
             var currentTime = DateTime.Now;
-            IList<Transportation> transportation = new List<Transportation>();
+            IList&lt;Transportation&gt; transportation = new List&lt;Transportation&gt;();
 
-            var mockTransportationDal = new Mock<TransportationDal>();
-            mockTransportationDal.Setup(db => db.GetTransportationOnDate(1, currentTime)).Returns(transportation);
+            var mockTransportationDal = new Mock&lt;TransportationDal&gt;();
+            mockTransportationDal.Setup(db =&gt; db.GetTransportationOnDate(1, currentTime)).Returns(transportation);
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
@@ -32,21 +42,21 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         public void GetTransportationOnDate_YieldsSetWithOneValue_ReturnsExpectedList()
         {
             var currentTime = DateTime.Now;
-            IList<Transportation> transportation = new List<Transportation>
+            IList&lt;Transportation&gt; transportation = new List&lt;Transportation&gt;
             {
                 new()
                 {
                     TripId = 1,
                     TransportationId = 1,
-                    Method = "Car",
+                    Method = &quot;Car&quot;,
                     StartDate = currentTime,
                     EndDate = currentTime,
-                    Notes = "notes"
+                    Notes = &quot;notes&quot;
                 }
             };
 
-            var mockTransportationDal = new Mock<TransportationDal>();
-            mockTransportationDal.Setup(db => db.GetTransportationOnDate(1, currentTime)).Returns(transportation);
+            var mockTransportationDal = new Mock&lt;TransportationDal&gt;();
+            mockTransportationDal.Setup(db =&gt; db.GetTransportationOnDate(1, currentTime)).Returns(transportation);
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
@@ -56,27 +66,27 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             Assert.AreEqual(1, resultResponse.Data?.Count);
             Assert.AreEqual(1, resultResponse.Data?[0].TripId);
             Assert.AreEqual(1, resultResponse.Data?[0].TransportationId);
-            Assert.AreEqual("Car", resultResponse.Data?[0].Method);
-            Assert.AreEqual("Car", resultResponse.Data?[0].DisplayName);
+            Assert.AreEqual(&quot;Car&quot;, resultResponse.Data?[0].Method);
+            Assert.AreEqual(&quot;Car&quot;, resultResponse.Data?[0].DisplayName);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
-            Assert.AreEqual("notes", resultResponse.Data?[0].Notes);
+            Assert.AreEqual(&quot;notes&quot;, resultResponse.Data?[0].Notes);
             Assert.AreEqual(1, resultResponse.Data?[0].Id);
             Assert.AreEqual(nameof(Transportation), resultResponse.Data?[0].EventType);
-            Assert.AreEqual("Car", resultResponse.Data?[0].FullName);
+            Assert.AreEqual(&quot;Car&quot;, resultResponse.Data?[0].FullName);
         }
 
         [TestMethod]
         public void GetTransportationOnDate_YieldsSetWithMultipleValues_ReturnsExpectedList()
         {
             var currentTime = DateTime.Now;
-            IList<Transportation> transportation = new List<Transportation>
+            IList&lt;Transportation&gt; transportation = new List&lt;Transportation&gt;
             {
                 new()
                 {
                     TripId = 1,
                     TransportationId = 1,
-                    Method = "Car",
+                    Method = &quot;Car&quot;,
                     StartDate = currentTime,
                     EndDate = currentTime
                 },
@@ -84,19 +94,19 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
                 {
                     TripId = 1,
                     TransportationId = 2,
-                    Method = "Bus",
+                    Method = &quot;Bus&quot;,
                     StartDate = currentTime,
                     EndDate = currentTime
                 }
             };
 
-            var mockTransportationDal = new Mock<TransportationDal>();
+            var mockTransportationDal = new Mock&lt;TransportationDal&gt;();
 
-            mockTransportationDal.Setup(db => db.CreateTransportation(1, "Car", currentTime, currentTime, null))
+            mockTransportationDal.Setup(db =&gt; db.CreateTransportation(1, &quot;Car&quot;, currentTime, currentTime, null))
                 .Returns(1);
-            mockTransportationDal.Setup(db => db.CreateTransportation(1, "Bus", currentTime, currentTime, null))
+            mockTransportationDal.Setup(db =&gt; db.CreateTransportation(1, &quot;Bus&quot;, currentTime, currentTime, null))
                 .Returns(1);
-            mockTransportationDal.Setup(db => db.GetTransportationOnDate(1, currentTime)).Returns(transportation);
+            mockTransportationDal.Setup(db =&gt; db.GetTransportationOnDate(1, currentTime)).Returns(transportation);
 
             TransportationManager transportationManager = new(mockTransportationDal.Object);
 
@@ -109,10 +119,10 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         [TestMethod]
         public void GetTransportationOnDate_ServerMySqlException_ReturnsErrorMessage()
         {
-            var mockDal = new Mock<TransportationDal>();
+            var mockDal = new Mock&lt;TransportationDal&gt;();
             var builder = new MySqlExceptionBuilder();
             var currentTime = DateTime.Now;
-            mockDal.Setup(dal => dal.GetTransportationOnDate(1, currentTime))
+            mockDal.Setup(dal =&gt; dal.GetTransportationOnDate(1, currentTime))
                 .Throws(builder
                     .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
 
@@ -127,9 +137,9 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         [TestMethod]
         public void GetTransportationOnDate_ServerException_ReturnsErrorMessage()
         {
-            var mockDal = new Mock<TransportationDal>();
+            var mockDal = new Mock&lt;TransportationDal&gt;();
             var currentTime = DateTime.Now;
-            mockDal.Setup(dal => dal.GetTransportationOnDate(1, currentTime))
+            mockDal.Setup(dal =&gt; dal.GetTransportationOnDate(1, currentTime))
                 .Throws(new Exception());
 
             TransportationManager transportationManager = new(mockDal.Object);
@@ -141,3 +151,9 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
         }
     }
 }
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,44,1],[18,13,18,79,1],[20,13,20,71,1],[21,13,21,115,1],[23,13,23,93,1],[25,13,26,79,1],[28,13,28,60,1],[29,9,29,10,1],[33,9,33,10,1],[34,13,34,44,1],[35,13,46,15,1],[48,13,48,71,1],[49,13,49,115,1],[51,13,51,93,1],[53,13,54,79,1],[56,13,56,60,1],[57,13,57,64,1],[58,13,58,74,1],[59,13,59,68,1],[60,13,60,73,1],[61,13,61,77,1],[62,13,62,75,1],[63,13,63,69,1],[64,13,64,60,1],[65,13,65,88,1],[66,13,66,70,1],[67,9,67,10,1],[71,9,71,10,1],[72,13,72,44,1],[73,13,91,15,1],[93,13,93,71,1],[95,13,96,29,1],[97,13,98,29,1],[99,13,99,115,1],[101,13,101,93,1],[103,13,104,79,1],[106,13,106,60,1],[107,9,107,10,1],[111,9,111,10,1],[112,13,112,57,1],[113,13,113,55,1],[114,13,114,44,1],[115,13,117,121,1],[119,13,119,79,1],[121,13,121,88,1],[123,13,123,90,1],[124,13,124,88,1],[125,9,125,10,1],[129,9,129,10,1],[130,13,130,57,1],[131,13,131,44,1],[132,13,133,42,1],[135,13,135,79,1],[137,13,137,88,1],[139,13,139,90,1],[140,13,140,88,1],[141,9,141,10,1]]);
+    </script>
+  </body>
+</html>

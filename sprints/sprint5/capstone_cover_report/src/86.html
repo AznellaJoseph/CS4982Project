@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\DAL\TestWaypointDAL\TestCreateWaypoint.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneTest.BackendTests.DAL.TestWaypointDAL
+{
+    [TestClass]
+    public class TestCreateWaypoint
+    {
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testTripId;
+        private int _testWaypointId;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _testTripId = new TripDal(_connection).CreateTrip(1, &quot;TestTrip&quot;, &quot;Some Notes&quot;, DateTime.Now, DateTime.Now);
+        }
+
+        [TestMethod]
+        public void CallProcedure_WithIvalidTripId_Fails()
+        {
+            WaypointDal testDal = new(_connection);
+
+            Assert.ThrowsException&lt;MySqlException&gt;(() =&gt;
+                testDal.CreateWaypoint(-1, &quot;TestLocation&quot;, DateTime.Now, DateTime.Now, &quot;Some Notes&quot;));
+        }
+
+        [TestMethod]
+        public void CallProcedure_WithValidInput_Succeeds()
+        {
+            WaypointDal testDal = new(_connection);
+
+            int? resultId =
+                testDal.CreateWaypoint(_testTripId, &quot;TestLocation&quot;, DateTime.Now, DateTime.Now, &quot;Some Notes&quot;);
+            _testWaypointId = (int) resultId;
+
+            Assert.IsTrue(resultId is not null);
+            Assert.IsInstanceOfType(resultId, typeof(int));
+        }
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            _connection.Open();
+            var removeTrip = $&quot;delete from trip where tripId = {_testTripId};&quot;;
+            var removeWaypoint = $&quot;delete from waypoint where waypointId = {_testWaypointId};&quot;;
+
+            using var tripCmd = new MySqlCommand(removeTrip, _connection);
+            tripCmd.ExecuteNonQuery();
+
+            using var waypointCmd = new MySqlCommand(removeWaypoint, _connection);
+            waypointCmd.ExecuteNonQuery();
+
+            _connection.Close();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[11,9,11,89,1],[17,9,17,10,1],[18,13,18,120,1],[19,9,19,10,1],[23,9,23,10,1],[24,13,24,52,1],[26,13,27,17,1],[27,17,27,101,1],[27,101,27,103,1],[28,9,28,10,1],[32,9,32,10,1],[33,13,33,52,1],[35,13,36,111,1],[37,13,37,46,1],[39,13,39,49,1],[40,13,40,60,1],[41,9,41,10,1],[45,9,45,10,1],[46,13,46,32,1],[47,13,47,80,1],[48,13,48,96,1],[50,13,50,75,1],[51,13,51,39,1],[53,13,53,83,1],[54,13,54,43,1],[56,13,56,33,1],[57,9,57,10,1]]);
+    </script>
+  </body>
+</html>

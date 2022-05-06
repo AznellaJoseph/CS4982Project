@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\DesktopTests\ViewModels\TestEditWaypoint\TestEditWaypointCommand.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using CapstoneDesktop.ViewModels;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+
+namespace CapstoneTest.DesktopTests.ViewModels.TestEditWaypoint
+{
+    [TestClass]
+    public class TestEditWaypointCommand
+    {
+        [TestMethod]
+        public void EditWaypointCommand_NullLocation_ReturnsErrorMessage()
+        {
+            Waypoint waypoint = new()
+            {
+                EndDate = DateTime.Today.AddDays(3),
+                StartDate = DateTime.Today,
+                Location = &quot;Hilton&quot;,
+                WaypointId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            EditWaypointPageViewModel editWaypointPageViewModel =
+                new(waypoint, mockScreen.Object) {WaypointManager = mockWaypointManager.Object};
+
+            var testScheduler = new TestScheduler();
+
+            editWaypointPageViewModel.Location = null;
+
+            editWaypointPageViewModel.EditWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.EmptyLocation, editWaypointPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void EditWaypointCommand_InvalidDates_ReturnsErrorMessage()
+        {
+            Waypoint waypoint = new()
+            {
+                EndDate = DateTime.Today.AddDays(2),
+                StartDate = DateTime.Today,
+                Location = &quot;Paris, Italy&quot;,
+                WaypointId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            Waypoint updatedWaypoint = new()
+            {
+                EndDate = DateTime.Today,
+                StartDate = DateTime.Today.AddDays(1),
+                Location = &quot;Paris, Italy&quot;,
+                WaypointId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+
+            var mockValidationManager = new Mock&lt;ValidationManager&gt;();
+            mockValidationManager.Setup(vm =&gt;
+                    vm.DetermineIfValidEventDates(1, DateTime.Today.AddDays(1),
+                        DateTime.Today))
+                .Returns(new Response&lt;bool&gt;
+                {
+                    Data = true
+                });
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            mockWaypointManager.Setup(um =&gt;
+                    um.EditWaypoint(updatedWaypoint))
+                .Returns(new Response&lt;bool&gt; {Data = true});
+            EditWaypointPageViewModel editWaypointPageViewModel =
+                new(waypoint, mockScreen.Object)
+                {
+                    ValidationManager = mockValidationManager.Object,
+                    WaypointManager = mockWaypointManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+
+            editWaypointPageViewModel.StartDate = DateTime.Today.AddDays(1);
+            editWaypointPageViewModel.EndDate = DateTime.Today;
+
+            editWaypointPageViewModel.EditWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate,
+                editWaypointPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void EditWaypointCommand_NullDates_ReturnsErrorMessage()
+        {
+            Waypoint waypoint = new()
+            {
+                EndDate = DateTime.Today.AddDays(3),
+                StartDate = DateTime.Today,
+                Location = &quot;Hilton&quot;,
+                WaypointId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockScreen = new Mock&lt;IScreen&gt;();
+
+            EditWaypointPageViewModel editWaypointPageViewModel =
+                new(waypoint, mockScreen.Object);
+
+            var testScheduler = new TestScheduler();
+
+            editWaypointPageViewModel.Location = &quot;Paris, Italy&quot;;
+            editWaypointPageViewModel.Notes = &quot;notes&quot;;
+            editWaypointPageViewModel.StartDate = null;
+            editWaypointPageViewModel.StartTime = null;
+
+            editWaypointPageViewModel.EditWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(Ui.ErrorMessages.InvalidEventDate,
+                editWaypointPageViewModel.ErrorMessage);
+        }
+
+
+        [TestMethod]
+        public void EditWaypointCommand_InvalidEventDates_ReturnsErrorMessage()
+        {
+            var mockTrip = new Mock&lt;Trip&gt;
+            {
+                Object =
+                {
+                    StartDate = DateTime.Today.AddDays(-2),
+                    EndDate = DateTime.Now
+                }
+            };
+            Waypoint waypoint = new()
+            {
+                EndDate = DateTime.Today.AddDays(-3),
+                StartDate = DateTime.Today,
+                Location = &quot;UWG library, Carrollton&quot;,
+                WaypointId = 1,
+                TripId = 1
+            };
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockValidationManager = new Mock&lt;ValidationManager&gt;();
+            mockValidationManager.Setup(vm =&gt;
+                    vm.DetermineIfValidEventDates(1, DateTime.Today.AddDays(-1) + TimeSpan.Zero,
+                        DateTime.Today + TimeSpan.Zero))
+                .Returns(new Response&lt;bool&gt;
+                {
+                    ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate +
+                                   mockTrip.Object.StartDate.ToShortDateString(),
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                });
+
+
+            EditWaypointPageViewModel editWaypointPageViewModel =
+                new(waypoint, mockScreen.Object)
+                {
+                    ValidationManager = mockValidationManager.Object,
+                    WaypointManager = mockWaypointManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            editWaypointPageViewModel.Location = &quot;UWG library, Carrollton&quot;;
+            editWaypointPageViewModel.StartDate = DateTime.Now.AddDays(-1);
+            editWaypointPageViewModel.StartTime = TimeSpan.Zero;
+            editWaypointPageViewModel.EndDate = DateTime.Now;
+            editWaypointPageViewModel.EndTime = TimeSpan.Zero;
+
+            editWaypointPageViewModel.EditWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(
+                Ui.ErrorMessages.EventStartDateBeforeTripStartDate + mockTrip.Object.StartDate.ToShortDateString(),
+                editWaypointPageViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void EditWaypointCommand_ClashingEvent_ReturnsErrorMessage()
+        {
+            Waypoint waypoint = new()
+            {
+                EndDate = DateTime.Today.AddDays(3),
+                StartDate = DateTime.Today.AddDays(1),
+                Location = &quot;UWG Library, Carrollton&quot;,
+                WaypointId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            var mockEventManager = new Mock&lt;EventManager&gt;();
+
+            var mockValidationManager = new Mock&lt;ValidationManager&gt; { Object = { EventManager = mockEventManager.Object } };
+            mockEventManager.Setup(em =&gt; em.GetEventsOnDate(1, DateTime.Today.AddDays(1))).Returns(
+                new Response&lt;IList&lt;IEvent&gt;&gt;
+                {
+                    Data = new List&lt;IEvent&gt;
+                    {
+                        new Waypoint {StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(2)}
+                    }
+                });
+            mockValidationManager
+                .Setup(vm =&gt; vm.DetermineIfValidEventDates(1, DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
+                .Returns(new Response&lt;bool&gt; { Data = true });
+            mockValidationManager.Setup(vm =&gt; vm.FindClashingEvent(1,
+                    DateTime.Today.AddDays(1) + TimeSpan.Zero, DateTime.Today.AddDays(3) + TimeSpan.Zero))
+                .Returns(new Response&lt;IEvent&gt;
+                {
+                    ErrorMessage =
+                        $&quot;{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}.&quot;
+                });
+
+
+            EditWaypointPageViewModel editWaypointViewModel =
+                new(waypoint, mockScreen.Object)
+                {
+                    ValidationManager = mockValidationManager.Object
+                };
+
+            var testScheduler = new TestScheduler();
+
+            editWaypointViewModel.Location = &quot;UWG Library, Carrollton&quot;;
+            editWaypointViewModel.StartDate = DateTime.Today.AddDays(1);
+            editWaypointViewModel.StartTime = TimeSpan.Zero;
+            editWaypointViewModel.EndDate = DateTime.Today.AddDays(3);
+            editWaypointViewModel.EndTime = TimeSpan.Zero;
+
+            editWaypointViewModel.EditWaypointCommand.Execute().Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(
+                $&quot;{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}.&quot;,
+                editWaypointViewModel.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void EditWaypointCommand_SuccessfulCreation()
+        {
+            Waypoint waypoint = new()
+            {
+                EndDate = DateTime.Today.AddDays(3),
+                StartDate = DateTime.Today,
+                Location = &quot;Hilton&quot;,
+                WaypointId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockWaypointManager = new Mock&lt;WaypointManager&gt;();
+            mockWaypointManager.Setup(um =&gt; um.EditWaypoint(waypoint))
+                .Returns(new Response&lt;bool&gt; {StatusCode = (uint) Ui.StatusCode.Success});
+            var mockScreen = new Mock&lt;IScreen&gt;();
+            EditWaypointPageViewModel editWaypointPageViewModel =
+                new(waypoint, mockScreen.Object) {WaypointManager = mockWaypointManager.Object};
+
+            var testScheduler = new TestScheduler();
+
+            editWaypointPageViewModel.Location = &quot;Paris, Italy&quot;;
+            editWaypointPageViewModel.StartDate = DateTime.Today;
+            editWaypointPageViewModel.EndDate = DateTime.Today;
+            editWaypointPageViewModel.StartTime = DateTime.Today.TimeOfDay;
+            editWaypointPageViewModel.EndTime = DateTime.Today.TimeOfDay;
+
+            editWaypointPageViewModel.EditWaypointCommand.ThrownExceptions.Subscribe();
+
+            testScheduler.Start();
+
+            Assert.AreEqual(string.Empty, editWaypointPageViewModel.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[18,9,18,10,1],[19,13,27,15,1],[28,13,28,67,1],[29,13,29,50,1],[30,13,31,97,1],[33,13,33,53,1],[35,13,35,55,1],[37,13,37,81,1],[39,13,39,35,1],[41,13,41,101,1],[42,9,42,10,1],[46,9,46,10,1],[47,13,55,15,1],[56,13,64,15,1],[65,13,65,50,1],[68,13,68,71,1],[69,13,75,20,1],[76,13,76,67,1],[77,13,79,60,1],[80,13,85,19,1],[87,13,87,53,1],[90,13,90,77,1],[91,13,91,64,1],[93,13,93,81,1],[95,13,95,35,1],[97,13,98,57,1],[99,9,99,10,1],[103,9,103,10,1],[104,13,112,15,1],[113,13,113,50,1],[115,13,116,50,1],[118,13,118,53,1],[120,13,120,65,1],[121,13,121,55,1],[122,13,122,56,1],[123,13,123,56,1],[125,13,125,81,1],[127,13,127,35,1],[129,13,130,57,1],[131,9,131,10,1],[136,9,136,10,1],[137,13,144,15,1],[145,13,152,15,1],[153,13,153,67,1],[154,13,154,50,1],[155,13,155,71,1],[156,13,164,20,1],[167,13,172,19,1],[174,13,174,53,1],[176,13,176,76,1],[177,13,177,76,1],[178,13,178,65,1],[179,13,179,62,1],[180,13,180,63,1],[182,13,182,81,1],[184,13,184,35,1],[186,13,188,57,1],[189,9,189,10,1],[193,9,193,10,1],[194,13,202,15,1],[203,13,203,50,1],[204,13,204,61,1],[206,13,206,125,1],[207,13,214,20,1],[215,13,217,62,1],[218,13,224,20,1],[227,13,231,19,1],[233,13,233,53,1],[235,13,235,72,1],[236,13,236,73,1],[237,13,237,61,1],[238,13,238,71,1],[239,13,239,59,1],[241,13,241,77,1],[243,13,243,35,1],[245,13,247,53,1],[248,9,248,10,1],[252,9,252,10,1],[253,13,261,15,1],[262,13,262,67,1],[263,13,264,90,1],[265,13,265,50,1],[266,13,267,97,1],[269,13,269,53,1],[271,13,271,65,1],[272,13,272,66,1],[273,13,273,64,1],[274,13,274,76,1],[275,13,275,74,1],[277,13,277,88,1],[279,13,279,35,1],[281,13,281,83,1],[282,9,282,10,1]]);
+    </script>
+  </body>
+</html>

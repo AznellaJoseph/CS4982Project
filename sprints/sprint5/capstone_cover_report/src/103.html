@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\DAL\TestLodgingDAL\TestEditLodging.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneTest.BackendTests.DAL.TestLodgingDAL
+{
+    [TestClass]
+    public class TestEditLodging
+    {
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+        private int _testLodgingId;
+
+        [TestMethod]
+        public void CallProcedure_ReturnsFalse()
+        {
+            LodgingDal testDal = new(_connection);
+            _testLodgingId = testDal.CreateLodging(1, &quot;TestLocation&quot;, DateTime.Now, DateTime.Now, &quot;Some Notes&quot;);
+            var testLodging = testDal.GetLodgingById(_testLodgingId);
+            Assert.IsNotNull(testLodging);
+            testDal.RemoveLodging(_testLodgingId);
+
+            Assert.IsFalse(testDal.EditLodging(testLodging));
+        }
+
+        [TestMethod]
+        public void CallProcedure_ReturnsTrue()
+        {
+            LodgingDal testDal = new(_connection);
+            _testLodgingId = testDal.CreateLodging(1, &quot;TestLocation&quot;, DateTime.Now, DateTime.Now, &quot;Some Notes&quot;);
+            var testLodging = testDal.GetLodgingById(_testLodgingId);
+            Assert.IsNotNull(testLodging);
+
+            testLodging.Location = &quot;Hilton Atlanta&quot;;
+            Assert.IsTrue(testDal.EditLodging(testLodging));
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[11,9,11,89,1],[16,9,16,10,1],[17,13,17,51,1],[18,13,18,113,1],[19,13,19,70,1],[20,13,20,43,1],[21,13,21,51,1],[23,13,23,62,1],[24,9,24,10,1],[28,9,28,10,1],[29,13,29,51,1],[30,13,30,113,1],[31,13,31,70,1],[32,13,32,43,1],[34,13,34,53,1],[35,13,35,61,1],[36,9,36,10,1]]);
+    </script>
+  </body>
+</html>

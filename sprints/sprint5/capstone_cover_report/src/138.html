@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\CreateWaypoint.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Create Waypoint Site
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class CreateWaypointModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string ErrorMessage { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Location { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime StartDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime EndDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The waypoint manager.
+        /// &lt;/summary&gt;
+        public WaypointManager WaypointManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The validation manager.
+        /// &lt;/summary&gt;
+        public ValidationManager ValidationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     Called when [post].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     The redirection to the trip overview page or the current page if there was an error
+        /// &lt;/returns&gt;
+        public IActionResult OnPost(int tripId)
+        {
+            var validLocationResponse = ValidationManager.DetermineIfValidLocation(Location);
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
+
+            if (!string.IsNullOrEmpty(validLocationResponse.ErrorMessage))
+            {
+                ErrorMessage = validLocationResponse.ErrorMessage;
+                return Page();
+            }
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
+            {
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Page();
+            }
+
+            var clashingEventResponse = ValidationManager.FindClashingEvent(tripId, StartDate, EndDate);
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Page();
+            }
+
+            var response = WaypointManager.CreateWaypoint(tripId, Location, StartDate, EndDate, Notes);
+            if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))
+            {
+                var routeValue = new RouteValueDictionary
+                {
+                    {&quot;tripId&quot;, tripId}
+                };
+                return RedirectToPage(&quot;Trip&quot;, routeValue);
+            }
+
+            ErrorMessage = response.ErrorMessage;
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post cancel].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;Redirects to the trip overview page for the trip specified by the trip id &lt;/returns&gt;
+        public IActionResult OnPostCancel(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[20,38,20,42,1],[20,43,20,47,1],[26,34,26,38,1],[26,39,26,43,1],[32,37,32,41,1],[32,42,32,46,1],[32,51,32,63,1],[38,35,38,39,1],[38,40,38,44,1],[38,49,38,61,1],[44,31,44,35,1],[44,36,44,40,1],[49,50,49,54,1],[49,55,49,59,1],[49,64,49,69,1],[54,54,54,58,1],[54,59,54,63,1],[54,68,54,73,1],[64,9,64,10,1],[65,13,65,94,1],[66,13,66,111,1],[68,13,68,75,1],[69,13,69,14,1],[70,17,70,67,1],[71,17,71,31,1],[74,13,74,72,1],[75,13,75,14,1],[76,17,76,64,1],[77,17,77,31,1],[80,13,80,105,1],[81,13,81,75,1],[82,13,82,14,1],[83,17,83,67,1],[84,17,84,31,1],[87,13,87,104,1],[88,13,88,74,1],[89,13,89,14,1],[90,17,93,19,1],[94,17,94,59,1],[97,13,97,50,1],[98,13,98,27,1],[99,9,99,10,1],[107,9,107,10,1],[108,13,111,15,1],[112,13,112,55,1],[113,9,113,10,1]]);
+    </script>
+  </body>
+</html>

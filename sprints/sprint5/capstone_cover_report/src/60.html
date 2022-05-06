@@ -1,4 +1,14 @@
-﻿using System;
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestWaypointManager\TestGetWaypointsOnDate.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
 using System.Collections.Generic;
 using CapstoneBackend.DAL;
 using CapstoneBackend.Model;
@@ -16,10 +26,10 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         {
             var currentTime = DateTime.Now;
 
-            IList<Waypoint> fakeWaypoints = new List<Waypoint>();
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;();
 
-            var mockWaypointDal = new Mock<WaypointDal>();
-            mockWaypointDal.Setup(db => db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
 
             WaypointManager waypointManager = new(mockWaypointDal.Object);
 
@@ -33,25 +43,25 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         public void GetWaypointsOnDate_YieldsSetWithOneValue_ReturnsExpectedList()
         {
             var currentTime = DateTime.Now;
-            IList<Waypoint> fakeWaypoints = new List<Waypoint>
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
             {
                 new()
                 {
                     TripId = 1,
                     WaypointId = 1,
-                    Location = "1601 Maple St, Carrollton, GA 30117",
+                    Location = &quot;1601 Maple St, Carrollton, GA 30117&quot;,
                     StartDate = currentTime,
                     EndDate = currentTime,
-                    Notes = "notes"
+                    Notes = &quot;notes&quot;
                 }
             };
 
-            var mockWaypointDal = new Mock<WaypointDal>();
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
 
-            mockWaypointDal.Setup(db =>
-                    db.CreateWaypoint(1, "1601 Maple St, Carrollton, GA 30117", currentTime, currentTime, "notes"))
+            mockWaypointDal.Setup(db =&gt;
+                    db.CreateWaypoint(1, &quot;1601 Maple St, Carrollton, GA 30117&quot;, currentTime, currentTime, &quot;notes&quot;))
                 .Returns(1);
-            mockWaypointDal.Setup(db => db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
 
             WaypointManager waypointManager = new(mockWaypointDal.Object);
 
@@ -61,14 +71,14 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             Assert.AreEqual(1, resultResponse.Data?.Count);
             Assert.AreEqual(1, resultResponse.Data?[0].TripId);
             Assert.AreEqual(1, resultResponse.Data?[0].WaypointId);
-            Assert.AreEqual("1601 Maple St, Carrollton, GA 30117", resultResponse.Data?[0].Location);
-            Assert.AreEqual("1601 Maple St", resultResponse.Data?[0].DisplayName);
+            Assert.AreEqual(&quot;1601 Maple St, Carrollton, GA 30117&quot;, resultResponse.Data?[0].Location);
+            Assert.AreEqual(&quot;1601 Maple St&quot;, resultResponse.Data?[0].DisplayName);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].StartDate);
             Assert.AreEqual(currentTime, resultResponse.Data?[0].EndDate);
-            Assert.AreEqual("notes", resultResponse.Data?[0].Notes);
+            Assert.AreEqual(&quot;notes&quot;, resultResponse.Data?[0].Notes);
             Assert.AreEqual(nameof(Waypoint), resultResponse.Data?[0].EventType);
             Assert.AreEqual(1, resultResponse.Data?[0].Id);
-            Assert.AreEqual("1601 Maple St, Carrollton, GA 30117", resultResponse.Data?[0].FullName);
+            Assert.AreEqual(&quot;1601 Maple St, Carrollton, GA 30117&quot;, resultResponse.Data?[0].FullName);
         }
 
 
@@ -76,13 +86,13 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         public void GetWaypointsOnDate_YieldsSetWithMultipleValues_ReturnsExpectedList()
         {
             var currentTime = DateTime.Now;
-            IList<Waypoint> fakeWaypoints = new List<Waypoint>
+            IList&lt;Waypoint&gt; fakeWaypoints = new List&lt;Waypoint&gt;
             {
                 new()
                 {
                     TripId = 1,
                     WaypointId = 1,
-                    Location = "1601 Maple St",
+                    Location = &quot;1601 Maple St&quot;,
                     StartDate = currentTime,
                     EndDate = currentTime
                 },
@@ -90,19 +100,19 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
                 {
                     TripId = 1,
                     WaypointId = 2,
-                    Location = "1602 Maple St",
+                    Location = &quot;1602 Maple St&quot;,
                     StartDate = currentTime,
                     EndDate = currentTime
                 }
             };
 
-            var mockWaypointDal = new Mock<WaypointDal>();
+            var mockWaypointDal = new Mock&lt;WaypointDal&gt;();
 
-            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1601 Maple St", currentTime, currentTime, null))
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1601 Maple St&quot;, currentTime, currentTime, null))
                 .Returns(1);
-            mockWaypointDal.Setup(db => db.CreateWaypoint(1, "1602 Maple St", currentTime, currentTime, null))
+            mockWaypointDal.Setup(db =&gt; db.CreateWaypoint(1, &quot;1602 Maple St&quot;, currentTime, currentTime, null))
                 .Returns(1);
-            mockWaypointDal.Setup(db => db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
+            mockWaypointDal.Setup(db =&gt; db.GetWaypointsOnDate(1, currentTime)).Returns(fakeWaypoints);
 
             WaypointManager waypointManager = new(mockWaypointDal.Object);
 
@@ -115,10 +125,10 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         [TestMethod]
         public void GetWaypointsOnDate_ServerMySqlException_ReturnsErrorMessage()
         {
-            var mockDal = new Mock<WaypointDal>();
+            var mockDal = new Mock&lt;WaypointDal&gt;();
             var builder = new MySqlExceptionBuilder();
             var currentTime = DateTime.Now;
-            mockDal.Setup(dal => dal.GetWaypointsOnDate(1, currentTime))
+            mockDal.Setup(dal =&gt; dal.GetWaypointsOnDate(1, currentTime))
                 .Throws(builder
                     .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
             var waypointManager = new WaypointManager(mockDal.Object);
@@ -130,9 +140,9 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         [TestMethod]
         public void GetWaypointsOnDate_ServerException_ReturnsErrorMessage()
         {
-            var mockDal = new Mock<WaypointDal>();
+            var mockDal = new Mock&lt;WaypointDal&gt;();
             var currentTime = DateTime.Now;
-            mockDal.Setup(dal => dal.GetWaypointsOnDate(1, currentTime))
+            mockDal.Setup(dal =&gt; dal.GetWaypointsOnDate(1, currentTime))
                 .Throws(new Exception());
             var waypointManager = new WaypointManager(mockDal.Object);
             var result = waypointManager.GetWaypointsOnDate(1, currentTime);
@@ -141,3 +151,9 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
         }
     }
 }
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,44,1],[19,13,19,66,1],[21,13,21,59,1],[22,13,22,103,1],[24,13,24,75,1],[26,13,27,68,1],[29,13,29,60,1],[30,9,30,10,1],[34,9,34,10,1],[35,13,35,44,1],[36,13,47,15,1],[49,13,49,59,1],[51,13,53,29,1],[54,13,54,103,1],[56,13,56,75,1],[58,13,59,68,1],[61,13,61,60,1],[62,13,62,64,1],[63,13,63,68,1],[64,13,64,102,1],[65,13,65,83,1],[66,13,66,77,1],[67,13,67,75,1],[68,13,68,69,1],[69,13,69,82,1],[70,13,70,60,1],[71,13,71,102,1],[72,9,72,10,1],[77,9,77,10,1],[78,13,78,44,1],[79,13,97,15,1],[99,13,99,59,1],[101,13,102,29,1],[103,13,104,29,1],[105,13,105,103,1],[107,13,107,75,1],[109,13,110,68,1],[112,13,112,60,1],[113,9,113,10,1],[117,9,117,10,1],[118,13,118,51,1],[119,13,119,55,1],[120,13,120,44,1],[121,13,123,121,1],[124,13,124,71,1],[125,13,125,77,1],[126,13,126,90,1],[127,13,127,88,1],[128,9,128,10,1],[132,9,132,10,1],[133,13,133,51,1],[134,13,134,44,1],[135,13,136,42,1],[137,13,137,71,1],[138,13,138,77,1],[139,13,139,90,1],[140,13,140,88,1],[141,9,141,10,1]]);
+    </script>
+  </body>
+</html>

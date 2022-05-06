@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestUserManager\TestGetUserById.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestUserManager
+{
+    [TestClass]
+    public class TestGetUserById
+    {
+        [TestMethod]
+        public void GetUserById_Success()
+        {
+            User fakeExistingUser = new() {UserId = 1};
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserById(1)).Returns(fakeExistingUser);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserById(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.Success, resultResponse.StatusCode);
+            Assert.IsInstanceOfType(resultResponse.Data, typeof(User));
+            Assert.AreEqual(resultResponse.Data?.FirstName, fakeExistingUser.FirstName);
+            Assert.AreEqual(resultResponse.Data?.LastName, fakeExistingUser.LastName);
+            Assert.AreEqual(resultResponse.Data?.Username, fakeExistingUser.Username);
+            Assert.AreEqual(resultResponse.Data?.Password, fakeExistingUser.Password);
+            Assert.AreEqual(resultResponse.Data?.UserId, fakeExistingUser.UserId);
+        }
+
+        [TestMethod]
+        public void GetUserById_WithUnknownId_ReturnsErrorMessage()
+        {
+            User? missingUser = null;
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserById(1)).Returns(missingUser);
+
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserById(-1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.DataNotFound, resultResponse.StatusCode);
+        }
+
+        [TestMethod]
+        public void Call_ServerMySqlException_ReturnsErrorMessage()
+        {
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+            mockUserDal.Setup(db =&gt; db.GetUserById(1))
+                .Throws(builder
+                    .WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError).Build());
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserById(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetUserById_ServerException_ReturnsErrorMessage()
+        {
+            var mockUserDal = new Mock&lt;UserDal&gt;();
+            mockUserDal.Setup(db =&gt; db.GetUserById(1))
+                .Throws(new Exception());
+            UserManager userManager = new(mockUserDal.Object);
+
+            var resultResponse = userManager.GetUserById(1);
+
+            Assert.AreEqual((uint) Ui.StatusCode.InternalServerError, resultResponse.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InternalServerError, resultResponse.ErrorMessage);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,16,56,1],[17,13,17,51,1],[18,13,18,82,1],[20,13,20,63,1],[22,13,22,61,1],[24,13,24,86,1],[25,13,25,72,1],[26,13,26,89,1],[27,13,27,87,1],[28,13,28,87,1],[29,13,29,87,1],[30,13,30,83,1],[31,9,31,10,1],[35,9,35,10,1],[36,13,36,38,1],[37,13,37,51,1],[38,13,38,77,1],[40,13,40,63,1],[42,13,42,62,1],[44,13,44,91,1],[45,9,45,10,1],[49,9,49,10,1],[50,13,50,51,1],[51,13,51,55,1],[52,13,54,121,1],[55,13,55,63,1],[57,13,57,61,1],[59,13,59,98,1],[60,13,60,96,1],[61,9,61,10,1],[65,9,65,10,1],[66,13,66,51,1],[67,13,68,42,1],[69,13,69,63,1],[71,13,71,61,1],[73,13,73,98,1],[74,13,74,96,1],[75,9,75,10,1]]);
+    </script>
+  </body>
+</html>
