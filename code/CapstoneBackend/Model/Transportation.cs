@@ -49,6 +49,11 @@ namespace CapstoneBackend.Model
         public string DisplayName => Method;
 
         /// <summary>
+        ///     The full name.
+        /// </summary>
+        public string FullName => Method;
+
+        /// <summary>
         ///     The notes.
         /// </summary>
         public string Notes { get; set; } = string.Empty;

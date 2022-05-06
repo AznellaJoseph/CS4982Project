@@ -11,30 +11,27 @@ using ReactiveUI;
 
 namespace CapstoneDesktop.Views
 {
-
     /// <summary>
     ///     User Control for the Event Page Functionality
     /// </summary>
     /// <seealso cref="EventPageViewModel" />
     public class EventPage : ReactiveUserControl<EventPageViewModel>
     {
-
-        public GMapControl? MainMap { get; set; }
         /// <summary>
         ///     Initializes a new instance of the <see cref="EventPage" /> class.
         /// </summary>
         public EventPage()
         {
             InitializeComponent();
-
-
         }
+
+        public GMapControl? MainMap { get; set; }
 
         private void InitializeComponent()
         {
             this.WhenActivated(disposables =>
             {
-                var viewModel = (EventPageViewModel?)DataContext;
+                var viewModel = (EventPageViewModel?) DataContext;
                 if (viewModel?.Event is not Waypoint waypoint) return;
                 MainMap = new GMapControl();
                 var container = this.Get<Panel>("MapContainer");

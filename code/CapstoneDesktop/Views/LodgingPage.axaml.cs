@@ -16,8 +16,6 @@ namespace CapstoneDesktop.Views
     /// <seealso cref="LodgingPageViewModel" />
     public class LodgingPage : ReactiveUserControl<LodgingPageViewModel>
     {
-
-        public GMapControl? MainMap { get; set; }
         /// <summary>
         ///     Initializes a new instance of the <see cref="LodgingPage" /> class.
         /// </summary>
@@ -26,12 +24,14 @@ namespace CapstoneDesktop.Views
             InitializeComponent();
         }
 
+        public GMapControl? MainMap { get; set; }
+
         private void InitializeComponent()
         {
             this.WhenActivated(disposables =>
             {
                 if (DataContext is null) return;
-                var viewModel = (LodgingPageViewModel)DataContext;
+                var viewModel = (LodgingPageViewModel) DataContext;
                 MainMap = new GMapControl();
                 var lodging = viewModel.Lodging;
                 var container = this.Get<Panel>("MapContainer");

@@ -38,6 +38,7 @@ namespace CapstoneWeb.Pages
             if (!HttpContext.Session.Keys.Contains("userId")) return RedirectToPage("Login");
             UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
             Trips = TripManager.GetTripsByUser(UserId).Data;
+
             return Page();
         }
 

@@ -34,7 +34,7 @@
             public static readonly string NullTripDate = "You must enter a start and end date.";
 
             public static readonly string InvalidEventDate =
-                "You must enter a start date. The end date will default to the trip end date if end date and time are not entered.";
+                "You must enter a start date. The end date will default to the trip end date if not entered.";
 
             public static readonly string EmptyLocation = "You must enter a location.";
             public static readonly string EmptyTransportationMethod = "You must enter a method for the transportation.";

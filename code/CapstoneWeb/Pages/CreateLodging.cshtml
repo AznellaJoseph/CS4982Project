@@ -13,27 +13,27 @@
 
     <form method="post">
         <label for="location">Location* </label>
-        <input id="location" placeholder="Enter a place:" type="text" asp-for="Location" required />
+        <input id="location" placeholder="Enter a place:" type="text" asp-for="Location" required/>
 
         <div class="mapnotes">
-            <div>
+            <div id="notes-for-map">
                 <label for="notes">Notes</label>
                 <textarea id="notes" asp-for="Notes"></textarea>
             </div>
 
-            <div id="createmap"></div>
+            <div id="map" class="create-map"></div>
         </div>
 
 
         <div class="row input-row">
             <div class="input-group">
                 <label for="startDate">Start Date*</label>
-                <input id="startDate" asp-for="StartDate" type="datetime-local" required asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                <input id="startDate" asp-for="StartDate" type="datetime-local" required asp-format="{0:yyyy-MM-ddTHH:mm}"/>
             </div>
 
             <div class="input-group">
                 <label for="endDate">End Date*</label>
-                <input id="endDate" asp-for="EndDate" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                <input id="endDate" asp-for="EndDate" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}"/>
             </div>
 
         </div>

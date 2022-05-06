@@ -94,5 +94,42 @@ namespace CapstoneBackend.DAL
                 throw;
             }
         }
+
+        /// <summary>
+        ///     Gets the user with the specified username
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>
+        ///     The user with the given username or null if no matching user.
+        /// </returns>
+        public virtual User? GetUserById(int userId)
+        {
+            _connection.Open();
+            const string query = "uspGetUserById";
+            using MySqlCommand cmd = new(query, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var usernameOrdinal = reader.GetOrdinal("username");
+            var fnameOrdinal = reader.GetOrdinal("fname");
+            var lnameOrdinal = reader.GetOrdinal("lname");
+            var passwordOrdinal = reader.GetOrdinal("password");
+
+            User? user = null;
+
+            if (reader.Read())
+                user = new User
+                {
+                    UserId = userId,
+                    Username = reader.GetString(usernameOrdinal),
+                    FirstName = reader.GetString(fnameOrdinal),
+                    LastName = reader.GetString(lnameOrdinal),
+                    Password = reader.GetString(passwordOrdinal)
+                };
+
+            _connection.Close();
+            return user;
+        }
     }
 }

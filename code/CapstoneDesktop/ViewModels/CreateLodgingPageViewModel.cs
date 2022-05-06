@@ -126,17 +126,17 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            if (StartDate is null || StartTime is null)
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
             var validLocationResponse = ValidationManager.DetermineIfValidLocation(Location);
 
             if (!string.IsNullOrEmpty(validLocationResponse.ErrorMessage))
             {
                 ErrorMessage = validLocationResponse.ErrorMessage;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (StartDate is null || StartTime is null)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

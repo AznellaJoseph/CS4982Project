@@ -5,17 +5,18 @@
     </UserControl.Resources>
     <Grid RowDefinitions="2*,20,Auto,20,3*" ColumnDefinitions="2*,20,3*" Margin="20">
         <Border Classes="container" Grid.Column="0" Grid.Row="0">
-            <Panel Height="265" >
-                <Canvas Height="265" Margin="15" >
+            <Panel Height="265">
+                <Canvas Height="265" Margin="15">
                     <Grid ColumnDefinitions="Auto,25,Auto" RowDefinitions="265">
                         <TextBlock Grid.Column="2" Classes="logoText" TextAlignment="Center" VerticalAlignment="Center">WAYPOINTZ</TextBlock>
-                        <Image Grid.Column="0" Source="../Assets/waypointz_logo.png" Height="200" Width="200"></Image>
+                        <Image Grid.Column="0" Source="../Assets/waypointz_logo.png" Height="200" Width="200" />
                     </Grid>
                 </Canvas>
-            </Panel>        </Border>
+            </Panel>
+        </Border>
         <Border Classes="container" Grid.Column="0" Grid.Row="2">
-            <Grid ColumnDefinitions="*,10,*,10,*,10,*">
-                <Button HorizontalAlignment="Stretch" Grid.Column="0">
+            <Grid ColumnDefinitions="*,10,*,10,*">
+                <Button HorizontalAlignment="Stretch" Grid.Column="0" IsEnabled="False">
                     <TextBlock Classes="dark" Text="PROFILE" TextAlignment="Center" />
                 </Button>
                 <Button HorizontalAlignment="Stretch" Grid.Column="2" Command="{Binding BackCommand}">
@@ -32,15 +33,15 @@
         <Border Classes="container" Grid.Row="0" Grid.RowSpan="5" Grid.Column="2">
             <Grid VerticalAlignment="Stretch" RowDefinitions="*,10,*,10,2*">
                 <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Classes="h1 light"
-                           Text="{Binding Event.DisplayName}" />
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                           Text="{Binding Event.FullName}" />
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light"
                                Text="{Binding Event.StartDate}" />
                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light" Text="-" />
                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Classes="light"
                                Text="{Binding Event.EndDate}" />
                 </StackPanel>
-                <TextBlock Grid.Row="2" TextAlignment="Left" VerticalAlignment="Center" Classes="light"
+                <TextBlock Grid.Row="4" TextAlignment="Left" VerticalAlignment="Center" Classes="light"
                            Text="{Binding Event.Notes}" />
             </Grid>
         </Border>

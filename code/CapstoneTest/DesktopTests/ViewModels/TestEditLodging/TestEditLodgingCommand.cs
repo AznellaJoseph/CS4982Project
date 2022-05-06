@@ -145,7 +145,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestEditLodging
             {
                 EndDate = DateTime.Today.AddDays(-3),
                 StartDate = DateTime.Today,
-                Location = "UWG library, Carrollton",
+                Location = "Paris, Italy",
                 LodgingId = 1,
                 TripId = 1
             };

@@ -95,6 +95,12 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
+            if (StartDate.Value.CompareTo(EndDate.Value) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
             var clashingTripResponse =
                 ValidationManager.DetermineIfClashingTripExists(_user.UserId, StartDate.Value.Date, EndDate.Value.Date);
 

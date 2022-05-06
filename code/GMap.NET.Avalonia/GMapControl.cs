@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -26,46 +27,20 @@ namespace GMap.NET.Avalonia
     /// <summary>
     ///     GMap.NET control for Windows Presentation
     /// </summary>
-    public partial class GMapControl : ItemsControl, Interface, IDisposable
+    public class GMapControl : ItemsControl, Interface, IDisposable
     {
         private const double MinimumHorizontalDragDistance = 3;
         private const double MinimumVerticalDragDistance = 3;
-
-        #region DependencyProperties and related stuff
-
-        /// <summary>
-        ///     type of map
-        /// </summary>
-        [Browsable(false)]
-        public GMapProvider MapProvider
-        {
-            get { return GetValue(MapProviderProperty); }
-            set { SetValue(MapProviderProperty, value); }
-        }
-
-        public Point MapPoint
-        {
-            get { return GetValue(MapPointProperty); }
-            set { SetValue(MapPointProperty, value); }
-        }
 
         public static readonly StyledProperty<PointLatLng> CenterPositionProperty =
             AvaloniaProperty.Register<GMapControl, PointLatLng>(
                 nameof(CenterPosition),
                 notifying: CenterPositionPropertyChanged);
 
-        // Using a DependencyProperty as the backing store for point.  This enables animation, styling, binding, etc...
         public static readonly StyledProperty<Point> MapPointProperty =
             AvaloniaProperty.Register<GMapControl, Point>(
                 nameof(MapPoint),
                 notifying: OnMapPointPropertyChanged);
-
-        private static void OnMapPointPropertyChanged(IAvaloniaObject source, bool e)
-        {
-            if (e) return;
-            if (source is not GMapControl gmap) return;
-            gmap.Position = new PointLatLng(gmap.MapPoint.X, gmap.MapPoint.Y);
-        }
 
         public static readonly StyledProperty<GMapProvider> MapProviderProperty =
             AvaloniaProperty.Register<GMapControl, GMapProvider>(
@@ -96,540 +71,60 @@ namespace GMap.NET.Avalonia
                 //notifying: ZoomYPropertyChanged,
                 coerce: OnCoerceZoom);
 
-        /// <summary>
-        ///     The multi touch enabled property
-        /// </summary>
-        public static readonly StyledProperty<bool> MultiTouchEnabledProperty =
-            AvaloniaProperty.Register<GMapControl, bool>(
-                nameof(MultiTouchEnabled));
+        public static readonly StyledProperty<ObservableCollection<GMapMarker>> MarkersProperty =
+            AvaloniaProperty.Register<GMapControl, ObservableCollection<GMapMarker>>(
+                nameof(Markers));
+
+        private static DataTemplate _dataTemplateInstance;
+        private static ItemsPanelTemplate _itemsPanelTemplateInstance;
+        private static Style _styleInstance;
+
+        private readonly Core _core = new();
+
+        private readonly MouseDevice _mouse = new();
+
+        private readonly RotateTransform _rotationMatrix = new();
+        private readonly Typeface _tileTypeface = new("Arial");
+
+        internal readonly TranslateTransform MapOverlayTranslateTransform = new();
 
         /// <summary>
-        ///     The touch enabled property
+        ///     current markers overlay offset
         /// </summary>
-        public static readonly StyledProperty<bool> TouchEnabledProperty =
-            AvaloniaProperty.Register<GMapControl, bool>(
-                nameof(TouchEnabled));
-
-        /// <summary>
-        ///     map zoom
-        /// </summary>
-        [Category("GMap.NET")]
-        public double Zoom
-        {
-            get { return GetValue(ZoomProperty); }
-            set { SetValue(ZoomProperty, value); }
-        }
-
-        /// <summary>
-        ///     Map Zoom X
-        /// </summary>
-        [Category("GMap.NET")]
-        public double ZoomX
-        {
-            get { return GetValue(ZoomXProperty); }
-            set { SetValue(ZoomXProperty, value); }
-        }
-
-        /// <summary>
-        ///     Map Zoom Y
-        /// </summary>
-        [Category("GMap.NET")]
-        public double ZoomY
-        {
-            get { return GetValue(ZoomYProperty); }
-            set { SetValue(ZoomYProperty, value); }
-        }
-
-        [Category("GMap.NET")]
-        public PointLatLng CenterPosition
-        {
-            get { return GetValue(CenterPositionProperty); }
-            set { SetValue(CenterPositionProperty, value); }
-        }
-
-        /// <summary>
-        ///     Specifies, if a floating map scale is displayed using a
-        ///     stretched, or a narrowed map.
-        ///     If <code>ScaleMode</code> is <code>ScaleDown</code>,
-        ///     then a scale of 12.3 is displayed using a map zoom level of 13
-        ///     resized to the lower level. If the parameter is <code>ScaleUp</code> ,
-        ///     then the same scale is displayed using a zoom level of 12 with an
-        ///     enlarged scale. If the value is <code>Dynamic</code>, then until a
-        ///     remainder of 0.25 <code>ScaleUp</code> is applied, for bigger
-        ///     remainders <code>ScaleDown</code>.
-        /// </summary>
-        [Category("GMap.NET")]
-        [Description("map scale type")]
-        public ScaleModes ScaleMode
-        {
-            get { return _scaleMode; }
-            set
-            {
-                _scaleMode = value;
-                InvalidateVisual();
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether [multi touch enabled].
-        /// </summary>
-        /// <value><c>true</c> if [multi touch enabled]; otherwise, <c>false</c>.</value>
-        [Category("GMap.NET")]
-        [Description("Enable pinch map zoom")]
-        public bool MultiTouchEnabled
-        {
-            get { return GetValue(MultiTouchEnabledProperty); }
-            set { SetValue(MultiTouchEnabledProperty, value); }
-        }
-
-        private static double OnCoerceZoom(IAvaloniaObject o, double value)
-        {
-            if (o is GMapControl map)
-            {
-                var result = value;
-
-                if (result > map.MaxZoom)
-                    result = map.MaxZoom;
-
-                if (result < map.MinZoom)
-                    result = map.MinZoom;
-
-                return result;
-            }
-            else
-            {
-                return value;
-            }
-        }
-
-        /// <summary>
-        ///     Centers the position property changed.
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs" /> instance containing the event data.</param>
-        private static void CenterPositionPropertyChanged(IAvaloniaObject obj, bool e)
-        {
-            if (e) return;
-
-            if (obj is not GMapControl gmapControl)
-                return;
-
-            gmapControl.Position = gmapControl.CenterPosition;
-        }
-
-        private static void MapProviderPropertyChanged(IAvaloniaObject d, bool e)
-        {
-            if (e) return;
-            var map = (GMapControl)d;
-
-            if (map != null && map.MapProvider != null)
-            {
-                //Debug.WriteLine("MapType: " + e.OldValue + " -> " + e.NewValue);
-
-                var viewarea = map.SelectedArea;
-
-                if (viewarea != RectLatLng.Empty)
-                {
-                    map.Position = new PointLatLng(viewarea.Lat - viewarea.HeightLat / 2,
-                        viewarea.Lng + viewarea.WidthLng / 2);
-                }
-                else
-                {
-                    viewarea = map.ViewArea;
-                }
-
-                map._core.Provider = map.MapProvider;
-
-                map._copyright = null;
-
-                if (!string.IsNullOrEmpty(map._core.Provider.Copyright))
-                {
-                    map._copyright = new FormattedText(map._core.Provider.Copyright,
-                        new Typeface("GenericSansSerif"),
-                        9,
-                        TextAlignment.Left,
-                        TextWrapping.Wrap,
-                        new Size()
-                        );
-                }
-
-                if (map._core.IsStarted && map._core.ZoomToArea)
-                {
-                    // restore zoomrect as close as possible
-                    if (viewarea != RectLatLng.Empty && viewarea != map.ViewArea)
-                    {
-                        int bestZoom = map._core.GetMaxZoomToFitRect(viewarea);
-
-                        if (bestZoom > 0 && map.Zoom != bestZoom)
-                            map.Zoom = bestZoom;
-                    }
-                }
-            }
-        }
-
-        private static void ZoomPropertyChanged(GMapControl mapControl, double value, double oldValue,
-            ZoomMode zoomMode)
-        {
-            if (mapControl != null && mapControl.MapProvider?.Projection != null)
-            {
-                Debug.WriteLine("Zoom: " + oldValue + " -> " + value);
-
-                double remainder = value % 1;
-
-                if (mapControl.ScaleMode != ScaleModes.Integer && remainder != 0 && mapControl.Bounds.Width > 0)
-                {
-                    bool scaleDown;
-
-                    switch (mapControl.ScaleMode)
-                    {
-                        case ScaleModes.ScaleDown:
-                            scaleDown = true;
-                            break;
-
-                        case ScaleModes.Dynamic:
-                            scaleDown = remainder > 0.25;
-                            break;
-
-                        default:
-                            scaleDown = false;
-                            break;
-                    }
-
-                    if (scaleDown)
-                        remainder--;
-
-                    double scaleValue = Math.Pow(2d, remainder);
-                    {
-                        if (mapControl.MapScaleTransform == null)
-                        {
-                            mapControl.MapScaleTransform = mapControl._lastScaleTransform;
-                        }
-
-                        if (zoomMode == ZoomMode.XY || zoomMode == ZoomMode.X)
-                        {
-                            mapControl.MapScaleTransform.ScaleX = scaleValue;
-                            mapControl._core.ScaleX = 1 / scaleValue;
-                            //mapControl.MapScaleTransform.CenterX = mapControl.Width / 2;
-                        }
-
-                        if (zoomMode == ZoomMode.XY || zoomMode == ZoomMode.Y)
-                        {
-                            mapControl.MapScaleTransform.ScaleY = scaleValue;
-                            mapControl._core.ScaleY = 1 / scaleValue;
-                            //mapControl.MapScaleTransform.CenterY = mapControl.Height / 2;
-                        }
-                    }
-
-                    mapControl._core.Zoom = Convert.ToInt32(scaleDown ? Math.Ceiling(value) : value - remainder);
-                }
-                else
-                {
-                    mapControl.MapScaleTransform = null;
-
-                    if (zoomMode == ZoomMode.XY || zoomMode == ZoomMode.X)
-                        mapControl._core.ScaleX = 1;
-
-                    if (zoomMode == ZoomMode.XY || zoomMode == ZoomMode.Y)
-                        mapControl._core.ScaleY = 1;
-
-                    mapControl._core.Zoom = (int)Math.Floor(value);
-                }
-
-                if (mapControl.IsInitialized)
-                {
-                    mapControl.ForceUpdateOverlays();
-                    mapControl.InvalidateVisual(true);
-                }
-            }
-        }
-
-        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
-        {
-            base.OnPropertyChanged(change);
-            switch (change.Property.Name)
-            {
-                case nameof(Zoom):
-                    ZoomPropertyChanged(
-                        this,
-                        change.OldValue.GetValueOrDefault<double>(),
-                        change.OldValue.GetValueOrDefault<double>(),
-                        ZoomMode.XY);
-                    break;
-
-                case nameof(ZoomX):
-                    ZoomPropertyChanged(
-                       this,
-                       change.OldValue.GetValueOrDefault<double>(),
-                       change.OldValue.GetValueOrDefault<double>(),
-                       ZoomMode.X);
-                    break;
-
-                case nameof(ZoomY):
-                    ZoomPropertyChanged(
-                       this,
-                       change.OldValue.GetValueOrDefault<double>(),
-                       change.OldValue.GetValueOrDefault<double>(),
-                       ZoomMode.Y);
-                    break;
-
-                case nameof(Position):
-                    PositionChanged();
-                    break;
-            }
-        }
-
-        /// <summary>
-        ///     Handles the <see cref="E:MultiTouchEnabledChanged" /> event.
-        /// </summary>
-        /// <param name="d">The d.</param>
-        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs" /> instance containing the event data.</param>
-        //private static void OnMultiTouchEnabledChanged(IAvaloniaObject d, bool e)
-        //{
-        //    if (e) return;
-
-        //    var mapControl = (GMapControl)d;
-        //    mapControl.MultiTouchEnabled = (bool)e.NewValue;
-        //    //mapControl.IsManipulationEnabled = (bool)e.NewValue;
-        //}
-
-        /// <summary>
-        ///     is touch control enabled
-        /// </summary>
-        /// <value><c>true</c> if [touch enabled]; otherwise, <c>false</c>.</value>
-        [Obsolete("Touch Enabled is deprecated, please use MultiTouchEnabled")]
-        public bool TouchEnabled
-        {
-            get { return GetValue(TouchEnabledProperty); }
-            set { SetValue(TouchEnabledProperty, value); }
-        }
-
-        private readonly ScaleTransform _lastScaleTransform = new ScaleTransform();
-
-        private ScaleModes _scaleMode = ScaleModes.Integer;
-
-        #endregion DependencyProperties and related stuff
-
-        private readonly MouseDevice _mouse = new MouseDevice();
-
-        private readonly Core _core = new Core();
-
-        private PointLatLng _selectionStart;
-        private PointLatLng _selectionEnd;
-        private readonly Typeface _tileTypeface = new Typeface("Arial");
-        private bool _showTileGridLines;
+        internal readonly TranslateTransform MapTranslateTransform = new();
 
         private FormattedText _copyright;
+        private bool _lazyEvents = true;
 
-        /// <summary>
-        ///     enables filling empty tiles using lower level images
-        /// </summary>
-        [Browsable(false)]
-        public bool FillEmptyTiles
-        {
-            get { return _core.FillEmptyTiles; }
-            set { _core.FillEmptyTiles = value; }
-        }
+        private RectLatLng? _lazySetZoomToFitRect;
 
-        /// <summary>
-        ///     max zoom
-        /// </summary>
-        [Category("GMap.NET")]
-        [Description("maximum zoom level of map")]
-        public int MaxZoom
-        {
-            get { return _core.MaxZoom; }
-            set { _core.MaxZoom = value; }
-        }
-
-        /// <summary>
-        ///     min zoom
-        /// </summary>
-        [Category("GMap.NET")]
-        [Description("minimum zoom level of map")]
-        public int MinZoom
-        {
-            get { return _core.MinZoom; }
-            set { _core.MinZoom = value; }
-        }
-
-        /// <summary>
-        ///     pen for empty tile borders
-        /// </summary>
-        public Pen EmptyTileBorders { get; } = new(Brushes.White, 1.0);
-
-        /// <summary>
-        ///     pen for Selection
-        /// </summary>
-        public Pen SelectionPen { get; } = new(Brushes.Blue, 2.0);
-
-        /// <summary>
-        ///     background of selected area
-        /// </summary>
-        public Brush SelectedAreaFill { get; } =
-            new SolidColorBrush(Color.FromArgb(33, Colors.RoyalBlue.R, Colors.RoyalBlue.G, Colors.RoyalBlue.B));
-
-        /// <summary>
-        ///     pen for empty tile background
-        /// </summary>
-        public ISolidColorBrush EmptyTileBrush = Brushes.Navy;
-
-        /// <summary>
-        ///     text on empty tiles
-        /// </summary>
-        public FormattedText EmptyTileText { get; } =
-            GetFormattedText("We are sorry, but we don't\nhave imagery at this zoom\n     level for this region.", 16);
-
-        /// <summary>
-        ///     map zooming type for mouse wheel
-        /// </summary>
-        [Category("GMap.NET")]
-        [Description("map zooming type for mouse wheel")]
-        public MouseWheelZoomType MouseWheelZoomType
-        {
-            get { return _core.MouseWheelZoomType; }
-            set { _core.MouseWheelZoomType = value; }
-        }
-
-        /// <summary>
-        ///     enable map zoom on mouse wheel
-        /// </summary>
-        [Category("GMap.NET")]
-        [Description("enable map zoom on mouse wheel")]
-        public bool MouseWheelZoomEnabled
-        {
-            get { return _core.MouseWheelZoomEnabled; }
-            set { _core.MouseWheelZoomEnabled = value; }
-        }
-
-        /// <summary>
-        ///     map dragg button
-        /// </summary>
-        [Category("GMap.NET")]
-        public PointerUpdateKind DragButton { get; } = PointerUpdateKind.LeftButtonPressed;
-
-        /// <summary>
-        ///     use circle for selection
-        /// </summary>
-        public bool SelectionUseCircle { get; } = false;
-
-        /// <summary>
-        ///     shows tile gridlines
-        /// </summary>
-        [Category("GMap.NET")]
-        public bool ShowTileGridLines
-        {
-            get { return _showTileGridLines; }
-            set
-            {
-                _showTileGridLines = value;
-                InvalidateVisual();
-            }
-        }
-
-        /// <summary>
-        ///     retry count to get tile
-        /// </summary>
-        [Browsable(false)]
-        public int RetryLoadTile
-        {
-            get { return _core.RetryLoadTile; }
-            set { _core.RetryLoadTile = value; }
-        }
-
-        /// <summary>
-        ///     how many levels of tiles are staying decompresed in memory
-        /// </summary>
-        [Browsable(false)]
-        public int LevelsKeepInMemory
-        {
-            get { return _core.LevelsKeepInMemory; }
-            set { _core.LevelsKeepInMemory = value; }
-        }
+        private Canvas _mapCanvas;
+        private MatrixTransform _rotationMatrixInvert = new();
 
         /// <summary>
         ///     current selected area in map
         /// </summary>
         private RectLatLng _selectedArea;
 
-        [Browsable(false)]
-        public RectLatLng SelectedArea
-        {
-            get { return _selectedArea; }
-            set
-            {
-                _selectedArea = value;
-                InvalidateVisual();
-            }
-        }
+        private PointLatLng _selectionEnd;
+
+        private PointLatLng _selectionStart;
+        private bool _showTileGridLines;
 
         /// <summary>
-        ///     map boundaries
+        ///     pen for empty tile background
         /// </summary>
-        public RectLatLng? BoundsOfMap { get; }
+        public ISolidColorBrush EmptyTileBrush = Brushes.Navy;
 
-        /// <summary>
-        ///     occurs when mouse selection is changed
-        /// </summary>
-        public event SelectionChange OnSelectionChange;
+        internal RotateTransform MapRotateTransform = new();
 
-        public static readonly StyledProperty<ObservableCollection<GMapMarker>> MarkersProperty =
-            AvaloniaProperty.Register<GMapControl, ObservableCollection<GMapMarker>>(
-                nameof(Markers));
+        internal ScaleTransform MapScaleTransform = new();
 
-        /// <summary>
-        ///     List of markers
-        /// </summary>
-        public ObservableCollection<GMapMarker> Markers
+        static GMapControl()
         {
-            get { return GetValue(MarkersProperty); }
-            private set { SetValue(MarkersProperty, value); }
+            GMapImageProxy.Enable();
+            GMaps.Instance.SQLitePing();
         }
-
-        /// <summary>
-        ///     current markers overlay offset
-        /// </summary>
-        internal readonly TranslateTransform MapTranslateTransform = new TranslateTransform();
-
-        internal readonly TranslateTransform MapOverlayTranslateTransform = new TranslateTransform();
-
-        internal ScaleTransform MapScaleTransform = new ScaleTransform();
-        internal RotateTransform MapRotateTransform = new RotateTransform();
-
-        protected bool DesignModeInConstruct
-        {
-            get { return Design.IsDesignMode; }
-        }
-
-        private Canvas _mapCanvas;
-
-        /// <summary>
-        ///     markers overlay
-        /// </summary>
-        internal Canvas MapCanvas
-        {
-            get
-            {
-                if (_mapCanvas == null)
-                {
-                    if (VisualChildren.Count > 0)
-                    {
-                        _mapCanvas = this.GetVisualDescendants().FirstOrDefault(w => w is Canvas) as Canvas;
-                        _mapCanvas.RenderTransform = MapTranslateTransform;
-                    }
-                }
-
-                return _mapCanvas;
-            }
-        }
-
-        public GMaps Manager
-        {
-            get { return GMaps.Instance; }
-        }
-
-        private static DataTemplate _dataTemplateInstance;
-        private static ItemsPanelTemplate _itemsPanelTemplateInstance;
-        private static Style _styleInstance;
 
         public GMapControl()
         {
@@ -660,7 +155,7 @@ namespace GMap.NET.Avalonia
 
                 #endregion -- xaml --
 
-                _dataTemplateInstance ??= new DataTemplate()
+                _dataTemplateInstance ??= new DataTemplate
                 {
                     Content = new ContentPresenter
                     {
@@ -681,14 +176,11 @@ namespace GMap.NET.Avalonia
                 {
                     _styleInstance.Setters.Add(new Setter(Canvas.LeftProperty, new Binding("LocalPositionX")));
                     _styleInstance.Setters.Add(new Setter(Canvas.TopProperty, new Binding("LocalPositionY")));
-                    _styleInstance.Setters.Add(new Setter(Panel.ZIndexProperty, new Binding("ZIndex")));
+                    _styleInstance.Setters.Add(new Setter(ZIndexProperty, new Binding("ZIndex")));
                 }
 
 
-                if (!Styles.Contains(_styleInstance))
-                {
-                    Styles.Add(_styleInstance);
-                }
+                if (!Styles.Contains(_styleInstance)) Styles.Add(_styleInstance);
 
                 #endregion -- templates --
 
@@ -718,15 +210,243 @@ namespace GMap.NET.Avalonia
             }
         }
 
+        /// <summary>
+        ///     enables filling empty tiles using lower level images
+        /// </summary>
+        [Browsable(false)]
+        public bool FillEmptyTiles
+        {
+            get => _core.FillEmptyTiles;
+            set => _core.FillEmptyTiles = value;
+        }
+
+        /// <summary>
+        ///     max zoom
+        /// </summary>
+        [Category("GMap.NET")]
+        [Description("maximum zoom level of map")]
+        public int MaxZoom
+        {
+            get => _core.MaxZoom;
+            set => _core.MaxZoom = value;
+        }
+
+        /// <summary>
+        ///     min zoom
+        /// </summary>
+        [Category("GMap.NET")]
+        [Description("minimum zoom level of map")]
+        public int MinZoom
+        {
+            get => _core.MinZoom;
+            set => _core.MinZoom = value;
+        }
+
+        /// <summary>
+        ///     pen for empty tile borders
+        /// </summary>
+        public Pen EmptyTileBorders { get; } = new(Brushes.White);
+
+        /// <summary>
+        ///     pen for Selection
+        /// </summary>
+        public Pen SelectionPen { get; } = new(Brushes.Blue, 2.0);
+
+        /// <summary>
+        ///     background of selected area
+        /// </summary>
+        public Brush SelectedAreaFill { get; } =
+            new SolidColorBrush(Color.FromArgb(33, Colors.RoyalBlue.R, Colors.RoyalBlue.G, Colors.RoyalBlue.B));
+
+        /// <summary>
+        ///     text on empty tiles
+        /// </summary>
+        public FormattedText EmptyTileText { get; } =
+            GetFormattedText("We are sorry, but we don't\nhave imagery at this zoom\n     level for this region.", 16);
+
+        /// <summary>
+        ///     map zooming type for mouse wheel
+        /// </summary>
+        [Category("GMap.NET")]
+        [Description("map zooming type for mouse wheel")]
+        public MouseWheelZoomType MouseWheelZoomType
+        {
+            get => _core.MouseWheelZoomType;
+            set => _core.MouseWheelZoomType = value;
+        }
+
+        /// <summary>
+        ///     enable map zoom on mouse wheel
+        /// </summary>
+        [Category("GMap.NET")]
+        [Description("enable map zoom on mouse wheel")]
+        public bool MouseWheelZoomEnabled
+        {
+            get => _core.MouseWheelZoomEnabled;
+            set => _core.MouseWheelZoomEnabled = value;
+        }
+
+        /// <summary>
+        ///     map dragg button
+        /// </summary>
+        [Category("GMap.NET")]
+        public PointerUpdateKind DragButton { get; } = PointerUpdateKind.LeftButtonPressed;
+
+        /// <summary>
+        ///     use circle for selection
+        /// </summary>
+        public bool SelectionUseCircle { get; } = false;
+
+        /// <summary>
+        ///     shows tile gridlines
+        /// </summary>
+        [Category("GMap.NET")]
+        public bool ShowTileGridLines
+        {
+            get => _showTileGridLines;
+            set
+            {
+                _showTileGridLines = value;
+                InvalidateVisual();
+            }
+        }
+
+        /// <summary>
+        ///     retry count to get tile
+        /// </summary>
+        [Browsable(false)]
+        public int RetryLoadTile
+        {
+            get => _core.RetryLoadTile;
+            set => _core.RetryLoadTile = value;
+        }
+
+        /// <summary>
+        ///     how many levels of tiles are staying decompresed in memory
+        /// </summary>
+        [Browsable(false)]
+        public int LevelsKeepInMemory
+        {
+            get => _core.LevelsKeepInMemory;
+            set => _core.LevelsKeepInMemory = value;
+        }
+
+        [Browsable(false)]
+        public RectLatLng SelectedArea
+        {
+            get => _selectedArea;
+            set
+            {
+                _selectedArea = value;
+                InvalidateVisual();
+            }
+        }
+
+        /// <summary>
+        ///     map boundaries
+        /// </summary>
+        public RectLatLng? BoundsOfMap { get; }
+
+        /// <summary>
+        ///     List of markers
+        /// </summary>
+        public ObservableCollection<GMapMarker> Markers
+        {
+            get => GetValue(MarkersProperty);
+            private set => SetValue(MarkersProperty, value);
+        }
+
+        protected bool DesignModeInConstruct => Design.IsDesignMode;
+
+        /// <summary>
+        ///     markers overlay
+        /// </summary>
+        internal Canvas MapCanvas
+        {
+            get
+            {
+                if (_mapCanvas == null)
+                    if (VisualChildren.Count > 0)
+                    {
+                        _mapCanvas = this.GetVisualDescendants().FirstOrDefault(w => w is Canvas) as Canvas;
+                        _mapCanvas.RenderTransform = MapTranslateTransform;
+                    }
+
+                return _mapCanvas;
+            }
+        }
+
+        public GMaps Manager => GMaps.Instance;
+
+        public ISolidColorBrush EmptyMapBackground { get; } = Brushes.WhiteSmoke;
+
+        /// <summary>
+        ///     returs true if map bearing is not zero
+        /// </summary>
+        public bool IsRotated => _core.IsRotated;
+
+        /// <summary>
+        ///     bearing for rotation of the map
+        /// </summary>
+        [Category("GMap.NET")]
+        public float Bearing
+        {
+            get => _core.Bearing;
+            set
+            {
+                if (_core.Bearing != value)
+                {
+                    var resize = _core.Bearing == 0;
+                    _core.Bearing = value;
+
+                    UpdateRotationMatrix();
+
+                    if (value != 0 && value % 360 != 0)
+                    {
+                        _core.IsRotated = true;
+
+                        if (_core.TileRectBearing.Size == _core.TileRect.Size)
+                        {
+                            _core.TileRectBearing = _core.TileRect;
+                            _core.TileRectBearing.Inflate(1, 1);
+                        }
+                    }
+                    else
+                    {
+                        _core.IsRotated = false;
+                        _core.TileRectBearing = _core.TileRect;
+                    }
+
+                    if (resize) _core.OnMapSizeChanged((int) Bounds.Width, (int) Bounds.Height);
+
+                    if (_core.IsStarted) ForceUpdateOverlays();
+                }
+            }
+        }
+
+        #region IDisposable Members
+
+        public virtual void Dispose()
+        {
+            GMaps.Instance.CancelTileCaching();
+
+            if (_core.IsStarted)
+            {
+                _core.OnMapZoomChanged -= ForceUpdateOverlays;
+                _core.OnMapClose();
+            }
+        }
+
+        #endregion IDisposable Members
+
+        /// <summary>
+        ///     occurs when mouse selection is changed
+        /// </summary>
+        public event SelectionChange OnSelectionChange;
+
         private void CoreOnCurrentPositionChanged(PointLatLng pointLatLng)
         {
             Position = pointLatLng;
-        }
-
-        static GMapControl()
-        {
-            GMapImageProxy.Enable();
-            GMaps.Instance.SQLitePing();
         }
 
         private void InvalidatorEngage(object sender, ProgressChangedEventArgs e)
@@ -770,14 +490,10 @@ namespace GMap.NET.Avalonia
         {
             base.ItemsCollectionChanged(sender, e);
 
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
+            if (e.Action == NotifyCollectionChangedAction.Add)
                 ForceUpdateOverlays(e.NewItems);
-            }
             else
-            {
                 InvalidateVisual();
-            }
         }
 
         public void InitializeForBackgroundRendering(int width, int height)
@@ -806,15 +522,12 @@ namespace GMap.NET.Avalonia
 
             if (_core.IsStarted)
             {
-                if (IsRotated)
-                {
-                    UpdateRotationMatrix();
-                }
+                if (IsRotated) UpdateRotationMatrix();
 
                 ForceUpdateOverlays();
             }
 
-            base.InvalidateArrange();
+            InvalidateArrange();
         }
 
         /// <summary>
@@ -846,14 +559,11 @@ namespace GMap.NET.Avalonia
         /// </summary>
         protected override Size MeasureOverride(Size availableSize)
         {
-            _core.OnMapSizeChanged((int)availableSize.Width, (int)availableSize.Height);
+            _core.OnMapSizeChanged((int) availableSize.Width, (int) availableSize.Height);
 
             if (_core.IsStarted)
             {
-                if (IsRotated)
-                {
-                    UpdateRotationMatrix();
-                }
+                if (IsRotated) UpdateRotationMatrix();
 
                 ForceUpdateOverlays();
             }
@@ -890,13 +600,9 @@ namespace GMap.NET.Avalonia
                 var shape = s.CreatePath(localPath, true);
 
                 if (marker.Shape is Path p)
-                {
                     p.Data = shape.Data;
-                }
                 else
-                {
                     marker.Shape = shape;
-                }
             }
             else
             {
@@ -904,7 +610,7 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        private void ForceUpdateOverlays(System.Collections.IEnumerable items)
+        private void ForceUpdateOverlays(IEnumerable items)
         {
             //TODO: disable
             //using (Dispatcher.DisableProcessing())
@@ -912,7 +618,6 @@ namespace GMap.NET.Avalonia
             UpdateMarkersOffset();
 
             foreach (GMapMarker i in items)
-            {
                 if (i != null)
                 {
                     i.ForceUpdateLocalPosition(this);
@@ -920,7 +625,6 @@ namespace GMap.NET.Avalonia
                     if (i is IShapable s)
                         RegenerateShape(s);
                 }
-            }
             //}
 
             InvalidateVisual();
@@ -955,18 +659,13 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        public ISolidColorBrush EmptyMapBackground { get; } = Brushes.WhiteSmoke;
-
         /// <summary>
         ///     render map in WPF
         /// </summary>
         /// <param name="g"></param>
         private void DrawMap(DrawingContext g)
         {
-            if (MapProvider == EmptyProvider.Instance || MapProvider == null)
-            {
-                return;
-            }
+            if (MapProvider == EmptyProvider.Instance || MapProvider == null) return;
 
             _core.TileDrawingListLock.AcquireReaderLock();
             _core.Matrix.EnterReadLock();
@@ -980,14 +679,13 @@ namespace GMap.NET.Avalonia
 
                     //if(region.IntersectsWith(Core.tileRect) || IsRotated)
                     {
-                        bool found = false;
+                        var found = false;
 
                         var t = _core.Matrix.GetTileWithNoLock(_core.Zoom, tilePoint.PosXY);
 
                         if (t.NotEmpty)
                         {
                             foreach (GMapImage img in t.Overlays)
-                            {
                                 if (img != null && img.Img != null)
                                 {
                                     if (!found)
@@ -1016,30 +714,30 @@ namespace GMap.NET.Avalonia
                                         {
                                             g.DrawImage(img.Img, parentImgRect);
                                         }
+
                                         geometry = null;
                                     }
                                 }
-                            }
                         }
                         else if (FillEmptyTiles && MapProvider.Projection is MercatorProjection)
                         {
                             #region -- fill empty tiles --
 
-                            int zoomOffset = 1;
+                            var zoomOffset = 1;
                             var parentTile = Tile.Empty;
                             long ix = 0;
 
                             while (!parentTile.NotEmpty && zoomOffset < _core.Zoom && zoomOffset <= LevelsKeepInMemory)
                             {
-                                ix = (long)Math.Pow(2, zoomOffset);
+                                ix = (long) Math.Pow(2, zoomOffset);
                                 parentTile = _core.Matrix.GetTileWithNoLock(_core.Zoom - zoomOffset++,
-                                    new GPoint((int)(tilePoint.PosXY.X / ix), (int)(tilePoint.PosXY.Y / ix)));
+                                    new GPoint((int) (tilePoint.PosXY.X / ix), (int) (tilePoint.PosXY.Y / ix)));
                             }
 
                             if (parentTile.NotEmpty)
                             {
-                                long xOff = Math.Abs(tilePoint.PosXY.X - parentTile.Pos.X * ix);
-                                long yOff = Math.Abs(tilePoint.PosXY.Y - parentTile.Pos.Y * ix);
+                                var xOff = Math.Abs(tilePoint.PosXY.X - parentTile.Pos.X * ix);
+                                var yOff = Math.Abs(tilePoint.PosXY.Y - parentTile.Pos.Y * ix);
 
                                 var geometry =
                                     new RectangleGeometry(new Rect(_core.TileRect.X + 0.6,
@@ -1053,7 +751,6 @@ namespace GMap.NET.Avalonia
 
                                 // render tile
                                 foreach (GMapImage img in parentTile.Overlays)
-                                {
                                     if (img != null && img.Img != null && !img.IsParent)
                                     {
                                         if (!found)
@@ -1065,7 +762,6 @@ namespace GMap.NET.Avalonia
                                             g.DrawRectangle(SelectedAreaFill, null, geometry.Bounds);
                                         }
                                     }
-                                }
                             }
 
                             #endregion -- fill empty tiles --
@@ -1073,7 +769,6 @@ namespace GMap.NET.Avalonia
 
                         // add text if tile is missing
                         if (!found)
-                        {
                             lock (_core.FailedLoads)
                             {
                                 var lt = new LoadTask(tilePoint.PosXY, _core.Zoom);
@@ -1102,12 +797,13 @@ namespace GMap.NET.Avalonia
                                     g.DrawText(
                                         Brushes.Black,
                                         new Point(
-                                            _core.TileRect.X + _core.TileRect.Width / 2 - EmptyTileText.Bounds.Width / 2,
-                                            _core.TileRect.Y + _core.TileRect.Height / 2 - EmptyTileText.Bounds.Height / 2),
+                                            _core.TileRect.X + _core.TileRect.Width / 2 -
+                                            EmptyTileText.Bounds.Width / 2,
+                                            _core.TileRect.Y + _core.TileRect.Height / 2 -
+                                            EmptyTileText.Bounds.Height / 2),
                                         EmptyTileText);
                                 }
                             }
-                        }
 
                         if (ShowTileGridLines)
                         {
@@ -1120,7 +816,7 @@ namespace GMap.NET.Avalonia
 
                             if (tilePoint.PosXY == _core.CenterTileXYLocation)
                             {
-                                var tileText = GetFormattedText("CENTER:" + tilePoint.ToString(), 16);
+                                var tileText = GetFormattedText("CENTER:" + tilePoint, 16);
                                 //tileText.MaxTextWidth = _core.TileRect.Width;
                                 g.DrawText(
                                     Brushes.Black,
@@ -1131,7 +827,7 @@ namespace GMap.NET.Avalonia
                             }
                             else
                             {
-                                var tileText = GetFormattedText("TILE: " + tilePoint.ToString(), 16);
+                                var tileText = GetFormattedText("TILE: " + tilePoint, 16);
                                 //tileText.MaxTextWidth = _core.TileRect.Width;
                                 g.DrawText(
                                     Brushes.Black,
@@ -1179,7 +875,7 @@ namespace GMap.NET.Avalonia
             obj.Arrange(new Rect(size));
 
             var bmp = new RenderTargetBitmap(
-                new PixelSize((int)size.Width, (int)size.Height),
+                new PixelSize((int) size.Width, (int) size.Height),
                 new Vector(96, 96));
 
             bmp.Render(obj);
@@ -1210,22 +906,16 @@ namespace GMap.NET.Avalonia
             }
             else
             {
-                int maxZoom = _core.GetMaxZoomToFitRect(rect);
+                var maxZoom = _core.GetMaxZoomToFitRect(rect);
                 if (maxZoom > 0)
                 {
                     var center =
                         new PointLatLng(rect.Lat - rect.HeightLat / 2, rect.Lng + rect.WidthLng / 2);
                     Position = center;
 
-                    if (maxZoom > MaxZoom)
-                    {
-                        maxZoom = MaxZoom;
-                    }
+                    if (maxZoom > MaxZoom) maxZoom = MaxZoom;
 
-                    if (_core.Zoom != maxZoom)
-                    {
-                        Zoom = maxZoom;
-                    }
+                    if (_core.Zoom != maxZoom) Zoom = maxZoom;
 
                     return true;
                 }
@@ -1233,9 +923,6 @@ namespace GMap.NET.Avalonia
 
             return false;
         }
-
-        private RectLatLng? _lazySetZoomToFitRect;
-        private bool _lazyEvents = true;
 
         /// <summary>
         ///     sets to max zoom to fit all markers and centers them in map
@@ -1245,10 +932,7 @@ namespace GMap.NET.Avalonia
         public bool ZoomAndCenterMarkers(int? zIndex)
         {
             var rect = GetRectOfAllMarkers(zIndex);
-            if (rect.HasValue)
-            {
-                return SetZoomToFitRect(rect.Value);
-            }
+            if (rect.HasValue) return SetZoomToFitRect(rect.Value);
 
             return false;
         }
@@ -1262,10 +946,10 @@ namespace GMap.NET.Avalonia
         {
             RectLatLng? ret = null;
 
-            double left = double.MaxValue;
-            double top = double.MinValue;
-            double right = double.MinValue;
-            double bottom = double.MaxValue;
+            var left = double.MaxValue;
+            var top = double.MinValue;
+            var right = double.MinValue;
+            var bottom = double.MaxValue;
             IEnumerable<GMapMarker> overlays;
 
             overlays = zIndex.HasValue
@@ -1273,43 +957,25 @@ namespace GMap.NET.Avalonia
                 : Items.Cast<GMapMarker>();
 
             if (overlays != null)
-            {
                 foreach (var m in overlays)
-                {
                     if (m.Shape != null && m.Shape.IsVisible)
                     {
                         // left
-                        if (m.Position.Lng < left)
-                        {
-                            left = m.Position.Lng;
-                        }
+                        if (m.Position.Lng < left) left = m.Position.Lng;
 
                         // top
-                        if (m.Position.Lat > top)
-                        {
-                            top = m.Position.Lat;
-                        }
+                        if (m.Position.Lat > top) top = m.Position.Lat;
 
                         // right
-                        if (m.Position.Lng > right)
-                        {
-                            right = m.Position.Lng;
-                        }
+                        if (m.Position.Lng > right) right = m.Position.Lng;
 
                         // bottom
-                        if (m.Position.Lat < bottom)
-                        {
-                            bottom = m.Position.Lat;
-                        }
+                        if (m.Position.Lat < bottom) bottom = m.Position.Lat;
                     }
-                }
-            }
 
             if (left != double.MaxValue && right != double.MinValue && top != double.MinValue &&
                 bottom != double.MaxValue)
-            {
                 ret = RectLatLng.FromLTRB(left, top, right, bottom);
-            }
 
             return ret;
         }
@@ -1327,8 +993,8 @@ namespace GMap.NET.Avalonia
                 {
                     var p = new Point(x, y);
                     p = _rotationMatrixInvert.Transform(p);
-                    x = (int)p.X;
-                    y = (int)p.Y;
+                    x = (int) p.X;
+                    y = (int) p.Y;
 
                     _core.DragOffset(new GPoint(x, y));
 
@@ -1343,9 +1009,6 @@ namespace GMap.NET.Avalonia
                 }
             }
         }
-
-        private readonly RotateTransform _rotationMatrix = new RotateTransform();
-        private MatrixTransform _rotationMatrixInvert = new MatrixTransform();
 
         /// <summary>
         ///     updates rotation matrix
@@ -1363,69 +1026,13 @@ namespace GMap.NET.Avalonia
         }
 
         /// <summary>
-        ///     returs true if map bearing is not zero
-        /// </summary>
-        public bool IsRotated
-        {
-            get { return _core.IsRotated; }
-        }
-
-        /// <summary>
-        ///     bearing for rotation of the map
-        /// </summary>
-        [Category("GMap.NET")]
-        public float Bearing
-        {
-            get { return _core.Bearing; }
-            set
-            {
-                if (_core.Bearing != value)
-                {
-                    bool resize = _core.Bearing == 0;
-                    _core.Bearing = value;
-
-                    UpdateRotationMatrix();
-
-                    if (value != 0 && value % 360 != 0)
-                    {
-                        _core.IsRotated = true;
-
-                        if (_core.TileRectBearing.Size == _core.TileRect.Size)
-                        {
-                            _core.TileRectBearing = _core.TileRect;
-                            _core.TileRectBearing.Inflate(1, 1);
-                        }
-                    }
-                    else
-                    {
-                        _core.IsRotated = false;
-                        _core.TileRectBearing = _core.TileRect;
-                    }
-
-                    if (resize)
-                    {
-                        _core.OnMapSizeChanged((int)Bounds.Width, (int)Bounds.Height);
-                    }
-
-                    if (_core.IsStarted)
-                    {
-                        ForceUpdateOverlays();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         ///     apply transformation if in rotation mode
         /// </summary>
         private Point ApplyRotation(double x, double y)
         {
             var ret = new Point(x, y);
 
-            if (IsRotated)
-            {
-                ret = _rotationMatrix.Transform(ret);
-            }
+            if (IsRotated) ret = _rotationMatrix.Transform(ret);
 
             return ret;
         }
@@ -1437,10 +1044,7 @@ namespace GMap.NET.Avalonia
         {
             var ret = new Point(x, y);
 
-            if (IsRotated)
-            {
-                ret = _rotationMatrixInvert.Transform(ret);
-            }
+            if (IsRotated) ret = _rotationMatrixInvert.Transform(ret);
 
             return ret;
         }
@@ -1455,6 +1059,337 @@ namespace GMap.NET.Avalonia
                 TextWrapping.Wrap,
                 new Size());
         }
+
+        #region DependencyProperties and related stuff
+
+        /// <summary>
+        ///     type of map
+        /// </summary>
+        [Browsable(false)]
+        public GMapProvider MapProvider
+        {
+            get => GetValue(MapProviderProperty);
+            set => SetValue(MapProviderProperty, value);
+        }
+
+        public Point MapPoint
+        {
+            get => GetValue(MapPointProperty);
+            set => SetValue(MapPointProperty, value);
+        }
+
+
+        // Using a DependencyProperty as the backing store for point.  This enables animation, styling, binding, etc...
+
+
+        private static void OnMapPointPropertyChanged(IAvaloniaObject source, bool e)
+        {
+            if (e) return;
+            if (source is not GMapControl gmap) return;
+            gmap.Position = new PointLatLng(gmap.MapPoint.X, gmap.MapPoint.Y);
+        }
+
+
+        /// <summary>
+        ///     The multi touch enabled property
+        /// </summary>
+        public static readonly StyledProperty<bool> MultiTouchEnabledProperty =
+            AvaloniaProperty.Register<GMapControl, bool>(
+                nameof(MultiTouchEnabled));
+
+        /// <summary>
+        ///     The touch enabled property
+        /// </summary>
+        public static readonly StyledProperty<bool> TouchEnabledProperty =
+            AvaloniaProperty.Register<GMapControl, bool>(
+                nameof(TouchEnabled));
+
+        /// <summary>
+        ///     map zoom
+        /// </summary>
+        [Category("GMap.NET")]
+        public double Zoom
+        {
+            get => GetValue(ZoomProperty);
+            set => SetValue(ZoomProperty, value);
+        }
+
+        /// <summary>
+        ///     Map Zoom X
+        /// </summary>
+        [Category("GMap.NET")]
+        public double ZoomX
+        {
+            get => GetValue(ZoomXProperty);
+            set => SetValue(ZoomXProperty, value);
+        }
+
+        /// <summary>
+        ///     Map Zoom Y
+        /// </summary>
+        [Category("GMap.NET")]
+        public double ZoomY
+        {
+            get => GetValue(ZoomYProperty);
+            set => SetValue(ZoomYProperty, value);
+        }
+
+        [Category("GMap.NET")]
+        public PointLatLng CenterPosition
+        {
+            get => GetValue(CenterPositionProperty);
+            set => SetValue(CenterPositionProperty, value);
+        }
+
+        /// <summary>
+        ///     Specifies, if a floating map scale is displayed using a
+        ///     stretched, or a narrowed map.
+        ///     If <code>ScaleMode</code> is <code>ScaleDown</code>,
+        ///     then a scale of 12.3 is displayed using a map zoom level of 13
+        ///     resized to the lower level. If the parameter is <code>ScaleUp</code> ,
+        ///     then the same scale is displayed using a zoom level of 12 with an
+        ///     enlarged scale. If the value is <code>Dynamic</code>, then until a
+        ///     remainder of 0.25 <code>ScaleUp</code> is applied, for bigger
+        ///     remainders <code>ScaleDown</code>.
+        /// </summary>
+        [Category("GMap.NET")]
+        [Description("map scale type")]
+        public ScaleModes ScaleMode
+        {
+            get => _scaleMode;
+            set
+            {
+                _scaleMode = value;
+                InvalidateVisual();
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether [multi touch enabled].
+        /// </summary>
+        /// <value><c>true</c> if [multi touch enabled]; otherwise, <c>false</c>.</value>
+        [Category("GMap.NET")]
+        [Description("Enable pinch map zoom")]
+        public bool MultiTouchEnabled
+        {
+            get => GetValue(MultiTouchEnabledProperty);
+            set => SetValue(MultiTouchEnabledProperty, value);
+        }
+
+        private static double OnCoerceZoom(IAvaloniaObject o, double value)
+        {
+            if (o is GMapControl map)
+            {
+                var result = value;
+
+                if (result > map.MaxZoom)
+                    result = map.MaxZoom;
+
+                if (result < map.MinZoom)
+                    result = map.MinZoom;
+
+                return result;
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        ///     Centers the position property changed.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs" /> instance containing the event data.</param>
+        private static void CenterPositionPropertyChanged(IAvaloniaObject obj, bool e)
+        {
+            if (e) return;
+
+            if (obj is not GMapControl gmapControl)
+                return;
+
+            gmapControl.Position = gmapControl.CenterPosition;
+        }
+
+        private static void MapProviderPropertyChanged(IAvaloniaObject d, bool e)
+        {
+            if (e) return;
+            var map = (GMapControl) d;
+
+            if (map != null && map.MapProvider != null)
+            {
+                //Debug.WriteLine("MapType: " + e.OldValue + " -> " + e.NewValue);
+
+                var viewarea = map.SelectedArea;
+
+                if (viewarea != RectLatLng.Empty)
+                    map.Position = new PointLatLng(viewarea.Lat - viewarea.HeightLat / 2,
+                        viewarea.Lng + viewarea.WidthLng / 2);
+                else
+                    viewarea = map.ViewArea;
+
+                map._core.Provider = map.MapProvider;
+
+                map._copyright = null;
+
+                if (!string.IsNullOrEmpty(map._core.Provider.Copyright))
+                    map._copyright = new FormattedText(map._core.Provider.Copyright,
+                        new Typeface("GenericSansSerif"),
+                        9,
+                        TextAlignment.Left,
+                        TextWrapping.Wrap,
+                        new Size()
+                    );
+
+                if (map._core.IsStarted && map._core.ZoomToArea)
+                    // restore zoomrect as close as possible
+                    if (viewarea != RectLatLng.Empty && viewarea != map.ViewArea)
+                    {
+                        var bestZoom = map._core.GetMaxZoomToFitRect(viewarea);
+
+                        if (bestZoom > 0 && map.Zoom != bestZoom)
+                            map.Zoom = bestZoom;
+                    }
+            }
+        }
+
+        private static void ZoomPropertyChanged(GMapControl mapControl, double value, double oldValue,
+            ZoomMode zoomMode)
+        {
+            if (mapControl != null && mapControl.MapProvider?.Projection != null)
+            {
+                Debug.WriteLine("Zoom: " + oldValue + " -> " + value);
+
+                var remainder = value % 1;
+
+                if (mapControl.ScaleMode != ScaleModes.Integer && remainder != 0 && mapControl.Bounds.Width > 0)
+                {
+                    bool scaleDown;
+
+                    switch (mapControl.ScaleMode)
+                    {
+                        case ScaleModes.ScaleDown:
+                            scaleDown = true;
+                            break;
+
+                        case ScaleModes.Dynamic:
+                            scaleDown = remainder > 0.25;
+                            break;
+
+                        default:
+                            scaleDown = false;
+                            break;
+                    }
+
+                    if (scaleDown)
+                        remainder--;
+
+                    var scaleValue = Math.Pow(2d, remainder);
+                    {
+                        if (mapControl.MapScaleTransform == null)
+                            mapControl.MapScaleTransform = mapControl._lastScaleTransform;
+
+                        if (zoomMode == ZoomMode.XY || zoomMode == ZoomMode.X)
+                        {
+                            mapControl.MapScaleTransform.ScaleX = scaleValue;
+                            mapControl._core.ScaleX = 1 / scaleValue;
+                            //mapControl.MapScaleTransform.CenterX = mapControl.Width / 2;
+                        }
+
+                        if (zoomMode == ZoomMode.XY || zoomMode == ZoomMode.Y)
+                        {
+                            mapControl.MapScaleTransform.ScaleY = scaleValue;
+                            mapControl._core.ScaleY = 1 / scaleValue;
+                            //mapControl.MapScaleTransform.CenterY = mapControl.Height / 2;
+                        }
+                    }
+
+                    mapControl._core.Zoom = Convert.ToInt32(scaleDown ? Math.Ceiling(value) : value - remainder);
+                }
+                else
+                {
+                    mapControl.MapScaleTransform = null;
+
+                    if (zoomMode == ZoomMode.XY || zoomMode == ZoomMode.X)
+                        mapControl._core.ScaleX = 1;
+
+                    if (zoomMode == ZoomMode.XY || zoomMode == ZoomMode.Y)
+                        mapControl._core.ScaleY = 1;
+
+                    mapControl._core.Zoom = (int) Math.Floor(value);
+                }
+
+                if (mapControl.IsInitialized)
+                {
+                    mapControl.ForceUpdateOverlays();
+                    mapControl.InvalidateVisual(true);
+                }
+            }
+        }
+
+        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+        {
+            base.OnPropertyChanged(change);
+            switch (change.Property.Name)
+            {
+                case nameof(Zoom):
+                    ZoomPropertyChanged(
+                        this,
+                        change.OldValue.GetValueOrDefault<double>(),
+                        change.OldValue.GetValueOrDefault<double>(),
+                        ZoomMode.XY);
+                    break;
+
+                case nameof(ZoomX):
+                    ZoomPropertyChanged(
+                        this,
+                        change.OldValue.GetValueOrDefault<double>(),
+                        change.OldValue.GetValueOrDefault<double>(),
+                        ZoomMode.X);
+                    break;
+
+                case nameof(ZoomY):
+                    ZoomPropertyChanged(
+                        this,
+                        change.OldValue.GetValueOrDefault<double>(),
+                        change.OldValue.GetValueOrDefault<double>(),
+                        ZoomMode.Y);
+                    break;
+
+                case nameof(Position):
+                    PositionChanged();
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Handles the <see cref="E:MultiTouchEnabledChanged" /> event.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs" /> instance containing the event data.</param>
+        //private static void OnMultiTouchEnabledChanged(IAvaloniaObject d, bool e)
+        //{
+        //    if (e) return;
+
+        //    var mapControl = (GMapControl)d;
+        //    mapControl.MultiTouchEnabled = (bool)e.NewValue;
+        //    //mapControl.IsManipulationEnabled = (bool)e.NewValue;
+        //}
+
+        /// <summary>
+        ///     is touch control enabled
+        /// </summary>
+        /// <value><c>true</c> if [touch enabled]; otherwise, <c>false</c>.</value>
+        [Obsolete("Touch Enabled is deprecated, please use MultiTouchEnabled")]
+        public bool TouchEnabled
+        {
+            get => GetValue(TouchEnabledProperty);
+            set => SetValue(TouchEnabledProperty, value);
+        }
+
+        private readonly ScaleTransform _lastScaleTransform = new();
+
+        private ScaleModes _scaleMode = ScaleModes.Integer;
+
+        #endregion DependencyProperties and related stuff
 
         #region UserControl Events
 
@@ -1473,7 +1408,9 @@ namespace GMap.NET.Avalonia
                     {
                         using (drawingContext.PushPreTransform(MapScaleTransform.Value))
                         using (drawingContext.PushPreTransform(MapTranslateTransform.Value))
+                        {
                             DrawMap(drawingContext);
+                        }
                     }
                     else
                     {
@@ -1513,13 +1450,12 @@ namespace GMap.NET.Avalonia
                 var p2 = FromLatLngToLocal(SelectedArea.LocationRightBottom);
 
 
-                long x1 = p1.X;
-                long y1 = p1.Y;
-                long x2 = p2.X;
-                long y2 = p2.Y;
+                var x1 = p1.X;
+                var y1 = p1.Y;
+                var x2 = p2.X;
+                var y2 = p2.Y;
 
                 if (SelectionUseCircle)
-                {
                     drawingContext.DrawGeometry(SelectedAreaFill,
                         SelectionPen,
                         new EllipseGeometry(
@@ -1528,16 +1464,13 @@ namespace GMap.NET.Avalonia
                                 y1 + (y2 - y1) / 2,
                                 (x2 - x1) / 2,
                                 (y2 - y1) / 2)));
-                }
                 else
-                {
                     //TODO: add rounded rectangle
                     drawingContext.DrawRectangle(SelectedAreaFill,
                         SelectionPen,
                         new Rect(x1, y1, x2 - x1, y2 - y1),
                         5,
                         5);
-                }
             }
 
             if (ShowCenter)
@@ -1561,20 +1494,19 @@ namespace GMap.NET.Avalonia
             #region -- copyright --
 
             if (_copyright != null)
-            {
-                drawingContext.DrawText(Brushes.Black, new Point(5, Bounds.Height - _copyright.Bounds.Height - 5), _copyright);
-            }
+                drawingContext.DrawText(Brushes.Black, new Point(5, Bounds.Height - _copyright.Bounds.Height - 5),
+                    _copyright);
 
             #endregion -- copyright --
 
             base.Render(drawingContext);
         }
 
-        public Pen CenterCrossPen { get; } = new Pen(Brushes.Red, 1);
+        public Pen CenterCrossPen { get; } = new(Brushes.Red);
         public bool ShowCenter { get; } = true;
 
 #if DEBUG
-        private readonly Pen _virtualCenterCrossPen = new Pen(Brushes.Blue, 2);
+        private readonly Pen _virtualCenterCrossPen = new(Brushes.Blue, 2);
 #endif
 
         private HelperLineOptions _helperLineOption = HelperLineOptions.DontShow;
@@ -1585,19 +1517,16 @@ namespace GMap.NET.Avalonia
         [Browsable(false)]
         public HelperLineOptions HelperLineOption
         {
-            get { return _helperLineOption; }
+            get => _helperLineOption;
             set
             {
                 _helperLineOption = value;
                 _renderHelperLine = _helperLineOption == HelperLineOptions.ShowAlways;
-                if (_core.IsStarted)
-                {
-                    InvalidateVisual();
-                }
+                if (_core.IsStarted) InvalidateVisual();
             }
         }
 
-        public Pen HelperLinePen { get; } = new Pen(Brushes.Blue, 1);
+        public Pen HelperLinePen { get; } = new(Brushes.Blue);
         private bool _renderHelperLine;
 
         protected override void OnKeyUp(KeyEventArgs e)
@@ -1607,10 +1536,7 @@ namespace GMap.NET.Avalonia
             if (HelperLineOption == HelperLineOptions.ShowOnModifierKey)
             {
                 _renderHelperLine = !(e.Key == Key.LeftShift || e.KeyModifiers == KeyModifiers.Alt);
-                if (!_renderHelperLine)
-                {
-                    InvalidateVisual();
-                }
+                if (!_renderHelperLine) InvalidateVisual();
             }
         }
 
@@ -1621,10 +1547,7 @@ namespace GMap.NET.Avalonia
             if (HelperLineOption == HelperLineOptions.ShowOnModifierKey)
             {
                 _renderHelperLine = e.Key == Key.LeftShift || e.KeyModifiers == KeyModifiers.Alt;
-                if (_renderHelperLine)
-                {
-                    InvalidateVisual();
-                }
+                if (_renderHelperLine) InvalidateVisual();
             }
         }
 
@@ -1632,26 +1555,26 @@ namespace GMap.NET.Avalonia
         ///     Reverses MouseWheel zooming direction
         /// </summary>
         public static readonly StyledProperty<bool> InvertedMouseWheelZoomingProperty =
-          AvaloniaProperty.Register<GMapControl, bool>(
-              nameof(InvertedMouseWheelZooming));
+            AvaloniaProperty.Register<GMapControl, bool>(
+                nameof(InvertedMouseWheelZooming));
 
         public bool InvertedMouseWheelZooming
         {
-            get { return GetValue(InvertedMouseWheelZoomingProperty); }
-            set { SetValue(InvertedMouseWheelZoomingProperty, value); }
+            get => GetValue(InvertedMouseWheelZoomingProperty);
+            set => SetValue(InvertedMouseWheelZoomingProperty, value);
         }
 
         /// <summary>
         ///     Lets you zoom by MouseWheel even when pointer is in area of marker
         /// </summary>
         public static readonly StyledProperty<bool> IgnoreMarkerOnMouseWheelProperty =
-          AvaloniaProperty.Register<GMapControl, bool>(
-              nameof(IgnoreMarkerOnMouseWheel));
+            AvaloniaProperty.Register<GMapControl, bool>(
+                nameof(IgnoreMarkerOnMouseWheel));
 
         public bool IgnoreMarkerOnMouseWheel
         {
-            get { return GetValue(IgnoreMarkerOnMouseWheelProperty); }
-            set { SetValue(IgnoreMarkerOnMouseWheelProperty, value); }
+            get => GetValue(IgnoreMarkerOnMouseWheelProperty);
+            set => SetValue(IgnoreMarkerOnMouseWheelProperty, value);
         }
 
         protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
@@ -1662,30 +1585,21 @@ namespace GMap.NET.Avalonia
             {
                 var p = e.GetPosition(this);
 
-                if (MapScaleTransform != null)
-                {
-                    p = MapScaleTransform.Inverse().Transform(p);
-                }
+                if (MapScaleTransform != null) p = MapScaleTransform.Inverse().Transform(p);
 
                 p = ApplyRotationInversion(p.X, p.Y);
 
-                if (_core.MouseLastZoom.X != (int)p.X && _core.MouseLastZoom.Y != (int)p.Y)
+                if (_core.MouseLastZoom.X != (int) p.X && _core.MouseLastZoom.Y != (int) p.Y)
                 {
                     if (MouseWheelZoomType == MouseWheelZoomType.MousePositionAndCenter)
-                    {
-                        Position = FromLocalToLatLng((int)p.X, (int)p.Y);
-                    }
+                        Position = FromLocalToLatLng((int) p.X, (int) p.Y);
                     else if (MouseWheelZoomType == MouseWheelZoomType.ViewCenter)
-                    {
-                        Position = FromLocalToLatLng((int)Bounds.Width / 2, (int)Bounds.Height / 2);
-                    }
+                        Position = FromLocalToLatLng((int) Bounds.Width / 2, (int) Bounds.Height / 2);
                     else if (MouseWheelZoomType == MouseWheelZoomType.MousePositionWithoutCenter)
-                    {
-                        Position = FromLocalToLatLng((int)p.X, (int)p.Y);
-                    }
+                        Position = FromLocalToLatLng((int) p.X, (int) p.Y);
 
-                    _core.MouseLastZoom.X = (int)p.X;
-                    _core.MouseLastZoom.Y = (int)p.Y;
+                    _core.MouseLastZoom.X = (int) p.X;
+                    _core.MouseLastZoom.Y = (int) p.Y;
                 }
 
                 // set mouse position to map center
@@ -1700,24 +1614,16 @@ namespace GMap.NET.Avalonia
                 if (e.Delta.Y > 0)
                 {
                     if (!InvertedMouseWheelZooming)
-                    {
-                        Zoom = (int)Zoom + 1;
-                    }
+                        Zoom = (int) Zoom + 1;
                     else
-                    {
-                        Zoom = (int)(Zoom + 0.99) - 1;
-                    }
+                        Zoom = (int) (Zoom + 0.99) - 1;
                 }
                 else
                 {
                     if (InvertedMouseWheelZooming)
-                    {
-                        Zoom = (int)Zoom + 1;
-                    }
+                        Zoom = (int) Zoom + 1;
                     else
-                    {
-                        Zoom = (int)(Zoom + 0.99) - 1;
-                    }
+                        Zoom = (int) (Zoom + 0.99) - 1;
                 }
 
                 _core.MouseWheelZooming = false;
@@ -1734,15 +1640,12 @@ namespace GMap.NET.Avalonia
             {
                 var p = e.GetPosition(this);
 
-                if (MapScaleTransform != null)
-                {
-                    p = MapScaleTransform.Inverse().Transform(p);
-                }
+                if (MapScaleTransform != null) p = MapScaleTransform.Inverse().Transform(p);
 
                 p = ApplyRotationInversion(p.X, p.Y);
 
-                _core.MouseDown.X = (int)p.X;
-                _core.MouseDown.Y = (int)p.Y;
+                _core.MouseDown.X = (int) p.X;
+                _core.MouseDown.Y = (int) p.Y;
 
                 InvalidateVisual();
             }
@@ -1754,7 +1657,7 @@ namespace GMap.NET.Avalonia
                     _isSelected = true;
                     SelectedArea = RectLatLng.Empty;
                     _selectionEnd = PointLatLng.Empty;
-                    _selectionStart = FromLocalToLatLng((int)p.X, (int)p.Y);
+                    _selectionStart = FromLocalToLatLng((int) p.X, (int) p.Y);
                 }
             }
         }
@@ -1765,10 +1668,7 @@ namespace GMap.NET.Avalonia
         {
             base.OnPointerReleased(e);
 
-            if (_isSelected)
-            {
-                _isSelected = false;
-            }
+            if (_isSelected) _isSelected = false;
 
             if (_core.IsDragging)
             {
@@ -1784,28 +1684,19 @@ namespace GMap.NET.Avalonia
                 _core.EndDrag();
 
                 if (BoundsOfMap.HasValue && !BoundsOfMap.Value.Contains(Position))
-                {
                     if (_core.LastLocationInBounds.HasValue)
-                    {
                         Position = _core.LastLocationInBounds.Value;
-                    }
-                }
             }
             else
             {
-                if (e.GetCurrentPoint(this).Properties.PointerUpdateKind == DragButton)
-                {
-                    _core.MouseDown = GPoint.Empty;
-                }
+                if (e.GetCurrentPoint(this).Properties.PointerUpdateKind == DragButton) _core.MouseDown = GPoint.Empty;
 
                 if (!_selectionEnd.IsEmpty && !_selectionStart.IsEmpty)
                 {
-                    bool zoomtofit = false;
+                    var zoomtofit = false;
 
                     if (!SelectedArea.IsEmpty && e.KeyModifiers == KeyModifiers.Shift)
-                    {
                         zoomtofit = SetZoomToFitRect(SelectedArea);
-                    }
 
                     OnSelectionChange?.Invoke(SelectedArea, zoomtofit);
                 }
@@ -1825,9 +1716,9 @@ namespace GMap.NET.Avalonia
             // wpf generates to many events if mouse is over some visual
             // and OnMouseUp is fired, wtf, anyway...
             // http://greatmaps.codeplex.com/workitem/16013
-            if ((e.Timestamp & UInt32.MaxValue) - _onMouseUpTimestamp < 55)
+            if ((e.Timestamp & uint.MaxValue) - _onMouseUpTimestamp < 55)
             {
-                Debug.WriteLine("OnMouseMove skipped: " + ((e.Timestamp & Int32.MaxValue) - _onMouseUpTimestamp) + "ms");
+                Debug.WriteLine("OnMouseMove skipped: " + ((e.Timestamp & int.MaxValue) - _onMouseUpTimestamp) + "ms");
                 return;
             }
 
@@ -1835,22 +1726,15 @@ namespace GMap.NET.Avalonia
             {
                 var p = e.GetPosition(this);
 
-                if (MapScaleTransform != null)
-                {
-                    p = MapScaleTransform.Inverse().Transform(p);
-                }
+                if (MapScaleTransform != null) p = MapScaleTransform.Inverse().Transform(p);
 
                 p = ApplyRotationInversion(p.X, p.Y);
 
                 // cursor has moved beyond drag tolerance
                 if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
-                {
                     if (Math.Abs(p.X - _core.MouseDown.X) * 2 >= MinimumHorizontalDragDistance ||
                         Math.Abs(p.Y - _core.MouseDown.Y) * 2 >= MinimumVerticalDragDistance)
-                    {
                         _core.BeginDrag(_core.MouseDown);
-                    }
-                }
             }
 
             if (_core.IsDragging)
@@ -1872,27 +1756,20 @@ namespace GMap.NET.Avalonia
                 {
                     var p = e.GetPosition(this);
 
-                    if (MapScaleTransform != null)
-                    {
-                        p = MapScaleTransform.Inverse().Transform(p);
-                    }
+                    if (MapScaleTransform != null) p = MapScaleTransform.Inverse().Transform(p);
 
                     p = ApplyRotationInversion(p.X, p.Y);
 
-                    _core.MouseCurrent.X = (int)p.X;
-                    _core.MouseCurrent.Y = (int)p.Y;
+                    _core.MouseCurrent.X = (int) p.X;
+                    _core.MouseCurrent.Y = (int) p.Y;
                     {
                         _core.Drag(_core.MouseCurrent);
                     }
 
                     if (IsRotated || _scaleMode != ScaleModes.Integer)
-                    {
                         ForceUpdateOverlays();
-                    }
                     else
-                    {
                         UpdateMarkersOffset();
-                    }
                 }
 
                 InvalidateVisual(true);
@@ -1904,24 +1781,21 @@ namespace GMap.NET.Avalonia
                      DisableAltForSelection))
                 {
                     var p = e.GetPosition(this);
-                    _selectionEnd = FromLocalToLatLng((int)p.X, (int)p.Y);
+                    _selectionEnd = FromLocalToLatLng((int) p.X, (int) p.Y);
                     {
                         var p1 = _selectionStart;
                         var p2 = _selectionEnd;
 
-                        double x1 = Math.Min(p1.Lng, p2.Lng);
-                        double y1 = Math.Max(p1.Lat, p2.Lat);
-                        double x2 = Math.Max(p1.Lng, p2.Lng);
-                        double y2 = Math.Min(p1.Lat, p2.Lat);
+                        var x1 = Math.Min(p1.Lng, p2.Lng);
+                        var y1 = Math.Max(p1.Lat, p2.Lat);
+                        var x2 = Math.Max(p1.Lng, p2.Lng);
+                        var y2 = Math.Min(p1.Lat, p2.Lat);
 
                         SelectedArea = new RectLatLng(y1, x1, x2 - x1, y1 - y2);
                     }
                 }
 
-                if (_renderHelperLine)
-                {
-                    InvalidateVisual(true);
-                }
+                if (_renderHelperLine) InvalidateVisual(true);
             }
         }
 
@@ -1929,7 +1803,6 @@ namespace GMap.NET.Avalonia
         ///     if true, selects area just by holding mouse and moving
         /// </summary>
         public bool DisableAltForSelection { get; } = false;
-
 
         #endregion UserControl Events
 
@@ -1962,18 +1835,12 @@ namespace GMap.NET.Avalonia
             var status = GeoCoderStatusCode.UNKNOWN_ERROR;
 
             var gp = MapProvider as GeocodingProvider;
-            if (gp == null)
-            {
-                gp = GMapProviders.OpenStreetMap as GeocodingProvider;
-            }
+            if (gp == null) gp = GMapProviders.OpenStreetMap;
 
             if (gp != null)
             {
                 var pt = gp.GetPoint(keys, out status);
-                if (status == GeoCoderStatusCode.OK && pt.HasValue)
-                {
-                    Position = pt.Value;
-                }
+                if (status == GeoCoderStatusCode.OK && pt.HasValue) Position = pt.Value;
             }
 
             return status;
@@ -1989,18 +1856,12 @@ namespace GMap.NET.Avalonia
             var status = GeoCoderStatusCode.UNKNOWN_ERROR;
 
             var gp = MapProvider as GeocodingProvider;
-            if (gp == null)
-            {
-                gp = GMapProviders.OpenStreetMap as GeocodingProvider;
-            }
+            if (gp == null) gp = GMapProviders.OpenStreetMap;
 
             if (gp != null)
             {
                 var pt = gp.GetPoint(keys, out status);
-                if (status == GeoCoderStatusCode.OK && pt.HasValue)
-                {
-                    return pt.Value;
-                }
+                if (status == GeoCoderStatusCode.OK && pt.HasValue) return pt.Value;
             }
 
             return new PointLatLng();
@@ -2011,16 +1872,16 @@ namespace GMap.NET.Avalonia
             if (MapScaleTransform != null)
             {
                 var tp = MapScaleTransform.Inverse().Transform(new Point(x, y));
-                x = (int)tp.X;
-                y = (int)tp.Y;
+                x = (int) tp.X;
+                y = (int) tp.Y;
             }
 
             if (IsRotated)
             {
                 var f = _rotationMatrixInvert.Transform(new Point(x, y));
 
-                x = (int)f.X;
-                y = (int)f.Y;
+                x = (int) f.X;
+                y = (int) f.Y;
             }
 
             return _core.FromLocalToLatLng(x, y);
@@ -2033,16 +1894,16 @@ namespace GMap.NET.Avalonia
             if (MapScaleTransform != null)
             {
                 var tp = MapScaleTransform.Transform(new Point(ret.X, ret.Y));
-                ret.X = (int)tp.X;
-                ret.Y = (int)tp.Y;
+                ret.X = (int) tp.X;
+                ret.Y = (int) tp.Y;
             }
 
             if (IsRotated)
             {
                 var f = _rotationMatrix.Transform(new Point(ret.X, ret.Y));
 
-                ret.X = (int)f.X;
-                ret.Y = (int)f.Y;
+                ret.X = (int) f.X;
+                ret.Y = (int) f.Y;
             }
 
             return ret;
@@ -2141,31 +2002,24 @@ namespace GMap.NET.Avalonia
         [Browsable(false)]
         public PointLatLng Position
         {
-            get { return GetValue(PositionProperty); }
-            set { SetValue(PositionProperty, value); }
+            get => GetValue(PositionProperty);
+            set => SetValue(PositionProperty, value);
         }
 
         private void PositionChanged()
         {
             _core.Position = Position;
-            if (_core.IsStarted)
-            {
-                ForceUpdateOverlays();
-            }
+            if (_core.IsStarted) ForceUpdateOverlays();
         }
 
-        [Browsable(false)]
-        public GPoint PositionPixel
-        {
-            get { return _core.PositionPixel; }
-        }
+        [Browsable(false)] public GPoint PositionPixel => _core.PositionPixel;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public string CacheLocation
         {
-            get { return CacheLocator.Location; }
-            set { CacheLocator.Location = value; }
+            get => CacheLocator.Location;
+            set => CacheLocator.Location = value;
         }
 
         [Browsable(false)] public bool IsDragging { get; private set; }
@@ -2179,10 +2033,11 @@ namespace GMap.NET.Avalonia
                 {
                     return _core.ViewArea;
                 }
-                else if (_core.Provider.Projection != null)
+
+                if (_core.Provider.Projection != null)
                 {
                     var p = FromLocalToLatLng(0, 0);
-                    var p2 = FromLocalToLatLng((int)Bounds.Width, (int)Bounds.Height);
+                    var p2 = FromLocalToLatLng((int) Bounds.Width, (int) Bounds.Height);
 
                     return RectLatLng.FromLTRB(p.Lng, p.Lat, p2.Lng, p2.Lat);
                 }
@@ -2194,14 +2049,11 @@ namespace GMap.NET.Avalonia
         [Category("GMap.NET")]
         public bool CanDragMap
         {
-            get { return _core.CanDragMap; }
-            set { _core.CanDragMap = value; }
+            get => _core.CanDragMap;
+            set => _core.CanDragMap = value;
         }
 
-        public RenderMode RenderMode
-        {
-            get { return RenderMode.WPF; }
-        }
+        public RenderMode RenderMode => RenderMode.WPF;
 
         #endregion IGControl Members
 
@@ -2209,32 +2061,32 @@ namespace GMap.NET.Avalonia
 
         public event PositionChanged OnPositionChanged
         {
-            add { _core.OnCurrentPositionChanged += value; }
-            remove { _core.OnCurrentPositionChanged -= value; }
+            add => _core.OnCurrentPositionChanged += value;
+            remove => _core.OnCurrentPositionChanged -= value;
         }
 
         public event TileLoadComplete OnTileLoadComplete
         {
-            add { _core.OnTileLoadComplete += value; }
-            remove { _core.OnTileLoadComplete -= value; }
+            add => _core.OnTileLoadComplete += value;
+            remove => _core.OnTileLoadComplete -= value;
         }
 
         public event TileLoadStart OnTileLoadStart
         {
-            add { _core.OnTileLoadStart += value; }
-            remove { _core.OnTileLoadStart -= value; }
+            add => _core.OnTileLoadStart += value;
+            remove => _core.OnTileLoadStart -= value;
         }
 
         public event MapDrag OnMapDrag
         {
-            add { _core.OnMapDrag += value; }
-            remove { _core.OnMapDrag -= value; }
+            add => _core.OnMapDrag += value;
+            remove => _core.OnMapDrag -= value;
         }
 
         public event MapZoomChanged OnMapZoomChanged
         {
-            add { _core.OnMapZoomChanged += value; }
-            remove { _core.OnMapZoomChanged -= value; }
+            add => _core.OnMapZoomChanged += value;
+            remove => _core.OnMapZoomChanged -= value;
         }
 
         /// <summary>
@@ -2242,8 +2094,8 @@ namespace GMap.NET.Avalonia
         /// </summary>
         public event MapTypeChanged OnMapTypeChanged
         {
-            add { _core.OnMapTypeChanged += value; }
-            remove { _core.OnMapTypeChanged -= value; }
+            add => _core.OnMapTypeChanged += value;
+            remove => _core.OnMapTypeChanged -= value;
         }
 
         /// <summary>
@@ -2251,26 +2103,11 @@ namespace GMap.NET.Avalonia
         /// </summary>
         public event EmptyTileError OnEmptyTileError
         {
-            add { _core.OnEmptyTileError += value; }
-            remove { _core.OnEmptyTileError -= value; }
+            add => _core.OnEmptyTileError += value;
+            remove => _core.OnEmptyTileError -= value;
         }
 
         #endregion IGControl event Members
-
-        #region IDisposable Members
-
-        public virtual void Dispose()
-        {
-            GMaps.Instance.CancelTileCaching();
-
-            if (_core.IsStarted)
-            {
-                _core.OnMapZoomChanged -= ForceUpdateOverlays;
-                _core.OnMapClose();
-            }
-        }
-
-        #endregion IDisposable Members
     }
 
     public enum HelperLineOptions

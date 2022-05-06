@@ -38,6 +38,11 @@ namespace CapstoneBackend.Model
         public string DisplayName { get; }
 
         /// <summary>
+        ///     The full name.
+        /// </summary>
+        public string FullName { get; }
+
+        /// <summary>
         ///     The notes.
         /// </summary>
         public string Notes { get; set; }

@@ -40,7 +40,7 @@ namespace CapstoneBackend.Model
                     StatusCode = (uint) Ui.StatusCode.DataNotFound
                 };
 
-            if (startDate.CompareTo(currentTrip.StartDate) < 0)
+            if (startDate.Date.CompareTo(currentTrip.StartDate.Date) < 0)
                 return new Response<bool>
                 {
                     ErrorMessage = Ui.ErrorMessages.EventStartDateBeforeTripStartDate +
@@ -48,7 +48,7 @@ namespace CapstoneBackend.Model
                     StatusCode = (uint) Ui.StatusCode.BadRequest
                 };
 
-            if (startDate.CompareTo(currentTrip.EndDate) > 0)
+            if (startDate.Date.CompareTo(currentTrip.EndDate.Date) > 0)
                 return new Response<bool>
                 {
                     ErrorMessage = Ui.ErrorMessages.EventStartDateAfterTripEndDate +
@@ -56,7 +56,7 @@ namespace CapstoneBackend.Model
                     StatusCode = (uint) Ui.StatusCode.BadRequest
                 };
 
-            if (endDate.CompareTo(currentTrip.StartDate) < 0)
+            if (endDate.Date.CompareTo(currentTrip.StartDate.Date) < 0)
                 return new Response<bool>
                 {
                     ErrorMessage = Ui.ErrorMessages.EventEndDateBeforeTripStartDate +
@@ -64,7 +64,7 @@ namespace CapstoneBackend.Model
                     StatusCode = (uint) Ui.StatusCode.BadRequest
                 };
 
-            if (endDate.CompareTo(currentTrip.EndDate) > 0)
+            if (endDate.Date.CompareTo(currentTrip.EndDate.Date) > 0)
                 return new Response<bool>
                 {
                     ErrorMessage = Ui.ErrorMessages.EventEndDateAfterTripEndDate +

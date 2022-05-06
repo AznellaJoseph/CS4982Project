@@ -53,6 +53,11 @@ namespace CapstoneBackend.Model
         public string DisplayName => Location[..Location.IndexOf(",", StringComparison.Ordinal)];
 
         /// <summary>
+        ///     The full name.
+        /// </summary>
+        public string FullName => Location;
+
+        /// <summary>
         ///     Indicates whether the current object is equal to another object of the same type.
         /// </summary>
         /// <param name="other">An object to compare with this object.</param>

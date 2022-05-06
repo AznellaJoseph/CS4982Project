@@ -6,7 +6,8 @@ CREATE PROCEDURE uspGetTripsByUserId(userId int)
 BEGIN
     SELECT tripId, name, notes, startDate, endDate
     FROM trip
-    WHERE trip.userId = userId;
+    WHERE trip.userId = userId
+    ORDER BY endDate ASC;
 END$
 
 DELIMITER ;
