@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using CapstoneBackend.Utils;
 
@@ -32,6 +31,13 @@ namespace CapstoneBackend.Model
         /// </returns>
         public virtual Response<bool> DetermineIfValidEventDates(int tripId, DateTime startDate, DateTime endDate)
         {
+            if (startDate.CompareTo(endDate) > 0)
+                return new Response<bool>
+                {
+                    StatusCode = (uint) Ui.StatusCode.BadRequest,
+                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
+                };
+
             var currentTrip = TripManager.GetTripByTripId(tripId).Data;
 
             if (currentTrip is null)
@@ -80,6 +86,48 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
+        ///     Determines if there is a clashing trip with the chosen start and end dates.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="startDate">The start date.</param>
+        /// <param name="endDate">The end date.</param>
+        /// <returns>
+        ///     A response of false if a clashing trip does not exist or a non-success code and error message specifying the
+        ///     clashing trip dates.
+        /// </returns>
+        public virtual Response<bool> DetermineIfClashingTripExists(int userId, DateTime startDate, DateTime endDate)
+        {
+            var tripDates = Enumerable.Range(0,
+                    (endDate - startDate).Days + 1)
+                .Select(day => startDate.AddDays(day)).ToList();
+
+            var userTrips = TripManager.GetTripsByUser(userId);
+            if (userTrips.Data == null)
+                return new Response<bool>
+                {
+                    Data = false
+                };
+
+            var clashingTrip = (from tripDate in tripDates
+                from userTrip in userTrips.Data
+                where tripDate >= userTrip.StartDate && tripDate <= userTrip.EndDate
+                select userTrip).FirstOrDefault();
+
+            if (clashingTrip is null)
+                return new Response<bool>
+                {
+                    Data = false
+                };
+
+            return new Response<bool>
+            {
+                ErrorMessage =
+                    $"{Ui.ErrorMessages.ClashingTripDates} {clashingTrip.StartDate.ToShortDateString()} to {clashingTrip.EndDate.ToShortDateString()}.",
+                StatusCode = (uint) Ui.StatusCode.BadRequest
+            };
+        }
+
+        /// <summary>
         ///     Finds the clashing event with the chosen start and end dates.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
@@ -112,7 +160,10 @@ namespace CapstoneBackend.Model
 
             return new Response<IEvent>
             {
-                Data = clashingEvent
+                Data = clashingEvent,
+                ErrorMessage =
+                    $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.",
+                StatusCode = (uint) Ui.StatusCode.BadRequest
             };
         }
 

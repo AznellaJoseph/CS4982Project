@@ -95,12 +95,6 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            if (StartDate.Value.CompareTo(EndDate.Value) > 0)
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
             var resultResponse =
                 TripManager.CreateTrip(_user.UserId, TripName, Notes, StartDate.Value.Date, EndDate.Value.Date);
             if (string.IsNullOrEmpty(resultResponse.ErrorMessage))

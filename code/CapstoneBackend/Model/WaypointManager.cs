@@ -43,13 +43,6 @@ namespace CapstoneBackend.Model
         public virtual Response<int> CreateWaypoint(int tripId, string location, DateTime startTime, DateTime endTime,
             string? notes)
         {
-            if (startTime.CompareTo(endTime) > 0)
-                return new Response<int>
-                {
-                    StatusCode = (uint) Ui.StatusCode.BadRequest,
-                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
-                };
-
             try
             {
                 var waypointId = _dal.CreateWaypoint(tripId, location, startTime, endTime, notes);

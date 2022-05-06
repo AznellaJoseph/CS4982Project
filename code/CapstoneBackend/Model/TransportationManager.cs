@@ -43,12 +43,6 @@ namespace CapstoneBackend.Model
         public virtual Response<int> CreateTransportation(int tripId, string method, DateTime startTime,
             DateTime endTime, string? notes)
         {
-            if (startTime.CompareTo(endTime) > 0)
-                return new Response<int>
-                {
-                    StatusCode = (uint) Ui.StatusCode.BadRequest,
-                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
-                };
             try
             {
                 return new Response<int>

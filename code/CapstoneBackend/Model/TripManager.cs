@@ -116,13 +116,11 @@ namespace CapstoneBackend.Model
             DateTime endDate)
         {
             if (startDate.CompareTo(endDate) > 0)
-            {
                 return new Response<int>
                 {
                     ErrorMessage = Ui.ErrorMessages.InvalidStartDate,
                     StatusCode = (uint) Ui.StatusCode.BadRequest
                 };
-            }
 
             try
             {
