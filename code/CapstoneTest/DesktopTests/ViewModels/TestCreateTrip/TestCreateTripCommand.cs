@@ -39,8 +39,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
                     {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
             var mockScreen = new Mock<IScreen>();
             var mockValidationManager = new Mock<ValidationManager>();
-            mockValidationManager.Setup(vm => vm.DetermineIfClashingTripExists(0, DateTime.Today.AddDays(1), DateTime.Today))
-                .Returns(new Response<bool> {Data = false});
 
             CreateTripPageViewModel createTripWindowViewModel =
                 new(mockUser.Object, mockScreen.Object)
@@ -86,44 +84,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
         }
 
         [TestMethod]
-        public void CreateTripCommand_ClashingTripExists_ReturnsErrorMessage()
-        {
-            var mockUser = new Mock<User>();
-            var mockTripManager = new Mock<TripManager>();
-            var mockScreen = new Mock<IScreen>();
-            var startDate = DateTime.Today;
-            var endDate = DateTime.Today.AddDays(1);
-            var mockValidationManager = new Mock<ValidationManager>();
-            mockValidationManager.Setup(vm => vm.DetermineIfClashingTripExists(0, startDate, endDate)).Returns(new Response<bool>
-            {
-                ErrorMessage =
-                    $"{Ui.ErrorMessages.ClashingTripDates} {startDate.AddDays(-1).ToShortDateString()} to {endDate.ToShortDateString()}"
-            });
-
-            CreateTripPageViewModel createTripWindowViewModel =
-                new(mockUser.Object, mockScreen.Object)
-                {
-                    TripManager = mockTripManager.Object,
-                    ValidationManager = mockValidationManager.Object
-                };
-
-            var testScheduler = new TestScheduler();
-
-            createTripWindowViewModel.TripName = "name";
-            createTripWindowViewModel.StartDate = startDate;
-            createTripWindowViewModel.EndDate = endDate;
-            createTripWindowViewModel.Notes = "notes";
-
-            createTripWindowViewModel.CreateTripCommand.Execute().Subscribe();
-
-            testScheduler.Start();
-
-            Assert.AreEqual(
-                $"{Ui.ErrorMessages.ClashingTripDates} {startDate.AddDays(-1).ToShortDateString()} to {endDate.ToShortDateString()}",
-                createTripWindowViewModel.ErrorMessage);
-        }
-
-        [TestMethod]
         public void CreateTripCommand_SuccessfulCreation()
         {
             var mockUser = new Mock<User>();
@@ -132,8 +92,6 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateTrip
             var startDate = DateTime.Today;
             var endDate = DateTime.Today.AddDays(1);
             var mockValidationManager = new Mock<ValidationManager>();
-            mockValidationManager.Setup(vm => vm.DetermineIfClashingTripExists(0, startDate, endDate)).Returns(new Response<bool>
-                {Data = false});
             mockTripManager.Setup(um => um.CreateTrip(0, "name", "notes", startDate, endDate))
                 .Returns(new Response<int> {StatusCode = (uint) Ui.StatusCode.Success});
 

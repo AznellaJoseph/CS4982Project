@@ -1,5 +1,6 @@
 using System;
 using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -59,14 +60,6 @@ namespace CapstoneWeb.Pages
         public IActionResult OnPost()
         {
             var userId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
-
-
-            var clashingTripResponse = ValidationManager.DetermineIfClashingTripExists(userId, StartDate, EndDate);
-            if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
-            {
-                ErrorMessage = clashingTripResponse.ErrorMessage;
-                return Page();
-            }
 
             var response = TripManager.CreateTrip(userId, TripName,
                 Notes,
