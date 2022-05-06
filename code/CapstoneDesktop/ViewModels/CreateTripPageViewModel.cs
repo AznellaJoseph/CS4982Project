@@ -8,7 +8,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the CreateTrip Page
+    ///     ViewModel for the Create Trip Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateTripPageViewModel : ReactiveViewModelBase
@@ -20,7 +20,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateTripPageViewModel" /> class.
         /// </summary>
-        /// <param name="user">The user that the trip will be created for</param>
+        /// <param name="user">The user that the trip is being created for</param>
         /// <param name="screen">the screen</param>
         public CreateTripPageViewModel(User user, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
@@ -92,6 +92,12 @@ namespace CapstoneDesktop.ViewModels
             if (StartDate is null || EndDate is null)
             {
                 ErrorMessage = Ui.ErrorMessages.NullTripDate;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            if (StartDate.Value.CompareTo(EndDate.Value) > 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

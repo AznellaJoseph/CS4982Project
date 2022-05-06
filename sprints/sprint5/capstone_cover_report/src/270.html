@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\TransportationViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.IO;
+using System.Reactive;
+using Avalonia.Media.Imaging;
+using CapstoneBackend.Model;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for a single Transportation, used in the trip overview event list
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ReactiveViewModelBase&quot; /&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.IEventViewModel&quot; /&gt;
+    /// &lt;seealso cref=&quot;CapstoneDesktop.ViewModels.ViewModelBase&quot; /&gt;
+    public class TransportationViewModel : ReactiveViewModelBase, IEventViewModel
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TransportationViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;transportation&quot;&gt;The transportation.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public TransportationViewModel(Transportation transportation, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            HostScreen = screen;
+            Transportation = transportation;
+            RemoveCommand = ReactiveCommand.Create(removeTransportation);
+            ViewCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new EventPageViewModel(transportation, screen)));
+            EditCommand = ReactiveCommand.CreateFromObservable(() =&gt;
+                HostScreen.Router.Navigate.Execute(new EditTransportationPageViewModel(transportation, screen)));
+        }
+
+        /// &lt;summary&gt;
+        ///     The transportation
+        /// &lt;/summary&gt;
+        public Transportation Transportation { get; }
+
+        /// &lt;summary&gt;
+        ///     The transportation manager
+        /// &lt;/summary&gt;
+        public TransportationManager TransportationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The remove command
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; RemoveCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The view command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; ViewCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The edit command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; EditCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The remove event
+        /// &lt;/summary&gt;
+        public event EventHandler&lt;EventArgs&gt;? RemoveEvent;
+
+        /// &lt;summary&gt;
+        ///     The Event.
+        /// &lt;/summary&gt;
+        public IEvent Event =&gt; Transportation;
+
+        /// &lt;summary&gt;
+        ///     The image path.
+        /// &lt;/summary&gt;
+        public IBitmap ImagePath =&gt;
+            new Bitmap(Path.Combine(
+                Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
+                    .FullName).FullName, &quot;Assets/transportation_icon.png&quot;));
+
+        private void removeTransportation()
+        {
+            if (TransportationManager.RemoveTransportation(Transportation.TransportationId).Data)
+                RemoveEvent?.Invoke(this, EventArgs.Empty);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[23,89,24,44,1],[25,9,25,10,1],[26,13,26,33,1],[27,13,27,45,1],[28,13,28,74,1],[29,13,30,17,1],[30,17,30,99,0],[30,99,30,101,1],[31,13,32,17,1],[32,17,32,112,0],[32,112,32,114,1],[33,9,33,10,1],[38,48,38,52,1],[43,62,43,66,1],[43,67,43,71,1],[43,76,43,81,1],[48,60,48,64,1],[53,72,53,76,1],[58,72,58,76,1],[68,32,68,46,1],[74,13,76,76,0],[79,9,79,10,1],[80,13,80,98,1],[81,17,81,60,1],[82,9,82,10,1]]);
+    </script>
+  </body>
+</html>

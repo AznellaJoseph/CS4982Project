@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\Lodging.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Linq;
+using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Lodging Site.
+    /// &lt;/summary&gt;
+    public class LodgingModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The current lodging.
+        /// &lt;/summary&gt;
+        public Lodging CurrentLodging { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     The lodging manager.
+        /// &lt;/summary&gt;
+        public LodgingManager LodgingManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     Called when [get].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current
+        ///     lodging display
+        /// &lt;/returns&gt;
+        public IActionResult OnGet(int id, int tripId)
+        {
+            if (!HttpContext.Session.Keys.Contains(&quot;userId&quot;))
+                return RedirectToPage(&quot;Index&quot;);
+
+            var lodgingResponse = LodgingManager.GetLodgingById(id);
+
+            if (lodgingResponse.Data is null) return RedirectToPage(&quot;Trip&quot;, tripId);
+
+            if (lodgingResponse.Data.TripId != tripId) return RedirectToPage(&quot;Trip&quot;, tripId);
+
+            CurrentLodging = lodgingResponse.Data;
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post logout].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;Redirect to index&lt;/returns&gt;
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Remove(&quot;userId&quot;);
+            return RedirectToPage(&quot;Index&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post back].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;Redirects to the trip overview page for the trip specified by the trip id&lt;/returns&gt;
+        public IActionResult OnPostBack(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,41,17,45,1],[17,46,17,58,1],[22,48,22,52,1],[22,53,22,57,1],[22,62,22,67,1],[34,9,34,10,1],[35,13,35,62,1],[36,17,36,48,1],[38,13,38,69,1],[40,13,40,46,1],[40,47,40,85,1],[42,13,42,55,1],[42,56,42,94,1],[44,13,44,51,1],[45,13,45,27,1],[46,9,46,10,1],[53,9,53,10,1],[54,13,54,50,1],[55,13,55,44,1],[56,9,56,10,1],[64,9,64,10,1],[65,13,68,15,1],[69,13,69,55,1],[70,9,70,10,1]]);
+    </script>
+  </body>
+</html>

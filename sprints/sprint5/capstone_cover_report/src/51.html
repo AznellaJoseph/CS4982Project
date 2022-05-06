@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Utils\TestGooglePlacesService\TestAutocomplete.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Collections;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace CapstoneTest.BackendTests.Utils.TestGooglePlacesService
+{
+    [TestClass]
+    public class TestAutocomplete
+    {
+        [TestMethod]
+        public void Autocomplete_EmptyString_ReturnsEmptyList()
+        {
+            var input = string.Empty;
+
+            IEnumerable result = GooglePlacesService.Autocomplete(input).Result;
+
+            Assert.IsFalse(result.GetEnumerator().MoveNext());
+        }
+
+        [TestMethod]
+        public void Autocomplete_ValidLocation_ReturnsFullList()
+        {
+            const string input = &quot;Atlanta&quot;;
+            const int minimumResults = 3;
+
+            IEnumerable result = GooglePlacesService.Autocomplete(input).Result;
+
+            for (var iterator = 0; iterator &lt; minimumResults; iterator++)
+                Assert.IsTrue(result.GetEnumerator().MoveNext());
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[12,9,12,10,1],[13,13,13,38,1],[15,13,15,81,1],[17,13,17,63,1],[18,9,18,10,1],[22,9,22,10,1],[26,13,26,81,1],[28,18,28,34,1],[28,36,28,61,1],[28,63,28,73,1],[29,17,29,66,1],[30,9,30,10,1]]);
+    </script>
+  </body>
+</html>

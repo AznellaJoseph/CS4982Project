@@ -27,6 +27,9 @@ namespace CapstoneDesktop.ViewModels
                 HostScreen.Router.Navigate.Execute(new LoginPageViewModel(HostScreen)));
         }
 
+        /// <summary>
+        ///     The lodging
+        /// </summary>
         public Lodging Lodging { get; }
 
         /// <summary>

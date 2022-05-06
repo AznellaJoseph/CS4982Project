@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\DAL\TestUserDAL\TestGetUserById.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneTest.BackendTests.DAL.TestUserDAL
+{
+    [TestClass]
+    public class TestGetUserById
+    {
+        private readonly MySqlConnection _connection = new(Connection.ConnectionString);
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            DeleteTestUser();
+        }
+
+        [TestMethod]
+        public void CallProcedure_InvalidId_ReturnsNull()
+        {
+            UserDal testDal = new(_connection);
+
+            var result = testDal.GetUserById(-1);
+
+            Assert.IsTrue(result is null);
+        }
+
+        [TestMethod]
+        public void CallProcedure_ValidId_ReturnsUser()
+        {
+            InsertTestUser();
+            UserDal testDal = new(_connection);
+
+            var result = testDal.GetUserById(1);
+
+            Assert.IsTrue(result is not null);
+            Assert.IsInstanceOfType(result, typeof(User));
+        }
+
+        private void InsertTestUser()
+        {
+            _connection.Open();
+            const string query = &quot;INSERT user (username, password, fname, lname) &quot; +
+                                 &quot;VALUES (&#39;TestUsername&#39;, &#39;TestPassword&#39;, &#39;TestFirstName&#39;, &#39;TestLastName&#39;);&quot;;
+
+            using var cmd = new MySqlCommand(query, _connection);
+            cmd.ExecuteNonQuery();
+            _connection.Close();
+        }
+
+        private void DeleteTestUser()
+        {
+            _connection.Open();
+            const string query = &quot;delete from user where username = &#39;TestUsername&#39;;&quot;;
+
+            using var cmd = new MySqlCommand(query, _connection);
+            cmd.ExecuteNonQuery();
+            _connection.Close();
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,89,1],[20,9,20,10,1],[21,13,21,30,1],[22,9,22,10,1],[26,9,26,10,1],[27,13,27,48,1],[29,13,29,50,1],[31,13,31,43,1],[32,9,32,10,1],[36,9,36,10,1],[37,13,37,30,1],[38,13,38,48,1],[40,13,40,49,1],[42,13,42,47,1],[43,13,43,59,1],[44,9,44,10,1],[47,9,47,10,1],[48,13,48,32,1],[52,13,52,66,1],[53,13,53,35,1],[54,13,54,33,1],[55,9,55,10,1],[58,9,58,10,1],[59,13,59,32,1],[62,13,62,66,1],[63,13,63,35,1],[64,13,64,33,1],[65,9,65,10,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestTransportationManager\TestEditTransportation.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestTransportationManager
+{
+    [TestClass]
+    public class TestEditTransportation
+    {
+        [TestMethod]
+        public void EditTransportation_TransportationDoesNotExist_ReturnsErrorMessage()
+        {
+            Transportation transportation = new()
+            {
+                EndDate = DateTime.Today.AddDays(3),
+                StartDate = DateTime.Today,
+                Method = &quot;Hilton&quot;,
+                TransportationId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockTransportationDal = new Mock&lt;TransportationDal&gt;();
+            mockTransportationDal.Setup(db =&gt; db.EditTransportation(transportation)).Returns(false);
+            mockTransportationDal.Setup(db =&gt; db.RemoveTransportation(1)).Returns(true);
+
+            TransportationManager manager = new(mockTransportationDal.Object);
+
+            transportation.Notes = &quot;Bring blankets&quot;;
+
+            manager.RemoveTransportation(1);
+
+            var resultResponse = manager.EditTransportation(transportation);
+
+            Assert.AreEqual(resultResponse.ErrorMessage, Ui.ErrorMessages.TransportationNotFound);
+            Assert.AreEqual(resultResponse.StatusCode, (uint) Ui.StatusCode.DataNotFound);
+        }
+
+        [TestMethod]
+        public void EditTransportation_SuccessfulEdit_ReturnsTrue()
+        {
+            Transportation transportation = new()
+            {
+                EndDate = DateTime.Today.AddDays(3),
+                StartDate = DateTime.Today,
+                Method = &quot;Hilton&quot;,
+                TransportationId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockTransportationDal = new Mock&lt;TransportationDal&gt;();
+            mockTransportationDal.Setup(db =&gt; db.EditTransportation(transportation)).Returns(true);
+
+            TransportationManager manager = new(mockTransportationDal.Object);
+
+            transportation.Notes = &quot;Bring blankets&quot;;
+
+            var resultResponse = manager.EditTransportation(transportation);
+
+            Assert.IsTrue(resultResponse.Data);
+        }
+
+        [TestMethod]
+        public void EditTransportation_ServerMySqlException_ReturnsErrorMessage()
+        {
+            Transportation transportation = new()
+            {
+                EndDate = DateTime.Today.AddDays(3),
+                StartDate = DateTime.Today,
+                Method = &quot;Hilton&quot;,
+                TransportationId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockTransportationDal = new Mock&lt;TransportationDal&gt;();
+            var builder = new MySqlExceptionBuilder();
+
+            mockTransportationDal.Setup(db =&gt; db.EditTransportation(transportation)).Throws(
+                builder.WithError((uint) Ui.StatusCode.InternalServerError, Ui.ErrorMessages.InternalServerError)
+                    .Build());
+
+
+            TransportationManager manager = new(mockTransportationDal.Object);
+
+            transportation.Notes = &quot;Bring blankets&quot;;
+
+            var resultResponse = manager.EditTransportation(transportation);
+
+            Assert.AreEqual(resultResponse.ErrorMessage, Ui.ErrorMessages.InternalServerError);
+            Assert.AreEqual(resultResponse.StatusCode, (uint) Ui.StatusCode.InternalServerError);
+        }
+
+        [TestMethod]
+        public void EditTransportation_ServerException_ReturnsErrorMessage()
+        {
+            Transportation transportation = new()
+            {
+                EndDate = DateTime.Today.AddDays(3),
+                StartDate = DateTime.Today,
+                Method = &quot;Hilton&quot;,
+                TransportationId = 1,
+                TripId = 1,
+                Notes = &quot;notes&quot;
+            };
+            var mockTransportationDal = new Mock&lt;TransportationDal&gt;();
+
+            mockTransportationDal.Setup(db =&gt; db.EditTransportation(transportation)).Throws(
+                new Exception());
+
+
+            TransportationManager manager = new(mockTransportationDal.Object);
+
+            transportation.Notes = &quot;Bring blankets&quot;;
+
+            var resultResponse = manager.EditTransportation(transportation);
+
+            Assert.AreEqual(resultResponse.ErrorMessage, Ui.ErrorMessages.InternalServerError);
+            Assert.AreEqual(resultResponse.StatusCode, (uint) Ui.StatusCode.InternalServerError);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[15,9,15,10,1],[16,13,24,15,1],[25,13,25,71,1],[26,13,26,101,1],[27,13,27,89,1],[29,13,29,79,1],[31,13,31,53,1],[33,13,33,45,1],[35,13,35,77,1],[37,13,37,99,1],[38,13,38,91,1],[39,9,39,10,1],[43,9,43,10,1],[44,13,52,15,1],[53,13,53,71,1],[54,13,54,100,1],[56,13,56,79,1],[58,13,58,53,1],[60,13,60,77,1],[62,13,62,48,1],[63,9,63,10,1],[67,9,67,10,1],[68,13,76,15,1],[77,13,77,71,1],[78,13,78,55,1],[80,13,82,31,1],[85,13,85,79,1],[87,13,87,53,1],[89,13,89,77,1],[91,13,91,96,1],[92,13,92,98,1],[93,9,93,10,1],[97,9,97,10,1],[98,13,106,15,1],[107,13,107,71,1],[109,13,110,34,1],[113,13,113,79,1],[115,13,115,53,1],[117,13,117,77,1],[119,13,119,96,1],[120,13,120,98,1],[121,9,121,10,1]]);
+    </script>
+  </body>
+</html>

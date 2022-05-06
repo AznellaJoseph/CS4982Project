@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\Waypoint.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A model class for the Waypoint object
+    /// &lt;/summary&gt;
+    public class Waypoint : IEvent
+    {
+        /// &lt;summary&gt;
+        ///     The waypoint id.
+        /// &lt;/summary&gt;
+        public int WaypointId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        public string Location { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The event type.
+        /// &lt;/summary&gt;
+        public string EventType =&gt; nameof(Waypoint);
+
+        /// &lt;summary&gt;
+        ///     The id.
+        /// &lt;/summary&gt;
+        public int Id =&gt; WaypointId;
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string Notes { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     The trip id.
+        /// &lt;/summary&gt;
+        public int TripId { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTime StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTime EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The display name.
+        /// &lt;/summary&gt;
+        public string DisplayName =&gt; Location[..Location.IndexOf(&quot;,&quot;, StringComparison.Ordinal)];
+
+        /// &lt;summary&gt;
+        ///     The full name.
+        /// &lt;/summary&gt;
+        public string FullName =&gt; Location;
+
+        /// &lt;summary&gt;
+        ///     Indicates whether the current object is equal to another object of the same type.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;other&quot;&gt;An object to compare with this object.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     True if the current object is equal to the parameter, false otherwise /&gt;.
+        /// &lt;/returns&gt;
+        public bool Equals(IEvent? other)
+        {
+            return other is not null &amp;&amp; other.Id.Equals(Id) &amp;&amp; other.DisplayName.Equals(DisplayName) &amp;&amp;
+                   other.EndDate.Equals(EndDate) &amp;&amp;
+                   other.EventType.Equals(EventType) &amp;&amp; other.Notes.Equals(Notes) &amp;&amp;
+                   other.StartDate.Equals(StartDate) &amp;&amp; other.TripId.Equals(TripId);
+        }
+
+        /// &lt;summary&gt;
+        ///     Returns a hash code for this instance.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// &lt;/returns&gt;
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, DisplayName, EventType);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[13,33,13,37,1],[13,38,13,42,1],[18,34,18,38,1],[18,39,18,43,1],[18,48,18,60,1],[23,36,23,52,1],[28,26,28,36,1],[33,31,33,35,1],[33,36,33,40,1],[33,45,33,57,1],[38,29,38,33,1],[38,34,38,38,1],[43,37,43,41,1],[43,42,43,46,1],[48,35,48,39,1],[48,40,48,44,1],[53,38,53,97,1],[58,35,58,43,1],[68,9,68,10,1],[69,13,72,85,1],[73,9,73,10,1],[82,9,82,10,1],[83,13,83,65,1],[84,9,84,10,1]]);
+    </script>
+  </body>
+</html>

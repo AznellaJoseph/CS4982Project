@@ -68,6 +68,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypointManager
             Assert.AreEqual("notes", resultResponse.Data?[0].Notes);
             Assert.AreEqual(nameof(Waypoint), resultResponse.Data?[0].EventType);
             Assert.AreEqual(1, resultResponse.Data?[0].Id);
+            Assert.AreEqual("1601 Maple St, Carrollton, GA 30117", resultResponse.Data?[0].FullName);
         }
 
 

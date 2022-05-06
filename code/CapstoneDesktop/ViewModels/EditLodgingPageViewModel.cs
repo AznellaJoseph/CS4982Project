@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using CapstoneBackend.Model;
@@ -7,15 +8,21 @@ using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
+    /// <summary>
+    ///     ViewModel for the Edit Lodging Page
+    /// </summary>
     public class EditLodgingPageViewModel : ReactiveViewModelBase
     {
         private readonly Lodging _lodging;
         private string _error = string.Empty;
+        private string _location = string.Empty;
+
+        private IEnumerable<string> _predictions = new List<string>();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="EditLodgingPageViewModel" /> class.
         /// </summary>
-        /// <param name="lodging">The lodging.</param>
+        /// <param name="lodging">The lodging being edited.</param>
         /// <param name="screen">The screen.</param>
         public EditLodgingPageViewModel(Lodging lodging, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])
@@ -83,20 +90,50 @@ namespace CapstoneDesktop.ViewModels
         public TimeSpan? EndTime { get; set; }
 
         /// <summary>
-        ///     The method.
-        /// </summary>
-        public string? Location { get; set; }
-
-        /// <summary>
         ///     The notes.
         /// </summary>
         public string? Notes { get; set; }
+
+        /// <summary>
+        ///     The location.
+        /// </summary>
+        public string Location
+        {
+            get => _location;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _location, value);
+                UpdateAutoCompleteResultsAsync();
+            }
+        }
+
+        /// <summary>
+        ///     List of autocomplete results shown in the dropdown.
+        /// </summary>
+        public IEnumerable<string> AutocompletePredictions
+        {
+            get => _predictions;
+            set => this.RaiseAndSetIfChanged(ref _predictions, value);
+        }
+
+        private async void UpdateAutoCompleteResultsAsync()
+        {
+            AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+        }
 
         private IObservable<IRoutableViewModel> editLodging()
         {
             if (string.IsNullOrEmpty(Location))
             {
                 ErrorMessage = Ui.ErrorMessages.EmptyLocation;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
+            var validLocationResponse = ValidationManager.DetermineIfValidLocation(Location);
+
+            if (!string.IsNullOrEmpty(validLocationResponse.ErrorMessage))
+            {
+                ErrorMessage = validLocationResponse.ErrorMessage;
                 return Observable.Empty<IRoutableViewModel>();
             }
 

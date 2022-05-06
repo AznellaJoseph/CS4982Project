@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\Views\EditLodgingPage.axaml</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+&lt;UserControl xmlns=&quot;https://github.com/avaloniaui&quot;
+             xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+             x:Class=&quot;CapstoneDesktop.Views.EditLodgingPage&quot;&gt;
+    &lt;Border Classes=&quot;container&quot; VerticalAlignment=&quot;Center&quot; HorizontalAlignment=&quot;Center&quot; Padding=&quot;30&quot;&gt;
+        &lt;StackPanel Width=&quot;700&quot; Spacing=&quot;10&quot;&gt;
+            &lt;TextBlock Classes=&quot;h1&quot; Text=&quot;EDIT LODGING&quot; HorizontalAlignment=&quot;Center&quot;
+                       VerticalAlignment=&quot;Top&quot; /&gt;
+            &lt;TextBlock Text=&quot;{Binding ErrorMessage}&quot; Foreground=&quot;Red&quot; /&gt;
+            &lt;TextBlock Text=&quot;LODGING LOCATION:&quot; /&gt;
+            &lt;AutoCompleteBox Watermark=&quot;LOCATION NAME&quot;
+                             Text=&quot;{Binding Location, Mode=TwoWay}&quot;
+                             Items=&quot;{Binding AutocompletePredictions, Mode=TwoWay}&quot;
+                             IsTextCompletionEnabled=&quot;True&quot;
+                             FilterMode=&quot;None&quot; /&gt;
+            &lt;TextBlock Text=&quot;LODGING NOTES&quot; /&gt;
+            &lt;TextBox Watermark=&quot;NOTES&quot; VerticalAlignment=&quot;Bottom&quot; Text=&quot;{Binding Notes, Mode=TwoWay}&quot;
+                     AcceptsReturn=&quot;True&quot; TextWrapping=&quot;Wrap&quot; Height=&quot;200&quot; /&gt;
+
+            &lt;Grid ColumnDefinitions=&quot;*,10,*&quot; RowDefinitions=&quot;*,10,*&quot;&gt;
+                &lt;DatePicker Grid.Column=&quot;0&quot; Grid.Row=&quot;0&quot; SelectedDate=&quot;{Binding StartDate}&quot; Header=&quot;START DATE&quot; /&gt;
+                &lt;TimePicker Grid.Column=&quot;2&quot; Grid.Row=&quot;0&quot; SelectedTime=&quot;{Binding StartTime}&quot; Header=&quot;START TIME&quot; /&gt;
+                &lt;DatePicker Grid.Column=&quot;0&quot; Grid.Row=&quot;2&quot; SelectedDate=&quot;{Binding EndDate}&quot; Header=&quot;END DATE&quot; /&gt;
+                &lt;TimePicker Grid.Column=&quot;2&quot; Grid.Row=&quot;2&quot; SelectedTime=&quot;{Binding EndTime}&quot; Header=&quot;END TIME&quot; /&gt;
+            &lt;/Grid&gt;
+            &lt;Grid ColumnDefinitions=&quot;*,10,*&quot;&gt;
+                &lt;Button Grid.Column=&quot;0&quot; Command=&quot;{Binding EditLodgingCommand}&quot; HorizontalAlignment=&quot;Stretch&quot;&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;EDIT LODGING&quot; /&gt;
+                &lt;/Button&gt;
+                &lt;Button Grid.Column=&quot;2&quot; Command=&quot;{Binding CancelEditLodgingCommand}&quot; HorizontalAlignment=&quot;Stretch&quot;&gt;
+                    &lt;TextBlock TextAlignment=&quot;Center&quot; Text=&quot;CANCEL&quot; /&gt;
+                &lt;/Button&gt;
+            &lt;/Grid&gt;
+        &lt;/StackPanel&gt;
+    &lt;/Border&gt;
+&lt;/UserControl&gt;
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[1,2,1,13,0],[4,6,4,12,0],[4,13,4,20,0],[4,60,4,79,0],[5,10,5,20,0],[5,21,5,26,0],[6,14,6,23,0],[6,24,6,31,0],[6,37,6,41,0],[7,24,7,41,0],[8,14,8,23,0],[8,24,8,28,0],[8,54,8,64,0],[9,14,9,23,0],[9,24,9,28,0],[10,14,10,29,0],[10,30,10,39,0],[11,30,11,34,0],[12,30,12,35,0],[14,30,14,40,0],[15,14,15,23,0],[15,24,15,28,0],[16,14,16,21,0],[16,22,16,31,0],[16,67,16,71,0],[17,43,17,55,0],[19,14,19,18,0],[19,19,19,36,0],[19,46,19,60,0],[20,18,20,28,0],[20,29,20,33,0],[20,58,20,70,0],[20,93,20,99,0],[21,18,21,28,0],[21,29,21,33,0],[21,58,21,70,0],[21,93,21,99,0],[22,18,22,28,0],[22,29,22,33,0],[22,58,22,70,0],[22,91,22,97,0],[23,18,23,28,0],[23,29,23,33,0],[23,58,23,70,0],[23,91,23,97,0],[25,14,25,18,0],[25,19,25,36,0],[26,18,26,24,0],[26,25,26,29,0],[26,41,26,48,0],[27,22,27,31,0],[27,32,27,45,0],[27,55,27,59,0],[29,18,29,24,0],[29,25,29,29,0],[29,41,29,48,0],[30,22,30,31,0],[30,32,30,45,0],[30,55,30,59,0]]);
+    </script>
+  </body>
+</html>

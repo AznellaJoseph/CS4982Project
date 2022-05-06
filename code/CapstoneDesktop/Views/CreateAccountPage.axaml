@@ -24,7 +24,8 @@
             <TextBox PasswordChar="*" Watermark="PASSWORD" Text="{Binding ConfirmedPassword, Mode=TwoWay}" />
 
             <Grid ColumnDefinitions="*,10,*">
-                <Button Grid.Column="0" HorizontalAlignment="Stretch" Command="{Binding SubmitAccountCommand}">
+                <Button Grid.Column="0" HorizontalAlignment="Stretch" Command="{Binding SubmitAccountCommand}"
+                        IsDefault="True">
                     <Button.Content>
                         <TextBlock TextAlignment="Center" Text="CREATE ACCOUNT" />
                     </Button.Content>

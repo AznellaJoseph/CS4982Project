@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestValidationManager\TestDetermineIfValidLocation.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace CapstoneTest.BackendTests.Model.TestValidationManager
+{
+    [TestClass]
+    public class TestDetermineIfValidLocation
+    {
+        [TestMethod]
+        public void DetermineIfValidLocation_InvalidLocation_ReturnsErrorResponse()
+        {
+            var validationManager = new ValidationManager();
+            var input = string.Empty;
+
+            var response = validationManager.DetermineIfValidLocation(input);
+
+            Assert.AreEqual((uint)Ui.StatusCode.BadRequest, response.StatusCode);
+            Assert.AreEqual(Ui.ErrorMessages.InvalidLocation, response.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void DetermineIfValidLocation_ValidLocation_ReturnsSuccessResponse()
+        {
+            var validationManager = new ValidationManager();
+            var input = &quot;Atlanta&quot;;
+
+            var response = validationManager.DetermineIfValidLocation(input);
+
+            Assert.AreEqual((uint)Ui.StatusCode.Success, response.StatusCode);
+            Assert.IsTrue(response.Data);
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,9,14,10,1],[15,13,15,61,1],[16,13,16,38,1],[18,13,18,78,1],[20,13,20,82,1],[21,13,21,86,1],[22,9,22,10,1],[26,9,26,10,1],[27,13,27,61,1],[28,13,28,35,1],[30,13,30,78,1],[32,13,32,79,1],[33,13,33,42,1],[34,9,34,10,1]]);
+    </script>
+  </body>
+</html>

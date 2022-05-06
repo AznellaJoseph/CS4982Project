@@ -119,5 +119,49 @@ namespace CapstoneBackend.Model
                 };
             }
         }
+
+        /// <summary>
+        ///     Gets a user by the given credentials
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>
+        ///     A response of the user with the given credentials or a non-success status code and error message
+        /// </returns>
+        public virtual Response<User> GetUserById(int userId)
+        {
+            User? user;
+            try
+            {
+                user = _dal.GetUserById(userId);
+            }
+            catch (MySqlException e)
+            {
+                return new Response<User>
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response<User>
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+
+            if (user is null)
+                return new Response<User>
+                {
+                    StatusCode = (uint) Ui.StatusCode.DataNotFound,
+                    ErrorMessage = Ui.ErrorMessages.IncorrectUsername
+                };
+
+            return new Response<User>
+            {
+                Data = user
+            };
+        }
     }
 }

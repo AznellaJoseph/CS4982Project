@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 namespace CapstoneWeb.Pages
 {
     /// <summary>
-    ///     PageModel for Create Transportation Site
+    ///     PageModel for Edit Transportation Site
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.RazorPages.PageModel" />
     public class EditTransportationModel : PageModel
@@ -39,7 +39,7 @@ namespace CapstoneWeb.Pages
         public DateTime EndDate { get; set; } = DateTime.Now;
 
         /// <summary>
-        ///     The end date.
+        ///     The notes.
         /// </summary>
         [BindProperty]
         public string Notes { get; set; }
@@ -58,7 +58,7 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [get].
         /// </summary>
-        /// <param name="id">The identifier of the transportation to update.</param>
+        /// <param name="id">The identifier of the transportation to edit.</param>
         /// <param name="tripId">The trip identifier.</param>
         /// <returns>
         ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current

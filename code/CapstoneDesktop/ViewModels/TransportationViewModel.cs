@@ -1,15 +1,14 @@
 using System;
+using System.IO;
 using System.Reactive;
-using Avalonia;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using CapstoneBackend.Model;
 using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for a single Transportation
+    ///     ViewModel for a single Transportation, used in the trip overview event list
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ReactiveViewModelBase" />
     /// <seealso cref="CapstoneDesktop.ViewModels.IEventViewModel" />
@@ -49,11 +48,6 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, Unit> RemoveCommand { get; }
 
         /// <summary>
-        ///     The remove event
-        /// </summary>
-        public event EventHandler<EventArgs>? RemoveEvent;
-
-        /// <summary>
         ///     The view command.
         /// </summary>
         public ReactiveCommand<Unit, IRoutableViewModel> ViewCommand { get; }
@@ -64,20 +58,19 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> EditCommand { get; }
 
         /// <summary>
+        ///     The remove event
+        /// </summary>
+        public event EventHandler<EventArgs>? RemoveEvent;
+
+        /// <summary>
         ///     The Event.
         /// </summary>
         public IEvent Event => Transportation;
-
-        /// <summary>
-        ///     The image path.
-        /// </summary>
-        public string ImagePath => "../Assets/transportation_icon.png";
 
         private void removeTransportation()
         {
             if (TransportationManager.RemoveTransportation(Transportation.TransportationId).Data)
                 RemoveEvent?.Invoke(this, EventArgs.Empty);
         }
-
     }
 }

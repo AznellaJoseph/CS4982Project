@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneBackend\Model\TransportationManager.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using CapstoneBackend.DAL;
+using CapstoneBackend.Utils;
+using MySql.Data.MySqlClient;
+
+namespace CapstoneBackend.Model
+{
+    /// &lt;summary&gt;
+    ///     A wrapper class for the TransportationDal. Manages the collection of Transportation and informs of server errors.
+    /// &lt;/summary&gt;
+    public class TransportationManager
+    {
+        private readonly TransportationDal _dal;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TransportationManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public TransportationManager() : this(new TransportationDal())
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TransportationManager&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dal&quot;&gt;The dal.&lt;/param&gt;
+        public TransportationManager(TransportationDal dal)
+        {
+            _dal = dal;
+        }
+
+        /// &lt;summary&gt;
+        ///     Creates the transportation.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;method&quot;&gt;The method.&lt;/param&gt;
+        /// &lt;param name=&quot;startTime&quot;&gt;The start time.&lt;/param&gt;
+        /// &lt;param name=&quot;endTime&quot;&gt;The end time.&lt;/param&gt;
+        /// &lt;param name=&quot;notes&quot;&gt;The notes.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     A response of the id of the new transportation or a non-success status code and error message
+        /// &lt;/returns&gt;
+        public virtual Response&lt;int&gt; CreateTransportation(int tripId, string method, DateTime startTime,
+            DateTime endTime, string? notes)
+        {
+            if (startTime.CompareTo(endTime) &gt; 0)
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.BadRequest,
+                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
+                };
+            try
+            {
+                return new Response&lt;int&gt;
+                {
+                    Data = _dal.CreateTransportation(tripId, method, startTime, endTime, notes)
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;int&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the transportation on date.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;selectedDate&quot;&gt;The selected date.&lt;/param&gt;
+        /// &lt;returns&gt; A response of the transportation on that date or a non-success status code and error message&lt;/returns&gt;
+        public virtual Response&lt;IList&lt;Transportation&gt;&gt; GetTransportationOnDate(int tripId, DateTime selectedDate)
+        {
+            try
+            {
+                var transportationOnDate = _dal.GetTransportationOnDate(tripId, selectedDate);
+
+                return new Response&lt;IList&lt;Transportation&gt;&gt;
+                {
+                    Data = transportationOnDate
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;IList&lt;Transportation&gt;&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;IList&lt;Transportation&gt;&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Removes the transportation.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;transportationId&quot;&gt;The identifier.&lt;/param&gt;
+        /// &lt;returns&gt; A response specifying the transportation was removed or a non-success status code and error message &lt;/returns&gt;
+        public virtual Response&lt;bool&gt; RemoveTransportation(int transportationId)
+        {
+            try
+            {
+                var removed = _dal.RemoveTransportation(transportationId);
+
+                if (!removed)
+                    return new Response&lt;bool&gt;
+                    {
+                        ErrorMessage = Ui.ErrorMessages.TransportationNotFound,
+                        StatusCode = (uint) Ui.StatusCode.BadRequest
+                    };
+
+                return new Response&lt;bool&gt;
+                {
+                    Data = removed
+                };
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;bool&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;bool&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the transportation by identifier.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;transportationId&quot;&gt;The transportation identifier.&lt;/param&gt;
+        /// &lt;returns&gt;A response of the transportation with the given id or a non-success code and error message&lt;/returns&gt;
+        public virtual Response&lt;Transportation&gt; GetTransportationById(int transportationId)
+        {
+            try
+            {
+                var transportation = _dal.GetTransportationById(transportationId);
+
+                if (transportation is null)
+                    return new Response&lt;Transportation&gt;
+                    {
+                        ErrorMessage = Ui.ErrorMessages.TransportationNotFound,
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound
+                    };
+
+                return new Response&lt;Transportation&gt; {Data = transportation};
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;Transportation&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;Transportation&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Edits the transportation.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;transportation&quot;&gt;The transportation.&lt;/param&gt;
+        /// &lt;returns&gt;A response specifying the transportation was updated or a non-success code and error message&lt;/returns&gt;
+        public virtual Response&lt;bool&gt; EditTransportation(Transportation transportation)
+        {
+            try
+            {
+                var updated = _dal.EditTransportation(transportation);
+
+                if (!updated)
+                    return new Response&lt;bool&gt;
+                    {
+                        StatusCode = (uint) Ui.StatusCode.DataNotFound,
+                        ErrorMessage = Ui.ErrorMessages.TransportationNotFound
+                    };
+
+                return new Response&lt;bool&gt; {Data = updated};
+            }
+            catch (MySqlException e)
+            {
+                return new Response&lt;bool&gt;
+                {
+                    StatusCode = e.Code,
+                    ErrorMessage = e.Message
+                };
+            }
+            catch (Exception)
+            {
+                return new Response&lt;bool&gt;
+                {
+                    StatusCode = (uint) Ui.StatusCode.InternalServerError,
+                    ErrorMessage = Ui.ErrorMessages.InternalServerError
+                };
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,42,19,71,1],[20,9,20,10,1],[21,9,21,10,1],[27,9,27,60,1],[28,9,28,10,1],[29,13,29,24,1],[30,9,30,10,1],[45,9,45,10,1],[46,13,46,50,1],[47,17,51,19,1],[53,13,53,14,1],[54,17,57,19,1],[59,13,59,37,1],[60,13,60,14,1],[61,17,65,19,1],[67,13,67,30,1],[68,13,68,14,1],[69,17,73,19,1],[75,9,75,10,1],[84,9,84,10,1],[86,13,86,14,1],[87,17,87,95,1],[89,17,92,19,1],[94,13,94,37,1],[95,13,95,14,1],[96,17,100,19,1],[102,13,102,30,1],[103,13,103,14,1],[104,17,108,19,1],[110,9,110,10,1],[118,9,118,10,1],[120,13,120,14,1],[121,17,121,75,1],[123,17,123,30,1],[124,21,128,23,1],[130,17,133,19,1],[135,13,135,37,1],[136,13,136,14,1],[137,17,141,19,1],[143,13,143,30,1],[144,13,144,14,1],[145,17,149,19,1],[151,9,151,10,1],[159,9,159,10,1],[161,13,161,14,1],[162,17,162,83,1],[164,17,164,44,1],[165,21,169,23,1],[171,17,171,77,1],[173,13,173,37,1],[174,13,174,14,1],[175,17,179,19,1],[181,13,181,30,1],[182,13,182,14,1],[183,17,187,19,1],[189,9,189,10,1],[197,9,197,10,1],[199,13,199,14,1],[200,17,200,71,1],[202,17,202,30,1],[203,21,207,23,1],[209,17,209,60,1],[211,13,211,37,1],[212,13,212,14,1],[213,17,217,19,1],[219,13,219,30,1],[220,13,220,14,1],[221,17,225,19,1],[227,9,227,10,1]]);
+    </script>
+  </body>
+</html>

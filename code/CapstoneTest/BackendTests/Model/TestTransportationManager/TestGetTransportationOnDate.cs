@@ -63,6 +63,7 @@ namespace CapstoneTest.BackendTests.Model.TestTransportationManager
             Assert.AreEqual("notes", resultResponse.Data?[0].Notes);
             Assert.AreEqual(1, resultResponse.Data?[0].Id);
             Assert.AreEqual(nameof(Transportation), resultResponse.Data?[0].EventType);
+            Assert.AreEqual("Car", resultResponse.Data?[0].FullName);
         }
 
         [TestMethod]

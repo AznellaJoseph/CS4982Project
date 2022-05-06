@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Utils\TestGooglePlacesService\TestIsLocationValid.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using CapstoneBackend.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using ReactiveUI;
+using System.Collections;
+
+namespace CapstoneTest.BackendTests.Utils.TestGooglePlacesService
+{
+    [TestClass]
+    public class TestIsLocationValid
+    {
+        [TestMethod]
+        public void Location_EmptyString_ReturnsFalse()
+        {
+            string input = string.Empty;
+
+            bool result = GooglePlacesService.IsLocationValid(input);
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void Location_ValidLocation_ReturnsTrue()
+        {
+            string input = &quot;Atlanta&quot;;
+
+            bool result = GooglePlacesService.IsLocationValid(input);
+
+            Assert.IsTrue(result);
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[14,9,14,10,1],[15,13,15,41,1],[17,13,17,70,1],[19,13,19,36,1],[20,9,20,10,1],[24,9,24,10,1],[25,13,25,38,1],[27,13,27,70,1],[29,13,29,35,1],[30,9,30,10,1]]);
+    </script>
+  </body>
+</html>

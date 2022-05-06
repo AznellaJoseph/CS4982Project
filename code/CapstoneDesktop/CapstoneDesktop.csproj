@@ -1,66 +1,66 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFramework>net5.0</TargetFramework>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-    <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
-        <None Remove=".gitignore" />
-        <None Remove="Assets\edit_icon.png" />
-        <None Remove="Assets\remove_icon.png" />
-        <None Remove="Assets\transportation_icon.png" />
-        <None Remove="Assets\view_icon.png" />
-        <None Remove="Assets\waypointz_logo.png" />
-        <None Remove="Assets\waypoint_icon.png" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.10" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.10" />
-        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.10" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.10" />
-        <PackageReference Include="MySql.Data" Version="8.0.28" />
-    </ItemGroup>
-    <ItemGroup>
-	    <ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj" />
-	    <ProjectReference Include="..\GMap.NET.Avalonia\GMap.NET.Avalonia.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Update="Views\CreateTransportationPage.axaml.cs">
-        <DependentUpon>CreateTransportationPage.axaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\EditLodgingPage.axaml.cs">
-        <DependentUpon>EditLodgingPage.axaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\EditWaypointPage.axaml.cs">
-        <DependentUpon>EditWaypointPage.axaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\LodgingPage.axaml.cs">
-        <DependentUpon>LodgingPage.axaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\LandingPage.axaml.cs">
-        <DependentUpon>LandingPage.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\LoginPage.axaml.cs">
-        <DependentUpon>LoginPage.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\CreateAccountPage.axaml.cs">
-        <DependentUpon>CreateAccountPage.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\TripOverviewPage.axaml.cs">
-        <DependentUpon>TripOverviewPage.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\EventPage.axaml.cs">
-        <DependentUpon>EventItemPage.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-    </ItemGroup>
-    <ItemGroup>
-      <UpToDateCheckInput Remove="Views\Styles\DarkMode.axaml" />
-    </ItemGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+		<None Remove=".gitignore" />
+		<None Remove="Assets\edit_icon.png" />
+		<None Remove="Assets\remove_icon.png" />
+		<None Remove="Assets\transportation_icon.png" />
+		<None Remove="Assets\view_icon.png" />
+		<None Remove="Assets\waypointz_logo.png" />
+		<None Remove="Assets\waypoint_icon.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="0.10.10" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.10" />
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.10" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.10" />
+		<PackageReference Include="MySql.Data" Version="8.0.28" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\CapstoneBackend\CapstoneBackend.csproj" />
+		<ProjectReference Include="..\GMap.NET.Avalonia\GMap.NET.Avalonia.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Views\CreateTransportationPage.axaml.cs">
+			<DependentUpon>CreateTransportationPage.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\EditLodgingPage.axaml.cs">
+			<DependentUpon>EditLodgingPage.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\EditWaypointPage.axaml.cs">
+			<DependentUpon>EditWaypointPage.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\LodgingPage.axaml.cs">
+			<DependentUpon>LodgingPage.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\LandingPage.axaml.cs">
+			<DependentUpon>LandingPage.axaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\LoginPage.axaml.cs">
+			<DependentUpon>LoginPage.axaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\CreateAccountPage.axaml.cs">
+			<DependentUpon>CreateAccountPage.axaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\TripOverviewPage.axaml.cs">
+			<DependentUpon>TripOverviewPage.axaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\EventPage.axaml.cs">
+			<DependentUpon>EventItemPage.axaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Remove="Views\Styles\DarkMode.axaml" />
+	</ItemGroup>
 </Project>

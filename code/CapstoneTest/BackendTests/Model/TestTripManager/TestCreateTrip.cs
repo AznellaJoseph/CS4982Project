@@ -10,17 +10,6 @@ namespace CapstoneTest.BackendTests.Model.TestTripManager
     [TestClass]
     public class TestCreateTrip
     {
-        [TestMethod]
-        public void CreateTrip_StartDateAfterEndDate_ReturnsErrorMessage()
-        {
-            var mockDal = new Mock<TripDal>();
-            var tripManager = new TripManager(mockDal.Object);
-
-            var result = tripManager.CreateTrip(1, string.Empty, null, DateTime.Now.AddDays(1), DateTime.Now);
-
-            Assert.AreEqual((uint) Ui.StatusCode.BadRequest, result.StatusCode);
-            Assert.AreEqual(Ui.ErrorMessages.InvalidStartDate, result.ErrorMessage);
-        }
 
         [TestMethod]
         public void CreateTrip_Success()

@@ -364,18 +364,22 @@ label {
     padding: 1% 0;
 }
 
-#createmap {
-    height: 125%;
-    width: 50%;
-}
-
 #map {
     height: 75%;
 }
 
+.create-map, #notes-for-map {
+    height: 100%;
+    width: 48%;
+}
+
+#notes-for-map {
+    display: flex;
+    flex-direction: column;
+}
+
 #notes {
     height: 100%;
-    width: 150%;
     resize: none;
 }
 
@@ -383,7 +387,7 @@ label {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 1%;
+    align-items: flex-end;
 }
 
 img[alt="Remove"], img[alt="Edit"], img[alt="View"], img[alt="Transportation"], img[alt="Waypoint"] {

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\EditLodging.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Linq;
+using CapstoneBackend.Model;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Edit Lodging Site
+    /// &lt;/summary&gt;
+    public class EditLodgingModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string ErrorMessage { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Location { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime StartDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public DateTime EndDate { get; set; } = DateTime.Now;
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        [BindProperty]
+        public string Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The lodging manager.
+        /// &lt;/summary&gt;
+        public LodgingManager LodgingManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The validation manager.
+        /// &lt;/summary&gt;
+        public ValidationManager ValidationManager { get; set; } = new();
+
+
+        /// &lt;summary&gt;
+        ///     Called when [get].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier for the lodging to edit.&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to index if the user is not logged in, trip if the selected event does not exist, or the current
+        ///     lodging display
+        /// &lt;/returns&gt;
+        public IActionResult OnGet(int id, int tripId)
+        {
+            if (!HttpContext.Session.Keys.Contains(&quot;userId&quot;))
+                return RedirectToPage(&quot;Index&quot;);
+
+            var lodgingResponse = LodgingManager.GetLodgingById(id);
+
+            if (lodgingResponse.Data is null) return RedirectToPage(&quot;Trip&quot;, tripId);
+            if (lodgingResponse.Data.TripId != tripId) return RedirectToPage(&quot;Trip&quot;, tripId);
+
+            var lodging = lodgingResponse.Data;
+            Location = lodging.Location;
+            StartDate = lodging.StartDate;
+            EndDate = lodging.EndDate;
+            Notes = lodging.Notes;
+
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt; The id of the lodging record to edit&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to the trip overview page or the current page if there was an error
+        /// &lt;/returns&gt;
+        public IActionResult OnPost(int id, int tripId)
+        {
+            var validDatesResponse = ValidationManager.DetermineIfValidEventDates(tripId, StartDate, EndDate);
+            var validLocationResponse = ValidationManager.DetermineIfValidLocation(Location);
+
+            if (!string.IsNullOrEmpty(validLocationResponse.ErrorMessage))
+            {
+                ErrorMessage = validLocationResponse.ErrorMessage;
+                return Page();
+            }
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
+            {
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Page();
+            }
+
+            var updatedLodging = new Lodging
+            {
+                LodgingId = id,
+                TripId = tripId,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                Location = Location,
+                Notes = Notes
+            };
+
+            var response = LodgingManager.EditLodging(updatedLodging);
+            if (!string.IsNullOrEmpty(response.ErrorMessage))
+            {
+                ErrorMessage = response.ErrorMessage;
+                return Page();
+            }
+
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post cancel].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;Redirects to the trip overview page for the trip specified by the trip id&lt;/returns&gt;
+        public IActionResult OnPostCancel(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,38,19,42,1],[19,43,19,47,1],[25,34,25,38,1],[25,39,25,43,1],[31,37,31,41,1],[31,42,31,46,1],[31,51,31,63,1],[37,35,37,39,1],[37,40,37,44,1],[37,49,37,61,1],[43,31,43,35,1],[43,36,43,40,1],[48,48,48,52,1],[48,53,48,57,1],[48,62,48,67,1],[53,54,53,58,1],[53,59,53,63,1],[53,68,53,73,1],[66,9,66,10,1],[67,13,67,62,1],[68,17,68,48,1],[70,13,70,69,1],[72,13,72,46,1],[72,47,72,85,1],[73,13,73,55,1],[73,56,73,94,1],[75,13,75,48,1],[76,13,76,41,1],[77,13,77,43,1],[78,13,78,39,1],[79,13,79,35,1],[81,13,81,27,1],[82,9,82,10,1],[93,9,93,10,1],[94,13,94,111,1],[95,13,95,94,1],[97,13,97,75,1],[98,13,98,14,1],[99,17,99,67,1],[100,17,100,31,1],[103,13,103,72,1],[104,13,104,14,1],[105,17,105,64,1],[106,17,106,31,1],[109,13,117,15,1],[119,13,119,71,1],[120,13,120,62,1],[121,13,121,14,0],[122,17,122,54,0],[123,17,123,31,0],[126,13,129,15,1],[130,13,130,55,1],[131,9,131,10,1],[139,9,139,10,1],[140,13,143,15,1],[144,13,144,55,1],[145,9,145,10,1]]);
+    </script>
+  </body>
+</html>

@@ -14,7 +14,7 @@
         </Border>
         <Border Classes="container" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
             <Grid ColumnDefinitions="*,10,*,10,*">
-                <Button HorizontalAlignment="Stretch" Grid.Column="0">
+                <Button HorizontalAlignment="Stretch" Grid.Column="0" IsEnabled="False">
                     <TextBlock Classes="dark" Text="PROFILE" TextAlignment="Center" />
                 </Button>
                 <Button HorizontalAlignment="Stretch" Grid.Column="2" Command="{Binding BackCommand}">
@@ -47,10 +47,10 @@
                             <DataTemplate>
                                 <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*,Auto,*">
                                     <TextBlock Grid.Column="0" TextAlignment="Center"
-                                               Text="{Binding Lodging.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}" />
+                                               Text="{Binding Lodging.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}" />
                                     <TextBlock Grid.Column="2" TextAlignment="Center" Text="-" />
                                     <TextBlock Grid.Column="4" TextAlignment="Center"
-                                               Text="{Binding Lodging.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}" />
+                                               Text="{Binding Lodging.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Date}" />
                                     <TextBlock Grid.Column="6" TextAlignment="Center"
                                                Text="{Binding Lodging.DisplayName}" />
                                     <StackPanel Grid.Column="8" Spacing="5" Orientation="Horizontal">
@@ -96,16 +96,15 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid ColumnDefinitions="Auto,*,5,Auto,5,*,10,3*,Auto,*">
-                                    <Image Grid.Column="0" Source="{Binding Event.ImagePath}" />
-                                    <TextBlock Grid.Column="1" TextAlignment="Center"
+                                <Grid ColumnDefinitions="*,5,Auto,5,*,10,3*,Auto,*">
+                                    <TextBlock Grid.Column="0" TextAlignment="Center"
                                                Text="{Binding Event.StartDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}" />
-                                    <TextBlock Grid.Column="3" TextAlignment="Center" Text="-" />
-                                    <TextBlock Grid.Column="5" TextAlignment="Center"
+                                    <TextBlock Grid.Column="2" TextAlignment="Center" Text="-" />
+                                    <TextBlock Grid.Column="4" TextAlignment="Center"
                                                Text="{Binding Event.EndDate, Converter={StaticResource DateFormatter}, ConverterParameter=Both}" />
-                                    <TextBlock Grid.Column="7" TextAlignment="Center"
+                                    <TextBlock Grid.Column="6" TextAlignment="Center"
                                                Text="{Binding Event.DisplayName}" />
-                                    <StackPanel Grid.Column="9" Spacing="5" Orientation="Horizontal">
+                                    <StackPanel Grid.Column="8" Spacing="5" Orientation="Horizontal">
                                         <Button Command="{Binding ViewCommand}" Width="35" Height="35">
                                             <Image Source="../Assets/view_icon.png" />
                                         </Button>

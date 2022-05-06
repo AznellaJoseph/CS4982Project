@@ -196,7 +196,7 @@ namespace CapstoneBackend.Model
         /// </summary>
         /// <param name="waypoint">The waypoint.</param>
         /// <returns>
-        ///     A response of if the waypoint was updated or a non-success code and error message
+        ///     A response specifying the waypoint was updated or a non-success code and error message
         /// </returns>
         public virtual Response<bool> EditWaypoint(Waypoint waypoint)
         {

@@ -38,7 +38,7 @@ namespace CapstoneBackend.DAL
         /// <param name="endDate">The end date.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        ///     The transportation id or throws an exception if there was an error
+        ///     The id of the new transportation or throws an exception if there was an error
         /// </returns>
         public virtual int CreateTransportation(int tripId, string method, DateTime startDate, DateTime endDate,
             string? notes)
@@ -111,7 +111,7 @@ namespace CapstoneBackend.DAL
         /// </summary>
         /// <param name="transportationId">The transportation identifier.</param>
         /// <returns>
-        ///     True if the transportation was removed, false otherwise or throws an exception if there was an error
+        ///     True if the transportation was removed, false otherwise
         /// </returns>
         public virtual bool RemoveTransportation(int transportationId)
         {
@@ -131,7 +131,7 @@ namespace CapstoneBackend.DAL
         ///     Gets the transportation by its id.
         /// </summary>
         /// <param name="transportationId">The transportation identifier.</param>
-        /// <returns>The transportation with the given id, null if no matching transportation found</returns>
+        /// <returns>The transportation with the given id, or null if no matching transportation found</returns>
         public virtual Transportation? GetTransportationById(int transportationId)
         {
             _connection.Open();
@@ -166,11 +166,11 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        /// Edits the transportation.
+        ///     Edits the transportation.
         /// </summary>
         /// <param name="transportation">The transportation.</param>
         /// <returns>
-        /// True if the transportation was updated, false otherwise
+        ///     True if the transportation was updated, false otherwise
         /// </returns>
         public virtual bool EditTransportation(Transportation transportation)
         {

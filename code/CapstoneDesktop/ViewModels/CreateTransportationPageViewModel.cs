@@ -8,7 +8,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for the CreateTransportation Page
+    ///     ViewModel for the Create Transportation Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class CreateTransportationPageViewModel : ReactiveViewModelBase
@@ -20,7 +20,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateTransportationPageViewModel" /> class.
         /// </summary>
-        /// <param name="trip">the trip that the transportation is for.</param>
+        /// <param name="trip">the trip the transportation is being created for.</param>
         /// <param name="screen">The screen</param>
         public CreateTransportationPageViewModel(Trip trip, IScreen screen) : base(
             screen,
@@ -83,7 +83,7 @@ namespace CapstoneDesktop.ViewModels
         public TimeSpan? EndTime { get; set; }
 
         /// <summary>
-        ///     The location.
+        ///     The method.
         /// </summary>
         public string? Method { get; set; }
 

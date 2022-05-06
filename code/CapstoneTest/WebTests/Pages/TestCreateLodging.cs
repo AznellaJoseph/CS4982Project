@@ -20,12 +20,12 @@ namespace CapstoneTest.WebTests.Pages
             var manager = new Mock<LodgingManager>();
             var currentTime = DateTime.Now;
             manager.Setup(lm => lm.CreateLodging(0, "Hilton", currentTime, currentTime, "notes"))
-                .Returns(new Response<int> { Data = 0 });
+                .Returns(new Response<int> {Data = 0});
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime))
-                .Returns(new Response<bool> { Data = true });
+                .Returns(new Response<bool> {Data = true});
             fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("Hilton"))
-                .Returns(new Response<bool> { Data = true });
+                .Returns(new Response<bool> {Data = true});
 
             var page = TestPageBuilder.BuildPage<CreateLodgingModel>(session.Object);
             page.LodgingManager = manager.Object;
@@ -38,7 +38,7 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPost(0);
 
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Trip", redirect.PageName);
         }
 
@@ -50,12 +50,12 @@ namespace CapstoneTest.WebTests.Pages
             var currentTime = DateTime.Now;
             manager.Setup(lm => lm.CreateLodging(0, "Hilton", currentTime.AddDays(1), currentTime, null))
                 .Returns(new Response<int>
-                { StatusCode = (uint)Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate });
+                    {StatusCode = (uint) Ui.StatusCode.BadRequest, ErrorMessage = Ui.ErrorMessages.InvalidStartDate});
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime.AddDays(1), currentTime))
-                .Returns(new Response<bool> { Data = true });
+                .Returns(new Response<bool> {Data = true});
             fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("Hilton"))
-                .Returns(new Response<bool> { Data = true });
+                .Returns(new Response<bool> {Data = true});
 
             var page = TestPageBuilder.BuildPage<CreateLodgingModel>(session.Object);
             page.LodgingManager = manager.Object;
@@ -78,9 +78,10 @@ namespace CapstoneTest.WebTests.Pages
 
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime.AddDays(2)))
-                .Returns(new Response<bool> { ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}"});
+                .Returns(new Response<bool>
+                    {ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}"});
             fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("Hilton"))
-                .Returns(new Response<bool> { Data = true });
+                .Returns(new Response<bool> {Data = true});
 
             var page = TestPageBuilder.BuildPage<CreateLodgingModel>(session.Object);
             page.ValidationManager = fakeValidationManager.Object;
@@ -91,7 +92,8 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPost(0);
 
             Assert.IsInstanceOfType(result, typeof(PageResult));
-            Assert.AreEqual($"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}", page.ErrorMessage);
+            Assert.AreEqual($"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}",
+                page.ErrorMessage);
         }
 
         [TestMethod]
@@ -102,9 +104,9 @@ namespace CapstoneTest.WebTests.Pages
 
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime))
-                .Returns(new Response<bool> { Data = true });
+                .Returns(new Response<bool> {Data = true});
             fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("Hilton"))
-                .Returns(new Response<bool> { Data = false, ErrorMessage = Ui.ErrorMessages.InvalidLocation });
+                .Returns(new Response<bool> {Data = false, ErrorMessage = Ui.ErrorMessages.InvalidLocation});
 
             var page = TestPageBuilder.BuildPage<CreateLodgingModel>(session.Object);
             page.ValidationManager = fakeValidationManager.Object;
@@ -127,10 +129,9 @@ namespace CapstoneTest.WebTests.Pages
             var result = page.OnPostCancel(1);
 
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-            var redirect = (RedirectToPageResult)result;
+            var redirect = (RedirectToPageResult) result;
             Assert.AreEqual("Trip", redirect.PageName);
             Assert.AreEqual(1, redirect.RouteValues["tripId"]);
         }
-
     }
 }

@@ -19,7 +19,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="TripOverviewPageViewModel" /> class.
         /// </summary>
-        /// <param name="trip">The trip.</param>
+        /// <param name="trip">The trip being viewed.</param>
         /// <param name="screen">The screen.</param>
         /// <param name="lodgingManager">The lodging manager.</param>
         public TripOverviewPageViewModel(Trip trip,
@@ -27,6 +27,7 @@ namespace CapstoneDesktop.ViewModels
             Guid.NewGuid().ToString()[..5])
         {
             Trip = trip;
+
             HostScreen = screen;
             LodgingManager = lodgingManager;
             LogoutCommand = ReactiveCommand.CreateFromObservable(() =>
@@ -37,7 +38,10 @@ namespace CapstoneDesktop.ViewModels
                 HostScreen.Router.Navigate.Execute(new CreateTransportationPageViewModel(Trip, HostScreen)));
             CreateLodgingCommand = ReactiveCommand.CreateFromObservable(() =>
                 HostScreen.Router.Navigate.Execute(new CreateLodgingPageViewModel(Trip, HostScreen)));
-            BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
+            BackCommand = ReactiveCommand.CreateFromObservable(() =>
+                HostScreen.Router.Navigate.Execute(
+                    new LandingPageViewModel(new UserManager().GetUserById(Trip.UserId).Data, screen,
+                        new TripManager())));
             EventViewModels = new ObservableCollection<IEventViewModel>();
             LodgingViewModels = new ObservableCollection<LodgingViewModel>();
             updateLodging();
@@ -61,7 +65,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     The back command.
         /// </summary>
-        public ReactiveCommand<Unit, Unit> BackCommand { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> BackCommand { get; }
 
         /// <summary>
         ///     The create waypoint command.
@@ -79,7 +83,7 @@ namespace CapstoneDesktop.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> CreateLodgingCommand { get; }
 
         /// <summary>
-        ///     The waypoint viewmodels.
+        ///     The event viewmodels.
         /// </summary>
         public ObservableCollection<IEventViewModel> EventViewModels { get; }
 

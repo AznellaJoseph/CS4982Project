@@ -71,10 +71,10 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Gets the trips by the user specified by the given id.
+        ///     Gets the trips of the user specified by the given id.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns> A response of the list of the user's trips or a non-success status code and error message </returns>
+        /// <returns> A response of a list of the user's trips or a non-success status code and error message </returns>
         public virtual Response<IList<Trip>> GetTripsByUser(int userId)
         {
             try
@@ -115,13 +115,6 @@ namespace CapstoneBackend.Model
         public virtual Response<int> CreateTrip(int userId, string name, string? notes, DateTime startDate,
             DateTime endDate)
         {
-            if (startDate.CompareTo(endDate) > 0)
-                return new Response<int>
-                {
-                    StatusCode = (uint) Ui.StatusCode.BadRequest,
-                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate
-                };
-
             try
             {
                 var tripId = _dal.CreateTrip(userId, name, notes, startDate, endDate);

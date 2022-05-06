@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneWeb\Pages\Trip.cshtml.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+
+namespace CapstoneWeb.Pages
+{
+    /// &lt;summary&gt;
+    ///     PageModel for Trip Site
+    /// &lt;/summary&gt;
+    /// &lt;seealso cref=&quot;Microsoft.AspNetCore.Mvc.RazorPages.PageModel&quot; /&gt;
+    public class TripModel : PageModel
+    {
+        /// &lt;summary&gt;
+        ///     The user id.
+        /// &lt;/summary&gt;
+        public int UserId { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     The current trip.
+        /// &lt;/summary&gt;
+        public Trip CurrentTrip { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     The lodgings.
+        /// &lt;/summary&gt;
+        public IList&lt;Lodging&gt; Lodgings { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     The trip manager.
+        /// &lt;/summary&gt;
+        public TripManager TripManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The event manager.
+        /// &lt;/summary&gt;
+        public EventManager EventManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The waypoint manager.
+        /// &lt;/summary&gt;
+        public WaypointManager WaypointManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The transportation manager.
+        /// &lt;/summary&gt;
+        public TransportationManager TransportationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The lodging manager.
+        /// &lt;/summary&gt;
+        public LodgingManager LodgingManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     Called when [get].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to index if the user is not logged in or the current trip display
+        /// &lt;/returns&gt;
+        public IActionResult OnGet(int tripId)
+        {
+            if (!HttpContext.Session.Keys.Contains(&quot;userId&quot;))
+                return RedirectToPage(&quot;Index&quot;);
+
+            UserId = Convert.ToInt32(HttpContext.Session.GetString(&quot;userId&quot;));
+            var response = TripManager.GetTripByTripId(tripId);
+
+            if (!response.StatusCode.Equals((uint) Ui.StatusCode.Success) || response.Data?.UserId != UserId)
+                return RedirectToPage(&quot;Index&quot;);
+
+            CurrentTrip = response.Data;
+            Lodgings = LodgingManager.GetLodgingsByTripId(CurrentTrip.TripId).Data;
+            return Page();
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [get events].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;selectedDate&quot;&gt;The selected date.&lt;/param&gt;
+        /// &lt;returns&gt; A json response of the events on the selected date.&lt;/returns&gt;
+        public IActionResult OnGetEvents(int tripId, string selectedDate)
+        {
+            return new JsonResult(EventManager.GetEventsOnDate(tripId, DateTime.Parse(selectedDate)));
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post create lodging].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to create lodging form.
+        /// &lt;/returns&gt;
+        public IActionResult OnPostCreateLodging(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;CreateLodging&quot;, routeValue);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post create waypoint].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to create waypoint form
+        /// &lt;/returns&gt;
+        public IActionResult OnPostCreateWaypoint(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;CreateWaypoint&quot;, routeValue);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post create transportation].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to create transportation form
+        /// &lt;/returns&gt;
+        public IActionResult OnPostCreateTransportation(int tripId)
+        {
+            var routeValue = new RouteValueDictionary
+            {
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;CreateTransportation&quot;, routeValue);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post back].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; Redirect to index &lt;/returns&gt;
+        public IActionResult OnPostBack()
+        {
+            return RedirectToPage(&quot;Index&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post logout].
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt; Redirect to index &lt;/returns&gt;
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Remove(&quot;userId&quot;);
+            return RedirectToPage(&quot;Index&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post remove].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier of the waypoint to remove.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     The json result of removing the waypoint specified by the id
+        /// &lt;/returns&gt;
+        public IActionResult OnGetRemoveWaypoint(int id)
+        {
+            return new JsonResult(WaypointManager.RemoveWaypoint(id));
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [get remove transportation].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier of the transportation to remove.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     The json result of removing the transportation specified by the id
+        /// &lt;/returns&gt;
+        public IActionResult OnGetRemoveTransportation(int id)
+        {
+            return new JsonResult(TransportationManager.RemoveTransportation(id));
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [post remove lodging].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier of the lodging to remove&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;Redirect to trip with removed lodging&lt;/returns&gt;
+        public IActionResult OnPostRemoveLodging(int id, int tripId)
+        {
+            LodgingManager.RemoveLodging(id);
+
+            var routeValue = new RouteValueDictionary {{&quot;tripId&quot;, tripId}};
+            return RedirectToPage(&quot;Trip&quot;, routeValue);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [get view waypoint].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier of the waypoint to view.&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to waypoint
+        /// &lt;/returns&gt;
+        public IActionResult OnGetViewWaypoint(int tripId, int id)
+        {
+            var routeValues = new RouteValueDictionary
+            {
+                {&quot;id&quot;, id},
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Waypoint&quot;, routeValues);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [get view transportation].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier of the transportation to view.&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to transportation
+        /// &lt;/returns&gt;
+        public IActionResult OnGetViewTransportation(int id, int tripId)
+        {
+            var routeValues = new RouteValueDictionary
+            {
+                {&quot;id&quot;, id},
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Transportation&quot;, routeValues);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [get edit waypoint].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier of the waypoint to edit.&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to edit waypoint page
+        /// &lt;/returns&gt;
+        public IActionResult OnGetEditWaypoint(int tripId, int id)
+        {
+            var routeValues = new RouteValueDictionary
+            {
+                {&quot;id&quot;, id},
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Waypoint&quot;, routeValues);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when [get edit transportation].
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier of the transportation to edit.&lt;/param&gt;
+        /// &lt;param name=&quot;tripId&quot;&gt;The trip identifier.&lt;/param&gt;
+        /// &lt;returns&gt;
+        ///     Redirect to edit transportation page
+        /// &lt;/returns&gt;
+        public IActionResult OnGetEditTransportation(int id, int tripId)
+        {
+            var routeValues = new RouteValueDictionary
+            {
+                {&quot;id&quot;, id},
+                {&quot;tripId&quot;, tripId}
+            };
+            return RedirectToPage(&quot;Transportation&quot;, routeValues);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[22,29,22,33,1],[22,34,22,46,1],[27,35,27,39,1],[27,40,27,52,1],[32,42,32,46,1],[32,47,32,59,1],[37,42,37,46,1],[37,47,37,51,1],[37,56,37,61,1],[42,44,42,48,1],[42,49,42,53,1],[42,58,42,63,1],[47,50,47,54,1],[47,55,47,59,1],[47,64,47,69,1],[52,62,52,66,1],[52,67,52,71,1],[52,76,52,81,1],[57,48,57,52,1],[57,53,57,57,1],[57,62,57,67,1],[67,9,67,10,1],[68,13,68,62,1],[69,17,69,48,1],[71,13,71,79,1],[72,13,72,64,1],[74,13,74,110,1],[75,17,75,48,1],[77,13,77,41,1],[78,13,78,84,1],[79,13,79,27,1],[80,9,80,10,1],[89,9,89,10,1],[90,13,90,103,1],[91,9,91,10,1],[101,9,101,10,1],[102,13,105,15,1],[106,13,106,64,1],[107,9,107,10,1],[117,9,117,10,1],[118,13,121,15,1],[122,13,122,65,1],[123,9,123,10,1],[133,9,133,10,1],[134,13,137,15,1],[138,13,138,71,1],[139,9,139,10,1],[146,9,146,10,1],[147,13,147,44,1],[148,9,148,10,1],[155,9,155,10,1],[156,13,156,50,1],[157,13,157,44,1],[158,9,158,10,1],[168,9,168,10,1],[169,13,169,71,1],[170,9,170,10,1],[180,9,180,10,1],[181,13,181,83,1],[182,9,182,10,1],[191,9,191,10,1],[192,13,192,46,1],[194,13,194,76,1],[195,13,195,55,1],[196,9,196,10,1],[207,9,207,10,1],[208,13,212,15,1],[213,13,213,60,1],[214,9,214,10,1],[225,9,225,10,1],[226,13,230,15,1],[231,13,231,66,1],[232,9,232,10,1],[243,9,243,10,0],[244,13,248,15,0],[249,13,249,60,0],[250,9,250,10,0],[261,9,261,10,0],[262,13,266,15,0],[267,13,267,66,0],[268,9,268,10,0]]);
+    </script>
+  </body>
+</html>

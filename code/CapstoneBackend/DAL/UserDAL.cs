@@ -69,7 +69,7 @@ namespace CapstoneBackend.DAL
         /// <param name="password">The password.</param>
         /// <param name="fname">The first name.</param>
         /// <param name="lname">The last name.</param>
-        /// <returns>The user id or throws an exception if there was an error</returns>
+        /// <returns>The id of the new user or throws an exception if there was an error</returns>
         public virtual int CreateUser(string username, string password, string fname, string lname)
         {
             _connection.Open();
@@ -93,6 +93,43 @@ namespace CapstoneBackend.DAL
                 _connection.Close();
                 throw;
             }
+        }
+
+        /// <summary>
+        ///     Gets the user with the specified username
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>
+        ///     The user with the given username or null if no matching user.
+        /// </returns>
+        public virtual User? GetUserById(int userId)
+        {
+            _connection.Open();
+            const string query = "uspGetUserById";
+            using MySqlCommand cmd = new(query, _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
+
+            using var reader = cmd.ExecuteReaderAsync().Result;
+            var usernameOrdinal = reader.GetOrdinal("username");
+            var fnameOrdinal = reader.GetOrdinal("fname");
+            var lnameOrdinal = reader.GetOrdinal("lname");
+            var passwordOrdinal = reader.GetOrdinal("password");
+
+            User? user = null;
+
+            if (reader.Read())
+                user = new User
+                {
+                    UserId = userId,
+                    Username = reader.GetString(usernameOrdinal),
+                    FirstName = reader.GetString(fnameOrdinal),
+                    LastName = reader.GetString(lnameOrdinal),
+                    Password = reader.GetString(passwordOrdinal)
+                };
+
+            _connection.Close();
+            return user;
         }
     }
 }

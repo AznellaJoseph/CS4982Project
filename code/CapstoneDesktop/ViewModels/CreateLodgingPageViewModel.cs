@@ -9,7 +9,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for CreateLodging Page
+    ///     ViewModel for the Create Lodging Page
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ReactiveViewModelBase" />
     public class CreateLodgingPageViewModel : ReactiveViewModelBase
@@ -26,7 +26,7 @@ namespace CapstoneDesktop.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="CreateLodgingPageViewModel" /> class.
         /// </summary>
-        /// <param name="trip">The trip.</param>
+        /// <param name="trip">The trip the lodging is being created for.</param>
         /// <param name="screen">The screen.</param>
         public CreateLodgingPageViewModel(Trip trip, IScreen screen) : base(screen, Guid.NewGuid().ToString()[..5])
         {
@@ -115,7 +115,7 @@ namespace CapstoneDesktop.ViewModels
 
         private async void UpdateAutoCompleteResultsAsync()
         {
-            this.AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+            AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
         }
 
         private IObservable<IRoutableViewModel> createLodging()
@@ -123,12 +123,6 @@ namespace CapstoneDesktop.ViewModels
             if (string.IsNullOrEmpty(Location))
             {
                 ErrorMessage = Ui.ErrorMessages.EmptyLocation;
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
-            if (StartDate is null || StartTime is null)
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
                 return Observable.Empty<IRoutableViewModel>();
             }
 
@@ -140,12 +134,18 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
+            if (StartDate is null || StartTime is null)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
+                return Observable.Empty<IRoutableViewModel>();
+            }
+
             var startDate = StartDate.Value.Date + StartTime.Value;
 
             var endDate = EndDate is null || EndTime is null ? _trip.EndDate : EndDate.Value.Date + EndTime.Value;
 
             var validDatesResponse = ValidationManager.DetermineIfValidEventDates(_trip.TripId, startDate, endDate);
-            
+
             if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
             {
                 ErrorMessage = validDatesResponse.ErrorMessage;

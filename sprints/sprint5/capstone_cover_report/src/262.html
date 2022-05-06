@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\EditWaypointPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the Edit Waypoint Page
+    /// &lt;/summary&gt;
+    public class EditWaypointPageViewModel : ReactiveViewModelBase
+    {
+        private readonly Waypoint _waypoint;
+        private string _error = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;EditWaypointPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;waypoint&quot;&gt;The waypoint being edited.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public EditWaypointPageViewModel(Waypoint waypoint, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            _waypoint = waypoint;
+            HostScreen = screen;
+            StartDate = _waypoint.StartDate.Date;
+            StartTime = _waypoint.StartDate.TimeOfDay;
+            EndDate = _waypoint.EndDate.Date;
+            EndTime = _waypoint.EndDate.TimeOfDay;
+            Location = _waypoint.Location;
+            Notes = _waypoint.Notes;
+            EditWaypointCommand = ReactiveCommand.CreateFromObservable(editWaypoint);
+            CancelEditWaypointCommand =
+                ReactiveCommand.CreateFromObservable(() =&gt; HostScreen.Router.NavigateBack.Execute());
+        }
+
+        /// &lt;summary&gt;
+        ///     The waypoint manager.
+        /// &lt;/summary&gt;
+        public WaypointManager WaypointManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The validation manager.
+        /// &lt;/summary&gt;
+        public ValidationManager ValidationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The edit waypoint command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; EditWaypointCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The cancel edit waypoint command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelEditWaypointCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start time.
+        /// &lt;/summary&gt;
+        public TimeSpan? StartTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end time.
+        /// &lt;/summary&gt;
+        public TimeSpan? EndTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        public string? Location { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string? Notes { get; set; }
+
+        private IObservable&lt;IRoutableViewModel&gt; editWaypoint()
+        {
+            if (string.IsNullOrEmpty(Location))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyLocation;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (StartDate is null || StartTime is null)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var startDate = StartDate.Value.Date + StartTime.Value;
+
+            var endDate = EndDate is null || EndTime is null
+                ? _waypoint.EndDate
+                : EndDate.Value.Date + EndTime.Value;
+
+            var validDatesResponse =
+                ValidationManager.DetermineIfValidEventDates(_waypoint.TripId, startDate, endDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
+            {
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (startDate.CompareTo(endDate) &gt; 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var updatedWaypoint = new Waypoint
+            {
+                WaypointId = _waypoint.WaypointId,
+                TripId = _waypoint.TripId,
+                EndDate = endDate,
+                Location = Location,
+                Notes = Notes ?? string.Empty,
+                StartDate = startDate
+            };
+
+            var clashingEventResponse =
+                ValidationManager.FindClashingEvent(_waypoint.TripId, startDate, endDate);
+
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                var clashingEvent = clashingEventResponse.Data;
+                if (clashingEvent is null || !clashingEvent.Equals(_waypoint))
+                {
+                    ErrorMessage = clashingEventResponse.ErrorMessage;
+                    return Observable.Empty&lt;IRoutableViewModel&gt;();
+                }
+            }
+
+            var updatedWaypointResponse = WaypointManager.EditWaypoint(updatedWaypoint);
+
+            if (string.IsNullOrEmpty(updatedWaypointResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(
+                    new TripManager().GetTripByTripId(_waypoint.TripId).Data, HostScreen, new LodgingManager()));
+            ErrorMessage = updatedWaypointResponse.ErrorMessage;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,46,1],[23,79,24,44,1],[25,9,25,10,1],[26,13,26,34,1],[27,13,27,33,1],[28,13,28,50,1],[29,13,29,55,1],[30,13,30,46,1],[31,13,31,51,1],[32,13,32,43,1],[33,13,33,37,1],[34,13,34,86,1],[35,13,36,60,1],[36,60,36,100,0],[36,100,36,102,1],[37,9,37,10,1],[42,50,42,54,1],[42,55,42,59,1],[42,64,42,69,1],[47,54,47,58,1],[47,59,47,63,1],[47,68,47,73,1],[52,80,52,84,1],[57,72,57,76,1],[64,20,64,26,1],[65,20,65,64,1],[71,44,71,48,1],[71,49,71,53,1],[76,38,76,42,1],[76,43,76,47,1],[81,42,81,46,1],[81,47,81,51,1],[86,36,86,40,1],[86,41,86,45,1],[91,35,91,39,1],[91,40,91,44,1],[96,32,96,36,1],[96,37,96,41,1],[99,9,99,10,1],[100,13,100,48,1],[101,13,101,14,1],[102,17,102,63,1],[103,17,103,63,1],[106,13,106,56,1],[107,13,107,14,1],[108,17,108,66,1],[109,17,109,63,1],[112,13,112,68,1],[114,13,116,54,1],[118,13,119,100,1],[121,13,121,72,1],[122,13,122,14,1],[123,17,123,64,1],[124,17,124,63,1],[127,13,127,50,1],[128,13,128,14,1],[129,17,129,66,1],[130,17,130,63,1],[133,13,141,15,1],[143,13,144,91,1],[146,13,146,75,1],[147,13,147,14,1],[148,17,148,64,1],[149,17,149,79,1],[150,17,150,18,1],[151,21,151,71,1],[152,21,152,67,1],[154,13,154,14,0],[156,13,156,89,0],[158,13,158,76,0],[159,17,160,114,0],[161,13,161,65,0],[162,13,162,59,0],[163,9,163,10,1]]);
+    </script>
+  </body>
+</html>

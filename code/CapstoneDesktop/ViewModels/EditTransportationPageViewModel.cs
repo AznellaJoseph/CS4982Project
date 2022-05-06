@@ -7,15 +7,18 @@ using ReactiveUI;
 
 namespace CapstoneDesktop.ViewModels
 {
+    /// <summary>
+    ///     ViewModel for the Edit Transportation Page
+    /// </summary>
     public class EditTransportationPageViewModel : ReactiveViewModelBase
     {
-        private string _error = string.Empty;
         private readonly Transportation _transportation;
+        private string _error = string.Empty;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="EditTransportationPageViewModel" /> class.
         /// </summary>
-        /// <param name="transportation">The transportation.</param>
+        /// <param name="transportation">The transportation being edited.</param>
         /// <param name="screen">The screen.</param>
         public EditTransportationPageViewModel(Transportation transportation, IScreen screen) : base(screen,
             Guid.NewGuid().ToString()[..5])

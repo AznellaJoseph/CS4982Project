@@ -79,7 +79,7 @@ namespace CapstoneBackend.Model
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="selectedDate">The selected date.</param>
-        /// <returns> A response of the transportation on that date </returns>
+        /// <returns> A response of the transportation on that date or a non-success status code and error message</returns>
         public virtual Response<IList<Transportation>> GetTransportationOnDate(int tripId, DateTime selectedDate)
         {
             try
@@ -192,7 +192,7 @@ namespace CapstoneBackend.Model
         ///     Edits the transportation.
         /// </summary>
         /// <param name="transportation">The transportation.</param>
-        /// <returns>A response of if the transportation was updated or a non-success code and error message</returns>
+        /// <returns>A response specifying the transportation was updated or a non-success code and error message</returns>
         public virtual Response<bool> EditTransportation(Transportation transportation)
         {
             try

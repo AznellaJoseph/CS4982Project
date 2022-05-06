@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneTest\BackendTests\Model\TestWaypoint\TestGetHashCode.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using CapstoneBackend.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace CapstoneTest.BackendTests.Model.TestWaypoint
+{
+    [TestClass]
+    public class TestGetHashCode
+    {
+        [TestMethod]
+        public void GetHashCode_ReturnsCombinedHashCode()
+        {
+            Waypoint waypoint = new()
+            {
+                TripId = 1,
+                WaypointId = 1,
+                EndDate = DateTime.Today.AddDays(4),
+                StartDate = DateTime.Today,
+                Location = &quot;UWG Library, Carrollton&quot;,
+                Notes = string.Empty
+            };
+
+            Assert.AreEqual(HashCode.Combine(waypoint.Id, waypoint.DisplayName, waypoint.EventType),
+                waypoint.GetHashCode());
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[12,9,12,10,1],[13,13,21,15,1],[23,13,24,41,1],[25,9,25,10,1]]);
+    </script>
+  </body>
+</html>

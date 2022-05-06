@@ -6,10 +6,10 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for a single Lodging
+    ///     ViewModel for a single Lodging, used in the trip overview lodging list
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ReactiveViewModelBase" />
-    public class LodgingViewModel : ReactiveViewModelBase, IRemovable, IEditable
+    public class LodgingViewModel : ReactiveViewModelBase, IRemovable
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="LodgingViewModel" /> class.

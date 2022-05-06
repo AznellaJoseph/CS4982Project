@@ -5,7 +5,7 @@ using ReactiveUI;
 namespace CapstoneDesktop.ViewModels
 {
     /// <summary>
-    ///     ViewModel for a single Trip
+    ///     ViewModel for a single Trip, used in the trip list of a user
     /// </summary>
     /// <seealso cref="CapstoneDesktop.ViewModels.ViewModelBase" />
     public class TripViewModel : ViewModelBase

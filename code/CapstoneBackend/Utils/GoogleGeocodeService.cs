@@ -4,14 +4,14 @@ using System.Text.Json;
 namespace CapstoneBackend.Utils
 {
     /// <summary>
-    /// Utility for calling the Google Geocode API for retrieving longitude and latitude for maps
+    ///     Utility for calling the Google Geocode API for retrieving longitude and latitude for maps
     /// </summary>
     public class GoogleGeocodeService
     {
         private const string Key = "AIzaSyB_TdvmfkvpMjDjMQnd3bDvhkNbrjRq5_I";
 
         /// <summary>
-        /// Gets the location by address.
+        ///     Gets the location by address.
         /// </summary>
         /// <param name="address">The address.</param>
         /// <returns>A location object with the longitude and latitude of the entered address</returns>
@@ -35,11 +35,18 @@ namespace CapstoneBackend.Utils
         }
 
         /// <summary>
-        /// Location object used to store longitudes and latitudes
+        ///     Location object used to store longitudes and latitudes
         /// </summary>
         public struct Location
         {
+            /// <summary>
+            ///     The latitude
+            /// </summary>
             public double Latitude;
+
+            /// <summary>
+            ///     The longitude
+            /// </summary>
             public double Longitude;
         }
     }

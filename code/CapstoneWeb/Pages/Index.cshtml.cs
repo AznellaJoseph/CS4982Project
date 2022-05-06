@@ -32,12 +32,13 @@ namespace CapstoneWeb.Pages
         /// <summary>
         ///     Called when [get].
         /// </summary>
-        /// <returns>Current page with trips or login if the user is not logged in. </returns>
+        /// <returns>Redirect to current page with trips or login if the user is not logged in. </returns>
         public IActionResult OnGet()
         {
             if (!HttpContext.Session.Keys.Contains("userId")) return RedirectToPage("Login");
             UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
             Trips = TripManager.GetTripsByUser(UserId).Data;
+
             return Page();
         }
 

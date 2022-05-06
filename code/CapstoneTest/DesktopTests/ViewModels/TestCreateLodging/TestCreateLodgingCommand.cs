@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using CapstoneBackend.Model;
 using CapstoneBackend.Utils;
 using CapstoneDesktop.ViewModels;
@@ -42,11 +41,12 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateLodging
                 .Returns(new Response<bool>
                 {
                     ErrorMessage = Ui.ErrorMessages.InvalidLocation,
-                    StatusCode = (uint)Ui.StatusCode.BadRequest
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
                 });
 
             CreateLodgingPageViewModel createLodgingPageViewModel =
-                new(mockTrip.Object, mockScreen.Object) {
+                new(mockTrip.Object, mockScreen.Object)
+                {
                     LodgingManager = mockLodgingManager.Object,
                     ValidationManager = mockValidationManager.Object
                 };

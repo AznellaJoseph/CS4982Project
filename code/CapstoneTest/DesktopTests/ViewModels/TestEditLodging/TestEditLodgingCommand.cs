@@ -31,7 +31,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestEditLodging
 
             var testScheduler = new TestScheduler();
 
-            editLodgingPageViewModel.Location = null;
+            editLodgingPageViewModel.Location = string.Empty;
 
             editLodgingPageViewModel.EditLodgingCommand.Execute().Subscribe();
 
@@ -65,6 +65,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestEditLodging
 
 
             var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
+                .Returns(new Response<bool> { Data = true });
             mockValidationManager.Setup(vm =>
                     vm.DetermineIfValidEventDates(1, DateTime.Today.AddDays(1),
                         DateTime.Today))
@@ -110,9 +112,15 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestEditLodging
                 Notes = "notes"
             };
             var mockScreen = new Mock<IScreen>();
+            var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
+                .Returns(new Response<bool> {Data = true});
 
             EditLodgingPageViewModel editLodgingPageViewModel =
-                new(lodging, mockScreen.Object);
+                new(lodging, mockScreen.Object)
+                {
+                    ValidationManager = mockValidationManager.Object
+                };
 
             var testScheduler = new TestScheduler();
 
@@ -145,13 +153,15 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestEditLodging
             {
                 EndDate = DateTime.Today.AddDays(-3),
                 StartDate = DateTime.Today,
-                Location = "UWG library, Carrollton",
+                Location = "Paris, Italy",
                 LodgingId = 1,
                 TripId = 1
             };
             var mockLodgingManager = new Mock<LodgingManager>();
             var mockScreen = new Mock<IScreen>();
             var mockValidationManager = new Mock<ValidationManager>();
+            mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("UWG library, Carrollton"))
+                .Returns(new Response<bool> { Data = true });
             mockValidationManager.Setup(vm =>
                     vm.DetermineIfValidEventDates(1, DateTime.Today.AddDays(-1) + TimeSpan.Zero,
                         DateTime.Today + TimeSpan.Zero))

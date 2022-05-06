@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\aznel\Documents\UWG\2021-2022\spring semester\capstone\CS4982Project\code\CapstoneDesktop\ViewModels\EditLodgingPageViewModel.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Reactive;
+using System.Reactive.Linq;
+using CapstoneBackend.Model;
+using CapstoneBackend.Utils;
+using ReactiveUI;
+
+namespace CapstoneDesktop.ViewModels
+{
+    /// &lt;summary&gt;
+    ///     ViewModel for the Edit Lodging Page
+    /// &lt;/summary&gt;
+    public class EditLodgingPageViewModel : ReactiveViewModelBase
+    {
+        private readonly Lodging _lodging;
+        private string _error = string.Empty;
+        private string _location = string.Empty;
+
+        private IEnumerable&lt;string&gt; _predictions = new List&lt;string&gt;();
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;EditLodgingPageViewModel&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;lodging&quot;&gt;The lodging being edited.&lt;/param&gt;
+        /// &lt;param name=&quot;screen&quot;&gt;The screen.&lt;/param&gt;
+        public EditLodgingPageViewModel(Lodging lodging, IScreen screen) : base(screen,
+            Guid.NewGuid().ToString()[..5])
+        {
+            _lodging = lodging;
+            HostScreen = screen;
+            StartDate = _lodging.StartDate.Date;
+            StartTime = _lodging.StartDate.TimeOfDay;
+            EndDate = _lodging.EndDate.Date;
+            EndTime = _lodging.EndDate.TimeOfDay;
+            Location = _lodging.Location;
+            Notes = _lodging.Notes;
+            EditLodgingCommand = ReactiveCommand.CreateFromObservable(editLodging);
+            CancelEditLodgingCommand =
+                ReactiveCommand.CreateFromObservable(() =&gt; HostScreen.Router.NavigateBack.Execute());
+        }
+
+        /// &lt;summary&gt;
+        ///     The lodging manager.
+        /// &lt;/summary&gt;
+        public LodgingManager LodgingManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The validation manager.
+        /// &lt;/summary&gt;
+        public ValidationManager ValidationManager { get; set; } = new();
+
+        /// &lt;summary&gt;
+        ///     The edit lodging command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, IRoutableViewModel&gt; EditLodgingCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The cancel edit lodging command.
+        /// &lt;/summary&gt;
+        public ReactiveCommand&lt;Unit, Unit&gt; CancelEditLodgingCommand { get; }
+
+        /// &lt;summary&gt;
+        ///     The error message.
+        /// &lt;/summary&gt;
+        public string ErrorMessage
+        {
+            get =&gt; _error;
+            set =&gt; this.RaiseAndSetIfChanged(ref _error, value);
+        }
+
+        /// &lt;summary&gt;
+        ///     The start date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? StartDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The start time.
+        /// &lt;/summary&gt;
+        public TimeSpan? StartTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end date.
+        /// &lt;/summary&gt;
+        public DateTimeOffset? EndDate { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The end time.
+        /// &lt;/summary&gt;
+        public TimeSpan? EndTime { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The notes.
+        /// &lt;/summary&gt;
+        public string? Notes { get; set; }
+
+        /// &lt;summary&gt;
+        ///     The location.
+        /// &lt;/summary&gt;
+        public string Location
+        {
+            get =&gt; _location;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _location, value);
+                UpdateAutoCompleteResultsAsync();
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     List of autocomplete results shown in the dropdown.
+        /// &lt;/summary&gt;
+        public IEnumerable&lt;string&gt; AutocompletePredictions
+        {
+            get =&gt; _predictions;
+            set =&gt; this.RaiseAndSetIfChanged(ref _predictions, value);
+        }
+
+        private async void UpdateAutoCompleteResultsAsync()
+        {
+            AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+        }
+
+        private IObservable&lt;IRoutableViewModel&gt; editLodging()
+        {
+            if (string.IsNullOrEmpty(Location))
+            {
+                ErrorMessage = Ui.ErrorMessages.EmptyLocation;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var validLocationResponse = ValidationManager.DetermineIfValidLocation(Location);
+
+            if (!string.IsNullOrEmpty(validLocationResponse.ErrorMessage))
+            {
+                ErrorMessage = validLocationResponse.ErrorMessage;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (StartDate is null || StartTime is null)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidEventDate;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var startDate = StartDate.Value.Date + StartTime.Value;
+
+            var endDate = EndDate is null || EndTime is null
+                ? _lodging.EndDate
+                : EndDate.Value.Date + EndTime.Value;
+
+            var validDatesResponse =
+                ValidationManager.DetermineIfValidEventDates(_lodging.TripId, startDate, endDate);
+
+            if (!string.IsNullOrEmpty(validDatesResponse.ErrorMessage))
+            {
+                ErrorMessage = validDatesResponse.ErrorMessage;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            if (startDate.CompareTo(endDate) &gt; 0)
+            {
+                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
+                return Observable.Empty&lt;IRoutableViewModel&gt;();
+            }
+
+            var updatedLodging = new Lodging
+            {
+                LodgingId = _lodging.LodgingId,
+                TripId = _lodging.TripId,
+                EndDate = endDate,
+                Location = Location,
+                Notes = Notes ?? string.Empty,
+                StartDate = startDate
+            };
+
+            var updatedLodgingResponse = LodgingManager.EditLodging(updatedLodging);
+
+            if (string.IsNullOrEmpty(updatedLodgingResponse.ErrorMessage))
+                return HostScreen.Router.Navigate.Execute(new TripOverviewPageViewModel(
+                    new TripManager().GetTripByTripId(_lodging.TripId).Data, HostScreen, new LodgingManager()));
+            ErrorMessage = updatedLodgingResponse.ErrorMessage;
+            return Observable.Empty&lt;IRoutableViewModel&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,9,17,46,1],[18,9,18,49,1],[20,9,20,71,1],[27,76,28,44,1],[29,9,29,10,1],[30,13,30,32,1],[31,13,31,33,1],[32,13,32,49,1],[33,13,33,54,1],[34,13,34,45,1],[35,13,35,50,1],[36,13,36,42,1],[37,13,37,36,1],[38,13,38,84,1],[39,13,40,60,1],[40,60,40,100,0],[40,100,40,102,1],[41,9,41,10,1],[46,48,46,52,1],[46,53,46,57,1],[46,62,46,67,1],[51,54,51,58,1],[51,59,51,63,1],[51,68,51,73,1],[56,79,56,83,1],[61,71,61,75,1],[68,20,68,26,1],[69,20,69,64,1],[75,44,75,48,1],[75,49,75,53,1],[80,38,80,42,1],[80,43,80,47,1],[85,42,85,46,1],[85,47,85,51,1],[90,36,90,40,1],[90,41,90,45,1],[95,32,95,36,1],[95,37,95,41,1],[102,20,102,29,1],[104,13,104,14,1],[105,17,105,65,1],[106,17,106,50,1],[107,13,107,14,1],[115,20,115,32,0],[116,20,116,70,1],[120,9,120,10,1],[121,13,121,88,1],[122,9,122,10,1],[125,9,125,10,1],[126,13,126,48,1],[127,13,127,14,1],[128,17,128,63,1],[129,17,129,63,1],[132,13,132,94,1],[134,13,134,75,1],[135,13,135,14,0],[136,17,136,67,0],[137,17,137,63,0],[140,13,140,56,1],[141,13,141,14,1],[142,17,142,66,1],[143,17,143,63,1],[146,13,146,68,1],[148,13,150,54,1],[152,13,153,99,1],[155,13,155,72,1],[156,13,156,14,1],[157,17,157,64,1],[158,17,158,63,1],[161,13,161,50,1],[162,13,162,14,1],[163,17,163,66,1],[164,17,164,63,1],[167,13,175,15,0],[177,13,177,85,0],[179,13,179,75,0],[180,17,181,113,0],[182,13,182,64,0],[183,13,183,59,0],[184,9,184,10,1]]);
+    </script>
+  </body>
+</html>

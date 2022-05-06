@@ -38,7 +38,7 @@ namespace CapstoneBackend.DAL
         /// <param name="endDate">The end date.</param>
         /// <param name="notes">The notes.</param>
         /// <returns>
-        ///     The Lodging id
+        ///     The lodging id of the new lodging
         /// </returns>
         public virtual int CreateLodging(int tripId, string location, DateTime startDate, DateTime endDate,
             string? notes)
@@ -159,11 +159,11 @@ namespace CapstoneBackend.DAL
         }
 
         /// <summary>
-        /// Edits the lodging.
+        ///     Edits the lodging.
         /// </summary>
         /// <param name="lodging">The lodging.</param>
         /// <returns>
-        /// True if the lodging was updated, false otherwise
+        ///     True if the lodging was updated, false otherwise
         /// </returns>
         public virtual bool EditLodging(Lodging lodging)
         {
