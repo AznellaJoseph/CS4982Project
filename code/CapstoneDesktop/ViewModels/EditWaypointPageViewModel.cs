@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using CapstoneBackend.Model;
@@ -14,6 +15,10 @@ namespace CapstoneDesktop.ViewModels
     {
         private readonly Waypoint _waypoint;
         private string _error = string.Empty;
+        private string _location = string.Empty;
+
+        private IEnumerable<string> _predictions = new List<string>();
+
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="EditWaypointPageViewModel" /> class.
@@ -86,14 +91,36 @@ namespace CapstoneDesktop.ViewModels
         public TimeSpan? EndTime { get; set; }
 
         /// <summary>
-        ///     The location.
-        /// </summary>
-        public string? Location { get; set; }
-
-        /// <summary>
         ///     The notes.
         /// </summary>
         public string? Notes { get; set; }
+
+        /// <summary>
+        ///     The location.
+        /// </summary>
+        public string Location
+        {
+            get => _location;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _location, value);
+                UpdateAutoCompleteResultsAsync();
+            }
+        }
+
+        /// <summary>
+        ///     List of autocomplete results shown in the dropdown.
+        /// </summary>
+        public IEnumerable<string> AutocompletePredictions
+        {
+            get => _predictions;
+            set => this.RaiseAndSetIfChanged(ref _predictions, value);
+        }
+
+        private async void UpdateAutoCompleteResultsAsync()
+        {
+            AutocompletePredictions = await GooglePlacesService.Autocomplete(Location);
+        }
 
         private IObservable<IRoutableViewModel> editWaypoint()
         {

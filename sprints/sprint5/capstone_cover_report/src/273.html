@@ -76,14 +76,6 @@ namespace CapstoneDesktop.ViewModels
         /// &lt;/summary&gt;
         public IEvent Event =&gt; Waypoint;
 
-        /// &lt;summary&gt;
-        ///     The image path.
-        /// &lt;/summary&gt;
-        public IBitmap ImagePath =&gt;
-            new Bitmap(Path.Combine(
-                Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                    .FullName).FullName, &quot;Assets/waypoint_icon.png&quot;));
-
         private void removeWaypoint()
         {
             if (WaypointManager.RemoveWaypoint(Waypoint.WaypointId).Data) RemoveEvent?.Invoke(this, EventArgs.Empty);
@@ -92,7 +84,7 @@ namespace CapstoneDesktop.ViewModels
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[23,71,23,115,1],[24,9,24,10,1],[25,13,25,33,1],[26,13,26,33,1],[27,13,27,68,1],[28,13,29,17,1],[29,17,29,93,0],[29,93,29,95,1],[30,13,31,17,1],[31,17,31,100,0],[31,100,31,102,1],[32,9,32,10,1],[37,36,37,40,1],[42,50,42,54,1],[42,55,42,59,1],[42,64,42,69,1],[47,60,47,64,1],[52,72,52,76,1],[57,72,57,76,1],[67,32,67,40,1],[73,13,75,70,0],[78,9,78,10,1],[79,13,79,74,1],[79,75,79,118,1],[80,9,80,10,1]]);
+      highlightRanges([[23,71,23,115,1],[24,9,24,10,1],[25,13,25,33,1],[26,13,26,33,1],[27,13,27,68,1],[28,13,29,17,1],[29,17,29,93,0],[29,93,29,95,1],[30,13,31,17,1],[31,17,31,100,0],[31,100,31,102,1],[32,9,32,10,1],[37,36,37,40,1],[42,50,42,54,1],[42,55,42,59,1],[42,64,42,69,1],[47,60,47,64,1],[52,72,52,76,1],[57,72,57,76,1],[67,32,67,40,1],[70,9,70,10,1],[71,13,71,74,1],[71,75,71,118,1],[72,9,72,10,1]]);
     </script>
   </body>
 </html>
