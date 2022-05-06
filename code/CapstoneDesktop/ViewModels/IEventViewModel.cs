@@ -13,10 +13,5 @@ namespace CapstoneDesktop.ViewModels
         ///     The event.
         /// </summary>
         public IEvent Event { get; }
-
-        /// <summary>
-        ///     The image path.
-        /// </summary>
-        public IBitmap ImagePath { get; }
     }
 }

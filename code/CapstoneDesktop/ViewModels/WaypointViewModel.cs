@@ -66,14 +66,6 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public IEvent Event => Waypoint;
 
-        /// <summary>
-        ///     The image path.
-        /// </summary>
-        public IBitmap ImagePath =>
-            new Bitmap(Path.Combine(
-                Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                    .FullName).FullName, "Assets/waypoint_icon.png"));
-
         private void removeWaypoint()
         {
             if (WaypointManager.RemoveWaypoint(Waypoint.WaypointId).Data) RemoveEvent?.Invoke(this, EventArgs.Empty);

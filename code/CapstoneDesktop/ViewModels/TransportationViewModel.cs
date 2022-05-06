@@ -67,14 +67,6 @@ namespace CapstoneDesktop.ViewModels
         /// </summary>
         public IEvent Event => Transportation;
 
-        /// <summary>
-        ///     The image path.
-        /// </summary>
-        public IBitmap ImagePath =>
-            new Bitmap(Path.Combine(
-                Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                    .FullName).FullName, "Assets/transportation_icon.png"));
-
         private void removeTransportation()
         {
             if (TransportationManager.RemoveTransportation(Transportation.TransportationId).Data)
