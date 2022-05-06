@@ -77,14 +77,6 @@ namespace CapstoneDesktop.ViewModels
         /// &lt;/summary&gt;
         public IEvent Event =&gt; Transportation;
 
-        /// &lt;summary&gt;
-        ///     The image path.
-        /// &lt;/summary&gt;
-        public IBitmap ImagePath =&gt;
-            new Bitmap(Path.Combine(
-                Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                    .FullName).FullName, &quot;Assets/transportation_icon.png&quot;));
-
         private void removeTransportation()
         {
             if (TransportationManager.RemoveTransportation(Transportation.TransportationId).Data)
@@ -94,7 +86,7 @@ namespace CapstoneDesktop.ViewModels
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[23,89,24,44,1],[25,9,25,10,1],[26,13,26,33,1],[27,13,27,45,1],[28,13,28,74,1],[29,13,30,17,1],[30,17,30,99,0],[30,99,30,101,1],[31,13,32,17,1],[32,17,32,112,0],[32,112,32,114,1],[33,9,33,10,1],[38,48,38,52,1],[43,62,43,66,1],[43,67,43,71,1],[43,76,43,81,1],[48,60,48,64,1],[53,72,53,76,1],[58,72,58,76,1],[68,32,68,46,1],[74,13,76,76,0],[79,9,79,10,1],[80,13,80,98,1],[81,17,81,60,1],[82,9,82,10,1]]);
+      highlightRanges([[23,89,24,44,1],[25,9,25,10,1],[26,13,26,33,1],[27,13,27,45,1],[28,13,28,74,1],[29,13,30,17,1],[30,17,30,99,0],[30,99,30,101,1],[31,13,32,17,1],[32,17,32,112,0],[32,112,32,114,1],[33,9,33,10,1],[38,48,38,52,1],[43,62,43,66,1],[43,67,43,71,1],[43,76,43,81,1],[48,60,48,64,1],[53,72,53,76,1],[58,72,58,76,1],[68,32,68,46,1],[71,9,71,10,1],[72,13,72,98,1],[73,17,73,60,1],[74,9,74,10,1]]);
     </script>
   </body>
 </html>

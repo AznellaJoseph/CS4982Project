@@ -6,9 +6,13 @@
 			<TextBlock Classes="h1" Text="EDIT WAYPOINT" HorizontalAlignment="Center"
                        VerticalAlignment="Top" />
 			<TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
-			<TextBlock Text="WAYPOINT METHOD:" />
-			<TextBox Watermark="METHOD" VerticalAlignment="Bottom" Text="{Binding Location, Mode=TwoWay}" />
-
+            <TextBlock Text="WAYPOINT LOCATION:" />
+            <AutoCompleteBox Watermark="LOCATION NAME"
+                             Text="{Binding Location, Mode=TwoWay}"
+                             Items="{Binding AutocompletePredictions, Mode=TwoWay}"
+                             IsTextCompletionEnabled="True"
+                             FilterMode="None"
+            />
 			<TextBlock Text="WAYPOINT NOTES" />
 			<TextBox Watermark="NOTES" VerticalAlignment="Bottom" Text="{Binding Notes, Mode=TwoWay}"
                      AcceptsReturn="True" TextWrapping="Wrap" Height="200" />
