@@ -112,23 +112,14 @@ namespace CapstoneTest.WebTests.Pages
         {
             var session = new Mock<ISession>();
             var fakeTransportationManager = new Mock<TransportationManager>();
-            var currentTime = DateTime.Now;
-
-            var fakeTransportation = new Transportation
-            {
-                Method = "Car",
-                StartDate = currentTime,
-                EndDate = currentTime,
-                Notes = "TestNotes"
-            };
 
             fakeTransportationManager.Setup(um => um.EditTransportation(It.IsAny<Transportation>()))
                 .Returns(new Response<bool> { Data = true, StatusCode = (uint) Ui.StatusCode.Success });
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(new Response<bool> { Data = true });
-            fakeValidationManager.Setup(vm => vm.FindClashingEvent(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-                .Returns(new Response<IEvent> { Data = null });
+            fakeValidationManager.Setup(vm => vm.FindClashingEvents(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), null))
+                .Returns(new Response<IList<IEvent>> { Data = null });
 
             var page = TestPageBuilder.BuildPage<EditTransportationModel>(session.Object);
             page.TransportationManager = fakeTransportationManager.Object;
@@ -139,11 +130,7 @@ namespace CapstoneTest.WebTests.Pages
             Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
             
             var redirect = (RedirectToPageResult)result;
-            Assert.AreEqual("Trip", redirect.PageName); ;
-            //Assert.AreEqual(fakeTransportation.Method, page.Method);
-            //Assert.AreEqual(fakeTransportation.StartDate, page.StartDate);
-            //Assert.AreEqual(fakeTransportation.EndDate, page.EndDate);
-            //Assert.AreEqual(fakeTransportation.Notes, page.Notes);
+            Assert.AreEqual("Trip", redirect.PageName);
         }
 
         [TestMethod]
@@ -159,8 +146,8 @@ namespace CapstoneTest.WebTests.Pages
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime.AddDays(1), currentTime))
                 .Returns(new Response<bool> { Data = true });
-            fakeValidationManager.Setup(vm => vm.FindClashingEvent(0, currentTime.AddDays(1), currentTime))
-                .Returns(new Response<IEvent> { Data = null });
+            fakeValidationManager.Setup(vm => vm.FindClashingEvents(0, currentTime.AddDays(1), currentTime, null))
+                .Returns(new Response<IList<IEvent>> { Data = null });
 
             var page = TestPageBuilder.BuildPage<EditTransportationModel>(session.Object);
             page.TransportationManager = manager.Object;
@@ -206,10 +193,10 @@ namespace CapstoneTest.WebTests.Pages
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(new Response<bool> { Data = true });
-            fakeValidationManager.Setup(vm => vm.FindClashingEvent(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-                .Returns(new Response<IEvent>
+            fakeValidationManager.Setup(vm => vm.FindClashingEvents(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), null))
+                .Returns(new Response<IList<IEvent>>
                 {
-                    Data = new Transportation {TransportationId = 1 },
+                    Data = new List<IEvent>{ new Transportation {TransportationId = 1} },
                     ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}"
                 });
 

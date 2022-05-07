@@ -109,13 +109,6 @@ namespace CapstoneWeb.Pages
                 return Page();
             }
 
-            var clashingEventResponse = ValidationManager.FindClashingEvent(tripId, StartDate, EndDate);
-            if (clashingEventResponse.Data is not null && clashingEventResponse.Data.Id != id)
-            {
-                ErrorMessage = clashingEventResponse.ErrorMessage;
-                return Page();
-            }
-
             var updatedWaypoint = new Waypoint
             {
                 TripId = tripId,
@@ -125,6 +118,15 @@ namespace CapstoneWeb.Pages
                 EndDate = EndDate,
                 Notes = Notes
             };
+
+            var clashingEventResponse =
+                ValidationManager.FindClashingEvents(tripId, StartDate, EndDate, updatedWaypoint);
+
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Page();
+            }
 
             var response = WaypointManager.EditWaypoint(updatedWaypoint);
             if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))

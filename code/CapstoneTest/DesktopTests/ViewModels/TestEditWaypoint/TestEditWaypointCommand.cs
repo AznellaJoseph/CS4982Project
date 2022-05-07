@@ -32,7 +32,7 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestEditWaypoint
 
             var testScheduler = new TestScheduler();
 
-            editWaypointPageViewModel.Location = null;
+            editWaypointPageViewModel.Location = string.Empty;
 
             editWaypointPageViewModel.EditWaypointCommand.Execute().Subscribe();
 
@@ -215,9 +215,9 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestEditWaypoint
             mockValidationManager
                 .Setup(vm => vm.DetermineIfValidEventDates(1, DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
                 .Returns(new Response<bool> { Data = true });
-            mockValidationManager.Setup(vm => vm.FindClashingEvent(1,
-                    DateTime.Today.AddDays(1) + TimeSpan.Zero, DateTime.Today.AddDays(3) + TimeSpan.Zero))
-                .Returns(new Response<IEvent>
+            mockValidationManager.Setup(vm => vm.FindClashingEvents(1,
+                    DateTime.Today.AddDays(1) + TimeSpan.Zero, DateTime.Today.AddDays(3) + TimeSpan.Zero, null))
+                .Returns(new Response<IList<IEvent>>
                 {
                     ErrorMessage =
                         $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}."

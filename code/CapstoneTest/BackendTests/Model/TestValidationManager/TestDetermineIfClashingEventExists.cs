@@ -20,7 +20,7 @@ namespace CapstoneTest.BackendTests.Model.TestValidationManager
             var validationManager = new ValidationManager { EventManager = mockEventManager.Object };
 
             var clashingTripResponse =
-                validationManager.FindClashingEvent(1, DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-5));
+                validationManager.FindClashingEvents(1, DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-5), null);
 
             Assert.IsNull(clashingTripResponse.Data);
         }
@@ -38,7 +38,7 @@ namespace CapstoneTest.BackendTests.Model.TestValidationManager
             var validationManager = new ValidationManager { EventManager = mockEventManager.Object };
 
             var clashingTripResponse =
-                validationManager.FindClashingEvent(1, DateTime.Today, DateTime.Today.AddHours(3));
+                validationManager.FindClashingEvents(1, DateTime.Today, DateTime.Today.AddHours(3), null);
 
             Assert.AreEqual((uint)Ui.StatusCode.BadRequest, clashingTripResponse.StatusCode);
             Assert.AreEqual($"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today} to {DateTime.Today.AddDays(4)}.",

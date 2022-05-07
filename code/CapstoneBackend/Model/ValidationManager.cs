@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CapstoneBackend.Utils;
 
@@ -86,83 +87,49 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Determines if there is a clashing trip with the chosen start and end dates.
-        /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="startDate">The start date.</param>
-        /// <param name="endDate">The end date.</param>
-        /// <returns>
-        ///     A response of false if a clashing trip does not exist or a non-success code and error message specifying the
-        ///     clashing trip dates.
-        /// </returns>
-        public virtual Response<bool> DetermineIfClashingTripExists(int userId, DateTime startDate, DateTime endDate)
-        {
-            var tripDates = Enumerable.Range(0,
-                    (endDate - startDate).Days + 1)
-                .Select(day => startDate.AddDays(day)).ToList();
-
-            var userTrips = TripManager.GetTripsByUser(userId);
-            if (userTrips.Data == null)
-                return new Response<bool>
-                {
-                    Data = false
-                };
-
-            var clashingTrip = (from tripDate in tripDates
-                from userTrip in userTrips.Data
-                where tripDate >= userTrip.StartDate && tripDate <= userTrip.EndDate
-                select userTrip).FirstOrDefault();
-
-            if (clashingTrip is null)
-                return new Response<bool>
-                {
-                    Data = false
-                };
-
-            return new Response<bool>
-            {
-                ErrorMessage =
-                    $"{Ui.ErrorMessages.ClashingTripDates} {clashingTrip.StartDate.ToShortDateString()} to {clashingTrip.EndDate.ToShortDateString()}.",
-                StatusCode = (uint) Ui.StatusCode.BadRequest
-            };
-        }
-
-        /// <summary>
         ///     Finds the clashing event with the chosen start and end dates.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
+        /// <param name="excludingEvent">The excluding event.</param>
         /// <returns>
         ///     A response of the clashing event and a non-success code and error message specifying the clashing event dates
         ///     or an empty response.
         /// </returns>
-        public virtual Response<IEvent> FindClashingEvent(int tripId, DateTime startDate, DateTime endDate)
+        public virtual Response<IList<IEvent>> FindClashingEvents(int tripId, DateTime startDate,
+            DateTime endDate, IEvent? excludingEvent)
         {
             var eventDates = Enumerable.Range(0,
                     (endDate - startDate).Days + 1)
                 .Select(day => startDate.AddDays(day)).ToList();
 
-            var clashingEvent = (from eventDate in eventDates
+            var clashingEvents = from eventDate in eventDates
                 select EventManager.GetEventsOnDate(tripId, eventDate).Data
                 into eventsOnDate
                 where eventsOnDate is not null
                 from eventOnDate in eventsOnDate
-                where startDate >= eventOnDate.StartDate && startDate <= eventOnDate.EndDate ||
-                      endDate >= eventOnDate.StartDate && endDate <= eventOnDate.EndDate
-                select eventOnDate).FirstOrDefault();
+                where
+                    startDate >= eventOnDate.StartDate && startDate <= eventOnDate.EndDate ||
+                    endDate >= eventOnDate.StartDate && endDate <= eventOnDate.EndDate
+                select eventOnDate;
 
-            if (clashingEvent is null)
-                return new Response<IEvent>
+            var clashingEventList = clashingEvents.ToList();
+
+            if (excludingEvent is not null)
+                clashingEventList.RemoveAll(clashingEvent => clashingEvent.Equals(excludingEvent));
+
+            if (clashingEventList.Count == 0)
+                return new Response<IList<IEvent>>
                 {
                     Data = null
                 };
 
-            return new Response<IEvent>
+            return new Response<IList<IEvent>>
             {
-                Data = clashingEvent,
+                Data = clashingEventList,
                 ErrorMessage =
-                    $"{Ui.ErrorMessages.ClashingEventDates} {clashingEvent.StartDate} to {clashingEvent.EndDate}.",
+                    $"There {(clashingEventList.Count == 1 ? "is" : "are")} {clashingEventList.Count} clashing event{(clashingEventList.Count > 1 ? "s" : string.Empty)} from {clashingEventList.Min(clashingEvent => clashingEvent.StartDate)} to {clashingEventList.Max(clashingEvent => clashingEvent.EndDate)}",
                 StatusCode = (uint) Ui.StatusCode.BadRequest
             };
         }
