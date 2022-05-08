@@ -368,9 +368,13 @@ label {
     height: 75%;
 }
 
+.create-map {
+    height: 100% !important;
+}
+
 .create-map, #notes-for-map {
     height: 100%;
-    width: 48%;
+    width: 49.5%;
 }
 
 #notes-for-map {
@@ -388,6 +392,7 @@ label {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
+    height: 250px;
 }
 
 img[alt="Remove"], img[alt="Edit"], img[alt="View"], img[alt="Transportation"], img[alt="Waypoint"] {
