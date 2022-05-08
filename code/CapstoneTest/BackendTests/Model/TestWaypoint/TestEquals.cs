@@ -38,8 +38,7 @@ namespace CapstoneTest.BackendTests.Model.TestWaypoint
 
             Assert.IsTrue(waypoint.Equals(new Waypoint
             {
-                TripId = 1, WaypointId = 1, EndDate = DateTime.Today.AddDays(4), StartDate = DateTime.Today,
-                Location = "UWG Library, Carrollton GA"
+                TripId = 1, WaypointId = 1
             }));
         }
     }

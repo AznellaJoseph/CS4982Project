@@ -60,14 +60,6 @@ namespace CapstoneWeb.Pages
         {
             var userId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
 
-
-            var clashingTripResponse = ValidationManager.DetermineIfClashingTripExists(userId, StartDate, EndDate);
-            if (!string.IsNullOrEmpty(clashingTripResponse.ErrorMessage))
-            {
-                ErrorMessage = clashingTripResponse.ErrorMessage;
-                return Page();
-            }
-
             var response = TripManager.CreateTrip(userId, TripName,
                 Notes,
                 StartDate, EndDate);

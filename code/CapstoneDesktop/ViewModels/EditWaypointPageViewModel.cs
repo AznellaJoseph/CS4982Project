@@ -151,12 +151,6 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            if (startDate.CompareTo(endDate) > 0)
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
             var updatedWaypoint = new Waypoint
             {
                 WaypointId = _waypoint.WaypointId,
@@ -168,16 +162,12 @@ namespace CapstoneDesktop.ViewModels
             };
 
             var clashingEventResponse =
-                ValidationManager.FindClashingEvent(_waypoint.TripId, startDate, endDate);
+                ValidationManager.FindClashingEvents(_waypoint.TripId, startDate, endDate, updatedWaypoint);
 
             if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
             {
-                var clashingEvent = clashingEventResponse.Data;
-                if (clashingEvent is null || !clashingEvent.Equals(_waypoint))
-                {
-                    ErrorMessage = clashingEventResponse.ErrorMessage;
-                    return Observable.Empty<IRoutableViewModel>();
-                }
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Observable.Empty<IRoutableViewModel>();
             }
 
             var updatedWaypointResponse = WaypointManager.EditWaypoint(updatedWaypoint);

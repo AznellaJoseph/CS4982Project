@@ -38,8 +38,8 @@ namespace CapstoneTest.BackendTests.Model.TestTransportation
 
             Assert.IsTrue(transportation.Equals(new Transportation
             {
-                TripId = 1, TransportationId = 1, EndDate = DateTime.Today.AddDays(4), StartDate = DateTime.Today,
-                Method = "Car"
+                TripId = 1,
+                TransportationId = 1
             }));
         }
     }

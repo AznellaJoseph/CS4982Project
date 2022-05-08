@@ -122,8 +122,8 @@ namespace CapstoneTest.WebTests.Pages
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime))
                 .Returns(new Response<bool> {Data = true});
-            fakeValidationManager.Setup(vm => vm.FindClashingEvent(0, currentTime, currentTime))
-                .Returns(new Response<IEvent> {Data = null});
+            fakeValidationManager.Setup(vm => vm.FindClashingEvents(0, currentTime, currentTime, null))
+                .Returns(new Response<IList<IEvent>> { Data = null});
             fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("1601 Maple St"))
                 .Returns(new Response<bool> { Data = true });
 
@@ -154,8 +154,8 @@ namespace CapstoneTest.WebTests.Pages
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(new Response<bool> {Data = true});
-            fakeValidationManager.Setup(vm => vm.FindClashingEvent(0, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-                .Returns(new Response<IEvent> {Data = null});
+            fakeValidationManager.Setup(vm => vm.FindClashingEvents(0, It.IsAny<DateTime>(), It.IsAny<DateTime>(), null))
+                .Returns(new Response<IList<IEvent>> { Data = null});
             fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation(It.IsAny<string>()))
                 .Returns(new Response<bool> { Data = true });
 
@@ -209,10 +209,10 @@ namespace CapstoneTest.WebTests.Pages
                 .Returns(new Response<bool> { Data = true });
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime.AddDays(2)))
                 .Returns(new Response<bool> {Data = true});
-            fakeValidationManager.Setup(vm => vm.FindClashingEvent(0, currentTime, currentTime.AddDays(2)))
-                .Returns(new Response<IEvent>
+            fakeValidationManager.Setup(vm => vm.FindClashingEvents(0, currentTime, currentTime.AddDays(2), null))
+                .Returns(new Response<IList<IEvent>>
                 {
-                    Data = new Waypoint { WaypointId = 1 },
+                    Data = new List<IEvent>{ new Waypoint() { WaypointId = 1 }},
                     ErrorMessage = $"{Ui.ErrorMessages.ClashingEventDates} {currentTime} {currentTime.AddDays(1)}"
                 });
 
@@ -237,8 +237,8 @@ namespace CapstoneTest.WebTests.Pages
             var fakeValidationManager = new Mock<ValidationManager>();
             fakeValidationManager.Setup(vm => vm.DetermineIfValidEventDates(0, currentTime, currentTime))
                 .Returns(new Response<bool> { Data = true });
-            fakeValidationManager.Setup(vm => vm.FindClashingEvent(0, currentTime, currentTime))
-                .Returns(new Response<IEvent> { Data = null });
+            fakeValidationManager.Setup(vm => vm.FindClashingEvents(0, currentTime, currentTime, null))
+                .Returns(new Response<IList<IEvent>> { Data = null });
             fakeValidationManager.Setup(vm => vm.DetermineIfValidLocation("Hilton"))
                 .Returns(new Response<bool> { Data = false, ErrorMessage = Ui.ErrorMessages.InvalidLocation });
 

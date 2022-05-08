@@ -100,13 +100,6 @@ namespace CapstoneWeb.Pages
                 return Page();
             }
 
-            var clashingEventResponse = ValidationManager.FindClashingEvent(tripId, StartDate, EndDate);
-            if (clashingEventResponse.Data is not null && clashingEventResponse.Data.Id != id)
-            {
-                ErrorMessage = clashingEventResponse.ErrorMessage;
-                return Page();
-            }
-
             var updatedTransportation = new Transportation
             {
                 TransportationId = id,
@@ -116,6 +109,15 @@ namespace CapstoneWeb.Pages
                 EndDate = EndDate,
                 Notes = Notes
             };
+
+            var clashingEventResponse =
+                ValidationManager.FindClashingEvents(tripId, StartDate, EndDate, updatedTransportation);
+
+            if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
+            {
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Page();
+            }
 
             var response = TransportationManager.EditTransportation(updatedTransportation);
             if (response.StatusCode.Equals((uint) Ui.StatusCode.Success))

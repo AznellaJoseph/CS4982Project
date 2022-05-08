@@ -115,6 +115,13 @@ namespace CapstoneBackend.Model
         public virtual Response<int> CreateTrip(int userId, string name, string? notes, DateTime startDate,
             DateTime endDate)
         {
+            if (startDate.CompareTo(endDate) > 0)
+                return new Response<int>
+                {
+                    ErrorMessage = Ui.ErrorMessages.InvalidStartDate,
+                    StatusCode = (uint) Ui.StatusCode.BadRequest
+                };
+
             try
             {
                 var tripId = _dal.CreateTrip(userId, name, notes, startDate, endDate);

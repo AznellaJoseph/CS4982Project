@@ -158,12 +158,6 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            if (startDate.CompareTo(endDate) > 0)
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
             var updatedLodging = new Lodging
             {
                 LodgingId = _lodging.LodgingId,

@@ -88,8 +88,8 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
                 {
                     Data = true
                 });
-            mockValidationManager.Setup(vm => vm.FindClashingEvent(0, DateTime.Today.AddDays(1), DateTime.Today))
-                .Returns(new Response<IEvent> {Data = null});
+            mockValidationManager.Setup(vm => vm.FindClashingEvents(0, DateTime.Today.AddDays(1), DateTime.Today, null))
+                .Returns(new Response<IList<IEvent>> { Data = null});
             mockValidationManager.Setup(vm => vm.DetermineIfValidLocation("Paris, Italy"))
                 .Returns(new Response<bool>
                 {
@@ -310,9 +310,9 @@ namespace CapstoneTest.DesktopTests.ViewModels.TestCreateWaypoint
             mockValidationManager
                 .Setup(vm => vm.DetermineIfValidEventDates(0, DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
                 .Returns(new Response<bool> {Data = true});
-            mockValidationManager.Setup(vm => vm.FindClashingEvent(0,
-                    DateTime.Today.AddDays(1), DateTime.Today.AddDays(3)))
-                .Returns(new Response<IEvent>
+            mockValidationManager.Setup(vm => vm.FindClashingEvents(0,
+                    DateTime.Today.AddDays(1), DateTime.Today.AddDays(3), null))
+                .Returns(new Response<IList<IEvent>>
                 {
                     ErrorMessage =
                         $"{Ui.ErrorMessages.ClashingEventDates} {DateTime.Today.AddDays(1)} to {DateTime.Today.AddDays(2)}."

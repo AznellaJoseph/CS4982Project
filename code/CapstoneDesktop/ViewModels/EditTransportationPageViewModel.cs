@@ -124,12 +124,6 @@ namespace CapstoneDesktop.ViewModels
                 return Observable.Empty<IRoutableViewModel>();
             }
 
-            if (startDate.CompareTo(endDate) > 0)
-            {
-                ErrorMessage = Ui.ErrorMessages.InvalidStartDate;
-                return Observable.Empty<IRoutableViewModel>();
-            }
-
             var updatedTransportation = new Transportation
             {
                 TransportationId = _transportation.TransportationId,
@@ -141,16 +135,12 @@ namespace CapstoneDesktop.ViewModels
             };
 
             var clashingEventResponse =
-                ValidationManager.FindClashingEvent(_transportation.TripId, startDate, endDate);
+                ValidationManager.FindClashingEvents(_transportation.TripId, startDate, endDate, updatedTransportation);
 
             if (!string.IsNullOrEmpty(clashingEventResponse.ErrorMessage))
             {
-                var clashingEvent = clashingEventResponse.Data;
-                if (clashingEvent is null || !clashingEvent.Equals(_transportation))
-                {
-                    ErrorMessage = clashingEventResponse.ErrorMessage;
-                    return Observable.Empty<IRoutableViewModel>();
-                }
+                ErrorMessage = clashingEventResponse.ErrorMessage;
+                return Observable.Empty<IRoutableViewModel>();
             }
 
             var updatedTransportationResponse = TransportationManager.EditTransportation(updatedTransportation);
