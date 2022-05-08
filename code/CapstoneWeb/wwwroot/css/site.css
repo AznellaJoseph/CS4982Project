@@ -315,8 +315,7 @@ label {
 }
 
 .event.list-item {
-    min-height: 25px;
-    max-height: 50px;
+    height: 50px;
 }
 
 .event.list-item .removeButton, .event.list-item .removeButton a {
