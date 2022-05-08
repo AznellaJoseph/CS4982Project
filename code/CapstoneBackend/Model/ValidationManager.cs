@@ -87,22 +87,23 @@ namespace CapstoneBackend.Model
         }
 
         /// <summary>
-        ///     Finds the clashing event with the chosen start and end dates.
+        ///     Finds the clashing events with the chosen start and end dates.
         /// </summary>
         /// <param name="tripId">The trip identifier.</param>
         /// <param name="startDate">The start date.</param>
         /// <param name="endDate">The end date.</param>
         /// <param name="excludingEvent">The excluding event.</param>
         /// <returns>
-        ///     A response of the clashing event and a non-success code and error message specifying the clashing event dates
+        ///     A response of the clashing events and a non-success code and error message specifying the number of clashing events
+        ///     and the earliest start and latest end dates of the clashing events
         ///     or an empty response.
         /// </returns>
         public virtual Response<IList<IEvent>> FindClashingEvents(int tripId, DateTime startDate,
             DateTime endDate, IEvent? excludingEvent)
         {
             var eventDates = Enumerable.Range(0,
-                    (endDate - startDate).Days + 1)
-                .Select(day => startDate.AddDays(day)).ToList();
+                    (endDate.Date - startDate.Date).Days + 1)
+                .Select(day => startDate.Date.AddDays(day)).ToList();
 
             var clashingEvents = from eventDate in eventDates
                 select EventManager.GetEventsOnDate(tripId, eventDate).Data
@@ -110,6 +111,8 @@ namespace CapstoneBackend.Model
                 where eventsOnDate is not null
                 from eventOnDate in eventsOnDate
                 where
+                    eventOnDate.StartDate >= startDate && eventOnDate.EndDate <= endDate ||
+                    eventOnDate.StartDate >= endDate && eventOnDate.EndDate <= endDate ||
                     startDate >= eventOnDate.StartDate && startDate <= eventOnDate.EndDate ||
                     endDate >= eventOnDate.StartDate && endDate <= eventOnDate.EndDate
                 select eventOnDate;
